@@ -675,24 +675,10 @@ class PSummaryHrv : UIViewController, Refreshable {
     
     func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double) {
         hrvChartView.data = chartData
-        hrvChartView.noDataText = ""
-        hrvChartView.xAxis.enabled = true
-        hrvChartView.legend.font = .systemFont(ofSize: 15, weight: .bold)
         hrvChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
         hrvChartView.setVisibleXRangeMaximum(maximum)
-        hrvChartView.xAxis.granularity = 1
-        hrvChartView.xAxis.labelPosition = .bottom
-        hrvChartView.xAxis.drawGridLinesEnabled = false
-        
         hrvChartView.leftAxis.axisMaximum = axisMaximum
         hrvChartView.leftAxis.axisMinimum = axisMinimum
-        hrvChartView.rightAxis.enabled = false
-        hrvChartView.drawMarkers = false
-        hrvChartView.dragEnabled = true
-        hrvChartView.pinchZoomEnabled = false
-        hrvChartView.doubleTapToZoomEnabled = false
-        hrvChartView.highlightPerTapEnabled = false
-        
         hrvChartView.data?.notifyDataChanged()
         hrvChartView.notifyDataSetChanged()
         hrvChartView.moveViewToX(0)
