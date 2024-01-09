@@ -111,11 +111,17 @@ class PSummaryArr : UIViewController, Refreshable {
     }
     
     //    ----------------------------- UILabel -------------------    //
-    private let bottomLabel = UILabel()
+    private let bottomLabel = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
-    private let topContents = UILabel()
+    private let topContents = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
-    private let middleContents = UILabel()
+    private let middleContents = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
     private lazy var bottomContents = UIStackView(arrangedSubviews: [arrCntLabel, arrCnt]).then {
         $0.axis = .horizontal
@@ -840,7 +846,7 @@ class PSummaryArr : UIViewController, Refreshable {
         
         middleContents.addSubview(yesterdayArrButton)
         yesterdayArrButton.snp.makeConstraints { make in
-            make.top.centerX.bottom.equalTo(middleContents)
+            make.top.left.bottom.equalTo(middleContents)
         }
         
         middleContents.addSubview(tomorrowArrButton)
@@ -850,7 +856,7 @@ class PSummaryArr : UIViewController, Refreshable {
         
         middleContents.addSubview(todayDispalay)
         todayDispalay.snp.makeConstraints { make in
-            make.top.left.bottom.equalTo(middleContents)
+            make.top.centerX.bottom.equalTo(middleContents)
         }
     }
 }
