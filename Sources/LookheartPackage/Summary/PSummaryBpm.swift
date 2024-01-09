@@ -95,8 +95,7 @@ class PSummaryBpm : UIViewController, Refreshable {
         return currentDirectoryURL.appendingPathComponent(BPMDATA_FILENAME)
     }
     
-    // MARK: -
-    
+    // MARK: UI VAR
     private let safeAreaView = UIView()
     
     //    ----------------------------- Chart -------------------    //
@@ -929,6 +928,7 @@ class PSummaryBpm : UIViewController, Refreshable {
         diffMaxBpm.text = "+0"
         
     }
+    
     // MARK: -
     func addViews() {
         
@@ -937,8 +937,6 @@ class PSummaryBpm : UIViewController, Refreshable {
         
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneThirdWidth = screenWidth / 3.0
-        
-        print(oneThirdWidth)
         
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
