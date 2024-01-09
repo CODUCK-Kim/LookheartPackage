@@ -1,7 +1,7 @@
 import Foundation
 
 public class UserProfileManager {
-    static let shared = UserProfileManager()
+    public static let shared = UserProfileManager()
     
     private(set) var userProfile: UserProfile? // 싱글톤
     private var guardianPhoneNumbers: [String] = [] // 보호자 번호
