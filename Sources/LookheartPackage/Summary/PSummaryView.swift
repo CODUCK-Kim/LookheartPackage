@@ -3,6 +3,7 @@ import UIKit
 import Then
 import SnapKit
 
+@available(iOS 13.0, *)
 public class PSummaryVC : UIViewController {
     
     private let BPM_BUTTON_TAG = 1
@@ -11,7 +12,7 @@ public class PSummaryVC : UIViewController {
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
     
-    private let bpmView = PSummaryVC()
+    private let bpmView = PSummaryBpm()
 //    private let arrView = SummaryArr()
 //    private let hrvView = SummaryHrv()
 //    private let calView = SummaryCal()
