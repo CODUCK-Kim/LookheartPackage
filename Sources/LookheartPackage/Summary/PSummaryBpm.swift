@@ -308,6 +308,8 @@ class PSummaryBpm : UIViewController, Refreshable {
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneThirdWidth = screenWidth / 3.0
         
+        print(oneThirdWidth)
+        
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
@@ -356,17 +358,17 @@ class PSummaryBpm : UIViewController, Refreshable {
         
         topContents.addSubview(todayButton)
         todayButton.snp.makeConstraints { make in
-            make.top.centerX.equalTo(topContents)
+            make.top.equalTo(topContents)
             make.left.equalTo(safeAreaView).offset(10)
-            make.bottom.equalTo(twoDaysButton)
+            make.bottom.equalTo(topContents).offset(-20)
             make.width.equalTo(oneThirdWidth - 30)
         }
         
         topContents.addSubview(threeDaysButton)
         threeDaysButton.snp.makeConstraints { make in
-            make.top.centerX.equalTo(topContents)
+            make.top.equalTo(topContents)
             make.right.equalTo(safeAreaView).offset(-10)
-            make.bottom.equalTo(twoDaysButton)
+            make.bottom.equalTo(topContents).offset(-20)
             make.width.equalTo(oneThirdWidth - 30)
         }
         
@@ -407,7 +409,7 @@ class PSummaryBpm : UIViewController, Refreshable {
             make.width.equalTo(oneThirdWidth)
         }
         
-        
+        // --------------------- centerBpmContents --------------------- //
         centerBpmContents.addSubview(avgBpmValue)
         avgBpmValue.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(centerBpmContents)
@@ -415,7 +417,7 @@ class PSummaryBpm : UIViewController, Refreshable {
         
         centerBpmContents.addSubview(avgBpmLabel)
         avgBpmLabel.snp.makeConstraints { make in
-            make.top.equalTo(avgBpmValue).offset(-10)
+            make.bottom.equalTo(avgBpmValue.snp.top).offset(-10)
             make.centerX.equalTo(centerBpmContents)
         }
         
@@ -426,7 +428,7 @@ class PSummaryBpm : UIViewController, Refreshable {
             make.centerX.equalTo(centerBpmContents)
         }
         
-        
+        // --------------------- leftBpmContents --------------------- //
         leftBpmContents.addSubview(minBpmValue)
         minBpmValue.snp.makeConstraints { make in
             make.centerX.equalTo(leftBpmContents)
@@ -446,7 +448,7 @@ class PSummaryBpm : UIViewController, Refreshable {
             make.centerY.equalTo(bpmLabel)
         }
         
-    
+        // --------------------- rightBpmContents --------------------- //
         rightBpmContents.addSubview(maxBpmValue)
         maxBpmValue.snp.makeConstraints { make in
             make.centerX.equalTo(rightBpmContents)
