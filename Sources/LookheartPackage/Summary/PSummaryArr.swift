@@ -88,7 +88,7 @@ class PSummaryArr : UIViewController, Refreshable {
         return currentDirectoryURL.appendingPathComponent(ARRDATA_FILENAME)
     }
     
-    // MARK: UI VAR
+    // MARK: - UI VAR
     private let safeAreaView = UIView()
     
     //    ----------------------------- Chart -------------------    //
@@ -476,7 +476,6 @@ class PSummaryArr : UIViewController, Refreshable {
 
         do {
             appendingPath = path
-            print("appendingPath : \(appendingPath)")
             let fileData = try String(contentsOf: arrDataFileURL)
             let separatedData = fileData.components(separatedBy: .newlines)
             
