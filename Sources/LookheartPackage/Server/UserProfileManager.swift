@@ -1,6 +1,6 @@
 import Foundation
 
-class UserProfileManager {
+public class UserProfileManager {
     static let shared = UserProfileManager()
     
     private(set) var userProfile: UserProfile? // 싱글톤
