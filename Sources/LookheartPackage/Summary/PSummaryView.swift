@@ -13,10 +13,10 @@ public class PSummaryVC : UIViewController {
     private let STEP_BUTTON_TAG = 5
     
     private let bpmView = PSummaryBpm()
-//    private let arrView = SummaryArr()
-//    private let hrvView = SummaryHrv()
-//    private let calView = SummaryCal()
-//    private let stepView = SummaryStep()
+    private let arrView = PSummaryArr()
+    private let hrvView = PSummaryHrv()
+    private let calView = PSummaryCal()
+    private let stepView = PSummaryStep()
     
     private var arrChild: [UIViewController] = []
     
@@ -28,9 +28,9 @@ public class PSummaryVC : UIViewController {
         return [bpmImage, arrImage, hrvImage, calorieImage, stepImage]
     }()
     
-//    private lazy var childs: [UIViewController] = {
-//        return [bpmView, arrView, hrvView, calView, stepView]
-//    }()
+    private lazy var childs: [UIViewController] = {
+        return [bpmView, arrView, hrvView, calView, stepView]
+    }()
     
     // MARK: -
     private let safeAreaView = UIView()
@@ -153,30 +153,30 @@ public class PSummaryVC : UIViewController {
         
         setButtonColor(sender)
         
-//        switch(sender.tag) {
-//        case BPM_BUTTON_TAG:
-//            setChild(selectChild: bpmView, in: self.view)
-//        case ARR_BUTTON_TAG:
-//            setChild(selectChild: arrView, in: self.view)
-//        case HRV_BUTTON_TAG:
-//            setChild(selectChild: hrvView, in: self.view)
-//        case CAL_BUTTON_TAG:
-//            setChild(selectChild: calView, in: self.view)
-//        case STEP_BUTTON_TAG:
-//            setChild(selectChild: stepView, in: self.view)
-//        default:
-//            break
-//        }
+        switch(sender.tag) {
+        case BPM_BUTTON_TAG:
+            setChild(selectChild: bpmView, in: self.view)
+        case ARR_BUTTON_TAG:
+            setChild(selectChild: arrView, in: self.view)
+        case HRV_BUTTON_TAG:
+            setChild(selectChild: hrvView, in: self.view)
+        case CAL_BUTTON_TAG:
+            setChild(selectChild: calView, in: self.view)
+        case STEP_BUTTON_TAG:
+            setChild(selectChild: stepView, in: self.view)
+        default:
+            break
+        }
     }
     
     private func setChild(selectChild: UIViewController, in containerView: UIView) {
-//        for child in childs {
-//            if child == selectChild {
-//                addChild(child, in: containerView)
-//            } else {
-//                removeChild(child)
-//            }
-//        }
+        for child in childs {
+            if child == selectChild {
+                addChild(child, in: containerView)
+            } else {
+                removeChild(child)
+            }
+        }
     }
     
     // MARK: - viewDidLoad
@@ -220,25 +220,21 @@ public class PSummaryVC : UIViewController {
         }
     }
     
-    // 자식 뷰 컨트롤러 추가
     func addChild(_ child: UIViewController, in containerView: UIView) {
-//        addChild(child)
-//        containerView.addSubview(child.view)
-//        child.view.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            child.view.topAnchor.constraint(equalTo: calorieButton.bottomAnchor),
-//            child.view.leadingAnchor.constraint(equalTo: safeAreaView.leadingAnchor),
-//            child.view.trailingAnchor.constraint(equalTo: safeAreaView.trailingAnchor),
-//            child.view.bottomAnchor.constraint(equalTo: safeAreaView.bottomAnchor),
-//        ])
-//        
-//        child.didMove(toParent: self)
-//        
-//        
-//        if !arrChild.contains(where: { $0 === child }) {
-//            arrChild.append(child)
-//        }
+
+        addChild(child)
+        containerView.addSubview(child.view)
+        
+        child.view.snp.makeConstraints { make in
+            make.top.equalTo(calorieButton.snp.bottom)
+            make.left.right.bottom.equalTo(safeAreaView)
+        }
+        
+        child.didMove(toParent: self)
+                
+        if !arrChild.contains(where: { $0 === child }) {
+            arrChild.append(child)
+        }
         
     }
 

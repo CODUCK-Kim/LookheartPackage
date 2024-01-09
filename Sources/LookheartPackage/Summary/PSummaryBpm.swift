@@ -142,16 +142,16 @@ class PSummaryBpm : UIViewController, Refreshable {
         $0.setTitleColor(.lightGray, for: .disabled)
         
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .normal)
-        $0.setBackgroundColor(UIColor(red: 45/255, green: 63/255, blue: 100/255, alpha: 1.0), for: .selected)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_BODY_STATE, for: .selected)
         
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         $0.isSelected = true
         
         $0.tag = TODAY_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var twoDaysButton = UIButton().then {
@@ -162,15 +162,15 @@ class PSummaryBpm : UIViewController, Refreshable {
         $0.setTitleColor(.lightGray, for: .disabled)
         
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .normal)
-        $0.setBackgroundColor(UIColor(red: 45/255, green: 63/255, blue: 100/255, alpha: 1.0), for: .selected)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_BODY_STATE, for: .selected)
         
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         
         $0.tag = TWO_DAYS_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var threeDaysButton = UIButton().then {
@@ -181,15 +181,15 @@ class PSummaryBpm : UIViewController, Refreshable {
         $0.setTitleColor(.lightGray, for: .disabled)
         
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .normal)
-        $0.setBackgroundColor(UIColor(red: 45/255, green: 63/255, blue: 100/255, alpha: 1.0), for: .selected)
-        $0.setBackgroundColor(UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0), for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .disabled)
+        $0.setBackgroundColor(UIColor.MY_BODY_STATE, for: .selected)
         
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         
         $0.tag = THREE_DAYS_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     
@@ -205,12 +205,13 @@ class PSummaryBpm : UIViewController, Refreshable {
     private lazy var yesterdayBpmButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
+    
     private lazy var tomorrowBpmButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
     // MARK: - Bottom
