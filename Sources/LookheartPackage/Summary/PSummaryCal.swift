@@ -931,7 +931,8 @@ class PSummaryCal : UIViewController, Refreshable {
         // --------------------- bottomContents --------------------- //
         bottomLabel.addSubview(calValueContents)
         calValueContents.snp.makeConstraints { make in
-            make.top.left.equalTo(bottomContents)
+            make.top.equalTo(bottomContents)
+            make.left.equalTo(bottomContents.snp.right)
             make.bottom.right.equalTo(safeAreaView)
         }
         
