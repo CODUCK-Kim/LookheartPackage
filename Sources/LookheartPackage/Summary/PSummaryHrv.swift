@@ -141,6 +141,7 @@ class PSummaryHrv : UIViewController, Refreshable {
         $0.layer.cornerRadius = 15
         $0.isSelected = true
         
+        $0.tag = TODAY_FLAG
         $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
@@ -159,6 +160,7 @@ class PSummaryHrv : UIViewController, Refreshable {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         
+        $0.tag = TWO_DAYS_FLAG
         $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
@@ -176,6 +178,7 @@ class PSummaryHrv : UIViewController, Refreshable {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         
+        $0.tag = THREE_DAYS_FLAG
         $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
@@ -191,10 +194,12 @@ class PSummaryHrv : UIViewController, Refreshable {
     
     private lazy var yesterdayHrvButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
+        $0.tag = YESTERDAY_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     private lazy var tomorrowHrvButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
+        $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
