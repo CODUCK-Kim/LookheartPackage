@@ -33,7 +33,7 @@ class MyDateTime {
         
         dateFormatter.dateFormat = getFormatter(dateType)
         
-        var dateTime = dateFormatter.string(from: now)
+        let dateTime = dateFormatter.string(from: now)
         
         switch (dateType) {
         case .DATE:

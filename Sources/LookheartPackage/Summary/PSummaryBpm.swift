@@ -281,24 +281,653 @@ class PSummaryBpm : UIViewController, Refreshable {
         super.viewDidLoad()
         
         initVar()
-        
         addViews()
+        initArray()
+        todayBpmChart()
 
     }
     
     func refreshView() {
-        
+        initVar()
+        addViews()
+        initArray()
+        todayBpmChart()
     }
     
     private func initVar() {
         let currentDate = MyDateTime.shared.getSplitDateTime(.DATE)
         
+        email = UserProfileManager.shared.getEmail()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        currentFlag = TODAY_FLAG
+        
+        buttonList = [todayButton, twoDaysButton, threeDaysButton]
+        
         currentYear = currentDate[0]
         currentMonth = currentDate[1]
         currentDay = currentDate[2]
         
+        targetDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        targetYear = currentYear
+        targetMonth = currentMonth
+        targetDay = currentDay
+        
+        setButtonColor(todayButton)
+        setDays(targetDate)
+        
     }
     
+    // MARK: - CHART
+    func todayBpmChart() {
+        setDisplayText(changeDateFormat("\(targetYear)-\(targetMonth)-\(targetDay)", false))
+        
+        if fileExists() {
+            
+            getFileData(
+                path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
+                bpmData: &targetBpmData,
+                timeData: &targetBpmTimeData)
+            
+            var bpmDataEntries = [ChartDataEntry]()
+                        
+            for i in 0 ..< targetBpmData.count - 1 {
+                let bpmDataEntry = ChartDataEntry(x: Double(i), y: targetBpmData[i])
+                bpmDataEntries.append(bpmDataEntry)
+            }
+            
+            if bpmDataEntries.count == 0 {
+                let bpmDataEntry = ChartDataEntry(x: Double(0), y: targetBpmData[0])
+                bpmDataEntries.append(bpmDataEntry)
+            }
+            
+            // set ChartData
+            let bpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: bpmDataEntries, label: "fragment_bpm".localized()))
+            
+            removeSecond(targetBpmTimeData)
+            
+            setChart(chartData: LineChartData(dataSet: bpmChartDataSet),
+                     maximum: 500,
+                     axisMaximum: 200,
+                     axisMinimum: 40)
+            
+            setBpmText()
+            
+        } else {
+            // 파일 없음
+        }
+    }
+
+    func twoDaysBpmChart() {
+            
+        setDisplayText("\(changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)) ~ \(changeDateFormat("\(targetMonth)-\(targetDay)", true))")
+        
+        if fileExists() {
+            
+            // TODAY Data
+            getFileData(
+                path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
+                bpmData: &targetBpmData,
+                timeData: &targetBpmTimeData)
+            
+            // 2 DAYS Data
+            getFileData(
+                path: "\(email)/\(twoDaysTargetYear)/\(twoDaysTargetMonth)/\(twoDaysTargetDay)",
+                bpmData: &twoDaysBpmData,
+                timeData: &twoDaysBpmTimeData)
+            
+            // find start Time & end Time
+            guard let startOfToday = targetBpmTimeData.first,
+                  let endOfToday = targetBpmTimeData.last,
+                  let startOfYesterday = twoDaysBpmTimeData.first,
+                  let endOfYesterday = twoDaysBpmTimeData.last else {
+                return
+            }
+            
+            earliestStartTime = earlierTime(startOfToday, startOfYesterday)
+            latestEndTime = earlierTime(endOfToday, endOfYesterday) == endOfToday ? endOfYesterday : endOfToday
+
+            startBpmTime = earliestStartTime.components(separatedBy: ":")
+            endBpmTime = latestEndTime.components(separatedBy: ":")
+
+            // find difference Minutes
+            startBpmTimeInMinutes = Int(startBpmTime[0])! * 60 + Int(startBpmTime[1])!
+            endBpmTimeInMinutes = Int(endBpmTime[0])! * 60 + Int(endBpmTime[1])!
+
+            xAxisTotal = (endBpmTimeInMinutes - startBpmTimeInMinutes) * 6
+            
+            // set timeTable
+            setTimeTable(startBpmTime, false)
+
+            // find start point
+            var todayStart = findStartPoint(startOfToday.components(separatedBy: ":"))
+            var twoDaysStart = findStartPoint(startOfYesterday.components(separatedBy: ":"))
+            
+            // last value
+            let endOfTodayInt = timeToInt(endOfToday.components(separatedBy: ":"))
+            let endOfYesterdayInt = timeToInt(endOfYesterday.components(separatedBy: ":"))
+            
+            // today's data
+            processBpmData(timeData: targetBpmTimeData,
+                           bpmData: targetBpmData,
+                           endTimeInt: endOfTodayInt,
+                           entries: &targetBpmEntries,
+                           startIndex: &todayStart)
+
+            bpmTimeCount = 0    // Reset bpmTimeCount for yesterday's data
+
+            // yesterday's data
+            processBpmData(timeData: twoDaysBpmTimeData,
+                           bpmData: twoDaysBpmData,
+                           endTimeInt: endOfYesterdayInt,
+                           entries: &twoDaysBpmEntries,
+                           startIndex: &twoDaysStart)
+                            
+            // remove second
+            setTimeTable(startBpmTime, true)
+            
+            // set Chart
+            let todaysDate = changeDateFormat("\(targetMonth)-\(targetDay)", true)
+            let twoDaysDate = changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)
+            
+            let todayBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetBpmEntries, label: todaysDate))
+            let twoDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysBpmEntries, label: twoDaysDate))
+                                                                
+            let bpmChartDataSets: [LineChartDataSet] = [twoDaysBpmChartDataSet, todayBpmChartDataSet]
+            
+            setChart(chartData: LineChartData(dataSets: bpmChartDataSets),
+                     maximum: 1000,
+                     axisMaximum: 200,
+                     axisMinimum: 40)
+            
+            setBpmText()
+            
+        } else {
+            // 파일 없음
+        }
+    }
+    
+    func threeDaysBpmChart() {
+        
+        setDisplayText("\(changeDateFormat("\(threeDaysTargetMonth)-\(threeDaysTargetDay)", true)) ~ \(changeDateFormat("\(targetMonth)-\(targetDay)", true))")
+        
+        if fileExists() {
+            // Today Data
+            getFileData(
+                path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
+                bpmData: &targetBpmData,
+                timeData: &targetBpmTimeData)
+            
+            // 2 DAYS Data
+            getFileData(
+                path: "\(email)/\(twoDaysTargetYear)/\(twoDaysTargetMonth)/\(twoDaysTargetDay)",
+                bpmData: &twoDaysBpmData,
+                timeData: &twoDaysBpmTimeData)
+            
+            // 3 DAYS Data
+            getFileData(
+                path: "\(email)/\(threeDaysTargetYear)/\(threeDaysTargetMonth)/\(threeDaysTargetDay)",
+                bpmData: &threeDaysBpmData,
+                timeData: &threeDaysBpmTimeData)
+            
+            // find start Time & end Time
+            guard let startOfToday = targetBpmTimeData.first,
+                  let endOfToday = targetBpmTimeData.last,
+                  let startOfYesterday = twoDaysBpmTimeData.first,
+                  let endOfYesterday = twoDaysBpmTimeData.last,
+                  let startOfTwoDaysAgo = threeDaysBpmTimeData.first,
+                  let endOfTwoDaysAgo = threeDaysBpmTimeData.last else {
+                return
+            }
+            
+            var compareDates = earlierTime(startOfToday, startOfYesterday)
+            earliestStartTime = earlierTime(compareDates, startOfTwoDaysAgo)
+            
+            compareDates = earlierTime(endOfToday, endOfYesterday) == endOfToday ? endOfYesterday : endOfToday
+            latestEndTime = earlierTime(compareDates, endOfTwoDaysAgo) == compareDates ? endOfTwoDaysAgo : compareDates
+            
+            startBpmTime = earliestStartTime.components(separatedBy: ":")
+            endBpmTime = latestEndTime.components(separatedBy: ":")
+            
+            // find difference Minutes
+            startBpmTimeInMinutes = Int(startBpmTime[0])! * 60 + Int(startBpmTime[1])!
+            endBpmTimeInMinutes = Int(endBpmTime[0])! * 60 + Int(endBpmTime[1])!
+            
+            xAxisTotal = (endBpmTimeInMinutes - startBpmTimeInMinutes) * 6
+            
+            // set timeTable
+            setTimeTable(startBpmTime, false)
+            
+            // find start point
+            var todayStart = findStartPoint(startOfToday.components(separatedBy: ":"))
+            var twoDaysStart = findStartPoint(startOfYesterday.components(separatedBy: ":"))
+            var threeDaysStart = findStartPoint(startOfTwoDaysAgo.components(separatedBy: ":"))
+            
+            // last value
+            let endOfTodayInt = timeToInt(endOfToday.components(separatedBy: ":"))
+            let endOfYesterdayInt = timeToInt(endOfYesterday.components(separatedBy: ":"))
+            let endOfTwoDaysAgoInt = timeToInt(endOfTwoDaysAgo.components(separatedBy: ":"))
+            
+            // today's data
+            processBpmData(timeData: targetBpmTimeData,
+                           bpmData: targetBpmData,
+                           endTimeInt: endOfTodayInt,
+                           entries: &targetBpmEntries,
+                           startIndex: &todayStart)
+            
+            bpmTimeCount = 0    // Reset bpmTimeCount for yesterday's data
+            
+            // yesterday's data
+            processBpmData(timeData: twoDaysBpmTimeData,
+                           bpmData: twoDaysBpmData,
+                           endTimeInt: endOfYesterdayInt,
+                           entries: &twoDaysBpmEntries,
+                           startIndex: &twoDaysStart)
+            
+            bpmTimeCount = 0
+            
+            // twoDaysAgo's data
+            processBpmData(timeData: threeDaysBpmTimeData,
+                           bpmData: threeDaysBpmData,
+                           endTimeInt: endOfTwoDaysAgoInt,
+                           entries: &threeDaysBpmEntries,
+                           startIndex: &threeDaysStart)
+            
+            // remove second
+            setTimeTable(startBpmTime, true)
+            
+            // set Chart
+            let todaysDate = changeDateFormat("\(targetMonth)-\(targetDay)", true)
+            let twoDaysDate = changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)
+            let threeDaysDate = changeDateFormat("\(threeDaysTargetMonth)-\(threeDaysTargetDay)", true)
+            
+            let todayBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetBpmEntries, label: todaysDate))
+            let twoDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysBpmEntries, label: twoDaysDate))
+            let threeDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_GREEN, chartDataSet: LineChartDataSet(entries: threeDaysBpmEntries, label: threeDaysDate))
+            
+            let bpmChartDataSets: [LineChartDataSet] = [threeDaysBpmChartDataSet, twoDaysBpmChartDataSet, todayBpmChartDataSet]
+            
+            setChart(chartData: LineChartData(dataSets: bpmChartDataSets),
+                     maximum: 1000,
+                     axisMaximum: 200,
+                     axisMinimum: 40)
+            
+            setBpmText()
+            
+        } else {
+            // 파일 없음
+        }
+    }
+    
+    // MARK: - CHART FUNC
+    func getFileData(path: String, bpmData: inout [Double], timeData: inout [String]) {
+        do {
+            appendingPath = path
+            let fileData = try String(contentsOf: bpmDataFileURL)
+            let separatedData = fileData.components(separatedBy: .newlines)
+            
+            for i in 0 ..< separatedData.count - 1 {
+                let row = separatedData[i]
+                let columns = row.components(separatedBy: ",")
+                let bpm = Double(columns[2].trimmingCharacters(in: .whitespacesAndNewlines))
+                
+                let time = columns[0].components(separatedBy: ":")
+                let bpmTime = time[0] + ":" + time[1] + ":" + (time[safe: 2] ?? "00")
+                
+                calcMinMax(Int(bpm ?? 70))
+                bpmData.append(bpm ?? 0.0)
+                timeData.append(bpmTime)
+            }
+        } catch  {
+            print("Error reading CSV file")
+        }
+    }
+    
+    func setTimeTable(_ startBpmTime: [String], _ removeSecond: Bool){
+        if removeSecond {   timeTable = []  }
+        
+        var bpmHour = Int(startBpmTime[0]) ?? 0
+        var bpmMinutes = Int(startBpmTime[1]) ?? 0
+        var seconds = 0
+        
+        for _ in 0 ..< xAxisTotal {
+            var time = ""
+            if removeSecond {
+                time = String(format: "%02d:%02d", bpmHour, bpmMinutes)
+            } else {
+                time = String(format: "%02d:%02d:%d", bpmHour, bpmMinutes, seconds)
+            }
+            timeTable.append(time)
+            seconds = (seconds + 1) % 6
+            
+            if seconds == 0 {
+                incrementTime(hour: &bpmHour, minute: &bpmMinutes)
+            }
+        }
+    }
+    
+    func removeSecond(_ startTime: [String]) {
+        for time in startTime {
+            let splitTime = time.split(separator: ":")
+            timeTable.append("\(splitTime[0]):\(splitTime[1])")
+        }
+    }
+    
+    func incrementTime(hour: inout Int, minute: inout Int) {
+        minute += 1
+        if minute == 60 {
+            hour += 1
+            minute = 0
+        }
+    }
+    
+    func findStartPoint(_ startTime: [String]) -> Int {
+        let startTimeInMinutes = Int(startTime[0])! * 60 + Int(startTime[1])!
+        return (startTimeInMinutes - startBpmTimeInMinutes) * 6
+    }
+    
+    func earlierTime(_ todayTime: String, _ yesterdayTime: String) -> String {
+        let todayComponents = todayTime.components(separatedBy: ":")
+        let yesterdayComponents = yesterdayTime.components(separatedBy: ":")
+
+        let todayHour = Int(todayComponents[0])!
+        let yesterdayHour = Int(yesterdayComponents[0])!
+        let todayMinute = Int(todayComponents[1])!
+        let yesterdayMinute = Int(yesterdayComponents[1])!
+
+        if todayHour < yesterdayHour || (todayHour == yesterdayHour && todayMinute < yesterdayMinute) {
+            return todayTime
+        } else {
+            return yesterdayTime
+        }
+    }
+    
+    func timeToInt(_ time: [String]) -> Int {
+        let hour = Int(time[0]) ?? 0
+        let minute = Int(time[1]) ?? 0
+        let second = time[2].count == 2 ? Int(String(time[2].first!)) ?? 0 : Int(time[2]) ?? 0
+        return hour * 3600 + minute * 60 + second
+    }
+    
+    func processBpmData(timeData: [String], bpmData: [Double], endTimeInt: Int, entries: inout [ChartDataEntry], startIndex: inout Int) {
+        var bpmTimeCount = 0
+        for _ in 0 ..< xAxisTotal {
+            if bpmTimeCount >= timeData.count || startIndex >= timeTable.count { break }
+            
+            var bpmTime = timeToInt(timeData[bpmTimeCount].components(separatedBy: ":"))
+            let timePoint = timeToInt(timeTable[startIndex].components(separatedBy: ":"))
+            
+            if bpmTime == endTimeInt { break }
+            
+            if bpmTime == timePoint {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[bpmTimeCount]))
+                bpmTimeCount += 1
+            } else if bpmTime < timePoint {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[max(bpmTimeCount - 1, 0)]))
+            }
+            
+            while bpmTimeCount < timeData.count && bpmTime == timePoint && bpmTime != endTimeInt {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[bpmTimeCount]))
+                bpmTimeCount += 1
+                if bpmTimeCount < timeData.count {
+                    bpmTime = timeToInt(timeData[bpmTimeCount].components(separatedBy: ":"))
+                }
+            }
+            
+            startIndex += 1
+        }
+    }
+    
+    func chartDataSet(color: NSUIColor, chartDataSet: LineChartDataSet) -> LineChartDataSet {
+        chartDataSet.drawCirclesEnabled = false
+        chartDataSet.setColor(color)
+        chartDataSet.mode = .linear
+        chartDataSet.lineWidth = 0.7
+        chartDataSet.drawValuesEnabled = true
+        
+        return chartDataSet
+    }
+    
+    func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double) {
+        bpmChartView.data = chartData
+        bpmChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        bpmChartView.setVisibleXRangeMaximum(maximum)
+        bpmChartView.leftAxis.axisMaximum = axisMaximum
+        bpmChartView.leftAxis.axisMinimum = axisMinimum
+        bpmChartView.data?.notifyDataChanged()
+        bpmChartView.notifyDataSetChanged()
+        bpmChartView.moveViewToX(0)
+    }
+    
+    func changeDateFormat(_ dateString: String, _ checkDate: Bool) -> String {
+        var dateComponents = dateString.components(separatedBy: "-")
+        
+        if checkDate {
+            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+        } else {
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
+        }
+
+        return dateComponents.joined(separator: "-")
+    }
+    
+    // MARK: -
+    @objc func shiftDate(_ sender: UIButton) {
+        
+        switch(sender.tag) {
+        case YESTERDAY_BUTTON_FLAG:
+            dateCalculate(targetDate, 1, false)
+        default:    // TOMORROW_BUTTON_FLAG
+            dateCalculate(targetDate, 1, true)
+        }
+        
+        viewChart(currentFlag)
+    }
+    
+    @objc func selectDayButton(_ sender: UIButton) {
+        switch(sender.tag) {
+        case TWO_DAYS_FLAG:
+            currentFlag = TWO_DAYS_FLAG
+        case THREE_DAYS_FLAG:
+            currentFlag = THREE_DAYS_FLAG
+        default:
+            currentFlag = TODAY_FLAG
+        }
+        
+        viewChart(currentFlag)
+        setButtonColor(sender)
+    }
+     
+    func viewChart(_ tag: Int) {
+        
+        initArray()
+        
+        switch(tag) {
+        case TWO_DAYS_FLAG:
+            twoDaysBpmChart()
+        case THREE_DAYS_FLAG:
+            threeDaysBpmChart()
+        default:
+            todayBpmChart()
+        }
+    }
+    
+    func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) {
+        guard let inputDate = dateFormatter.date(from: date) else { return }
+
+        let dayValue = shouldAdd ? day : -day
+        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: dayValue, to: inputDate) {
+            
+            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                targetYear = "\(year)"
+                targetMonth = String(format: "%02d", month)
+                targetDay = String(format: "%02d", day)
+                
+                targetDate = "\(targetYear)-\(targetMonth)-\(targetDay)"
+                
+                setDays(targetDate) // set twoDays, threeDays
+            }
+        }
+    }
+    
+    func setDays(_ date: String) {
+        guard let inputDate = dateFormatter.date(from: date) else { return }
+        
+        // twoDays
+        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: -1, to: inputDate) {
+            
+            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                twoDaysTargetYear = "\(year)"
+                twoDaysTargetMonth = String(format: "%02d", month)
+                twoDaysTargetDay = String(format: "%02d", day)
+                
+                twoDaysTargetDate = "\(twoDaysTargetYear)-\(twoDaysTargetMonth)-\(twoDaysTargetDay)"
+            }
+        }
+        // threeDays
+        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: -2, to: inputDate) {
+            
+            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                threeDaysTargetYear = "\(year)"
+                threeDaysTargetMonth = String(format: "%02d", month)
+                threeDaysTargetDay = String(format: "%02d", day)
+                
+                threeDaysTargetDate = "\(threeDaysTargetYear)-\(threeDaysTargetMonth)-\(threeDaysTargetDay)"
+            }
+        }
+        
+//        print("today : \(targetDate)")
+//        print("twodays : \(twoDaysTargetDate)")
+//        print("threedays : \(threeDaysTargetDate)")
+    }
+    
+    func setDisplayText(_ dateText: String) {
+        todayDispalay.text = dateText
+    }
+    
+    func pathForDate(year: String, month: String, day: String) -> String {
+        return "\(email)/\(year)/\(month)/\(day)"
+    }
+
+    func fileExistsAtPath(_ path: String) -> Bool {
+        appendingPath = path
+        return fileManager.fileExists(atPath: bpmDataFileURL.path)
+    }
+
+    func fileExists() -> Bool {
+        let paths: [String]
+        
+        switch currentFlag {
+        case TWO_DAYS_FLAG:
+            paths = [
+                pathForDate(year: targetYear, month: targetMonth, day: targetDay),
+                pathForDate(year: twoDaysTargetYear, month: twoDaysTargetMonth, day: twoDaysTargetDay)
+            ]
+        case THREE_DAYS_FLAG:
+            paths = [
+                pathForDate(year: targetYear, month: targetMonth, day: targetDay),
+                pathForDate(year: twoDaysTargetYear, month: twoDaysTargetMonth, day: twoDaysTargetDay),
+                pathForDate(year: threeDaysTargetYear, month: threeDaysTargetMonth, day: threeDaysTargetDay)
+            ]
+        default:
+            paths = [pathForDate(year: targetYear, month: targetMonth, day: targetDay)]
+        }
+        
+        for path in paths {
+            if !fileExistsAtPath(path) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    func setBpmText() {
+        maxBpmValue.text = String(maxBpm)
+        minBpmValue.text = String(minBpm)
+        avgBpmValue.text = String(avgBpm)
+        diffMinBpm.text = "-\(avgBpm - minBpm)"
+        diffMaxBpm.text = "+\(maxBpm - avgBpm)"
+    }
+    
+    func setButtonColor(_ sender: UIButton) {
+        for button in buttonList {
+            if button == sender {
+                button.isSelected = true
+            } else {
+                button.isSelected = false
+            }
+        }
+    }
+    
+    func calcMinMax(_ bpm: Int) {
+        if (bpm != 0){
+            if (minBpm > bpm){
+                minBpm = bpm
+            }
+            if (maxBpm < bpm){
+                maxBpm = bpm
+            }
+
+            avgBpmSum += bpm
+            avgBpmCnt += 1
+            avgBpm = avgBpmSum/avgBpmCnt
+        }
+    }
+    
+    func initArray() {
+        
+        bpmChartView.clear()
+        
+        minBpm = 70
+        maxBpm = 0
+        avgBpm = 0
+        avgBpmCnt = 0
+        avgBpmSum = 0
+        
+        earliestStartTime = ""
+        latestEndTime = ""
+        
+        startBpmTimeInMinutes = 0
+        endBpmTimeInMinutes = 0
+        
+        xAxisTotal = 0
+        
+        bpmTimeCount = 0
+        timeTableCount = 0
+        
+        timeTable.removeAll()
+        
+        startBpmTime.removeAll()
+        endBpmTime.removeAll()
+        
+        targetBpmData.removeAll()
+        targetBpmTimeData.removeAll()
+        
+        twoDaysBpmData.removeAll()
+        twoDaysBpmTimeData.removeAll()
+        
+        threeDaysBpmData.removeAll()
+        threeDaysBpmTimeData.removeAll()
+        
+        targetBpmEntries.removeAll()
+        twoDaysBpmEntries.removeAll()
+        threeDaysBpmEntries.removeAll()
+        
+        maxBpmValue.text = "0"
+        minBpmValue.text = "0"
+        avgBpmValue.text = "0"
+        diffMinBpm.text = "-0"
+        diffMaxBpm.text = "+0"
+        
+    }
     // MARK: -
     func addViews() {
         

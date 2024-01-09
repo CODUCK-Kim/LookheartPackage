@@ -1,8 +1,7 @@
-//
-//  File.swift
-//  
-//
-//  Created by 정연호 on 2024/01/09.
-//
-
 import Foundation
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices ~= index ? self[index] : nil
+    }
+}
