@@ -873,7 +873,8 @@ class PSummaryCal : UIViewController, Refreshable {
         bottomLabel.addSubview(middleContents)
         middleContents.snp.makeConstraints { make in
             make.top.equalTo(topContents.snp.bottom)
-            make.left.right.equalTo(bottomLabel)
+            make.left.equalTo(bottomLabel).offset(10)
+            make.right.equalTo(bottomLabel).offset(-10)
             make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
         }
         
