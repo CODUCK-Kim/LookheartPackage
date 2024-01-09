@@ -11,13 +11,13 @@ public class PSummaryVC : UIViewController {
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
     
-//    private let bpmView = SummaryBpm()
+    private let bpmView = PSummaryVC()
 //    private let arrView = SummaryArr()
 //    private let hrvView = SummaryHrv()
 //    private let calView = SummaryCal()
 //    private let stepView = SummaryStep()
     
-    var arrChild: [UIViewController] = []
+    private var arrChild: [UIViewController] = []
     
     private lazy var buttons: [UIButton] = {
         return [bpmButton, arrButton, hrvButton, calorieButton, stepButton]
@@ -132,6 +132,7 @@ public class PSummaryVC : UIViewController {
     
     
     private lazy var stepButton = UIButton().then {
+        $0.setTitle("summaryStep".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
@@ -327,17 +328,12 @@ public class PSummaryVC : UIViewController {
             make.centerX.equalTo(stepButton)
         }
         
-//        addChild(bpmView)
-//        view.addSubview(bpmView.view)
-//        bpmView.didMove(toParent: self)
-//        ButtonEvent(bpmButton)
-//        bpmView.view.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            bpmView.view.topAnchor.constraint(equalTo: calorieButton.bottomAnchor),
-//            bpmView.view.leadingAnchor.constraint(equalTo: safeAreaView.leadingAnchor),
-//            bpmView.view.trailingAnchor.constraint(equalTo: safeAreaView.trailingAnchor),
-//            bpmView.view.bottomAnchor.constraint(equalTo: safeAreaView.bottomAnchor),
-//        ])
-    
+        addChild(bpmView)
+        view.addSubview(bpmView.view)
+        bpmView.didMove(toParent: self)
+        bpmView.view.snp.makeConstraints { make in
+            make.top.equalTo(calorieButton.snp.bottom)
+            make.left.right.bottom.equalTo(safeAreaView)
+        }
     }
 }
