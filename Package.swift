@@ -6,16 +6,22 @@ import PackageDescription
 let package = Package(
     name: "LookheartPackage",
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "LookheartPackage",
             targets: ["LookheartPackage"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/danielgindi/Charts.git", .upToNextMajor(from: "4.0.0")),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.0.0")),
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "LookheartPackage"),
+            name: "LookheartPackage",
+            dependencies: [
+                "Charts",
+                "Alamofire"
+            ]
+        ),
         .testTarget(
             name: "LookheartPackageTests",
             dependencies: ["LookheartPackage"]),
