@@ -3,7 +3,7 @@
 
 import UIKit
 
-public class SummaryView {
+open class SummaryView {
 
     private let BPM_BUTTON_TAG = 1
     private let ARR_BUTTON_TAG = 2
