@@ -270,7 +270,7 @@ public class PSummaryVC : UIViewController {
             make.top.equalTo(bpmButton).offset(5)
             make.centerX.equalTo(bpmButton)
         }
-        
+
         // arr
         view.addSubview(arrButton)
         arrButton.snp.makeConstraints { make in
@@ -308,7 +308,7 @@ public class PSummaryVC : UIViewController {
         }
         
         view.addSubview(calorieImage)
-        hrvImage.snp.makeConstraints { make in
+        calorieImage.snp.makeConstraints { make in
             make.top.equalTo(calorieButton).offset(5)
             make.centerX.equalTo(calorieButton)
         }
