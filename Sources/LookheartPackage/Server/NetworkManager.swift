@@ -6,7 +6,7 @@ public class NetworkManager {
     private let baseURL = "http://121.152.22.85:40081" // TEST
 //    private let baseURL = "http://121.152.22.85:40080" // REAL
     
-    static let shared = NetworkManager()
+    public static let shared = NetworkManager()
 
     private static let dateFormatter: DateFormatter = {
         let df = DateFormatter()
