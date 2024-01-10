@@ -103,7 +103,16 @@ public class UserProfileManager {
         return userProfile?.signupdate ?? "2023-01-01"
     }
     
-    // ---------------------------- PROFILE ---------------------------- //
+    // guardianPhoneNumber
+    public func setPhoneNumbers(_ numbers: [String]) {
+        guardianPhoneNumbers = numbers
+    }
+    
+    public func getPhoneNumbers() -> [String] {
+        return guardianPhoneNumbers
+    }
+    
+    // ---------------------------- SETTING ---------------------------- //
     
     // A.bpm
     public func setBpm(_ bpm: Int) {
@@ -145,15 +154,10 @@ public class UserProfileManager {
         return userProfile?.cal ?? 500
     }
     
-    // ---------------------------- SETTING ---------------------------- //
+    // ---------------------------- Conversion FLAG ---------------------------- //
     
-    // guardianPhoneNumber
-    public func setPhoneNumbers(_ numbers: [String]) {
-        guardianPhoneNumbers = numbers
+    public func getConversionFalg() -> Int {
+        return userProfile?.alarm_sms ?? 0
     }
     
-    public func getPhoneNumbers() -> [String] {
-        return guardianPhoneNumbers
-    }
-
 }
