@@ -3,7 +3,7 @@ import DGCharts
 import UIKit
 
 @available(iOS 13.0, *)
-class ArrVC : UIViewController {
+public class ArrVC : UIViewController {
     
     struct FileDataStruct {
         var hour: Int
@@ -158,7 +158,7 @@ class ArrVC : UIViewController {
     }
     
     // MARK: - viewDidLoad
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         initVar()
@@ -166,7 +166,7 @@ class ArrVC : UIViewController {
         arrTable()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isArrViewLoaded {
             viewDidLoad()
