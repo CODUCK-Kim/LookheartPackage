@@ -6,7 +6,7 @@ public class ToastHelper {
     
     
     // Singleton instance
-    static let shared = ToastHelper()
+    public static let shared = ToastHelper()
     
     public init() {
         var style = ToastStyle()
