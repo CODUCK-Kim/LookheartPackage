@@ -290,6 +290,8 @@ public class ArrViewController : UIViewController {
         
         let ecgDataConversion = EcgDataConversion()
         let conversionFlag = ecgDataConversion.getConversionFlag()
+        
+        print(conversionFlag)
         var arrDataEntry: ChartDataEntry
         arrDataEntries = []
         
