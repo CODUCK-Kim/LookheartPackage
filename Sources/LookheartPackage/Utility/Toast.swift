@@ -2,12 +2,13 @@ import Foundation
 import UIKit
 import Toast
 
-class ToastHelper {
+public class ToastHelper {
+    
     
     // Singleton instance
     static let shared = ToastHelper()
     
-    private init() {
+    public init() {
         var style = ToastStyle()
         style.messageColor = .white
         ToastManager.shared.style = style

@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     static let MY_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
     static let MY_PINK = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.5)
     static let MY_RED_BORDER = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
@@ -42,5 +42,4 @@ extension UIColor {
     class var lableBackground: UIColor? { return UIColor(named: "lableBackground") }
     class var mint: UIColor? { return UIColor(named: "mint") }
     class var lineGreen: UIColor? { return UIColor(named: "lineGreen") }
-    
 }
