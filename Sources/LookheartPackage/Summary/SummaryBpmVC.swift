@@ -1095,7 +1095,6 @@ class SummaryBpm : UIViewController, Refreshable {
             make.centerX.equalTo(rightBpmContents)
             make.centerY.equalTo(bpmLabel)
         }
-        
     }
     
 }

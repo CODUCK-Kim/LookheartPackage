@@ -413,6 +413,59 @@ public class NetworkManager {
         }
     }
     
+    func getBpmDataToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
+        
+        var bpmData: [BpmData] = []
+        let endpoint = "/mslbpm/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": id,
+            "startDate": startDate,
+            "endDate": endDate
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    if !(responseString.contains("result = 0")) {
+                        let newlineData = responseString.split(separator: "\n")
+                        let splitData = newlineData[1].split(separator: "\r\n")
+                        for data in splitData {
+                            let fields = data.split(separator: "|")
+                            
+                            if fields.count == 7 {
+                                if let bpm = Int(fields[4]), 
+                                    let temp = Double(fields[5]),
+                                    let hrv = Int(fields[6]) {
+                                    
+                                    bpmData.append( BpmData(
+                                        idx: String(fields[0]),
+                                        eq: String(fields[1]),
+                                        writetime: String(fields[2]),
+                                        timezone: String(fields[3]),
+                                        bpm: String(bpm),
+                                        temp: String(temp),
+                                        hrv: String(hrv)
+                                    ))
+                                }
+                            }
+                        }
+                        
+                        completion(.success(bpmData))
+                    }
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
     
     
     public func getArrListToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {

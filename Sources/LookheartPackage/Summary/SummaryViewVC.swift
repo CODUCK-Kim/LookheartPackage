@@ -3,6 +3,15 @@ import UIKit
 import Then
 import SnapKit
 
+
+enum ChartType {
+    case BPM
+    case HRV
+    case ARR
+    case CALORIE
+    case STEP
+}
+
 @available(iOS 13.0, *)
 public class SummaryViewController : UIViewController {
     
@@ -12,7 +21,8 @@ public class SummaryViewController : UIViewController {
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
     
-    private let bpmView = SummaryBpm()
+//    private let bpmView = SummaryBpm()
+    private let bpmView = LineChartVC(chartType: .BPM)
     private let arrView = SummaryArr()
     private let hrvView = SummaryHrv()
     private let calView = SummaryCalorie()
@@ -190,15 +200,15 @@ public class SummaryViewController : UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        // refresh view
-//        for child in arrChild {
-//            if let refreshableChild = child as? Refreshable {
-//                refreshableChild.refreshView()
-//            }
-//        }
+        // refresh view
+        for child in arrChild {
+            if let refreshableChild = child as? Refreshable {
+                refreshableChild.refreshView()
+            }
+        }
         
-//        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
-//        setChild(selectChild: bpmView, in: self.view)
+        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
+        setChild(selectChild: bpmView, in: self.view)
     }
     
     func setButtonColor(_ sender: UIButton) {
