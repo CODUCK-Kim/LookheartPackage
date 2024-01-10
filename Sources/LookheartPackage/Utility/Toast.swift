@@ -16,11 +16,11 @@ public class ToastHelper {
         ToastManager.shared.isQueueEnabled = true
     }
     
-    func showToast(message: String, view: UIView, duration: TimeInterval = 2.0, position: ToastPosition = .center) {
+    public func showToast(message: String, view: UIView, duration: TimeInterval = 2.0, position: ToastPosition = .center) {
         view.makeToast(message, duration: duration, position: position)
     }
     
-    func showToast(_ view: UIView, _ message: String, withDuration: Double, delay: Double, bottomPosition: Bool) {
+    public func showToast(_ view: UIView, _ message: String, withDuration: Double, delay: Double, bottomPosition: Bool) {
         let toastContainer = UIView(frame: CGRect())
         toastContainer.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastContainer.layer.cornerRadius = 10
@@ -64,7 +64,7 @@ public class ToastHelper {
         })
     }
     
-    func setToastLocation(_ view: UIView, _ setBottom: Bool) -> CGFloat {
+    public func setToastLocation(_ view: UIView, _ setBottom: Bool) -> CGFloat {
         return setBottom ? (view.frame.size.height - 120) : view.frame.height / 2
     }
 }
