@@ -4,7 +4,7 @@ import Then
 import SnapKit
 
 @available(iOS 13.0, *)
-public class PSummaryVC : UIViewController {
+public class SummaryViewController : UIViewController {
     
     private let BPM_BUTTON_TAG = 1
     private let ARR_BUTTON_TAG = 2
@@ -12,11 +12,11 @@ public class PSummaryVC : UIViewController {
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
     
-    private let bpmView = PSummaryBpm()
-    private let arrView = PSummaryArr()
-    private let hrvView = PSummaryHrv()
-    private let calView = PSummaryCal()
-    private let stepView = PSummaryStep()
+    private let bpmView = SummaryBpm()
+    private let arrView = SummaryArr()
+    private let hrvView = SummaryHrv()
+    private let calView = SummaryCalorie()
+    private let stepView = SummaryStep()
     
     private var arrChild: [UIViewController] = []
     

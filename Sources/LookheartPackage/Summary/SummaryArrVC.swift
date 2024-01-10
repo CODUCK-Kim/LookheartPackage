@@ -4,10 +4,19 @@ import Foundation
 import SnapKit
 import Then
 
+let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
+
 @available(iOS 13.0, *)
-class PSummaryStep : UIViewController, Refreshable {
+class SummaryArr : UIViewController, Refreshable {
     
-    private let STEPDATA_FILENAME = "/calandDistanceData.csv"
+    enum DateChangeType: Int {
+        case day = 1
+        case week = 2
+        case month = 3
+        case year = 4
+    }
+    
+    private let ARRDATA_FILENAME = "/calandDistanceData.csv"
     private let YESTERDAY_BUTTON_FLAG = 1
     private let TOMORROW_BUTTON_FLAG = 2
     
@@ -24,25 +33,15 @@ class PSummaryStep : UIViewController, Refreshable {
     private let WEEK_FLAG = 2
     private let MONTH_FLAG = 3
     private let YEAR_FLAG = 4
+        
     private var email = ""
     
-    enum DateChangeType: Int {
-        case day = 1
-        case week = 2
-        case month = 3
-        case year = 4
-    }
-    
-    //    ----------------------------- step Var -------------------    //
+    //    ----------------------------- arr Var -------------------    //
     private let dateFormatter = DateFormatter()
-
+    
+    private var arrCount = 0
+    private var arrSum = 0
     private var fileDataExists = 0
-    
-    private var stepSum = 0
-    private var distanceSum = 0
-    
-    private var resultStepSum = 0
-    private var resultDistanceSum = 0
     
     private var currentFlag = 0
     
@@ -58,22 +57,27 @@ class PSummaryStep : UIViewController, Refreshable {
     private var targetMonth:String = ""
     private var targetDay:String = ""
     
-    private var calendar = Calendar.current
+    private var arrCalendar = Calendar.current
     
     private var buttonList:[UIButton] = []
-
+    
+    private var earliestStartTime = ""
+    private var latestEndTime = ""
+    
     private var timeTable: [String] = []
-
-    private var targetStepData: [Double] = []
-    private var targetDistanceData: [Double] = []
-    private var targetTimeData: [String] = []
+    
+    private var arrTimeCount = 0
+    private var timeTableCount = 0
+    
+    private var targetArrData: [Double] = []
+    private var targetArrTimeData: [String] = []
     
     //    ----------------------------- csv Var -------------------    //
     private var fileManager:FileManager = FileManager.default
     private var appendingPath = ""
     
     private lazy var documentsURL: URL = {
-        return PSummaryStep.initializeDocumentsURL()
+        return SummaryArr.initializeDocumentsURL()
     }()
     
     private var currentDirectoryURL: URL {
@@ -81,24 +85,23 @@ class PSummaryStep : UIViewController, Refreshable {
     }
     
     private var arrDataFileURL: URL {
-        return currentDirectoryURL.appendingPathComponent(STEPDATA_FILENAME)
+        return currentDirectoryURL.appendingPathComponent(ARRDATA_FILENAME)
     }
     
     // MARK: - UI VAR
     private let safeAreaView = UIView()
     
     //    ----------------------------- Chart -------------------    //
-    private lazy var stepChartView = BarChartView().then {
-        $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
+    private lazy var arrChartView = BarChartView().then {
         $0.noDataText = ""
+        $0.xAxis.enabled = true
+        $0.xAxis.granularity = 1
         $0.xAxis.labelPosition = .bottom
         $0.xAxis.drawGridLinesEnabled = false
+        $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
         $0.leftAxis.granularityEnabled = true
         $0.leftAxis.granularity = 1.0
         $0.leftAxis.axisMinimum = 0
-        $0.xAxis.enabled = true
-        $0.xAxis.centerAxisLabelsEnabled = true
-        $0.xAxis.granularity = 1
         $0.rightAxis.enabled = false
         $0.drawMarkers = false
         $0.dragEnabled = false
@@ -108,24 +111,28 @@ class PSummaryStep : UIViewController, Refreshable {
     }
     
     //    ----------------------------- UILabel -------------------    //
-    private let bottomLabel = UILabel().then {  $0.isUserInteractionEnabled = true  }
+    private let bottomLabel = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
-    private let topContents = UILabel().then {  $0.isUserInteractionEnabled = true  }
+    private let topContents = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
-    private let middleContents = UILabel().then {  $0.isUserInteractionEnabled = true  }
+    private let middleContents = UILabel().then {
+        $0.isUserInteractionEnabled = true
+    }
     
-    private lazy var bottomContents = UIStackView(arrangedSubviews: [stepBackground, distanceBackground]).then {
-        $0.axis = .vertical
+    private lazy var bottomContents = UIStackView(arrangedSubviews: [arrCntLabel, arrCnt]).then {
+        $0.axis = .horizontal
         $0.distribution = .fillEqually // default
         $0.alignment = .fill // default
-        $0.spacing = 5
     }
-
-    private let stepValueContents = UILabel()
     
     // MARK: - top Contents
     private lazy var dayButton = UIButton().then {
         $0.setTitle ("fragment_day".localized(), for: .normal )
+        
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -145,6 +152,7 @@ class PSummaryStep : UIViewController, Refreshable {
     
     private lazy var weekButton = UIButton().then {
         $0.setTitle ("fragment_week".localized(), for: .normal )
+        
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -171,7 +179,7 @@ class PSummaryStep : UIViewController, Refreshable {
         $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
         $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .disabled)
         $0.setBackgroundColor(UIColor.MY_BODY_STATE, for: .selected)
-        
+                
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 15
         
@@ -179,7 +187,7 @@ class PSummaryStep : UIViewController, Refreshable {
         $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
-    private lazy var yearButton = UIButton().then {
+    lazy var yearButton = UIButton().then {
         $0.setTitle ("fragment_year".localized(), for: .normal )
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -206,108 +214,59 @@ class PSummaryStep : UIViewController, Refreshable {
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private lazy var yesterdayButton = UIButton().then {
+    private lazy var yesterdayArrButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
-    private lazy var tomorrowButton = UIButton().then {
+    private lazy var tomorrowArrButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
     // MARK: - bottom Contents
-    private lazy var stepBackground = UIStackView(arrangedSubviews: [stepLabel, stepProgress]).then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.alignment = .fill
-        $0.spacing = 10
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
-    }
-    private lazy var distanceBackground = UIStackView(arrangedSubviews: [distanceLabel, distanceProgress]).then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.alignment = .fill
-        $0.spacing = 10
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
-    }
-    private let stepProgress = UIProgressView().then {
-        $0.trackTintColor = UIColor.MY_LIGHT_GRAY_BORDER
-        $0.progressTintColor = UIColor.GRAPH_RED
-        $0.progress = 0.0
-        $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
-    }
-    private let distanceProgress = UIProgressView().then {
-        $0.trackTintColor = UIColor.MY_LIGHT_GRAY_BORDER
-        $0.progressTintColor = UIColor.MY_BLUE
-        $0.progress = 0.0
-        $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
-    }
-    
-    private let stepLabel = UILabel().then {
-        $0.text = "summaryStep".localized()
+    private let arrCntLabel = UILabel().then {
+        $0.text = "arrTimes".localized()
+        $0.numberOfLines = 2
+        $0.textColor = .darkGray
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
     }
     
-    private let distanceLabel = UILabel().then {
-        $0.text = "distance".localized()
+    private let arrCnt = UILabel().then {
+        $0.text = "0"
+        $0.textColor = .darkGray
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
     }
     
-    private let targetStep = UILabel().then {
-        $0.text = "stepValue".localized()
+    
+    // MARK: - Alert
+    private let alertBackground = UILabel().then {
+        $0.backgroundColor = .white
+        $0.layer.borderWidth = 3
+        $0.layer.borderColor = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0).cgColor
+        $0.layer.cornerRadius = 20
+        $0.isHidden = true
+    }
+
+    private let alertLabel = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        $0.textColor = .darkGray
+        $0.isHidden = true
+        $0.numberOfLines = 4
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
     }
+        
     
-    private let targetDistance = UILabel().then {
-        $0.text = "distanceValue3".localized()
-        $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
-    }
-    
-    private let walkCount = UILabel().then {
-        $0.text = "stepValue".localized()
-        $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
-    }
-    
-    private let walkDistance = UILabel().then {
-        $0.text = "distanceValue3".localized()
-        $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
-    }
-    
-    private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
-    
-    // MARK: - VDL
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initVar()
         addViews()
-        dailyStepChart()
-        
-    }
-    
-    func refreshView() {
-        initVar()
-        initArray()
-        addViews()
-        dailyStepChart()
+        dailyArrChart()
     }
     
     func initVar(){
@@ -329,30 +288,50 @@ class PSummaryStep : UIViewController, Refreshable {
         targetMonth = currentMonth
         targetDay = currentDay
         
-        targetStep.text = "\(UserProfileManager.shared.getStep()) \("stepValue2".localized())"
-        targetDistance.text = "\(UserProfileManager.shared.getDistance()) \("distanceValue2".localized())"
-        
         setButtonColor(dayButton)
     }
     
+    func refreshView() {
+        initVar()
+        initArray()
+        addViews()
+        dailyArrChart()
+    }
+    
     // MARK: - CHART
-    func dailyStepChart() {
+    func dailyArrChart() {
         
         setDisplayText(changeDateFormat("\(targetYear)-\(targetMonth)-\(targetDay)", YEAR_FORMAT))
         
         if fileExists() {
             
-            getFileData(path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)")
-            displayChart()
+            getFileData(
+                path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
+                arrData: &targetArrData,
+                timeData: &targetArrTimeData)
             
-            setUI(day: 1, stepSum: stepSum, distanceSum: distanceSum)
+            var arrDataEntries = [BarChartDataEntry]()
+            
+            for i in 0 ..< targetArrData.count {
+                let arrDataEntry = BarChartDataEntry(x: Double(i), y: targetArrData[i])
+                arrDataEntries.append(arrDataEntry)
+            }
+
+            // set ChartData
+            let arrChartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: arrDataEntries, label: "arr".localized()))
+                        
+            timeTable = targetArrTimeData
+            setChart(chartData: BarChartData(dataSet: arrChartDataSet),
+                     labelCnt: targetArrData.count)
+        
+            arrCnt.text = String(arrCount)
             
         } else {
             // 파일 없음
         }
     }
 
-    func weeklyStepChart() {
+    func weeklyArrChart() {
         
         let monday = findMonday()
         
@@ -361,7 +340,12 @@ class PSummaryStep : UIViewController, Refreshable {
         let mondayMonth = targetMonth
         let mondayDay = targetDay
         
-        fetchDailyFileData(startDay: 0, numDay: 6)
+        fetchDailyFileData(startDay: 0,
+                      numDay: 6,
+                      arrData: &targetArrData,
+                      arrTimeData: &targetArrTimeData,
+                      arrCnt: &arrSum,
+                      noDataCheck: &fileDataExists)
         
         setDisplayText("\(changeDateFormat("\(mondayMonth).\(mondayDay)", MONTH_FORMAT)) ~ \(changeDateFormat("\(targetMonth).\(targetDay)", MONTH_FORMAT))")
         
@@ -369,13 +353,13 @@ class PSummaryStep : UIViewController, Refreshable {
         
         if !(fileDataExists == 7) {
             displayChart()
-            setUI(day: 7 - fileDataExists, stepSum: resultStepSum, distanceSum: resultDistanceSum)
         } else {
             // 파일 없음
         }
+        arrCnt.text = String(arrSum)
     }
     
-    func monthlyStepChart() {
+    func monthlyArrChart() {
         
         setDisplayText(changeDateFormat("\(targetYear).\(targetMonth)", MONTH_FORMAT))
         
@@ -388,60 +372,58 @@ class PSummaryStep : UIViewController, Refreshable {
         dateCalculate(targetDate, firstDay, MINUS_DATE, .day)
         preDate = targetDate
         
-        fetchDailyFileData(startDay: 1, numDay: numDay)
+        fetchDailyFileData(startDay: 1,
+                      numDay: numDay,
+                      arrData: &targetArrData,
+                      arrTimeData: &targetArrTimeData,
+                      arrCnt: &arrSum,
+                      noDataCheck: &fileDataExists)
         
         dateCalculate(preDate, firstDay, ADD_DATE, .day)
         
         if !(fileDataExists == numDay) {
             displayChart()
-            setUI(day: numDay - fileDataExists, stepSum: resultStepSum, distanceSum: resultDistanceSum)
         } else {
             // 파일 없음
         }
+        
+        arrCnt.text = String(arrSum)
     }
     
-    func yearlyStepChart() {
-        
-        var monthlyStep = 0
-        var monthlyDistance = 0
-        var fileExistsCheck = 0
+    func yearlyArrChart() {
+    
+        var monthlyArrCnt = 0
         
         setDisplayText(targetYear)
-        
+    
         splitPreDate = targetDate.split(separator: "-")
         targetDate = "\(targetYear)-01-01"
         targetMonth = "01"
         targetDay = "01"
-                
+        
         for month in 1...12 {
             if monthDirExists() {
                 
                 let numberOfDaysInMonth = findNumDay(targetDate)!
+                
                 for day in 1...numberOfDaysInMonth {
                     
                     targetDate = "\(targetYear)-\(month)-\(day)"
-                    if fileExists(){
+                    
+                    if fileExists() {
                         getFileData(path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)")
-                        monthlyStep += stepSum
-                        monthlyDistance += distanceSum
-                        stepSum = 0
-                        distanceSum = 0
-                        
-                        fileExistsCheck += 1
+                        monthlyArrCnt += arrCount
+                        arrCount = 0
                     }
                     
                     if day != numberOfDaysInMonth {  dateCalculate(targetDate, 1, ADD_DATE, .day) }
                 }
                 
-                resultStepSum += monthlyStep
-                resultDistanceSum += monthlyDistance
+                arrSum += monthlyArrCnt
+                targetArrData.append(Double(monthlyArrCnt))
+                targetArrTimeData.append(String(month))
                 
-                targetStepData.append(Double(monthlyStep))
-                targetDistanceData.append(Double(monthlyDistance))
-                targetTimeData.append(String(month))
-                
-                monthlyStep = 0
-                monthlyDistance = 0
+                monthlyArrCnt = 0
                 
             } else {
                 // 디렉토리 없음
@@ -453,10 +435,11 @@ class PSummaryStep : UIViewController, Refreshable {
         
         if fileDataExists != 12 {
             displayChart()
-            setUI(day: fileExistsCheck, stepSum: resultStepSum, distanceSum: resultDistanceSum)
         } else {
             // 데이터 없음
         }
+        
+        arrCnt.text = String(arrSum)
         
         targetDate = splitPreDate.joined(separator: "-")
         targetYear = String(splitPreDate[0])
@@ -465,6 +448,30 @@ class PSummaryStep : UIViewController, Refreshable {
     }
     
     // MARK: - CHART FUNC
+    func getFileData(path: String, arrData: inout [Double], timeData: inout [String]) {
+
+//        print("arrData : \(path)")
+        do {
+            appendingPath = path
+            let fileData = try String(contentsOf: arrDataFileURL)
+            let separatedData = fileData.components(separatedBy: .newlines)
+            
+            for i in 0 ..< separatedData.count {
+                if separatedData[i].isEmpty {   break   }
+                let row = separatedData[i]
+                let columns = row.components(separatedBy: ",")
+                let arrCnt = Double(columns[6].trimmingCharacters(in: .whitespacesAndNewlines))
+                
+                sumArrCnt(Int(arrCnt ?? 0))
+                
+                arrData.append(arrCnt ?? 0.0)
+                timeData.append(columns[0])
+            }
+        } catch  {
+            print("Error reading CSV file")
+        }
+    }
+    
     func getFileData(path: String) {
 
         do {
@@ -476,137 +483,68 @@ class PSummaryStep : UIViewController, Refreshable {
                 if separatedData[i].isEmpty {   break   }
                 let row = separatedData[i]
                 let columns = row.components(separatedBy: ",")
+                let arrCnt = Double(columns[6].trimmingCharacters(in: .whitespacesAndNewlines))
                 
-                let step = Double(columns[2].trimmingCharacters(in: .whitespacesAndNewlines))
-                let distance = Double(columns[3].trimmingCharacters(in: .whitespacesAndNewlines))
-                
-                sumStepAndDistance(Int(step ?? 0), Int(distance ?? 0))
-
-                if currentFlag == DAY_FLAG {
-                    targetStepData.append(step ?? 0.0)
-                    targetDistanceData.append(distance ?? 0.0)
-                    targetTimeData.append(columns[0])
-                }
+                sumArrCnt(Int(arrCnt ?? 0))
             }
         } catch  {
             print("Error reading CSV file")
         }
     }
-        
-    func setUI(day: Int, stepSum: Int, distanceSum: Int){
-        let stepGoal = UserProfileManager.shared.getStep()
-        let distanceGaol = UserProfileManager.shared.getDistance()
-        
-        // Progress
-        let dailyStepRatio = Double(stepSum) / Double(stepGoal * day)
-        stepProgress.progress = Float(dailyStepRatio)
-        
-        let dailyDistanceRatio = (Double(distanceSum) / 1000.0) / Double(distanceGaol * day)
-        distanceProgress.progress = Float(dailyDistanceRatio)
-        
-        // text
-        targetStep.text = "\(stepGoal) \("stepValue2".localized())"
-        walkCount.text = "\(stepSum) \("stepValue2".localized())"
-        targetDistance.text = "\(distanceGaol) \("distanceValue2".localized())"
-        walkDistance.text = "\(distanceSum) \("distanceM2".localized())"
-    }
     
     func displayChart() {
-        var stepEntry = [BarChartDataEntry]()
-        var distanceEntry = [BarChartDataEntry]()
-        
-        for i in 0 ..< targetStepData.count {
-            let stepDataEntry = BarChartDataEntry(x: Double(i), y: targetStepData[i])
-            let distanceDataEntry = BarChartDataEntry(x: Double(i), y: targetDistanceData[i])
-            stepEntry.append(stepDataEntry)
-            distanceEntry.append(distanceDataEntry)
+        var arrDataEntries = [BarChartDataEntry]()
+        for i in 0 ..< targetArrData.count {
+            let arrDataEntry = BarChartDataEntry(x: Double(i), y: targetArrData[i])
+            arrDataEntries.append(arrDataEntry)
         }
-
+        
         // set ChartData
-        let stepChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: BarChartDataSet(entries: stepEntry, label: "step".localized()))
-        let distanceChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: BarChartDataSet(entries: distanceEntry, label: "distanceM".localized()))
-        
-        let dataSets: [BarChartDataSet] = [stepChartDataSet, distanceChartDataSet]
-        
-        setChart(chartData: BarChartData(dataSets: dataSets),
-                 labelCnt: targetStepData.count)
+        let arrChartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: arrDataEntries, label: "arr".localized()))
+                    
+        timeTable = targetArrTimeData
+        setChart(chartData: BarChartData(dataSet: arrChartDataSet),
+                 labelCnt: targetArrData.count)
     }
     
-    func fetchDailyFileData(startDay: Int, numDay: Int) {
+    func fetchDailyFileData(startDay: Int, numDay: Int, arrData: inout [Double], arrTimeData: inout [String], arrCnt: inout Int, noDataCheck: inout Int) {
         
         for i in startDay...numDay {
             if fileExists() {
                 getFileData(path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)")
-                targetStepData.append(Double(stepSum))
-                targetDistanceData.append(Double(distanceSum))
-                currentFlag == WEEK_FLAG ? targetTimeData.append(weekDays[i]) : targetTimeData.append(String(i))
+                arrData.append(Double(arrCount))
+                currentFlag == WEEK_FLAG ? arrTimeData.append(weekDays[i]) : arrTimeData.append(String(i))
             } else {
                 switch (currentFlag){
                 case MONTH_FLAG:
-                    fileDataExists += 1
+                    noDataCheck += 1
                 default: // WEEK_FLAG
-                    targetStepData.append(0.0)
-                    targetDistanceData.append(0.0)
-                    targetTimeData.append(weekDays[i])
-                    fileDataExists += 1
+                    arrData.append(0.0)
+                    arrTimeData.append(weekDays[i])
+                    noDataCheck += 1
                 }
             }
             
-            resultStepSum += stepSum
-            resultDistanceSum += distanceSum
-            
-            stepSum = 0
-            distanceSum = 0
-
+            arrCnt += arrCount
+            arrCount = 0
             if i != numDay {  dateCalculate(targetDate, 1, ADD_DATE, .day) }
         }
     }
 
-    
     func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {
         chartDataSet.setColor(color)
-        chartDataSet.drawValuesEnabled = false
-        
+        chartDataSet.drawValuesEnabled = true
+        chartDataSet.valueFormatter = CombinedValueFormatter()
         return chartDataSet
     }
     
     func setChart(chartData: BarChartData, labelCnt: Int) {
-        let groupSpace = 0.3
-        let barSpace = 0.05
-        let barWidth = 0.3
-        
-        chartData.barWidth = barWidth
-        
-        stepChartView.xAxis.axisMinimum = Double(0)
-        stepChartView.xAxis.axisMaximum = Double(0) + chartData.groupWidth(groupSpace: groupSpace, barSpace: barSpace) * Double(targetStepData.count)  // group count : 2
-        chartData.groupBars(fromX: Double(0), groupSpace: groupSpace, barSpace: barSpace)
-        
-        stepChartView.legend.font = .systemFont(ofSize: 15, weight: .bold)
-        
-        stepChartView.data = chartData
-        stepChartView.xAxis.enabled = true
-        stepChartView.xAxis.centerAxisLabelsEnabled = true
-        stepChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: targetTimeData)
-        stepChartView.xAxis.granularity = 1
-        stepChartView.xAxis.setLabelCount(targetStepData.count, force: false)
-        stepChartView.xAxis.labelPosition = .bottom
-        stepChartView.xAxis.drawGridLinesEnabled = false
-        
-        stepChartView.leftAxis.granularityEnabled = true
-        stepChartView.leftAxis.granularity = 1.0
-        
-        stepChartView.leftAxis.axisMinimum = 0
-        stepChartView.rightAxis.enabled = false
-        stepChartView.drawMarkers = false
-        stepChartView.dragEnabled = false
-        stepChartView.pinchZoomEnabled = false
-        stepChartView.doubleTapToZoomEnabled = false
-        stepChartView.highlightPerTapEnabled = false
-        
-        stepChartView.data?.notifyDataChanged()
-        stepChartView.notifyDataSetChanged()
-        stepChartView.moveViewToX(0)
-    
+        arrChartView.data = chartData
+        arrChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        arrChartView.xAxis.setLabelCount(labelCnt, force: false)
+        arrChartView.data?.notifyDataChanged()
+        arrChartView.notifyDataSetChanged()
+        arrChartView.moveViewToX(0)
     }
     
     func changeDateFormat(_ dateString: String, _ checkDate: Bool) -> String {
@@ -667,13 +605,13 @@ class PSummaryStep : UIViewController, Refreshable {
         
         switch(tag) {
         case WEEK_FLAG:
-            weeklyStepChart()
+            weeklyArrChart()
         case MONTH_FLAG:
-            monthlyStepChart()
+            monthlyArrChart()
         case YEAR_FLAG:
-            yearlyStepChart()
+            yearlyArrChart()
         default:
-            dailyStepChart()
+            dailyArrChart()
         }
     }
     
@@ -681,9 +619,9 @@ class PSummaryStep : UIViewController, Refreshable {
         
         guard let inputDate = dateFormatter.date(from: date) else { return }
         let dayValue = shouldAdd ? day : -day
-        if let stepTargetDate = calendar.date(byAdding: type, value: dayValue, to: inputDate) {
+        if let arrTargetDate = arrCalendar.date(byAdding: type, value: dayValue, to: inputDate) {
             
-            let components = calendar.dateComponents([.year, .month, .day], from: stepTargetDate)
+            let components = arrCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
                 targetYear = "\(year)"
@@ -718,8 +656,10 @@ class PSummaryStep : UIViewController, Refreshable {
     }
     
     func monthDirExists() -> Bool {
+        
         let directoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(email)/\(targetYear)/\(targetMonth)")
         var isDir: ObjCBool = false
+        
         if fileManager.fileExists(atPath: directoryURL.path, isDirectory: &isDir) {
             if isDir.boolValue {    // 디렉토리 존재
                 return true
@@ -741,11 +681,10 @@ class PSummaryStep : UIViewController, Refreshable {
         }
     }
     
-    func sumStepAndDistance(_ step: Int, _ distance: Int) {
-        stepSum += step
-        distanceSum += distance
+    func sumArrCnt(_ cnt: Int) {
+        arrCount += cnt
     }
-        
+    
     func findWeekday() -> String? {
         var dateComponents = DateComponents()
         dateComponents.year = Int(targetYear)
@@ -782,10 +721,9 @@ class PSummaryStep : UIViewController, Refreshable {
         return mondayIndex
     }
     
-    
     func findNumDay(_ date: String) -> Int? {
         guard let inputDate = dateFormatter.date(from: date) else { return nil}
-        if let range = calendar.range(of: .day, in: .month, for: inputDate) {
+        if let range = arrCalendar.range(of: .day, in: .month, for: inputDate) {
             return range.count
         } else {
             return nil
@@ -794,7 +732,7 @@ class PSummaryStep : UIViewController, Refreshable {
     
     func findFirstDayOfMonth(_ date: String) -> Int? {
         guard let inputDate = dateFormatter.date(from: date) else { return nil}
-        let currentDayComponent = calendar.component(.day, from: inputDate)
+        let currentDayComponent = arrCalendar.component(.day, from: inputDate)
         return  currentDayComponent - 1
     }
     
@@ -803,25 +741,26 @@ class PSummaryStep : UIViewController, Refreshable {
     }
     
     func initArray() {
-        stepChartView.clear()
-
-        stepSum = 0
-        distanceSum = 0
         
-        resultStepSum = 0
-        resultDistanceSum = 0
+        arrChartView.clear()
         
+        arrCount = 0
+        arrSum = 0
         fileDataExists = 0
         
+        earliestStartTime = ""
+        latestEndTime = ""
         preDate = ""
         
-        timeTable.removeAll()
-
-        targetStepData.removeAll()
-        targetDistanceData.removeAll()
-        targetTimeData.removeAll()
+        arrTimeCount = 0
+        timeTableCount = 0
         
-        setUI(day: 1, stepSum: stepSum, distanceSum: distanceSum)
+        timeTable.removeAll()
+        
+        targetArrData.removeAll()
+        targetArrTimeData.removeAll()
+        
+        arrCnt.text = String(arrCount)
     }
     
     public static func initializeDocumentsURL() -> URL {
@@ -830,9 +769,9 @@ class PSummaryStep : UIViewController, Refreshable {
     
     // MARK: - addViews
     func addViews() {
-        
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier
+        
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneFourthWidth = screenWidth / 4.0
         
@@ -841,15 +780,15 @@ class PSummaryStep : UIViewController, Refreshable {
             make.top.bottom.left.right.equalToSuperview()
         }
         
-        view.addSubview(stepChartView)
-        stepChartView.snp.makeConstraints { make in
+        view.addSubview(arrChartView)
+        arrChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
         }
         
         view.addSubview(bottomLabel)
         bottomLabel.snp.makeConstraints { make in
-            make.top.equalTo(stepChartView.snp.bottom)
+            make.top.equalTo(arrChartView.snp.bottom)
             make.left.right.bottom.equalTo(safeAreaView)
         }
         
@@ -870,17 +809,13 @@ class PSummaryStep : UIViewController, Refreshable {
         }
         
         bottomLabel.addSubview(bottomContents)
-        bottomLabel.addSubview(bottomContents)
         bottomContents.snp.makeConstraints { make in
             make.top.equalTo(middleContents.snp.bottom)
-            make.left.equalTo(bottomLabel).offset(20)
-            make.right.equalTo(safeAreaView.snp.centerX).offset(40)
-            make.bottom.equalTo(bottomLabel).offset(-5)
+            make.left.right.bottom.equalTo(bottomLabel)
         }
-        
-        
-        
+
         // --------------------- topContents --------------------- //
+        
         topContents.addSubview(weekButton)
         weekButton.snp.makeConstraints { make in
             make.top.equalTo(topContents)
@@ -908,13 +843,14 @@ class PSummaryStep : UIViewController, Refreshable {
         }
         
         // --------------------- middleContents --------------------- //
-        middleContents.addSubview(yesterdayButton)
-        yesterdayButton.snp.makeConstraints { make in
+        
+        middleContents.addSubview(yesterdayArrButton)
+        yesterdayArrButton.snp.makeConstraints { make in
             make.top.left.bottom.equalTo(middleContents)
         }
         
-        middleContents.addSubview(tomorrowButton)
-        tomorrowButton.snp.makeConstraints { make in
+        middleContents.addSubview(tomorrowArrButton)
+        tomorrowArrButton.snp.makeConstraints { make in
             make.top.right.bottom.equalTo(middleContents)
         }
         
@@ -922,46 +858,5 @@ class PSummaryStep : UIViewController, Refreshable {
         todayDispalay.snp.makeConstraints { make in
             make.top.centerX.bottom.equalTo(middleContents)
         }
-        
-        // --------------------- bottomContents --------------------- //
-        bottomLabel.addSubview(stepValueContents)
-        stepValueContents.snp.makeConstraints { make in
-            make.top.equalTo(bottomContents)
-            make.left.equalTo(bottomContents.snp.right)
-            make.bottom.right.equalTo(safeAreaView)
-        }
-        
-        stepValueContents.addSubview(walkCount)
-        walkCount.snp.makeConstraints { make in
-            make.centerX.equalTo(stepValueContents)
-            make.centerY.equalTo(stepLabel)
-        }
-        
-        stepValueContents.addSubview(targetStep)
-        targetStep.snp.makeConstraints { make in
-            make.centerX.equalTo(stepValueContents)
-            make.centerY.equalTo(stepProgress)
-        }
-        
-        stepValueContents.addSubview(walkDistance)
-        walkDistance.snp.makeConstraints { make in
-            make.centerX.equalTo(stepValueContents)
-            make.centerY.equalTo(distanceLabel)
-        }
-        
-        stepValueContents.addSubview(targetDistance)
-        targetDistance.snp.makeConstraints { make in
-            make.centerX.equalTo(stepValueContents)
-            make.centerY.equalTo(distanceProgress)
-        }
-        
-        stepValueContents.addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { make in
-            make.centerY.equalTo(stepValueContents)
-            make.left.equalTo(safeAreaView).offset(10)
-            make.right.equalTo(safeAreaView).offset(-10)
-            make.height.equalTo(1)
-        }
-
     }
 }

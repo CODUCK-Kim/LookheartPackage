@@ -5,7 +5,7 @@ import SnapKit
 import Then
 
 @available(iOS 13.0, *)
-class PSummaryCal : UIViewController, Refreshable {
+class SummaryCalorie : UIViewController, Refreshable {
 
     private let CALDATA_FILENAME = "/calandDistanceData.csv"
     private let YESTERDAY_BUTTON_FLAG = 1
@@ -84,7 +84,7 @@ class PSummaryCal : UIViewController, Refreshable {
     private var appendingPath = ""
     
     private lazy var documentsURL: URL = {
-        return PSummaryCal.initializeDocumentsURL()
+        return SummaryCalorie.initializeDocumentsURL()
     }()
     
     private var currentDirectoryURL: URL {

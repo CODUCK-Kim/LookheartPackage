@@ -3,7 +3,7 @@ import DGCharts
 import UIKit
 
 @available(iOS 13.0, *)
-public class ArrVC : UIViewController {
+public class ArrViewController : UIViewController {
     
     struct FileDataStruct {
         var hour: Int

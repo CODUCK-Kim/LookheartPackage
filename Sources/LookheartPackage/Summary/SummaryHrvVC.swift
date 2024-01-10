@@ -1,13 +1,14 @@
-
-import Foundation
 import UIKit
 import DGCharts
+import Foundation
 
+import SnapKit
+import Then
 
 @available(iOS 13.0, *)
-class PSummaryBpm : UIViewController, Refreshable {
+class SummaryHrv : UIViewController, Refreshable {
     
-    private let BPMDATA_FILENAME = "/BpmData.csv"
+    private let HRVDATA_FILENAME = "/BpmData.csv"
     private let YESTERDAY_BUTTON_FLAG = 1
     private let TOMORROW_BUTTON_FLAG = 2
     
@@ -17,14 +18,14 @@ class PSummaryBpm : UIViewController, Refreshable {
     
     private var email = ""
     
-    //    ----------------------------- Bpm Var -------------------    //
+    //    ----------------------------- hrv Var -------------------    //
     private let dateFormatter = DateFormatter()
     
-    private var minBpm = 70
-    private var maxBpm = 0
-    private var avgBpm = 0
-    private var avgBpmSum = 0
-    private var avgBpmCnt = 0
+    private var minHrv = 70
+    private var maxHrv = 0
+    private var avgHrv = 0
+    private var avgHrvSum = 0
+    private var avgHrvCnt = 0
     
     private var currentFlag = 0
     
@@ -47,59 +48,59 @@ class PSummaryBpm : UIViewController, Refreshable {
     private var threeDaysTargetMonth:String = ""
     private var threeDaysTargetDay:String = ""
     
-    private var bpmCalendar = Calendar.current
+    private var hrvCalendar = Calendar.current
     
     private var buttonList:[UIButton] = []
 
-    private var startBpmTime = [String]()
-    private var endBpmTime = [String]()
+    private var startHrvTime = [String]()
+    private var endHrvTime = [String]()
     
     private var earliestStartTime = ""
     private var latestEndTime = ""
     
     private var xAxisTotal = 0
-    private var startBpmTimeInMinutes = 0
-    private var endBpmTimeInMinutes = 0
+    private var startHrvTimeInMinutes = 0
+    private var endHrvTimeInMinutes = 0
     
     private var timeTable: [String] = []
     
-    private var bpmTimeCount = 0
+    private var hrvTimeCount = 0
     private var timeTableCount = 0
     
-    private var targetBpmData: [Double] = []
-    private var targetBpmTimeData: [String] = []
+    private var targetHrvData: [Double] = []
+    private var targetHrvTimeData: [String] = []
     
-    private var twoDaysBpmData: [Double] = []
-    private var twoDaysBpmTimeData: [String] = []
+    private var twoDaysHrvData: [Double] = []
+    private var twoDaysHrvTimeData: [String] = []
         
-    private var threeDaysBpmData: [Double] = []
-    private var threeDaysBpmTimeData: [String] = []
+    private var threeDaysHrvData: [Double] = []
+    private var threeDaysHrvTimeData: [String] = []
     
-    private var targetBpmEntries = [ChartDataEntry]()
-    private var twoDaysBpmEntries = [ChartDataEntry]()
-    private var threeDaysBpmEntries = [ChartDataEntry]()
+    private var targetHrvEntries = [ChartDataEntry]()
+    private var twoDaysHrvEntries = [ChartDataEntry]()
+    private var threeDaysHrvEntries = [ChartDataEntry]()
     
     //    ----------------------------- csv Var -------------------    //
     private var fileManager:FileManager = FileManager.default
     private var appendingPath = ""
     
     private lazy var documentsURL: URL = {
-        return PSummaryBpm.initializeDocumentsURL()
+        return SummaryHrv.initializeDocumentsURL()
     }()
     
     private var currentDirectoryURL: URL {
         return documentsURL.appendingPathComponent("\(appendingPath)")
     }
     
-    private var bpmDataFileURL: URL {
-        return currentDirectoryURL.appendingPathComponent(BPMDATA_FILENAME)
+    private var hrvDataFileURL: URL {
+        return currentDirectoryURL.appendingPathComponent(HRVDATA_FILENAME)
     }
     
-    // MARK: UI VAR
+    // MARK: - UI VAR
     private let safeAreaView = UIView()
     
     //    ----------------------------- Chart -------------------    //
-    private lazy var bpmChartView = LineChartView().then {
+    private lazy var hrvChartView = LineChartView().then {
         $0.noDataText = ""
         $0.xAxis.enabled = true
         $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
@@ -115,23 +116,14 @@ class PSummaryBpm : UIViewController, Refreshable {
     }
     
     //    ----------------------------- UILabel -------------------    //
-    private let bottomLabel = UILabel().then {
-        $0.isUserInteractionEnabled = true
-    }
+    private let bottomLabel = UILabel().then {  $0.isUserInteractionEnabled = true  }
     
-    private let topContents = UILabel().then {
-        $0.isUserInteractionEnabled = true
-    }
+    private let topContents = UILabel().then {  $0.isUserInteractionEnabled = true  }
     
-    private let middleContents = UILabel().then {
-        $0.isUserInteractionEnabled = true
-    }
+    private let middleContents = UILabel().then {    $0.isUserInteractionEnabled = true  }
     
-    private let bottomContents = UILabel().then {
-        $0.isUserInteractionEnabled = true
-    }
+    private let bottomContents = UILabel().then {   $0.isUserInteractionEnabled = true  }
     
-
     // MARK: - Top
     private lazy var todayButton = UIButton().then {
         $0.setTitle ("today".localized(), for: .normal )
@@ -174,7 +166,6 @@ class PSummaryBpm : UIViewController, Refreshable {
     
     private lazy var threeDaysButton = UIButton().then {
         $0.setTitle ("threeDays".localized(), for: .normal )
-        
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -201,100 +192,94 @@ class PSummaryBpm : UIViewController, Refreshable {
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private lazy var yesterdayBpmButton = UIButton().then {
+    private lazy var yesterdayHrvButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
-    
-    private lazy var tomorrowBpmButton = UIButton().then {
+    private lazy var tomorrowHrvButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
-    // MARK: - Bottom
-    private let leftBpmContents = UILabel()
+    // MARK: - bottom Contents
+    private let leftHrvContents = UILabel()
     
-    private let rightBpmContents = UILabel()
+    private let rightHrvContents = UILabel()
     
-    private let centerBpmContents = UILabel()
+    private let centerHrvContents = UILabel()
     
-    private let maxBpmLabel = UILabel().then {
+    private let maxHrvLabel = UILabel().then {
         $0.text = "home_maxBpm".localized()
         $0.textColor = .lightGray
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
     }
     
-    private let maxBpmValue = UILabel().then {
+    private let maxHrvValue = UILabel().then {
         $0.text = "0"
         $0.textColor = .lightGray
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
-    private let diffMaxBpm = UILabel().then {
+    private let diffMaxHrv = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
     }
     
-    private let minBpmLabel = UILabel().then {
+    private let minHrvLabel = UILabel().then {
         $0.text = "home_minBpm".localized()
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         $0.textColor = .lightGray
     }
     
-    private let minBpmValue = UILabel().then {
+    private let minHrvValue = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = .lightGray
     }
     
-    private let diffMinBpm = UILabel().then {
+    private let diffMinHrv = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0)
     }
     
-    private let avgBpmLabel = UILabel().then {
-        $0.text = "avgBPM".localized()
+    private let avgHrvLabel = UILabel().then {
+        $0.text = "avgHRV".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private let avgBpmValue = UILabel().then {
+    private let avgHrvValue = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private let bpmLabel = UILabel().then {
-        $0.text = "fragment_bpm".localized()
+    private let hrvLabel = UILabel().then {
+        $0.text = "home_hrv_unit".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    // MARK: -
-    public static func initializeDocumentsURL() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    }
-    
-    // MARK: - VDL
-    public override func viewDidLoad() {
+    // MARK: - viewDidLoad
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         initVar()
         addViews()
-        initArray()
-        todayBpmChart()
-
+        todayHrvChart()
+        
     }
     
     func refreshView() {
         initVar()
         addViews()
         initArray()
-        todayBpmChart()
+        todayHrvChart()
     }
     
-    private func initVar() {
+    func initVar(){
+        
         let currentDate = MyDateTime.shared.getSplitDateTime(.DATE)
         
         email = UserProfileManager.shared.getEmail()
@@ -314,50 +299,50 @@ class PSummaryBpm : UIViewController, Refreshable {
         
         setButtonColor(todayButton)
         setDays(targetDate)
-        
     }
     
     // MARK: - CHART
-    func todayBpmChart() {
+    func todayHrvChart() {
+        
         setDisplayText(changeDateFormat("\(targetYear)-\(targetMonth)-\(targetDay)", false))
         
         if fileExists() {
             
             getFileData(
                 path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
-                bpmData: &targetBpmData,
-                timeData: &targetBpmTimeData)
+                hrvData: &targetHrvData,
+                timeData: &targetHrvTimeData)
             
-            var bpmDataEntries = [ChartDataEntry]()
-                        
-            for i in 0 ..< targetBpmData.count - 1 {
-                let bpmDataEntry = ChartDataEntry(x: Double(i), y: targetBpmData[i])
-                bpmDataEntries.append(bpmDataEntry)
+            var hrvDataEntries = [ChartDataEntry]()
+            
+            for i in 0 ..< targetHrvData.count - 1 {
+                let hrvDataEntry = ChartDataEntry(x: Double(i), y: targetHrvData[i])
+                hrvDataEntries.append(hrvDataEntry)
             }
             
-            if bpmDataEntries.count == 0 {
-                let bpmDataEntry = ChartDataEntry(x: Double(0), y: targetBpmData[0])
-                bpmDataEntries.append(bpmDataEntry)
+            if hrvDataEntries.count == 0 {
+                let hrvDataEntry = ChartDataEntry(x: Double(0), y: targetHrvData[0])
+                hrvDataEntries.append(hrvDataEntry)
             }
             
             // set ChartData
-            let bpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: bpmDataEntries, label: "fragment_bpm".localized()))
+            let hrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: hrvDataEntries, label: "home_hrv".localized()))
             
-            removeSecond(targetBpmTimeData)
+            removeSecond(targetHrvTimeData)
             
-            setChart(chartData: LineChartData(dataSet: bpmChartDataSet),
+            setChart(chartData: LineChartData(dataSet: hrvChartDataSet),
                      maximum: 500,
-                     axisMaximum: 200,
-                     axisMinimum: 40)
+                     axisMaximum: 150,
+                     axisMinimum: 0.0)
             
-            setBpmText()
+            setHrvText()
             
         } else {
             // 파일 없음
         }
     }
 
-    func twoDaysBpmChart() {
+    func twoDaysHrvChart() {
             
         setDisplayText("\(changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)) ~ \(changeDateFormat("\(targetMonth)-\(targetDay)", true))")
         
@@ -366,37 +351,37 @@ class PSummaryBpm : UIViewController, Refreshable {
             // TODAY Data
             getFileData(
                 path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
-                bpmData: &targetBpmData,
-                timeData: &targetBpmTimeData)
+                hrvData: &targetHrvData,
+                timeData: &targetHrvTimeData)
             
             // 2 DAYS Data
             getFileData(
                 path: "\(email)/\(twoDaysTargetYear)/\(twoDaysTargetMonth)/\(twoDaysTargetDay)",
-                bpmData: &twoDaysBpmData,
-                timeData: &twoDaysBpmTimeData)
+                hrvData: &twoDaysHrvData,
+                timeData: &twoDaysHrvTimeData)
             
             // find start Time & end Time
-            guard let startOfToday = targetBpmTimeData.first,
-                  let endOfToday = targetBpmTimeData.last,
-                  let startOfYesterday = twoDaysBpmTimeData.first,
-                  let endOfYesterday = twoDaysBpmTimeData.last else {
+            guard let startOfToday = targetHrvTimeData.first,
+                  let endOfToday = targetHrvTimeData.last,
+                  let startOfYesterday = twoDaysHrvTimeData.first,
+                  let endOfYesterday = twoDaysHrvTimeData.last else {
                 return
             }
             
             earliestStartTime = earlierTime(startOfToday, startOfYesterday)
             latestEndTime = earlierTime(endOfToday, endOfYesterday) == endOfToday ? endOfYesterday : endOfToday
 
-            startBpmTime = earliestStartTime.components(separatedBy: ":")
-            endBpmTime = latestEndTime.components(separatedBy: ":")
+            startHrvTime = earliestStartTime.components(separatedBy: ":")
+            endHrvTime = latestEndTime.components(separatedBy: ":")
 
             // find difference Minutes
-            startBpmTimeInMinutes = Int(startBpmTime[0])! * 60 + Int(startBpmTime[1])!
-            endBpmTimeInMinutes = Int(endBpmTime[0])! * 60 + Int(endBpmTime[1])!
+            startHrvTimeInMinutes = Int(startHrvTime[0])! * 60 + Int(startHrvTime[1])!
+            endHrvTimeInMinutes = Int(endHrvTime[0])! * 60 + Int(endHrvTime[1])!
 
-            xAxisTotal = (endBpmTimeInMinutes - startBpmTimeInMinutes) * 6
+            xAxisTotal = (endHrvTimeInMinutes - startHrvTimeInMinutes) * 6
             
             // set timeTable
-            setTimeTable(startBpmTime, false)
+            setTimeTable(startHrvTime, false)
 
             // find start point
             var todayStart = findStartPoint(startOfToday.components(separatedBy: ":"))
@@ -407,46 +392,46 @@ class PSummaryBpm : UIViewController, Refreshable {
             let endOfYesterdayInt = timeToInt(endOfYesterday.components(separatedBy: ":"))
             
             // today's data
-            processBpmData(timeData: targetBpmTimeData,
-                           bpmData: targetBpmData,
+            processHrvData(timeData: targetHrvTimeData,
+                           hrvData: targetHrvData,
                            endTimeInt: endOfTodayInt,
-                           entries: &targetBpmEntries,
+                           entries: &targetHrvEntries,
                            startIndex: &todayStart)
 
-            bpmTimeCount = 0    // Reset bpmTimeCount for yesterday's data
+            hrvTimeCount = 0    // Reset HrvTimeCount for yesterday's data
 
             // yesterday's data
-            processBpmData(timeData: twoDaysBpmTimeData,
-                           bpmData: twoDaysBpmData,
+            processHrvData(timeData: twoDaysHrvTimeData,
+                           hrvData: twoDaysHrvData,
                            endTimeInt: endOfYesterdayInt,
-                           entries: &twoDaysBpmEntries,
+                           entries: &twoDaysHrvEntries,
                            startIndex: &twoDaysStart)
                             
             // remove second
-            setTimeTable(startBpmTime, true)
+            setTimeTable(startHrvTime, true)
             
             // set Chart
             let todaysDate = changeDateFormat("\(targetMonth)-\(targetDay)", true)
             let twoDaysDate = changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)
             
-            let todayBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetBpmEntries, label: todaysDate))
-            let twoDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysBpmEntries, label: twoDaysDate))
+            let todayHrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetHrvEntries, label: todaysDate))
+            let twoDaysHrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysHrvEntries, label: twoDaysDate))
                                                                 
-            let bpmChartDataSets: [LineChartDataSet] = [twoDaysBpmChartDataSet, todayBpmChartDataSet]
+            let hrvChartDataSets: [LineChartDataSet] = [twoDaysHrvChartDataSet, todayHrvChartDataSet]
             
-            setChart(chartData: LineChartData(dataSets: bpmChartDataSets),
+            setChart(chartData: LineChartData(dataSets: hrvChartDataSets),
                      maximum: 1000,
-                     axisMaximum: 200,
-                     axisMinimum: 40)
+                     axisMaximum: 150,
+                     axisMinimum: 0.0)
             
-            setBpmText()
+            setHrvText()
             
         } else {
             // 파일 없음
         }
     }
     
-    func threeDaysBpmChart() {
+    func threeDaysHrvChart() {
         
         setDisplayText("\(changeDateFormat("\(threeDaysTargetMonth)-\(threeDaysTargetDay)", true)) ~ \(changeDateFormat("\(targetMonth)-\(targetDay)", true))")
         
@@ -454,28 +439,28 @@ class PSummaryBpm : UIViewController, Refreshable {
             // Today Data
             getFileData(
                 path: "\(email)/\(targetYear)/\(targetMonth)/\(targetDay)",
-                bpmData: &targetBpmData,
-                timeData: &targetBpmTimeData)
+                hrvData: &targetHrvData,
+                timeData: &targetHrvTimeData)
             
             // 2 DAYS Data
             getFileData(
                 path: "\(email)/\(twoDaysTargetYear)/\(twoDaysTargetMonth)/\(twoDaysTargetDay)",
-                bpmData: &twoDaysBpmData,
-                timeData: &twoDaysBpmTimeData)
+                hrvData: &twoDaysHrvData,
+                timeData: &twoDaysHrvTimeData)
             
             // 3 DAYS Data
             getFileData(
                 path: "\(email)/\(threeDaysTargetYear)/\(threeDaysTargetMonth)/\(threeDaysTargetDay)",
-                bpmData: &threeDaysBpmData,
-                timeData: &threeDaysBpmTimeData)
+                hrvData: &threeDaysHrvData,
+                timeData: &threeDaysHrvTimeData)
             
             // find start Time & end Time
-            guard let startOfToday = targetBpmTimeData.first,
-                  let endOfToday = targetBpmTimeData.last,
-                  let startOfYesterday = twoDaysBpmTimeData.first,
-                  let endOfYesterday = twoDaysBpmTimeData.last,
-                  let startOfTwoDaysAgo = threeDaysBpmTimeData.first,
-                  let endOfTwoDaysAgo = threeDaysBpmTimeData.last else {
+            guard let startOfToday = targetHrvTimeData.first,
+                  let endOfToday = targetHrvTimeData.last,
+                  let startOfYesterday = twoDaysHrvTimeData.first,
+                  let endOfYesterday = twoDaysHrvTimeData.last,
+                  let startOfTwoDaysAgo = threeDaysHrvTimeData.first,
+                  let endOfTwoDaysAgo = threeDaysHrvTimeData.last else {
                 return
             }
             
@@ -485,17 +470,17 @@ class PSummaryBpm : UIViewController, Refreshable {
             compareDates = earlierTime(endOfToday, endOfYesterday) == endOfToday ? endOfYesterday : endOfToday
             latestEndTime = earlierTime(compareDates, endOfTwoDaysAgo) == compareDates ? endOfTwoDaysAgo : compareDates
             
-            startBpmTime = earliestStartTime.components(separatedBy: ":")
-            endBpmTime = latestEndTime.components(separatedBy: ":")
+            startHrvTime = earliestStartTime.components(separatedBy: ":")
+            endHrvTime = latestEndTime.components(separatedBy: ":")
             
             // find difference Minutes
-            startBpmTimeInMinutes = Int(startBpmTime[0])! * 60 + Int(startBpmTime[1])!
-            endBpmTimeInMinutes = Int(endBpmTime[0])! * 60 + Int(endBpmTime[1])!
+            startHrvTimeInMinutes = Int(startHrvTime[0])! * 60 + Int(startHrvTime[1])!
+            endHrvTimeInMinutes = Int(endHrvTime[0])! * 60 + Int(endHrvTime[1])!
             
-            xAxisTotal = (endBpmTimeInMinutes - startBpmTimeInMinutes) * 6
+            xAxisTotal = (endHrvTimeInMinutes - startHrvTimeInMinutes) * 6
             
             // set timeTable
-            setTimeTable(startBpmTime, false)
+            setTimeTable(startHrvTime, false)
             
             // find start point
             var todayStart = findStartPoint(startOfToday.components(separatedBy: ":"))
@@ -508,50 +493,50 @@ class PSummaryBpm : UIViewController, Refreshable {
             let endOfTwoDaysAgoInt = timeToInt(endOfTwoDaysAgo.components(separatedBy: ":"))
             
             // today's data
-            processBpmData(timeData: targetBpmTimeData,
-                           bpmData: targetBpmData,
+            processHrvData(timeData: targetHrvTimeData,
+                           hrvData: targetHrvData,
                            endTimeInt: endOfTodayInt,
-                           entries: &targetBpmEntries,
+                           entries: &targetHrvEntries,
                            startIndex: &todayStart)
             
-            bpmTimeCount = 0    // Reset bpmTimeCount for yesterday's data
+            hrvTimeCount = 0    // Reset HrvTimeCount for yesterday's data
             
             // yesterday's data
-            processBpmData(timeData: twoDaysBpmTimeData,
-                           bpmData: twoDaysBpmData,
+            processHrvData(timeData: twoDaysHrvTimeData,
+                           hrvData: twoDaysHrvData,
                            endTimeInt: endOfYesterdayInt,
-                           entries: &twoDaysBpmEntries,
+                           entries: &twoDaysHrvEntries,
                            startIndex: &twoDaysStart)
             
-            bpmTimeCount = 0
+            hrvTimeCount = 0
             
             // twoDaysAgo's data
-            processBpmData(timeData: threeDaysBpmTimeData,
-                           bpmData: threeDaysBpmData,
+            processHrvData(timeData: threeDaysHrvTimeData,
+                           hrvData: threeDaysHrvData,
                            endTimeInt: endOfTwoDaysAgoInt,
-                           entries: &threeDaysBpmEntries,
+                           entries: &threeDaysHrvEntries,
                            startIndex: &threeDaysStart)
             
             // remove second
-            setTimeTable(startBpmTime, true)
+            setTimeTable(startHrvTime, true)
             
             // set Chart
             let todaysDate = changeDateFormat("\(targetMonth)-\(targetDay)", true)
             let twoDaysDate = changeDateFormat("\(twoDaysTargetMonth)-\(twoDaysTargetDay)", true)
             let threeDaysDate = changeDateFormat("\(threeDaysTargetMonth)-\(threeDaysTargetDay)", true)
             
-            let todayBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetBpmEntries, label: todaysDate))
-            let twoDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysBpmEntries, label: twoDaysDate))
-            let threeDaysBpmChartDataSet = chartDataSet(color: NSUIColor.GRAPH_GREEN, chartDataSet: LineChartDataSet(entries: threeDaysBpmEntries, label: threeDaysDate))
+            let todayHrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: targetHrvEntries, label: todaysDate))
+            let twoDaysHrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: LineChartDataSet(entries: twoDaysHrvEntries, label: twoDaysDate))
+            let threeDaysHrvChartDataSet = chartDataSet(color: NSUIColor.GRAPH_GREEN, chartDataSet: LineChartDataSet(entries: threeDaysHrvEntries, label: threeDaysDate))
             
-            let bpmChartDataSets: [LineChartDataSet] = [threeDaysBpmChartDataSet, twoDaysBpmChartDataSet, todayBpmChartDataSet]
+            let hrvChartDataSets: [LineChartDataSet] = [threeDaysHrvChartDataSet, twoDaysHrvChartDataSet, todayHrvChartDataSet]
             
-            setChart(chartData: LineChartData(dataSets: bpmChartDataSets),
+            setChart(chartData: LineChartData(dataSets: hrvChartDataSets),
                      maximum: 1000,
-                     axisMaximum: 200,
-                     axisMinimum: 40)
+                     axisMaximum: 150,
+                     axisMinimum: 0.0)
             
-            setBpmText()
+            setHrvText()
             
         } else {
             // 파일 없음
@@ -559,48 +544,49 @@ class PSummaryBpm : UIViewController, Refreshable {
     }
     
     // MARK: - CHART FUNC
-    func getFileData(path: String, bpmData: inout [Double], timeData: inout [String]) {
+    func getFileData(path: String, hrvData: inout [Double], timeData: inout [String]) {
+
         do {
             appendingPath = path
-            let fileData = try String(contentsOf: bpmDataFileURL)
+            let fileData = try String(contentsOf: hrvDataFileURL)
             let separatedData = fileData.components(separatedBy: .newlines)
             
             for i in 0 ..< separatedData.count - 1 {
                 let row = separatedData[i]
                 let columns = row.components(separatedBy: ",")
-                let bpm = Double(columns[2].trimmingCharacters(in: .whitespacesAndNewlines))
+                let hrv = Double(columns[4].trimmingCharacters(in: .whitespacesAndNewlines))
                 
                 let time = columns[0].components(separatedBy: ":")
-                let bpmTime = time[0] + ":" + time[1] + ":" + (time[safe: 2] ?? "00")
+                let hrvTime = time[0] + ":" + time[1] + ":" + (time[safe: 2] ?? "00")
                 
-                calcMinMax(Int(bpm ?? 70))
-                bpmData.append(bpm ?? 0.0)
-                timeData.append(bpmTime)
+                calcMinMax(Int(hrv ?? 70))
+                hrvData.append(hrv ?? 0.0)
+                timeData.append(hrvTime)
             }
         } catch  {
             print("Error reading CSV file")
         }
     }
     
-    func setTimeTable(_ startBpmTime: [String], _ removeSecond: Bool){
+    func setTimeTable(_ startHrvTime: [String], _ removeSecond: Bool){
         if removeSecond {   timeTable = []  }
         
-        var bpmHour = Int(startBpmTime[0]) ?? 0
-        var bpmMinutes = Int(startBpmTime[1]) ?? 0
+        var hrvHour = Int(startHrvTime[0]) ?? 0
+        var hrvMinutes = Int(startHrvTime[1]) ?? 0
         var seconds = 0
         
         for _ in 0 ..< xAxisTotal {
             var time = ""
             if removeSecond {
-                time = String(format: "%02d:%02d", bpmHour, bpmMinutes)
+                time = String(format: "%02d:%02d", hrvHour, hrvMinutes)
             } else {
-                time = String(format: "%02d:%02d:%d", bpmHour, bpmMinutes, seconds)
+                time = String(format: "%02d:%02d:%d", hrvHour, hrvMinutes, seconds)
             }
             timeTable.append(time)
             seconds = (seconds + 1) % 6
             
             if seconds == 0 {
-                incrementTime(hour: &bpmHour, minute: &bpmMinutes)
+                incrementTime(hour: &hrvHour, minute: &hrvMinutes)
             }
         }
     }
@@ -622,7 +608,7 @@ class PSummaryBpm : UIViewController, Refreshable {
     
     func findStartPoint(_ startTime: [String]) -> Int {
         let startTimeInMinutes = Int(startTime[0])! * 60 + Int(startTime[1])!
-        return (startTimeInMinutes - startBpmTimeInMinutes) * 6
+        return (startTimeInMinutes - startHrvTimeInMinutes) * 6
     }
     
     func earlierTime(_ todayTime: String, _ yesterdayTime: String) -> String {
@@ -648,28 +634,28 @@ class PSummaryBpm : UIViewController, Refreshable {
         return hour * 3600 + minute * 60 + second
     }
     
-    func processBpmData(timeData: [String], bpmData: [Double], endTimeInt: Int, entries: inout [ChartDataEntry], startIndex: inout Int) {
-        var bpmTimeCount = 0
+    func processHrvData(timeData: [String], hrvData: [Double], endTimeInt: Int, entries: inout [ChartDataEntry], startIndex: inout Int) {
+        var hrvTimeCount = 0
         for _ in 0 ..< xAxisTotal {
-            if bpmTimeCount >= timeData.count || startIndex >= timeTable.count { break }
+            if hrvTimeCount >= timeData.count || startIndex >= timeTable.count { break }
             
-            var bpmTime = timeToInt(timeData[bpmTimeCount].components(separatedBy: ":"))
+            var hrvTime = timeToInt(timeData[hrvTimeCount].components(separatedBy: ":"))
             let timePoint = timeToInt(timeTable[startIndex].components(separatedBy: ":"))
             
-            if bpmTime == endTimeInt { break }
+            if hrvTime == endTimeInt { break }
             
-            if bpmTime == timePoint {
-                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[bpmTimeCount]))
-                bpmTimeCount += 1
-            } else if bpmTime < timePoint {
-                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[max(bpmTimeCount - 1, 0)]))
+            if hrvTime == timePoint {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: hrvData[hrvTimeCount]))
+                hrvTimeCount += 1
+            } else if hrvTime < timePoint {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: hrvData[max(hrvTimeCount - 1, 0)]))
             }
             
-            while bpmTimeCount < timeData.count && bpmTime == timePoint && bpmTime != endTimeInt {
-                entries.append(ChartDataEntry(x: Double(startIndex), y: bpmData[bpmTimeCount]))
-                bpmTimeCount += 1
-                if bpmTimeCount < timeData.count {
-                    bpmTime = timeToInt(timeData[bpmTimeCount].components(separatedBy: ":"))
+            while hrvTimeCount < timeData.count && hrvTime == timePoint && hrvTime != endTimeInt {
+                entries.append(ChartDataEntry(x: Double(startIndex), y: hrvData[hrvTimeCount]))
+                hrvTimeCount += 1
+                if hrvTimeCount < timeData.count {
+                    hrvTime = timeToInt(timeData[hrvTimeCount].components(separatedBy: ":"))
                 }
             }
             
@@ -681,21 +667,21 @@ class PSummaryBpm : UIViewController, Refreshable {
         chartDataSet.drawCirclesEnabled = false
         chartDataSet.setColor(color)
         chartDataSet.mode = .linear
-        chartDataSet.lineWidth = 0.7
+        chartDataSet.lineWidth = 0.5
         chartDataSet.drawValuesEnabled = true
         
         return chartDataSet
     }
     
     func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double) {
-        bpmChartView.data = chartData
-        bpmChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
-        bpmChartView.setVisibleXRangeMaximum(maximum)
-        bpmChartView.leftAxis.axisMaximum = axisMaximum
-        bpmChartView.leftAxis.axisMinimum = axisMinimum
-        bpmChartView.data?.notifyDataChanged()
-        bpmChartView.notifyDataSetChanged()
-        bpmChartView.moveViewToX(0)
+        hrvChartView.data = chartData
+        hrvChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        hrvChartView.setVisibleXRangeMaximum(maximum)
+        hrvChartView.leftAxis.axisMaximum = axisMaximum
+        hrvChartView.leftAxis.axisMinimum = axisMinimum
+        hrvChartView.data?.notifyDataChanged()
+        hrvChartView.notifyDataSetChanged()
+        hrvChartView.moveViewToX(0)
     }
     
     func changeDateFormat(_ dateString: String, _ checkDate: Bool) -> String {
@@ -745,11 +731,11 @@ class PSummaryBpm : UIViewController, Refreshable {
         
         switch(tag) {
         case TWO_DAYS_FLAG:
-            twoDaysBpmChart()
+            twoDaysHrvChart()
         case THREE_DAYS_FLAG:
-            threeDaysBpmChart()
+            threeDaysHrvChart()
         default:
-            todayBpmChart()
+            todayHrvChart()
         }
     }
     
@@ -757,9 +743,9 @@ class PSummaryBpm : UIViewController, Refreshable {
         guard let inputDate = dateFormatter.date(from: date) else { return }
 
         let dayValue = shouldAdd ? day : -day
-        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: dayValue, to: inputDate) {
+        if let hrvTargetDate = hrvCalendar.date(byAdding: .day, value: dayValue, to: inputDate) {
             
-            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            let components = hrvCalendar.dateComponents([.year, .month, .day], from: hrvTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
                 targetYear = "\(year)"
@@ -777,9 +763,9 @@ class PSummaryBpm : UIViewController, Refreshable {
         guard let inputDate = dateFormatter.date(from: date) else { return }
         
         // twoDays
-        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: -1, to: inputDate) {
+        if let hrvTargetDate = hrvCalendar.date(byAdding: .day, value: -1, to: inputDate) {
             
-            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            let components = hrvCalendar.dateComponents([.year, .month, .day], from: hrvTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
                 twoDaysTargetYear = "\(year)"
@@ -790,9 +776,9 @@ class PSummaryBpm : UIViewController, Refreshable {
             }
         }
         // threeDays
-        if let arrTargetDate = bpmCalendar.date(byAdding: .day, value: -2, to: inputDate) {
+        if let hrvTargetDate = hrvCalendar.date(byAdding: .day, value: -2, to: inputDate) {
             
-            let components = bpmCalendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            let components = hrvCalendar.dateComponents([.year, .month, .day], from: hrvTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
                 threeDaysTargetYear = "\(year)"
@@ -818,7 +804,7 @@ class PSummaryBpm : UIViewController, Refreshable {
 
     func fileExistsAtPath(_ path: String) -> Bool {
         appendingPath = path
-        return fileManager.fileExists(atPath: bpmDataFileURL.path)
+        return fileManager.fileExists(atPath: hrvDataFileURL.path)
     }
 
     func fileExists() -> Bool {
@@ -849,12 +835,12 @@ class PSummaryBpm : UIViewController, Refreshable {
         return true
     }
     
-    func setBpmText() {
-        maxBpmValue.text = String(maxBpm)
-        minBpmValue.text = String(minBpm)
-        avgBpmValue.text = String(avgBpm)
-        diffMinBpm.text = "-\(avgBpm - minBpm)"
-        diffMaxBpm.text = "+\(maxBpm - avgBpm)"
+    func setHrvText() {
+        maxHrvValue.text = String(maxHrv)
+        minHrvValue.text = String(minHrv)
+        avgHrvValue.text = String(avgHrv)
+        diffMinHrv.text = "-\(avgHrv - minHrv)"
+        diffMaxHrv.text = "+\(maxHrv - avgHrv)"
     }
     
     func setButtonColor(_ sender: UIButton) {
@@ -867,69 +853,73 @@ class PSummaryBpm : UIViewController, Refreshable {
         }
     }
     
-    func calcMinMax(_ bpm: Int) {
-        if (bpm != 0){
-            if (minBpm > bpm){
-                minBpm = bpm
+    func calcMinMax(_ hrv: Int) {
+        if (hrv != 0){
+            if (minHrv > hrv){
+                minHrv = hrv
             }
-            if (maxBpm < bpm){
-                maxBpm = bpm
+            if (maxHrv < hrv){
+                maxHrv = hrv
             }
 
-            avgBpmSum += bpm
-            avgBpmCnt += 1
-            avgBpm = avgBpmSum/avgBpmCnt
+            avgHrvSum += hrv
+            avgHrvCnt += 1
+            avgHrv = avgHrvSum/avgHrvCnt
         }
     }
     
     func initArray() {
         
-        bpmChartView.clear()
+        hrvChartView.clear()
         
-        minBpm = 70
-        maxBpm = 0
-        avgBpm = 0
-        avgBpmCnt = 0
-        avgBpmSum = 0
+        minHrv = 70
+        maxHrv = 0
+        avgHrv = 0
+        avgHrvCnt = 0
+        avgHrvSum = 0
         
         earliestStartTime = ""
         latestEndTime = ""
         
-        startBpmTimeInMinutes = 0
-        endBpmTimeInMinutes = 0
+        startHrvTimeInMinutes = 0
+        endHrvTimeInMinutes = 0
         
         xAxisTotal = 0
         
-        bpmTimeCount = 0
+        hrvTimeCount = 0
         timeTableCount = 0
         
         timeTable.removeAll()
         
-        startBpmTime.removeAll()
-        endBpmTime.removeAll()
+        startHrvTime.removeAll()
+        endHrvTime.removeAll()
         
-        targetBpmData.removeAll()
-        targetBpmTimeData.removeAll()
+        targetHrvData.removeAll()
+        targetHrvTimeData.removeAll()
         
-        twoDaysBpmData.removeAll()
-        twoDaysBpmTimeData.removeAll()
+        twoDaysHrvData.removeAll()
+        twoDaysHrvTimeData.removeAll()
         
-        threeDaysBpmData.removeAll()
-        threeDaysBpmTimeData.removeAll()
+        threeDaysHrvData.removeAll()
+        threeDaysHrvTimeData.removeAll()
         
-        targetBpmEntries.removeAll()
-        twoDaysBpmEntries.removeAll()
-        threeDaysBpmEntries.removeAll()
+        targetHrvEntries.removeAll()
+        twoDaysHrvEntries.removeAll()
+        threeDaysHrvEntries.removeAll()
         
-        maxBpmValue.text = "0"
-        minBpmValue.text = "0"
-        avgBpmValue.text = "0"
-        diffMinBpm.text = "-0"
-        diffMaxBpm.text = "+0"
+        maxHrvValue.text = "0"
+        minHrvValue.text = "0"
+        avgHrvValue.text = "0"
+        diffMinHrv.text = "-0"
+        diffMaxHrv.text = "+0"
         
     }
     
-    // MARK: -
+    public static func initializeDocumentsURL() -> URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    
+    // MARK: - addViews
     func addViews() {
         
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
@@ -943,15 +933,15 @@ class PSummaryBpm : UIViewController, Refreshable {
             make.top.bottom.left.right.equalToSuperview()
         }
         
-        view.addSubview(bpmChartView)
-        bpmChartView.snp.makeConstraints { make in
+        view.addSubview(hrvChartView)
+        hrvChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
         }
         
         view.addSubview(bottomLabel)
         bottomLabel.snp.makeConstraints { make in
-            make.top.equalTo(bpmChartView.snp.bottom)
+            make.top.equalTo(hrvChartView.snp.bottom)
             make.left.right.bottom.equalTo(safeAreaView)
         }
         
@@ -1006,96 +996,94 @@ class PSummaryBpm : UIViewController, Refreshable {
             make.top.bottom.centerX.equalTo(middleContents)
         }
         
-        middleContents.addSubview(yesterdayBpmButton)
-        yesterdayBpmButton.snp.makeConstraints { make in
+        middleContents.addSubview(yesterdayHrvButton)
+        yesterdayHrvButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.left.equalTo(middleContents).offset(10)
         }
         
-        middleContents.addSubview(tomorrowBpmButton)
-        tomorrowBpmButton.snp.makeConstraints { make in
+        middleContents.addSubview(tomorrowHrvButton)
+        tomorrowHrvButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.right.equalTo(middleContents).offset(-10)
         }
         
         // --------------------- bottomContents --------------------- //
-        bottomContents.addSubview(centerBpmContents)
-        centerBpmContents.snp.makeConstraints { make in
+        bottomContents.addSubview(centerHrvContents)
+        centerHrvContents.snp.makeConstraints { make in
             make.top.bottom.centerX.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
-        bottomContents.addSubview(leftBpmContents)
-        leftBpmContents.snp.makeConstraints { make in
+        bottomContents.addSubview(leftHrvContents)
+        leftHrvContents.snp.makeConstraints { make in
             make.top.bottom.left.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
-        bottomContents.addSubview(rightBpmContents)
-        rightBpmContents.snp.makeConstraints { make in
+        bottomContents.addSubview(rightHrvContents)
+        rightHrvContents.snp.makeConstraints { make in
             make.top.bottom.right.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
         // --------------------- centerBpmContents --------------------- //
-        centerBpmContents.addSubview(avgBpmValue)
-        avgBpmValue.snp.makeConstraints { make in
-            make.centerX.centerY.equalTo(centerBpmContents)
+        centerHrvContents.addSubview(avgHrvValue)
+        avgHrvValue.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(centerHrvContents)
         }
         
-        centerBpmContents.addSubview(avgBpmLabel)
-        avgBpmLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(avgBpmValue.snp.top).offset(-10)
-            make.centerX.equalTo(centerBpmContents)
+        centerHrvContents.addSubview(avgHrvLabel)
+        avgHrvLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(avgHrvValue.snp.top).offset(-10)
+            make.centerX.equalTo(centerHrvContents)
         }
         
         
-        centerBpmContents.addSubview(bpmLabel)
-        bpmLabel.snp.makeConstraints { make in
-            make.top.equalTo(avgBpmValue.snp.bottom).offset(10)
-            make.centerX.equalTo(centerBpmContents)
+        centerHrvContents.addSubview(hrvLabel)
+        hrvLabel.snp.makeConstraints { make in
+            make.top.equalTo(avgHrvValue.snp.bottom).offset(10)
+            make.centerX.equalTo(centerHrvContents)
         }
         
         // --------------------- leftBpmContents --------------------- //
-        leftBpmContents.addSubview(minBpmValue)
-        minBpmValue.snp.makeConstraints { make in
-            make.centerX.equalTo(leftBpmContents)
-            make.centerY.equalTo(avgBpmValue)
+        leftHrvContents.addSubview(minHrvValue)
+        minHrvValue.snp.makeConstraints { make in
+            make.centerX.equalTo(leftHrvContents)
+            make.centerY.equalTo(avgHrvValue)
         }
         
-        leftBpmContents.addSubview(minBpmLabel)
-        minBpmLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(leftBpmContents)
-            make.centerY.equalTo(avgBpmLabel)
+        leftHrvContents.addSubview(minHrvLabel)
+        minHrvLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(leftHrvContents)
+            make.centerY.equalTo(avgHrvLabel)
         }
         
         
-        leftBpmContents.addSubview(diffMinBpm)
-        diffMinBpm.snp.makeConstraints { make in
-            make.centerX.equalTo(leftBpmContents)
-            make.centerY.equalTo(bpmLabel)
+        leftHrvContents.addSubview(diffMinHrv)
+        diffMinHrv.snp.makeConstraints { make in
+            make.centerX.equalTo(leftHrvContents)
+            make.centerY.equalTo(hrvLabel)
         }
         
         // --------------------- rightBpmContents --------------------- //
-        rightBpmContents.addSubview(maxBpmValue)
-        maxBpmValue.snp.makeConstraints { make in
-            make.centerX.equalTo(rightBpmContents)
-            make.centerY.equalTo(avgBpmValue)
+        rightHrvContents.addSubview(maxHrvValue)
+        maxHrvValue.snp.makeConstraints { make in
+            make.centerX.equalTo(rightHrvContents)
+            make.centerY.equalTo(avgHrvValue)
         }
         
-        rightBpmContents.addSubview(maxBpmLabel)
-        maxBpmLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(rightBpmContents)
-            make.centerY.equalTo(avgBpmLabel)
+        rightHrvContents.addSubview(maxHrvLabel)
+        maxHrvLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(rightHrvContents)
+            make.centerY.equalTo(avgHrvLabel)
         }
-    
-        
-        rightBpmContents.addSubview(diffMaxBpm)
-        diffMaxBpm.snp.makeConstraints { make in
-            make.centerX.equalTo(rightBpmContents)
-            make.centerY.equalTo(bpmLabel)
+            
+        rightHrvContents.addSubview(diffMaxHrv)
+        diffMaxHrv.snp.makeConstraints { make in
+            make.centerX.equalTo(rightHrvContents)
+            make.centerY.equalTo(hrvLabel)
         }
         
     }
-    
 }
