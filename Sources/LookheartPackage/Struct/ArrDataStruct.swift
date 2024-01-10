@@ -1,6 +1,6 @@
 import Foundation
 
-struct ArrData: Equatable {
+public struct ArrData: Equatable {
     var idx: String
     var writeTime: String
     var time: String
@@ -11,16 +11,16 @@ struct ArrData: Equatable {
     var data: [Double]
 }
 
-struct EcgData: Codable {
+public struct EcgData: Codable {
     let ecg: String?
     let arr: String
 }
 
-struct ArrDateEntry: Decodable {
+public struct ArrDateEntry: Decodable {
     let writetime: String
     let address: String?
 }
 
-struct ArrEcgData: Decodable {
+public struct ArrEcgData: Decodable {
     let ecgpacket: String
 }
