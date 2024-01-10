@@ -289,9 +289,8 @@ public class ArrViewController : UIViewController {
         if arrData.data.count < 400 {   return  }
         
         let ecgDataConversion = EcgDataConversion()
-        let conversionFlag = ecgDataConversion.getConversionFlag()
+        let conversionFlag = UserProfileManager.shared.getConversionFalg() == 0 ? true : false
         
-        print(conversionFlag)
         var arrDataEntry: ChartDataEntry
         arrDataEntries = []
         

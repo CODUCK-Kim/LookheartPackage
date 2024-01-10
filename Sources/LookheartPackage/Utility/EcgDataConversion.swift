@@ -2,7 +2,6 @@ import Foundation
 
 public class EcgDataConversion {
     
-    private var conversionFlag = true  // true : PEAK, false : ECG
     public static let shared = EcgDataConversion()
     
     private var ecg_outData:[Float] = Array(repeating: 0.0, count: 5)
@@ -148,14 +147,5 @@ public class EcgDataConversion {
         }
 
         return Int64(sumit)
-    }
-    
-    
-    public func getConversionFlag() -> Bool {
-        return conversionFlag
-    }
-    
-    public func setConversionFlag(_ flag : Bool) {
-        conversionFlag = flag
     }
 }
