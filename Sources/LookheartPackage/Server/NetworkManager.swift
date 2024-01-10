@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-class NetworkManager {
+public class NetworkManager {
     
     private let baseURL = "http://121.152.22.85:40081" // TEST
 //    private let baseURL = "http://121.152.22.85:40080" // REAL
@@ -14,7 +14,7 @@ class NetworkManager {
         return df
     }()
             
-    func sendEmergencyData(_ identification: String, _ timezone: String,_ address: String) {
+    public func sendEmergencyData(_ identification: String, _ timezone: String,_ address: String) {
     
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -49,7 +49,7 @@ class NetworkManager {
     
     
     
-    func getProfileToServer(id: String, completion: @escaping (Result<UserProfile, Error>) -> Void) {
+    public func getProfileToServer(id: String, completion: @escaping (Result<UserProfile, Error>) -> Void) {
         
         let endpoint = "/msl/Profile"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -95,7 +95,7 @@ class NetworkManager {
         }
     }
     
-    func setGuardianToServer(id: String, timezone: String, phone:[String],  completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func setGuardianToServer(id: String, timezone: String, phone:[String],  completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/mslparents/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -132,7 +132,7 @@ class NetworkManager {
         }
     }
     
-    func checkLoginToServer(id: String, pw: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkLoginToServer(id: String, pw: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/CheckLogin"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -167,7 +167,7 @@ class NetworkManager {
         }
     }
     
-    func checkIDToServer(id: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkIDToServer(id: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/CheckIDDupe"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -211,7 +211,7 @@ class NetworkManager {
     
     
     
-    func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -251,7 +251,7 @@ class NetworkManager {
     
     
     
-    func sendEcgDataToServer(packet: String, identification: String, bpm: Int, timezone: String, writeTime: String) {
+    public func sendEcgDataToServer(packet: String, identification: String, bpm: Int, timezone: String, writeTime: String) {
         
         let endpoint = "/mslecg/api_getdata"
         
@@ -282,7 +282,7 @@ class NetworkManager {
     }
     
     
-    func sendByteEcgDataToServer(packet: [Int], identification: String, bpm: Int, timezone: String, writeTime: String) {
+    public func sendByteEcgDataToServer(packet: [Int], identification: String, bpm: Int, timezone: String, writeTime: String) {
         
         let endpoint = "/mslecgbyte/api_getdata"
         
@@ -312,7 +312,7 @@ class NetworkManager {
         }
     }
     
-    func sendTenSecondDataToServer(_ identification: String, _ utcOffsetAndCountry: String, otherParams: [String: Any]) {
+    public func sendTenSecondDataToServer(_ identification: String, _ utcOffsetAndCountry: String, otherParams: [String: Any]) {
         
         let endpoint = "/mslbpm/api_data"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -343,7 +343,7 @@ class NetworkManager {
         }
     }
  
-    func sendHourlyDataToServer(_ year: String, _ month: String, _ day: String, _ identification: String,  _ utcOffsetAndCountry: String, _ data: String) {
+    public func sendHourlyDataToServer(_ year: String, _ month: String, _ day: String, _ identification: String,  _ utcOffsetAndCountry: String, _ data: String) {
         
         let endpoint = "/mslecgday/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -386,7 +386,7 @@ class NetworkManager {
         }
     }
         
-    func sendArrDataToServer(_ packet: String, _ identification: String, _ writeTime: String) {
+    public func sendArrDataToServer(_ packet: String, _ identification: String, _ writeTime: String) {
     
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -415,7 +415,7 @@ class NetworkManager {
     
     
     
-    func getArrListToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
+    public func getArrListToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
         
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -500,7 +500,7 @@ class NetworkManager {
 //        }
 //    }
     
-    func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
+    public func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
         
         let endpoint = "/mslecgarr/arrPreEcgData?"
         guard let url = URL(string: baseURL + endpoint) else {
