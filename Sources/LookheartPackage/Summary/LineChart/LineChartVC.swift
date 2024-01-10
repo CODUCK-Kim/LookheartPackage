@@ -268,6 +268,8 @@ class LineChartVC : UIViewController, Refreshable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initVar()
+        
         setDate()
         addViews()
         
@@ -278,12 +280,26 @@ class LineChartVC : UIViewController, Refreshable {
         
     }
     
-    func setDate() {
+    func initVar() {
+        email = UserProfileManager.shared.getEmail()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        currentButtonFlag = TODAY_FLAG
+        
+        buttonList = [todayButton, twoDaysButton, threeDaysButton]
+        
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, 1, true)
     }
     
+    func setDate() {
+
+    }
+    
     func getBpmData(_ startDate: String, _ endDate: String) {
+        print(startDate)
+        print(endDate)
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate){ [self] result in
             switch(result){
             case .success(let data):
