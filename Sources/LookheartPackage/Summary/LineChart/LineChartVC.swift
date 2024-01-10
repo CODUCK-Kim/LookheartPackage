@@ -32,9 +32,8 @@ class LineChartVC : UIViewController, Refreshable {
     private let dateFormatter = DateFormatter()
     private var calendar = Calendar.current
     
-    private var currentYear:String = ""
-    private var currentMonth:String = ""
-    private var currentDay:String = ""
+    private var startDate = String()
+    private var endDate = String()
     
     private var targetDate:String = ""
     private var targetYear:String = ""
@@ -176,7 +175,6 @@ class LineChartVC : UIViewController, Refreshable {
     
     // MARK: - Middle
     private lazy var todayDispalay = UILabel().then {
-        $0.text = "\(currentYear)-\(currentMonth)-\(currentDay)"
         $0.textColor = .black
         $0.textAlignment = .center
         $0.baselineAdjustment = .alignCenters
@@ -270,12 +268,84 @@ class LineChartVC : UIViewController, Refreshable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setDate()
         addViews()
         
+        getBpmData(startDate, endDate)
     }
     
     func refreshView() {
         
+    }
+    
+    func setDate() {
+        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        endDate = dateCalculate(startDate, 1, true)
+    }
+    
+    func getBpmData(_ startDate: String, _ endDate: String) {
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate){ [self] result in
+            switch(result){
+            case .success(let data):
+                print(data)
+            case .failure(let error):
+                print("responseBpmData error : \(error)")
+            }
+        }
+    }
+    
+    
+    // MARK: - DATE FUNC
+    func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
+        guard let inputDate = dateFormatter.date(from: date) else { return date }
+
+        let dayValue = shouldAdd ? day : -day
+        if let arrTargetDate = calendar.date(byAdding: .day, value: dayValue, to: inputDate) {
+            
+            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                let year = "\(year)"
+                let month = String(format: "%02d", month)
+                let day = String(format: "%02d", day)
+                
+                return "\(year)-\(month)-\(day)"
+            }
+        }
+        
+        return date
+    }
+    
+    func setDays(_ date: String) {
+        guard let inputDate = dateFormatter.date(from: date) else { return }
+        
+        // twoDays
+        if let arrTargetDate = calendar.date(byAdding: .day, value: -1, to: inputDate) {
+            
+            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                twoDaysTargetYear = "\(year)"
+                twoDaysTargetMonth = String(format: "%02d", month)
+                twoDaysTargetDay = String(format: "%02d", day)
+                
+                twoDaysTargetDate = "\(twoDaysTargetYear)-\(twoDaysTargetMonth)-\(twoDaysTargetDay)"
+            }
+        }
+        
+        // threeDays
+        if let arrTargetDate = calendar.date(byAdding: .day, value: -2, to: inputDate) {
+            
+            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                threeDaysTargetYear = "\(year)"
+                threeDaysTargetMonth = String(format: "%02d", month)
+                threeDaysTargetDay = String(format: "%02d", day)
+                
+                threeDaysTargetDate = "\(threeDaysTargetYear)-\(threeDaysTargetMonth)-\(threeDaysTargetDay)"
+            }
+        }
     }
     
     // MARK: -
