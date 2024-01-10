@@ -1,9 +1,10 @@
 import Foundation
 
-class EcgDataConversion {
+public class EcgDataConversion {
     
     private var conversionFlag = true  // true : PEAK, false : ECG
-
+    public static let shared = EcgDataConversion()
+    
     private var ecg_outData:[Float] = Array(repeating: 0.0, count: 5)
     private var xx_msl_mm:Float = 0.0
     private var xx_outdata_itw:Float = 0.0
@@ -21,9 +22,7 @@ class EcgDataConversion {
     
     private var changeEcgData:[Double] = Array(repeating: 512.0, count: 2)
     
-    static let shared = EcgDataConversion()
-    
-    func conversionEcgData(_ ecg: Double) -> Double {
+    public func conversionEcgData(_ ecg: Double) -> Double {
         
         changeEcgData[1] = changeEcgData[0]
         changeEcgData[0] = ecg
@@ -44,7 +43,7 @@ class EcgDataConversion {
         return calcEcgData
      }
     
-    func setPeakData(_ ecgData:Int) -> Double {
+    public func setPeakData(_ ecgData:Int) -> Double {
         
         ecg_outData[4] = ecg_outData[3]
         ecg_outData[3] = ecg_outData[2]
