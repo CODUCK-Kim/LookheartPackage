@@ -1,5 +1,5 @@
 import UIKit
-import Charts
+import DGCharts
 import Foundation
 import SnapKit
 import Then

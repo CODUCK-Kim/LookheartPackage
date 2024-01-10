@@ -1,5 +1,5 @@
 import UIKit
-import Charts
+import DGCharts
 import Foundation
 import SnapKit
 import Then
@@ -534,7 +534,7 @@ class PSummaryArr : UIViewController, Refreshable {
     func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {
         chartDataSet.setColor(color)
         chartDataSet.drawValuesEnabled = true
-        chartDataSet.valueFormatter = CombinedValueFormatter()
+        chartDataSet.valueFormatter = CombinedValueFormatter() as! any ValueFormatter
         return chartDataSet
     }
     

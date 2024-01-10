@@ -1,7 +1,7 @@
 
 import Foundation
 import UIKit
-import Charts
+import DGCharts
 
 
 @available(iOS 13.0, *)
