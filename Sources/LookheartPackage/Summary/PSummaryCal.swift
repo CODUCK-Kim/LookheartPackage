@@ -176,6 +176,7 @@ class PSummaryCal : UIViewController, Refreshable {
     
     private lazy var monthButton = UIButton().then {
         $0.setTitle ("fragment_month".localized(), for: .normal )
+        
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -841,7 +842,6 @@ class PSummaryCal : UIViewController, Refreshable {
         
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier
-        
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneFourthWidth = screenWidth / 4.0
         
