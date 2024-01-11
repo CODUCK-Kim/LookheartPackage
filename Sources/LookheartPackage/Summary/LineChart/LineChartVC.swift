@@ -310,16 +310,13 @@ class LineChartVC : UIViewController, Refreshable {
         } else {
 //            getBpmDataToServer(startDate, endDate)
             endDate = dateCalculate(startDate, 2, false)
-            
             getBpmDataToServer(endDate, startDate, .THREE_DAYS_FLAG)
             
-            endDate = dateCalculate(startDate, 1, false)
-            
-            getBpmDataToServer(endDate, startDate, .TWO_DAYS_FLAG)
-            
-            endDate = dateCalculate(startDate, 1, true)
-            
-            getBpmDataToServer(startDate, endDate, .TWO_DAYS_FLAG)
+//            endDate = dateCalculate(startDate, 1, false)
+//            getBpmDataToServer(endDate, startDate, .TWO_DAYS_FLAG)
+//            
+//            endDate = dateCalculate(startDate, 1, true)
+//            getBpmDataToServer(startDate, endDate, .TWO_DAYS_FLAG)
         }
     }
     
