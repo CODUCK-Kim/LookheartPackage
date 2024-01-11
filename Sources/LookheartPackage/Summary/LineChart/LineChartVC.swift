@@ -345,7 +345,7 @@ class LineChartVC : UIViewController, Refreshable {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
                     
                     if !bpmDataArray.isEmpty {
-                        print(bpmDataArray)
+//                        print(bpmDataArray)
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
@@ -359,7 +359,9 @@ class LineChartVC : UIViewController, Refreshable {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
             chartDataSets.append(chartDataSet)
         }
-        
+  
+        print("chartDataSets : \(chartDataSets.count)")
+        print("timeTable : \(timeTable.count)")
 //        setChart(chartData: LineChartData(dataSets: chartDataSets),
 //                 maximum: 1000,
 //                 axisMaximum: 200,
