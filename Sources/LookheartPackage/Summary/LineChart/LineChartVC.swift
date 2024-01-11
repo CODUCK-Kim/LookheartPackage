@@ -326,7 +326,7 @@ class LineChartVC : UIViewController, Refreshable {
             }
         }
         timeTable.sort()
-        
+        timeTable = Array(Set(timeTable)).sorted()
         print(timeTable)
     }
     
