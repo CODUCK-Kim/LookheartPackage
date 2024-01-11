@@ -335,30 +335,35 @@ class LineChartVC : UIViewController, Refreshable {
             let timeSet = Set(dataForDate.map { $0.writeTime })
             timeSets.formUnion(timeSet)
         }
-
+            
         let timeTable = timeSets.sorted()    // 시간 정렬
 
+        var dataByTimeDict: [String: [String: [BpmData]]] = [:]
+
+        for (date, dataForDate) in dataDict {
+            var timeDict: [String: [BpmData]] = [:]
+            for data in dataForDate {
+                timeDict[data.writeTime, default: []].append(data)
+            }
+            dataByTimeDict[date] = timeDict
+        }
+        
         for i in 0..<timeTable.count {
             let time = timeTable[i]
 
-            for (date, dataForDate) in dataDict {
+            for (date, timeDict) in dataByTimeDict {
                 if let idx = bpmIdx[date] {
-                    let bpmDataArray = dataForDate.filter { $0.writeTime == time }
-                    
-                    if !bpmDataArray.isEmpty {
+                    if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
-                    } else if i + 1 < timeTable.count { // 다음 time 존재 확인
+                    } else if i + 1 < timeTable.count {
                         let nextTime = timeTable[i + 1].prefix(7)
-                        let nextTimeDataArray = dataForDate.filter { $0.writeTime.prefix(7) == nextTime }
-
-                        if nextTimeDataArray.isEmpty {
+                        if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
                             let entry = ChartDataEntry(x: Double(idx), y: 70.0)
                             entries[date]?.append(entry)
                         }
                     }
-
                     bpmIdx[date] = idx + 1
                 }
             }
