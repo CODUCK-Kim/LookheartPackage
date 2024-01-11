@@ -337,23 +337,24 @@ class LineChartVC : UIViewController, Refreshable {
         
         timeTable.sort()    // 시간 정렬
         
+        var cnt = 0
+        
         for time in timeTable {
+            if cnt == timeTable.count - 1  {    break   }
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
                     
-                    if let bpmString = bpmDataArray.first?.bpm,
-                        let bpmValue = Double(bpmString),
-                            !bpmValue.isNaN,
-                            bpmValue.isFinite {
-                        
+                    if !bpmDataArray.isEmpty {
+                        print(bpmDataArray)
+                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
                         bpmIdx[date] = idx + 1
-                        
                     }
                 }
             }
+            cnt += 1
         }
         
         for (date, entry) in entries {
