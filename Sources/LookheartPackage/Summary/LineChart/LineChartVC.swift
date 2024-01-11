@@ -318,28 +318,50 @@ class LineChartVC : UIViewController, Refreshable {
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
         
         let dataDict = groupBpmDataByDate(bpmDataList)
+
+        var entries: [String : [ChartDataEntry]] = [:]
+        var chartDataSets: [LineChartDataSet] = []
+        var bpmIdx: [String : Int] = [:]
         var timeTable: [String] = []
         
         for (date, dataForDate) in dataDict {
+            
+            bpmIdx[date] = 0
+            
             for bpmData in dataForDate {
-                timeTable.append(bpmData.writeTime)
+                if !timeTable.contains(bpmData.writeTime) {
+                    timeTable.append(bpmData.writeTime) // 중복된 시간이 아닌 writeTime
+                }
             }
         }
-        timeTable.sort()
-        timeTable = Array(Set(timeTable)).sorted()
-        print(timeTable)
-    }
-    
-//    let bpmDataEntry = ChartDataEntry(x: Double(xValue), y: Double(bpmData.bpm) ?? 0.0)
-//    dataEntries.append(bpmDataEntry)
-//    timeTable.append(bpmData.writeTime)
-    
-    func viewTwoDaysChart(_ bpmDataList: [BpmData]) {
         
-    }
-    
-    func viewThreeDaysChart(_ bpmDataList: [BpmData]) {
+        timeTable.sort()    // 시간 정렬
         
+        for time in timeTable {
+            for (date, dataForDate) in dataDict {
+                if let idx = bpmIdx[date] {
+                    let bpmDataArray = dataForDate.filter { $0.writeTime == time }
+                    
+                    if !bpmDataArray.isEmpty {
+                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                        let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
+                        entries[date]?.append(entry)
+                        bpmIdx[date] = idx + 1
+                    }
+                }
+            }
+        }
+        
+        for (date, entry) in entries {
+            let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
+            chartDataSets.append(chartDataSet)
+        }
+        
+        setChart(chartData: LineChartData(dataSets: chartDataSets),
+                 maximum: 1000,
+                 axisMaximum: 200,
+                 axisMinimum: 40, 
+                 timeTable: timeTable)
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
@@ -376,6 +398,16 @@ class LineChartVC : UIViewController, Refreshable {
                 print("responseBpmData error : \(error)")
             }
         }
+    }
+    
+    func chartDataSet(color: NSUIColor, chartDataSet: LineChartDataSet) -> LineChartDataSet {
+        chartDataSet.drawCirclesEnabled = false
+        chartDataSet.setColor(color)
+        chartDataSet.mode = .linear
+        chartDataSet.lineWidth = 0.7
+        chartDataSet.drawValuesEnabled = true
+        
+        return chartDataSet
     }
     
     func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double, timeTable: [String]) {
