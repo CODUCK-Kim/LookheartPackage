@@ -337,38 +337,31 @@ class LineChartVC : UIViewController, Refreshable {
         }
         
         timeTable.sort()    // 시간 정렬
-        
-        var cnt = 0
-        
+
         for time in timeTable {
-            
-            print("time : \(time)")
-            
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
-                    print("\(date) -> idx : \(idx)")
+                    
                     if !bpmDataArray.isEmpty {
-                        print("bpmDataArray : \(bpmDataArray)")
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
-                        print("bpmValue : \(bpmValue)")
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
-                        bpmIdx[date] = idx + 1
+//                        bpmIdx[date] = idx + 1
+                    } else {
+                        let entry = ChartDataEntry(x: Double(idx), y: 70.0)
+                        entries[date]?.append(entry)
                     }
+                    bpmIdx[date] = idx + 1
                 }
             }
         }
         
-        print("entries.count : \(entries.count)")
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
-            print(date)
-            print(entry)
             chartDataSets.append(chartDataSet)
         }
   
-        print("chartDataSets : \(chartDataSets.count)")
         print("timeTable : \(timeTable.count)")
         setChart(chartData: LineChartData(dataSets: chartDataSets),
                  maximum: 1000,
