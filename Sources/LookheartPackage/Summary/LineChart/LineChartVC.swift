@@ -340,7 +340,6 @@ class LineChartVC : UIViewController, Refreshable {
         var cnt = 0
         
         for time in timeTable {
-            if cnt == timeTable.count - 1  {    break   }
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
@@ -354,7 +353,6 @@ class LineChartVC : UIViewController, Refreshable {
                     }
                 }
             }
-            cnt += 1
         }
         
         for (date, entry) in entries {
@@ -362,11 +360,11 @@ class LineChartVC : UIViewController, Refreshable {
             chartDataSets.append(chartDataSet)
         }
         
-        setChart(chartData: LineChartData(dataSets: chartDataSets),
-                 maximum: 1000,
-                 axisMaximum: 200,
-                 axisMinimum: 40, 
-                 timeTable: timeTable)
+//        setChart(chartData: LineChartData(dataSets: chartDataSets),
+//                 maximum: 1000,
+//                 axisMaximum: 200,
+//                 axisMinimum: 40, 
+//                 timeTable: timeTable)
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
