@@ -93,6 +93,10 @@ class LineChartVC : UIViewController, Refreshable {
     private var threeDaysEntries = [ChartDataEntry]()
     // CHART END
     
+    
+    private var startTT = Date()
+    private var endTT = Date()
+    
     // MARK: UI VAR
     private let safeAreaView = UIView()
     
@@ -365,26 +369,6 @@ class LineChartVC : UIViewController, Refreshable {
                 }
             }
         }
-//        for time in timeTable {
-//            for (date, dataForDate) in dataDict {
-//                if let idx = bpmIdx[date] {
-//                    let bpmDataArray = dataForDate.filter { $0.writeTime == time }
-//                    
-//                    if !bpmDataArray.isEmpty {
-//                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
-//                        let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
-//                        entries[date]?.append(entry)
-////                        bpmIdx[date] = idx + 1
-//
-//                    } else {
-//                        let entry = ChartDataEntry(x: Double(idx), y: 70.0)
-//                        entries[date]?.append(entry)
-//                    }
-//                    
-//                    bpmIdx[date] = idx + 1
-//                }
-//            }
-//        }
         
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
@@ -396,6 +380,10 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMaximum: 200,
                  axisMinimum: 40, 
                  timeTable: timeTable)
+        
+        endTT = Date()
+        let duration = endTT.timeIntervalSince(startTT)
+        print("작업 시간: \(duration)초")
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
@@ -421,7 +409,7 @@ class LineChartVC : UIViewController, Refreshable {
 //    }
     
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
-                        
+        startTT = Date()
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
