@@ -342,12 +342,15 @@ class LineChartVC : UIViewController, Refreshable {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
                     
-                    if !bpmDataArray.isEmpty {
-                        print(bpmDataArray)
-                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                    if let bpmString = bpmDataArray.first?.bpm,
+                        let bpmValue = Double(bpmString),
+                            !bpmValue.isNaN,
+                            bpmValue.isFinite {
+                        
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
                         bpmIdx[date] = idx + 1
+                        
                     }
                 }
             }
