@@ -347,21 +347,21 @@ class LineChartVC : UIViewController, Refreshable {
     func setChartData(_ bpmDataList: [BpmData], _ flag: DateType) {
 
         
-        var preDateTime: String = ""
+//        var preDateTime: String = ""
 //        var firstArr =  bpmDataList.filter(data:BpmData -> data.writetime.contains(""))
         
         
-        for data in bpmDataList {
-            if data.writetime.contains(preDateTime) && preDateTime.isEmpty {
-                // first
-                preDateTime = String(data.writetime.split(separator: " ")[0])
-                
-                BpmDataController.shared.setData(preDateTime, <#T##bpmData: [BpmData]##[BpmData]#>)
-            } else {
-                
-            }
-            
-        }
+//        for data in bpmDataList {
+//            if data.writetime.contains(preDateTime) && preDateTime.isEmpty {
+//                // first
+//                preDateTime = String(data.writetime.split(separator: " ")[0])
+//                
+//                BpmDataController.shared.setData(preDateTime, <#T##bpmData: [BpmData]##[BpmData]#>)
+//            } else {
+//                
+//            }
+//            
+//        }
     }
     
     // MARK: - DATE FUNC
