@@ -340,13 +340,17 @@ class LineChartVC : UIViewController, Refreshable {
         var cnt = 0
         
         for time in timeTable {
+            
+            print("time : \(time)")
+            
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
-                    
+                    print("idx : \(idx)")
                     if !bpmDataArray.isEmpty {
-//                        print(bpmDataArray)
+                        print("bpmDataArray : \(bpmDataArray)")
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                        print("bpmValue : \(bpmValue)")
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
                         bpmIdx[date] = idx + 1
