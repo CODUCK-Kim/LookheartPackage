@@ -320,8 +320,9 @@ class LineChartVC : UIViewController, Refreshable {
         print(startDate)
         print(endDate)
         
-        findDate(startDate, type)
+        let test = findDate(startDate, type)
         
+        print(test)
 //        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
 //            switch(result){
 //            case .success(let bpmDataList): 
@@ -336,18 +337,32 @@ class LineChartVC : UIViewController, Refreshable {
     
     // MARK: - DATE FUNC
     // 서버에 조회 할 날짜값을 구함
-    func findDate(_ startDate: String, _ type: DateType) {
-        let bpmDataList = BpmDataController.shared.getList()
-        var dateArray:[String] = []
-        var flag = type == .TODAY_FLAG ? 1 :
+    func findDate(_ startDate: String, _ type: DateType) -> [String] {
+        let bpmDictionary = BpmDataController.shared.getList()
+        let flag = type == .TODAY_FLAG ? 1 :
                    type == .TWO_DAYS_FLAG ? 2 :
                    type == .THREE_DAYS_FLAG ? 3 : 1
+        
+        var dateArray: [String] = []
+        var result: [String] = []
         
         for i in 1...flag {
             dateArray.append(dateCalculate(startDate, i - 1, PLUS_DATE))
         }
         
-        print(dateArray)
+        // 데이터 유무 확인
+        for date in dateArray {
+            if bpmDictionary[date] == nil {
+                // 데이터 없음
+                result.append(date)
+            }
+        }
+        
+        guard let firstElement = result.first, let lastElement = result.last else {
+            return [] // 배열이 비어있으면 빈 배열 반환
+        }
+        
+        return [firstElement, dateCalculate(lastElement, 1, PLUS_DATE)]
     }
     
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
