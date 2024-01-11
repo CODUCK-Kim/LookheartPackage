@@ -270,10 +270,8 @@ class LineChartVC : UIViewController, Refreshable {
         
         initVar()
         
-        setDate()
         addViews()
         
-        getBpmData(startDate, endDate)
     }
     
     func refreshView() {
@@ -291,19 +289,29 @@ class LineChartVC : UIViewController, Refreshable {
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, 1, true)
+        
     }
     
-    func setDate() {
+    // MARK: - CHART FUNC
+    func getBpmData() {
+        
+        if let data = BpmDataController.shared.getData(startDate) {
+            let bpmData = data
+        } else {
+//            getBpmDataToServer(startDate, endDate)
+            endDate = dateCalculate(startDate, 2, false)
+            getBpmDataToServer(endDate, startDate)
+        }
+        
+    }
+    
+    func getBpmDataToServer(_ startDate: String, _ endDate: String) {
 
-    }
-    
-    func getBpmData(_ startDate: String, _ endDate: String) {
-        print(startDate)
-        print(endDate)
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate){ [self] result in
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let data):
                 print(data)
+//                BpmDataController.shared.setData(startDate, data)
             case .failure(let error):
                 print("responseBpmData error : \(error)")
             }
@@ -328,40 +336,7 @@ class LineChartVC : UIViewController, Refreshable {
                 return "\(year)-\(month)-\(day)"
             }
         }
-        
         return date
-    }
-    
-    func setDays(_ date: String) {
-        guard let inputDate = dateFormatter.date(from: date) else { return }
-        
-        // twoDays
-        if let arrTargetDate = calendar.date(byAdding: .day, value: -1, to: inputDate) {
-            
-            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
-            
-            if let year = components.year, let month = components.month, let day = components.day {
-                twoDaysTargetYear = "\(year)"
-                twoDaysTargetMonth = String(format: "%02d", month)
-                twoDaysTargetDay = String(format: "%02d", day)
-                
-                twoDaysTargetDate = "\(twoDaysTargetYear)-\(twoDaysTargetMonth)-\(twoDaysTargetDay)"
-            }
-        }
-        
-        // threeDays
-        if let arrTargetDate = calendar.date(byAdding: .day, value: -2, to: inputDate) {
-            
-            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
-            
-            if let year = components.year, let month = components.month, let day = components.day {
-                threeDaysTargetYear = "\(year)"
-                threeDaysTargetMonth = String(format: "%02d", month)
-                threeDaysTargetDay = String(format: "%02d", day)
-                
-                threeDaysTargetDate = "\(threeDaysTargetYear)-\(threeDaysTargetMonth)-\(threeDaysTargetDay)"
-            }
-        }
     }
     
     // MARK: -
