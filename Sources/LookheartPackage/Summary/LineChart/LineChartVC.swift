@@ -321,18 +321,15 @@ class LineChartVC : UIViewController, Refreshable {
         let test2 = findDate(startDate, .TWO_DAYS_FLAG)
         let test3 = findDate(startDate, .TODAY_FLAG)
         
-        print(test)
-        print(test2)
-        print(test3)
-//        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
-//            switch(result){
-//            case .success(let bpmDataList): 
-//                break
-////                BpmDataController.shared.setData(startDate, data)
-//            case .failure(let error):
-//                print("responseBpmData error : \(error)")
-//            }
-//        }
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: test[0], endDate: test[1]) { result in
+            switch(result){
+            case .success(let bpmDataList): 
+                print(bpmDataList)
+//                BpmDataController.shared.setData(startDate, data)
+            case .failure(let error):
+                print("responseBpmData error : \(error)")
+            }
+        }
     }
     
     
