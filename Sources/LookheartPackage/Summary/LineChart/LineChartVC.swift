@@ -320,7 +320,7 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
-        
+        startTT = Date()
         let dataDict = groupBpmDataByDate(bpmDataList)
 
         var chartDataSets: [LineChartDataSet] = []
@@ -413,7 +413,9 @@ class LineChartVC : UIViewController, Refreshable {
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
-                
+                self.endTT = Date()
+                let duration = self.endTT.timeIntervalSince(self.startTT)
+                print("작업 시간: \(duration)초")
                 self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
