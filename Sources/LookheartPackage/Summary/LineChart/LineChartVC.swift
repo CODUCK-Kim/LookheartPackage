@@ -317,12 +317,13 @@ class LineChartVC : UIViewController, Refreshable {
     
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
-        print(startDate)
-        print(endDate)
-        
         let test = findDate(startDate, type)
+        let test2 = findDate(startDate, .TWO_DAYS_FLAG)
+        let test3 = findDate(startDate, .TODAY_FLAG)
         
         print(test)
+        print(test2)
+        print(test3)
 //        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
 //            switch(result){
 //            case .success(let bpmDataList): 
@@ -336,7 +337,7 @@ class LineChartVC : UIViewController, Refreshable {
     
     
     // MARK: - DATE FUNC
-    // 서버에 조회 할 날짜값을 구함
+    // 서버에 조회 할 날짜
     func findDate(_ startDate: String, _ type: DateType) -> [String] {
         let bpmDictionary = BpmDataController.shared.getList()
         let flag = type == .TODAY_FLAG ? 1 :
@@ -353,7 +354,6 @@ class LineChartVC : UIViewController, Refreshable {
         // 데이터 유무 확인
         for date in dateArray {
             if bpmDictionary[date] == nil {
-                // 데이터 없음
                 result.append(date)
             }
         }
