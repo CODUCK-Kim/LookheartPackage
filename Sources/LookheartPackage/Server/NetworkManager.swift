@@ -442,11 +442,13 @@ public class NetworkManager {
                                 if let bpm = Int(fields[4]), 
                                     let temp = Double(fields[5]),
                                     let hrv = Int(fields[6]) {
+                                    let dateTime = fields[2].split(separator: " ")
                                     
                                     bpmData.append( BpmData(
                                         idx: String(fields[0]),
-                                        eq: String(fields[1]),
-                                        writetime: String(fields[2]),
+                                        eq: String(fields[1]), 
+                                        writeDate: String(dateTime[0]),
+                                        writeTime: String(dateTime[1]),
                                         timezone: String(fields[3]),
                                         bpm: String(bpm),
                                         temp: String(temp),

@@ -330,20 +330,22 @@ class LineChartVC : UIViewController, Refreshable {
     func setChartData(_ bpmDataList: [BpmData]) {
         
         let bpmDataDict = groupBpmDataByDate(bpmDataList)
+        var dataArray:[String] = []
         var arraySize = 0
         
         for bpmData in bpmDataDict {
+            dataArray.append(bpmData.key)
             arraySize = bpmData.value.count
-            for data in bpmData.value {
-                print(data)
-            }
+            print(bpmData.value)
         }
-        print(arraySize)
+        
+//        for i in 0..<arraySize {
+//        }
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
-            let dateKey = String(bpmData.writetime.prefix(10)) // "YYYY-MM-DD" 부분 추출
+            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 부분 추출
             dict[dateKey, default: []].append(bpmData)
         }
         return groupedData
