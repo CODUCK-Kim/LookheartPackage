@@ -346,7 +346,7 @@ class LineChartVC : UIViewController, Refreshable {
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
-                    print("idx : \(idx)")
+                    print("\(date) -> idx : \(idx)")
                     if !bpmDataArray.isEmpty {
                         print("bpmDataArray : \(bpmDataArray)")
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
@@ -359,11 +359,12 @@ class LineChartVC : UIViewController, Refreshable {
             }
         }
         
+        print("entries.count : \(entries.count)")
         for (date, entry) in entries {
-            let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
+//            let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
             print(date)
             print(entry)
-            chartDataSets.append(chartDataSet)
+//            chartDataSets.append(chartDataSet)
         }
   
         print("chartDataSets : \(chartDataSets.count)")
