@@ -326,23 +326,17 @@ class LineChartVC : UIViewController, Refreshable {
         var chartDataSets: [LineChartDataSet] = []
         var entries: [String : [ChartDataEntry]] = [:]
         var bpmIdx: [String : Int] = [:]
-        var preDateDict: [String : String] = [:]
-        var timeTable: [String] = []
-        
+        var timeSets: Set<String> = []
+
         for (date, dataForDate) in dataDict {
-            
             bpmIdx[date] = 0
             entries[date] = [ChartDataEntry]()
-            preDateDict[date] = ""
-            
-            for bpmData in dataForDate {
-                if !timeTable.contains(bpmData.writeTime) {
-                    timeTable.append(bpmData.writeTime) // 중복된 시간이 아닌 writeTime
-                }
-            }
+
+            let timeSet = Set(dataForDate.map { $0.writeTime })
+            timeSets.formUnion(timeSet)
         }
-        
-        timeTable.sort()    // 시간 정렬
+
+        let timeTable = timeSets.sorted()    // 시간 정렬
 
         for i in 0..<timeTable.count {
             let time = timeTable[i]
