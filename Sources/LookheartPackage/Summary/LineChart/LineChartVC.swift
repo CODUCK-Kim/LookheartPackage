@@ -272,6 +272,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         addViews()
         
+        getBpmData()
     }
     
     func refreshView() {
