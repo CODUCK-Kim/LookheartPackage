@@ -302,7 +302,7 @@ class LineChartVC : UIViewController, Refreshable {
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, 1, MINUS_DATE)
+        endDate = dateCalculate(startDate, 2, MINUS_DATE)
         
     }
     
