@@ -319,15 +319,17 @@ class LineChartVC : UIViewController, Refreshable {
         
         let dataDict = groupBpmDataByDate(bpmDataList)
 
-        var entries: [String : [ChartDataEntry]] = [:]
         var chartDataSets: [LineChartDataSet] = []
+        var entries: [String : [ChartDataEntry]] = [:]
         var bpmIdx: [String : Int] = [:]
+        var preDateDict: [String : String] = [:]
         var timeTable: [String] = []
         
         for (date, dataForDate) in dataDict {
             
             bpmIdx[date] = 0
             entries[date] = [ChartDataEntry]()
+            preDateDict[date] = ""
             
             for bpmData in dataForDate {
                 if !timeTable.contains(bpmData.writeTime) {
@@ -348,10 +350,15 @@ class LineChartVC : UIViewController, Refreshable {
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
 //                        bpmIdx[date] = idx + 1
+                        
+                        preDateDict[date] = String(bpmDataArray[0].writeTime.prefix(7)) // 09:10:2
                     } else {
-                        let entry = ChartDataEntry(x: Double(idx), y: 70.0)
-                        entries[date]?.append(entry)
+                        if preDateDict[date] != String(time.prefix(7)) {
+                            let entry = ChartDataEntry(x: Double(idx), y: 70.0)
+                            entries[date]?.append(entry)
+                        }
                     }
+                    
                     bpmIdx[date] = idx + 1
                 }
             }
