@@ -309,9 +309,9 @@ class LineChartVC : UIViewController, Refreshable {
     // MARK: - CHART FUNC
     func todayChart() {
         
-        startDate = "2024-01-10"
+        startDate = "2024-01-09"
         
-        getBpmDataToServer(startDate, dateCalculate(startDate, 1, PLUS_DATE), .TODAY_FLAG)
+        getBpmDataToServer(startDate, dateCalculate(startDate, 2, PLUS_DATE), .TODAY_FLAG)
         
     }
     
