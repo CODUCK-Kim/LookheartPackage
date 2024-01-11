@@ -330,15 +330,15 @@ class LineChartVC : UIViewController, Refreshable {
     func setChartData(_ bpmDataList: [BpmData]) {
         
         let bpmDataDict = groupBpmDataByDate(bpmDataList)
-        var bpmDataEntries: [String : [ChartDataEntry]] = [:]
+        var arraySize = 0
         
-        for bpmDataKey in bpmDataDict {
-            
-            for bpmDataValue in bpmDataKey.key {
-                print(bpmDataValue)
+        for bpmData in bpmDataDict {
+            arraySize = bpmData.value.count
+            for data in bpmData.value {
+                print(data)
             }
-            
         }
+        print(arraySize)
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
