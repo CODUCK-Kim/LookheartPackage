@@ -573,11 +573,6 @@ public class NetworkManager {
                 do {
                     let arrData = try JSONDecoder().decode([EcgData].self, from: data)
                     let resultString = arrData[0].arr.split(separator: ",")
-                    var preEcgArray:[Double] = []
-                    
-                    for data in arrData {
-                        preEcgArray.append(contentsOf: self.getEcgArray(data.ecg ?? "0.0"))
-                    }
                     
                     if resultString.count > 500 {
                         let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
