@@ -312,6 +312,14 @@ class LineChartVC : UIViewController, Refreshable {
             endDate = dateCalculate(startDate, 2, false)
             
             getBpmDataToServer(endDate, startDate, .THREE_DAYS_FLAG)
+            
+            endDate = dateCalculate(startDate, 1, false)
+            
+            getBpmDataToServer(endDate, startDate, .TWO_DAYS_FLAG)
+            
+            endDate = dateCalculate(startDate, 1, true)
+            
+            getBpmDataToServer(startDate, endDate, .TWO_DAYS_FLAG)
         }
     }
     
@@ -321,27 +329,38 @@ class LineChartVC : UIViewController, Refreshable {
         
         let startTime = Date()
         
-        if date.isEmpty {
-            // 데이터 있음
-            
-        } else {
-            // 데이터 없음
-            let startDate = date[0]
-            let endDate = date[1]
-            
-            NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
-                switch(result){
-                case .success(let bpmDataList):
-                    let endTime = Date()
-                    let duration = endTime.timeIntervalSince(startTime)
-                    print("작업 시간: \(duration)초")
-//                    self.setChartData(bpmDataList)
-                    
-                case .failure(let error):
-                    print("responseBpmData error : \(error)")
-                }
+        let startDate = date[0]
+        let endDate = date[1]
+        
+        NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
+            switch(result){
+            case .success(let bpmDataList):
+                let endTime = Date()
+                let duration = endTime.timeIntervalSince(startTime)
+                print("\(type) 작업 시간: \(duration)초")
+            case .failure(let error):
+                print("responseBpmData error : \(error)")
             }
         }
+//        if date.isEmpty {
+//            // 데이터 있음
+//            
+//        } else {
+//            // 데이터 없음
+//            let startDate = date[0]
+//            let endDate = date[1]
+//            
+//            NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
+//                switch(result){
+//                case .success(let bpmDataList):
+//                    let endTime = Date()
+//                    let duration = endTime.timeIntervalSince(startTime)
+//                    print("\(type) 작업 시간: \(duration)초")
+//                case .failure(let error):
+//                    print("responseBpmData error : \(error)")
+//                }
+//            }
+//        }
     }
     
     func setChartData(_ bpmDataList: [BpmData], _ flag: DateType) {
@@ -349,8 +368,8 @@ class LineChartVC : UIViewController, Refreshable {
         
 //        var preDateTime: String = ""
 //        var firstArr =  bpmDataList.filter(data:BpmData -> data.writetime.contains(""))
-        
-        
+//        
+//        
 //        for data in bpmDataList {
 //            if data.writetime.contains(preDateTime) && preDateTime.isEmpty {
 //                // first
