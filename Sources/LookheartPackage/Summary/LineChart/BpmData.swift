@@ -20,8 +20,16 @@ class BpmDataController {
         bpmDataList[date] = bpmData
     }
     
+    public func getList() -> [String: [BpmData]] {
+        return bpmDataList
+    }
+    
     public func getData(_ date: String) -> [BpmData]? {
         return bpmDataList[date] ?? nil
+    }
+    
+    public func addData(_ key: String, _ value: BpmData) {
+        bpmDataList[key]?.append(value)
     }
     
     public func removeAllData() {

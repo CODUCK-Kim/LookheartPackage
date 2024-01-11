@@ -8,6 +8,11 @@ class LineChartVC : UIViewController, Refreshable {
     
     private var email = String()
     
+    enum DateType {
+        case TODAY_FLAG
+        case TWO_DAYS_FLAG
+        case THREE_DAYS_FLAG
+    }
     // ----------------------------- TAG ------------------- //
     // 버튼 상수
     private let YESTERDAY_BUTTON_FLAG = 1
@@ -16,6 +21,9 @@ class LineChartVC : UIViewController, Refreshable {
     private let TODAY_FLAG = 1
     private let TWO_DAYS_FLAG = 2
     private let THREE_DAYS_FLAG = 3
+    
+    private let PLUS_DATE = true
+    private let MINUS_DATE = false
     // TAG END
     
     // ----------------------------- UI ------------------- //
@@ -301,26 +309,47 @@ class LineChartVC : UIViewController, Refreshable {
         } else {
 //            getBpmDataToServer(startDate, endDate)
             endDate = dateCalculate(startDate, 2, false)
-            getBpmDataToServer(endDate, startDate)
+            
+            getBpmDataToServer(endDate, startDate, .THREE_DAYS_FLAG)
         }
         
     }
     
-    func getBpmDataToServer(_ startDate: String, _ endDate: String) {
-
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
-            switch(result){
-            case .success(let data):
-                print(data)
-//                BpmDataController.shared.setData(startDate, data)
-            case .failure(let error):
-                print("responseBpmData error : \(error)")
-            }
-        }
+    func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+        
+        print(startDate)
+        print(endDate)
+        
+        findDate(startDate, type)
+        
+//        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
+//            switch(result){
+//            case .success(let bpmDataList): 
+//                break
+////                BpmDataController.shared.setData(startDate, data)
+//            case .failure(let error):
+//                print("responseBpmData error : \(error)")
+//            }
+//        }
     }
     
     
     // MARK: - DATE FUNC
+    // 서버에 조회 할 날짜값을 구함
+    func findDate(_ startDate: String, _ type: DateType) {
+        let bpmDataList = BpmDataController.shared.getList()
+        var dateArray:[String] = []
+        var flag = type == .TODAY_FLAG ? 1 :
+                   type == .TWO_DAYS_FLAG ? 2 :
+                   type == .THREE_DAYS_FLAG ? 3 : 1
+        
+        for i in 1...flag {
+            dateArray.append(dateCalculate(startDate, 1, PLUS_DATE))
+        }
+        
+        print(dateArray)
+    }
+    
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
         guard let inputDate = dateFormatter.date(from: date) else { return date }
 
