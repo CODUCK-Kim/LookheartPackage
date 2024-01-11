@@ -344,7 +344,7 @@ class LineChartVC : UIViewController, Refreshable {
                    type == .THREE_DAYS_FLAG ? 3 : 1
         
         for i in 1...flag {
-            dateArray.append(dateCalculate(startDate, 1, PLUS_DATE))
+            dateArray.append(dateCalculate(startDate, i - 1, PLUS_DATE))
         }
         
         print(dateArray)
