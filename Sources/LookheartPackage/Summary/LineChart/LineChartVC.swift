@@ -39,6 +39,7 @@ class LineChartVC : UIViewController, Refreshable {
     // ----------------------------- DATE ------------------- //
     // 날짜 변수
     private let dateFormatter = DateFormatter()
+    private let timeFormatter = DateFormatter()
     private var calendar = Calendar.current
     
     private var startDate = String()
@@ -74,8 +75,6 @@ class LineChartVC : UIViewController, Refreshable {
     private var xAxisTotal = 0
     private var startTimeInMinutes = 0
     private var endTimeInMinutes = 0
-    
-    private var timeTable: [String] = []
     
     private var timeCount = 0
     private var timeTableCount = 0
@@ -296,6 +295,7 @@ class LineChartVC : UIViewController, Refreshable {
         email = "jhaseung@medsyslab.co.kr"
         
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        timeFormatter.dateFormat = "HH:mm:ss"
         
         currentButtonFlag = TODAY_FLAG
         
@@ -309,9 +309,60 @@ class LineChartVC : UIViewController, Refreshable {
     // MARK: - CHART FUNC
     func todayChart() {
         
-        getBpmDataToServer(endDate, dateCalculate(startDate, 1, PLUS_DATE), .TODAY_FLAG)
+        startDate = "2024-01-10"
+        
+        getBpmDataToServer(startDate, dateCalculate(startDate, 1, PLUS_DATE), .TODAY_FLAG)
         
     }
+    
+    func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
+        
+        let dataDict = groupBpmDataByDate(bpmDataList)
+        var timeTable: [String] = []
+        
+        for (date, dataForDate) in dataDict {
+            for bpmData in dataForDate {
+                timeTable.append(bpmData.writeTime)
+            }
+        }
+        timeTable.sort()
+        
+        print(timeTable)
+    }
+    
+//    let bpmDataEntry = ChartDataEntry(x: Double(xValue), y: Double(bpmData.bpm) ?? 0.0)
+//    dataEntries.append(bpmDataEntry)
+//    timeTable.append(bpmData.writeTime)
+    
+    func viewTwoDaysChart(_ bpmDataList: [BpmData]) {
+        
+    }
+    
+    func viewThreeDaysChart(_ bpmDataList: [BpmData]) {
+        
+    }
+    
+    func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
+        let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
+            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 기준 저장
+            dict[dateKey, default: []].append(bpmData)
+        }
+        return groupedData
+    }
+    
+//    func setChartData(_ bpmDataList: [BpmData], _ type: DateType) {
+//        
+//        switch (type) {
+//        
+//        case .TODAY_FLAG:
+//            viewTodayChart(bpmDataList, type)
+//        case .TWO_DAYS_FLAG:
+//            viewTwoDaysChart(bpmDataList, type)
+//        case .THREE_DAYS_FLAG:
+//            viewThreeDaysChart(bpmDataList, )
+//            
+//        }
+//    }
     
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
                         
@@ -319,7 +370,7 @@ class LineChartVC : UIViewController, Refreshable {
             switch(result){
             case .success(let bpmDataList):
                 
-                self.setChartData(bpmDataList)
+                self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
                 print("responseBpmData error : \(error)")
@@ -327,28 +378,15 @@ class LineChartVC : UIViewController, Refreshable {
         }
     }
     
-    func setChartData(_ bpmDataList: [BpmData]) {
-        
-        let bpmDataDict = groupBpmDataByDate(bpmDataList)
-        var dataArray:[String] = []
-        var arraySize = 0
-        
-        for bpmData in bpmDataDict {
-            dataArray.append(bpmData.key)
-            arraySize = bpmData.value.count
-            print(bpmData.value)
-        }
-        
-//        for i in 0..<arraySize {
-//        }
-    }
-    
-    func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
-        let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
-            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 부분 추출
-            dict[dateKey, default: []].append(bpmData)
-        }
-        return groupedData
+    func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double, timeTable: [String]) {
+        lineChartView.data = chartData
+        lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        lineChartView.setVisibleXRangeMaximum(maximum)
+        lineChartView.leftAxis.axisMaximum = axisMaximum
+        lineChartView.leftAxis.axisMinimum = axisMinimum
+        lineChartView.data?.notifyDataChanged()
+        lineChartView.notifyDataSetChanged()
+        lineChartView.moveViewToX(0)
     }
     
     // MARK: - DATE FUNC

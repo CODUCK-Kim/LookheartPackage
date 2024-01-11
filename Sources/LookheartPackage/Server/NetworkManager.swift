@@ -447,6 +447,7 @@ public class NetworkManager {
                                     bpmData.append( BpmData(
                                         idx: String(fields[0]),
                                         eq: String(fields[1]), 
+                                        writeDateTime: String(fields[2]),
                                         writeDate: String(dateTime[0]),
                                         writeTime: String(dateTime[1]),
                                         timezone: String(fields[3]),
