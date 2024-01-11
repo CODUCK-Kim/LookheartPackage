@@ -571,11 +571,12 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 do {
-                    let arrData = try JSONDecoder().decode([EcgData].self, from: data)
-                    let resultString = arrData[0].arr.split(separator: ",")
-                    
+                    let arrData = try JSONDecoder().decode([ArrEcgData].self, from: data)
+                    let resultString = arrData[0].ecgpacket.split(separator: ",")
+
                     if resultString.count > 500 {
                         let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+
                         completion(.success(ArrData.init(
                             idx: "0",
                             writeTime: "0",
