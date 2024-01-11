@@ -353,7 +353,10 @@ class LineChartVC : UIViewController, Refreshable {
                         
                         preDateDict[date] = String(bpmDataArray[0].writeTime.prefix(7)) // 09:10:2
                     } else {
+                        print("preDateDict : \(String(describing: preDateDict[date]))")
+                        print("time : \(time)")
                         if preDateDict[date] != String(time.prefix(7)) {
+                            print("check")
                             let entry = ChartDataEntry(x: Double(idx), y: 70.0)
                             entries[date]?.append(entry)
                         }
@@ -368,8 +371,7 @@ class LineChartVC : UIViewController, Refreshable {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
             chartDataSets.append(chartDataSet)
         }
-  
-        print("timeTable : \(timeTable.count)")
+        
         setChart(chartData: LineChartData(dataSets: chartDataSets),
                  maximum: 1000,
                  axisMaximum: 200,
