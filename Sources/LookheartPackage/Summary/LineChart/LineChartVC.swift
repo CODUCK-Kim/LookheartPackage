@@ -331,7 +331,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         let test = groupBpmDataByDate(bpmDataList)
         
-        print(test)
+        print(test.count)
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
