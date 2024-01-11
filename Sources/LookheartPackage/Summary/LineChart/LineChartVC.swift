@@ -281,7 +281,8 @@ class LineChartVC : UIViewController, Refreshable {
         
         addViews()
         
-        getBpmData()
+        todayChart()
+        
     }
     
     func refreshView() {
@@ -289,7 +290,10 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     func initVar() {
-        email = UserProfileManager.shared.getEmail()
+//        email = UserProfileManager.shared.getEmail()
+        
+        // test
+        email = "jhaseung@medsyslab.co.kr"
         
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
@@ -298,117 +302,47 @@ class LineChartVC : UIViewController, Refreshable {
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, 1, true)
+        endDate = dateCalculate(startDate, 1, MINUS_DATE)
         
     }
     
     // MARK: - CHART FUNC
-    func getBpmData() {
+    func todayChart() {
         
-        if let data = BpmDataController.shared.getData(startDate) {
-            let bpmData = data
-        } else {
-//            getBpmDataToServer(startDate, endDate)
-            endDate = dateCalculate(startDate, 2, false)
-            getBpmDataToServer(endDate, startDate, .THREE_DAYS_FLAG)
-            
-//            endDate = dateCalculate(startDate, 1, false)
-//            getBpmDataToServer(endDate, startDate, .TWO_DAYS_FLAG)
-//            
-//            endDate = dateCalculate(startDate, 1, true)
-//            getBpmDataToServer(startDate, endDate, .TWO_DAYS_FLAG)
-        }
+        getBpmDataToServer(endDate, dateCalculate(startDate, 1, PLUS_DATE), .TODAY_FLAG)
+        
     }
     
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
-        
-        let date = findDate(startDate, type)
-        
-        let startTime = Date()
-        
-        let startDate = date[0]
-        let endDate = date[1]
-        
-        NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
+                        
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
-                let endTime = Date()
-                let duration = endTime.timeIntervalSince(startTime)
-                print("\(type) 작업 시간: \(duration)초")
+                
+                self.setChartData(bpmDataList, type)
+                
             case .failure(let error):
                 print("responseBpmData error : \(error)")
             }
         }
-//        if date.isEmpty {
-//            // 데이터 있음
-//            
-//        } else {
-//            // 데이터 없음
-//            let startDate = date[0]
-//            let endDate = date[1]
-//            
-//            NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
-//                switch(result){
-//                case .success(let bpmDataList):
-//                    let endTime = Date()
-//                    let duration = endTime.timeIntervalSince(startTime)
-//                    print("\(type) 작업 시간: \(duration)초")
-//                case .failure(let error):
-//                    print("responseBpmData error : \(error)")
-//                }
-//            }
-//        }
     }
     
     func setChartData(_ bpmDataList: [BpmData], _ flag: DateType) {
-
         
-//        var preDateTime: String = ""
-//        var firstArr =  bpmDataList.filter(data:BpmData -> data.writetime.contains(""))
-//        
-//        
-//        for data in bpmDataList {
-//            if data.writetime.contains(preDateTime) && preDateTime.isEmpty {
-//                // first
-//                preDateTime = String(data.writetime.split(separator: " ")[0])
-//                
-//                BpmDataController.shared.setData(preDateTime, <#T##bpmData: [BpmData]##[BpmData]#>)
-//            } else {
-//                
-//            }
-//            
-//        }
+        let test = groupBpmDataByDate(bpmDataList)
+        
+        print(test)
+    }
+    
+    func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
+        let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
+            let dateKey = String(bpmData.writetime.prefix(10)) // "YYYY-MM-DD" 부분 추출
+            dict[dateKey, default: []].append(bpmData)
+        }
+        return groupedData
     }
     
     // MARK: - DATE FUNC
-    // 서버에 조회 할 날짜
-    func findDate(_ startDate: String, _ type: DateType) -> [String] {
-        let bpmDictionary = BpmDataController.shared.getList()
-        let flag = type == .TODAY_FLAG ? 1 :
-                   type == .TWO_DAYS_FLAG ? 2 :
-                   type == .THREE_DAYS_FLAG ? 3 : 1
-        
-        var dateArray: [String] = []
-        var result: [String] = []
-        
-        for i in 1...flag {
-            dateArray.append(dateCalculate(startDate, i - 1, PLUS_DATE))
-        }
-        
-        // 데이터 유무 확인
-        for date in dateArray {
-            if bpmDictionary[date] == nil {
-                result.append(date)
-            }
-        }
-        
-        guard let firstElement = result.first, let lastElement = result.last else {
-            return [] // 배열이 비어있으면 빈 배열 반환
-        }
-        
-        return [firstElement, dateCalculate(lastElement, 1, PLUS_DATE)]
-    }
-    
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
         guard let inputDate = dateFormatter.date(from: date) else { return date }
 
