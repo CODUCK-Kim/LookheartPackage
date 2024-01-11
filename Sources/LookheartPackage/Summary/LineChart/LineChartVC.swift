@@ -13,6 +13,7 @@ class LineChartVC : UIViewController, Refreshable {
         case TWO_DAYS_FLAG
         case THREE_DAYS_FLAG
     }
+    
     // ----------------------------- TAG ------------------- //
     // 버튼 상수
     private let YESTERDAY_BUTTON_FLAG = 1
@@ -312,26 +313,56 @@ class LineChartVC : UIViewController, Refreshable {
             
             getBpmDataToServer(endDate, startDate, .THREE_DAYS_FLAG)
         }
-        
     }
     
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
-        let test = findDate(startDate, type)
-        let test2 = findDate(startDate, .TWO_DAYS_FLAG)
-        let test3 = findDate(startDate, .TODAY_FLAG)
+        let date = findDate(startDate, type)
         
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: test[0], endDate: test[1]) { result in
-            switch(result){
-            case .success(let bpmDataList): 
-                print(bpmDataList)
-//                BpmDataController.shared.setData(startDate, data)
-            case .failure(let error):
-                print("responseBpmData error : \(error)")
+        let startTime = Date()
+        
+        if date.isEmpty {
+            // 데이터 있음
+            
+        } else {
+            // 데이터 없음
+            let startDate = date[0]
+            let endDate = date[1]
+            
+            NetworkManager.shared.getBpmDataToServer(id: "jhaseung@medsyslab.co.kr", startDate: startDate, endDate: endDate) { result in
+                switch(result){
+                case .success(let bpmDataList):
+                    let endTime = Date()
+                    let duration = endTime.timeIntervalSince(startTime)
+                    print("작업 시간: \(duration)초")
+//                    self.setChartData(bpmDataList)
+                    
+                case .failure(let error):
+                    print("responseBpmData error : \(error)")
+                }
             }
         }
     }
     
+    func setChartData(_ bpmDataList: [BpmData], _ flag: DateType) {
+
+        
+        var preDateTime: String = ""
+//        var firstArr =  bpmDataList.filter(data:BpmData -> data.writetime.contains(""))
+        
+        
+        for data in bpmDataList {
+            if data.writetime.contains(preDateTime) && preDateTime.isEmpty {
+                // first
+                preDateTime = String(data.writetime.split(separator: " ")[0])
+                
+                BpmDataController.shared.setData(preDateTime, <#T##bpmData: [BpmData]##[BpmData]#>)
+            } else {
+                
+            }
+            
+        }
+    }
     
     // MARK: - DATE FUNC
     // 서버에 조회 할 날짜
