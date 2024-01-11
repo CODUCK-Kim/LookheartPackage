@@ -340,7 +340,9 @@ class LineChartVC : UIViewController, Refreshable {
         
         timeTable.sort()    // 시간 정렬
 
-        for time in timeTable {
+        for i in 0..<timeTable.count {
+            let time = timeTable[i]
+
             for (date, dataForDate) in dataDict {
                 if let idx = bpmIdx[date] {
                     let bpmDataArray = dataForDate.filter { $0.writeTime == time }
@@ -349,23 +351,40 @@ class LineChartVC : UIViewController, Refreshable {
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
-//                        bpmIdx[date] = idx + 1
-                        
-                        preDateDict[date] = String(bpmDataArray[0].writeTime.prefix(7)) // 09:10:2
-                    } else {
-                        print("preDateDict : \(String(describing: preDateDict[date]))")
-                        print("time : \(time)")
-                        if preDateDict[date] != String(time.prefix(7)) {
-                            print("check")
+                    } else if i + 1 < timeTable.count { // 다음 time 존재 확인
+                        let nextTime = timeTable[i + 1].prefix(7)
+                        let nextTimeDataArray = dataForDate.filter { $0.writeTime.prefix(7) == nextTime }
+
+                        if nextTimeDataArray.isEmpty {
                             let entry = ChartDataEntry(x: Double(idx), y: 70.0)
                             entries[date]?.append(entry)
                         }
                     }
-                    
+
                     bpmIdx[date] = idx + 1
                 }
             }
         }
+//        for time in timeTable {
+//            for (date, dataForDate) in dataDict {
+//                if let idx = bpmIdx[date] {
+//                    let bpmDataArray = dataForDate.filter { $0.writeTime == time }
+//                    
+//                    if !bpmDataArray.isEmpty {
+//                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+//                        let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
+//                        entries[date]?.append(entry)
+////                        bpmIdx[date] = idx + 1
+//
+//                    } else {
+//                        let entry = ChartDataEntry(x: Double(idx), y: 70.0)
+//                        entries[date]?.append(entry)
+//                    }
+//                    
+//                    bpmIdx[date] = idx + 1
+//                }
+//            }
+//        }
         
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
