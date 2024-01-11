@@ -326,31 +326,30 @@ public class ArrViewController : UIViewController {
         chartView.moveViewToX(0)
     }
     
-    private func setPreEcgData(_ ecgDataConversion: EcgDataConversion, _ arrData: ArrData) {
-        let preEcgData = findPreEcgData(arrData.preEcgData, arrData.data)
-        for i in 0...preEcgData.count - 1 {
-            _ = ecgDataConversion.setPeakData(Int(preEcgData[i]))
-        }
-    }
-    
-    private func findPreEcgData(_ ecgData: [Double], _ arrData: [Double]) -> [Double] {
-        let checkArrData = arrData.prefix(14)
-        
-        var startIndex = 0
-        var arrIndex = 0
-        
-        for index in 0...ecgData.count - 1 {
-            if ecgData[index] == checkArrData[arrIndex] {    arrIndex += 1   }
-            else {  arrIndex = 0    }
-            
-            if arrIndex == 14 {
-                startIndex = index - (arrIndex - 1)
-                break
-            }
-        }
-
-        return Array(ecgData.suffix(from: startIndex))
-    }
+//    private func setPreEcgData(_ ecgDataConversion: EcgDataConversion, _ arrData: ArrData) {
+//        let preEcgData = findPreEcgData(arrData.preEcgData, arrData.data)
+//        for i in 0...preEcgData.count - 1 {
+//            _ = ecgDataConversion.setPeakData(Int(preEcgData[i]))
+//        }
+//    }
+//    private func findPreEcgData(_ ecgData: [Double], _ arrData: [Double]) -> [Double] {
+//        let checkArrData = arrData.prefix(14)
+//        
+//        var startIndex = 0
+//        var arrIndex = 0
+//        
+//        for index in 0...ecgData.count - 1 {
+//            if ecgData[index] == checkArrData[arrIndex] {    arrIndex += 1   }
+//            else {  arrIndex = 0    }
+//            
+//            if arrIndex == 14 {
+//                startIndex = index - (arrIndex - 1)
+//                break
+//            }
+//        }
+//
+//        return Array(ecgData.suffix(from: startIndex))
+//    }
     
     private func emergencyChart(_ arrDate: String) {
         arrDataEntries = []
