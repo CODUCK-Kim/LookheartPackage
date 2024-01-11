@@ -319,7 +319,7 @@ class LineChartVC : UIViewController, Refreshable {
             switch(result){
             case .success(let bpmDataList):
                 
-                self.setChartData(bpmDataList, type)
+                self.setChartData(bpmDataList)
                 
             case .failure(let error):
                 print("responseBpmData error : \(error)")
@@ -327,11 +327,18 @@ class LineChartVC : UIViewController, Refreshable {
         }
     }
     
-    func setChartData(_ bpmDataList: [BpmData], _ flag: DateType) {
+    func setChartData(_ bpmDataList: [BpmData]) {
         
-        let test = groupBpmDataByDate(bpmDataList)
+        let bpmDataDict = groupBpmDataByDate(bpmDataList)
+        var bpmDataEntries: [String : [ChartDataEntry]] = [:]
         
-        print(test.count)
+        for bpmDataKey in bpmDataDict {
+            
+            for bpmDataValue in bpmDataKey.key {
+                print(bpmDataValue)
+            }
+            
+        }
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
