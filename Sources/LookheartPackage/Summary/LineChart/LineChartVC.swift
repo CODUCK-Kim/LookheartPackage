@@ -357,6 +357,8 @@ class LineChartVC : UIViewController, Refreshable {
         
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
+            print(date)
+            print(entry)
             chartDataSets.append(chartDataSet)
         }
   
