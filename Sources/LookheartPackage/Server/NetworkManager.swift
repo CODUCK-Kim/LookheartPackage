@@ -555,7 +555,7 @@ public class NetworkManager {
     
     public func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
         
-        let endpoint = "/mslecgarr/arrPreEcgData?"
+        let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
@@ -563,7 +563,8 @@ public class NetworkManager {
         
         let parameters: [String: Any] = [
             "eq": id,
-            "date": startDate,
+            "startDate": startDate,
+            "endDate": ""
         ]
         
         request(url: url, method: .get, parameters: parameters) { result in
@@ -587,7 +588,6 @@ public class NetworkManager {
                             timezone: "0",
                             bodyStatus: self.removeWsAndNl(resultString[2]),
                             type: self.removeWsAndNl(resultString[3]),
-                            preEcgData: preEcgArray,
                             data: ecgData)))
                     } else {
                         completion(.success(ArrData.init(
@@ -597,7 +597,6 @@ public class NetworkManager {
                             timezone: "",
                             bodyStatus: "응급 상황",
                             type: "응급 상황",
-                            preEcgData: [],
                             data: [])))
                     }
                 } catch {

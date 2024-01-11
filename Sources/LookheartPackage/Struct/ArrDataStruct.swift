@@ -7,7 +7,6 @@ public struct ArrData: Equatable {
     var timezone: String
     var bodyStatus: String
     var type: String
-    var preEcgData: [Double]
     var data: [Double]
 }
 

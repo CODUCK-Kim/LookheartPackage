@@ -157,7 +157,8 @@ public class UserProfileManager {
     // ---------------------------- Conversion FLAG ---------------------------- //
     
     public func getConversionFalg() -> Int {
-        return userProfile?.alarm_sms ?? 0
+        return 1
+//        return userProfile?.alarm_sms ?? 0
     }
     
 }
