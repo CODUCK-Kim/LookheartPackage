@@ -305,6 +305,7 @@ class LineChartVC : UIViewController, Refreshable {
         endDate = dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
         
         print("startDate : \(startDate), endDate : \(endDate)")
+        setDisplayDateText()
     }
     
     // MARK: - VDL
@@ -333,8 +334,9 @@ class LineChartVC : UIViewController, Refreshable {
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, 1, PLUS_DATE)
+        endDate = dateCalculate(startDate, setDate(.TODAY_FLAG), PLUS_DATE)
         
+        setDisplayDateText()
     }
     
     // MARK: - CHART FUNC
@@ -350,6 +352,7 @@ class LineChartVC : UIViewController, Refreshable {
         var entries: [String : [ChartDataEntry]] = [:]
         var timeSets: Set<String> = []
 
+        // setTimeTable
         for (date, dataForDate) in dataDict {
             
             entries[date] = [ChartDataEntry]()
@@ -374,6 +377,7 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMinimum: 40, 
                  timeTable: timeTable)
     }
+    
     
     func setDictionary(_ dataDict: [String : [BpmData]]) -> [String: [String: [BpmData]]] {
         // [ 날짜 : [ 시간 : [BpmData] ]
@@ -467,7 +471,7 @@ class LineChartVC : UIViewController, Refreshable {
             }
         }
         
-        setUI(dateText)
+        setUI()
         
         return chartDataSets
     }
@@ -540,18 +544,25 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     // MARK: - UI
-    func setUI(_ dateText: [String]) {
-        var displayTest = startDate
+    func setDisplayDateText() {
+        var displayText = startDate
+        let startDateText = changeDateFormat(startDate, false)
+        let endDateText = changeDateFormat(dateCalculate(endDate, 1, false), false)
         
-        if dateText.count > 1 {
-            if let startDate = dateText.first, let endDate = dateText.last {
-                displayTest = "\(changeDateFormat(startDate, false)) ~ \(changeDateFormat(endDate, false))"
-            }
-        } else {
-            displayTest = dateText.first ?? startDate
+        switch (currentButtonFlag) {
+            
+        case .TODAY_FLAG:
+            displayText = startDate
+        case .TWO_DAYS_FLAG:
+            fallthrough
+        case .THREE_DAYS_FLAG:
+            displayText = "\(startDateText) ~ \(endDateText)"
         }
         
-        todayDisplay.text = displayTest
+        todayDisplay.text = displayText
+    }
+    
+    func setUI() {
         maxValue.text = String(max)
         minValue.text = String(min)
         avgValue.text = String(avg)
