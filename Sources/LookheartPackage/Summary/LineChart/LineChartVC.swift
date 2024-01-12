@@ -234,7 +234,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         startDate = dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
         
-        getBpmDataToServer(startDate, endDate, currentButtonFlag)
+        getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
         setButtonColor(sender)
     }
@@ -250,7 +250,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         endDate = dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
         
-        getBpmDataToServer(startDate, endDate, currentButtonFlag)
+        getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
     }
     
@@ -262,15 +262,19 @@ class LineChartVC : UIViewController, Refreshable {
         
         addViews()
         
-        
+        refreshView(.BPM)
     }
     
     public func refreshView(_ type: ChartType) {
         
         chartType = type
         
-        getBpmDataToServer(startDate, endDate, currentButtonFlag)
+        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
+        getDataToServer(startDate, endDate, currentButtonFlag)
+        
+        setDisplayDateText()
     }
     
     func refreshView() {
@@ -298,7 +302,7 @@ class LineChartVC : UIViewController, Refreshable {
     // MARK: - CHART FUNC
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
         
-        let dataDict = groupBpmDataByDate(bpmDataList)
+        let dataDict = groupDataByDate(bpmDataList)
         var entries: [String : [ChartDataEntry]] = [:]
         var timeSets: Set<String> = []
 
@@ -369,7 +373,7 @@ class LineChartVC : UIViewController, Refreshable {
         return resultEntries
     }
     
-    func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
+    func groupDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
         // 날짜별("YYYY-MM-DD")로 데이터 그룹화
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
             let dateKey = String(bpmData.writeDate)
@@ -378,7 +382,7 @@ class LineChartVC : UIViewController, Refreshable {
         return groupedData
     }
         
-    func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+    func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
         activityIndicator.startAnimating()
         
