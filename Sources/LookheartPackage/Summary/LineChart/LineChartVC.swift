@@ -261,13 +261,17 @@ class LineChartVC : UIViewController {
         initVar()
         
         addViews()
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        refreshView(.BPM)
+        refreshView(chartType)
+        
     }
     
     public func refreshView(_ type: ChartType) {
-        
-        chartType = type
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
@@ -275,6 +279,10 @@ class LineChartVC : UIViewController {
         getDataToServer(startDate, endDate, currentButtonFlag)
         
         setDisplayDateText()
+    }
+    
+    public func setChartType(_ type: ChartType) {
+        chartType = type
     }
     
     func initVar() {
@@ -384,7 +392,6 @@ class LineChartVC : UIViewController {
         
         initUI()
         
-        print(email)
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
