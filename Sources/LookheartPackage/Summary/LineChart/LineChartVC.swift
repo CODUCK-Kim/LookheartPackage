@@ -366,7 +366,7 @@ class LineChartVC : UIViewController, Refreshable {
                             entries[date, default: [ChartDataEntry]()].append(entry)
                         }
                     }
-                    bpmIdx[date, default: 0] = idx + 1
+                    bpmIdx[date, default: idx] = idx + 1
                 }
             }
         }
