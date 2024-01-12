@@ -315,7 +315,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         startDate = "2024-01-08"
         
-        getBpmDataToServer(startDate, dateCalculate(startDate, 3, PLUS_DATE), .TODAY_FLAG)
+        getBpmDataToServer(startDate, dateCalculate(startDate, 2, PLUS_DATE), .TODAY_FLAG)
         
     }
     
