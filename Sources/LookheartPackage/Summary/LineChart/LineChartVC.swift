@@ -335,17 +335,8 @@ class LineChartVC : UIViewController, Refreshable {
             
         let timeTable = timeSets.sorted()    // 시간 정렬
 
-        // [ 날짜 : [ 시간 : [BpmData] ]
-        var dataByTimeDict: [String: [String: [BpmData]]] = [:]
-
-        for (date, dataForDate) in dataDict {
-            var timeDict: [String: [BpmData]] = [:]
-            for data in dataForDate {
-                timeDict[data.writeTime, default: []].append(data)
-            }
-            dataByTimeDict[date] = timeDict
-        }
-        
+        // setDictionary
+        let dataByTimeDict = setDictionary(dataDict)
         // setEntries
         entries = setEntries(entries: entries, timeTable: timeTable, dictionary: dataByTimeDict)
         
@@ -357,6 +348,21 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMinimum: 40, 
                  timeTable: timeTable)
 
+    }
+    
+    func setDictionary(_ dataDict: [String : [BpmData]]) -> [String: [String: [BpmData]]] {
+        // [ 날짜 : [ 시간 : [BpmData] ]
+        var dataByTimeDict: [String: [String: [BpmData]]] = [:]
+        
+        for (date, dataForDate) in dataDict {
+            var timeDict: [String: [BpmData]] = [:]
+            for data in dataForDate {
+                timeDict[data.writeTime, default: []].append(data)
+            }
+            dataByTimeDict[date] = timeDict
+        }
+        
+        return dataByTimeDict
     }
     
     func setEntries(entries: [String : [ChartDataEntry]], timeTable: [String], dictionary: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
