@@ -186,7 +186,7 @@ class LineChartVC : UIViewController, Refreshable {
     
     
     // MARK: - Middle
-    private lazy var todayDispalay = UILabel().then {
+    private lazy var todayDisplay = UILabel().then {
         $0.textColor = .black
         $0.textAlignment = .center
         $0.baselineAdjustment = .alignCenters
@@ -376,6 +376,9 @@ class LineChartVC : UIViewController, Refreshable {
                 if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
                     // 데이터 존재
                     let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                    
+                    calcMinMax(bpmValue)
+                    
                     let entry = ChartDataEntry(x: Double(i), y: bpmValue)
                     resultEntries[date]?.append(entry)
                 }
@@ -423,6 +426,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         var chartDataSets: [LineChartDataSet] = []
         var dateChartDict: [String : LineChartDataSet] = [:]
+        var dateText: [String] = []
         
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
@@ -430,14 +434,16 @@ class LineChartVC : UIViewController, Refreshable {
             graphIdx += 1
         }
         
+        // 시간순으로 정렬
         let sortedDates = dateChartDict.keys.sorted()
-    
-        print(sortedDates)
         for date in sortedDates {
             if let chartDataSet = dateChartDict[date] {
                 chartDataSets.append(chartDataSet)
+                dateText.append(date)
             }
         }
+        
+        setUI(dateText)
         
         return chartDataSets
     }
@@ -464,20 +470,6 @@ class LineChartVC : UIViewController, Refreshable {
         }
     }
     
-    func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
-        var dateComponents = dateString.components(separatedBy: "-")
-        
-        if yearFlag {
-            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
-            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
-            return "\(dateComponents[0])-\(dateComponents[1])"
-        } else {
-            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
-            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
-            return "\(dateComponents[1])-\(dateComponents[2])"
-        }
-    }
-    
     // MARK: - DATE FUNC
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
         guard let inputDate = dateFormatter.date(from: date) else { return date }
@@ -496,6 +488,55 @@ class LineChartVC : UIViewController, Refreshable {
             }
         }
         return date
+    }
+    
+    func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
+        var dateComponents = dateString.components(separatedBy: "-")
+        
+        if yearFlag {
+            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            return "\(dateComponents[0])-\(dateComponents[1])"
+        } else {
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
+            return "\(dateComponents[1])-\(dateComponents[2])"
+        }
+    }
+    
+    // MARK: - UI
+    func setUI(_ dateText: [String]) {
+        var displayTest:String
+        
+        if dateText.count > 1 {
+            displayTest = "\(String(describing: dateText.first)) ~ \(String(describing: dateText.last))"
+        } else {
+            displayTest = dateText.first ?? startDate
+        }
+        
+        todayDisplay.text = displayTest
+        maxValue.text = String(max)
+        minValue.text = String(min)
+        avgValue.text = String(avg)
+        diffMin.text = "-\(avg - min)"
+        diffMax.text = "+\(max - avg)"
+    }
+    
+    func calcMinMax(_ value: Double) {
+        let intValue = Int(value)
+        
+        if (intValue != 0){
+            if (min > intValue){
+                min = intValue
+            }
+            if (max < intValue){
+                max = intValue
+            }
+
+            avgSum += intValue
+            avgCnt += 1
+            avg = avgSum/avgCnt
+        }
     }
     
     // MARK: -
@@ -570,8 +611,8 @@ class LineChartVC : UIViewController, Refreshable {
         }
         
         // --------------------- middleContents --------------------- //
-        middleContents.addSubview(todayDispalay)
-        todayDispalay.snp.makeConstraints { make in
+        middleContents.addSubview(todayDisplay)
+        todayDisplay.snp.makeConstraints { make in
             make.top.bottom.centerX.equalTo(middleContents)
         }
         
