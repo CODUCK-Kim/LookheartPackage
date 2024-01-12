@@ -361,6 +361,8 @@ class LineChartVC : UIViewController, Refreshable {
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
                         entries[date]?.append(entry)
+                        
+                        bpmIdx[date] = idx + 1
                     } else if i + 1 < timeTable.count {
                         // 데이터 없음
                         // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
@@ -370,7 +372,7 @@ class LineChartVC : UIViewController, Refreshable {
                             entries[date]?.append(entry)
                         }
                     }
-                    bpmIdx[date] = idx + 1
+//                    bpmIdx[date] = idx + 1
                 }
             }
         }
