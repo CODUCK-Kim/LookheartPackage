@@ -461,7 +461,7 @@ public class NetworkManager {
                         
                         completion(.success(bpmData))
                     } else {
-                        completion(.failure("result = 0" as! Error))
+                        completion(.failure(NetworkError.noData))
                     }
                 } else {
                     completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
@@ -636,13 +636,6 @@ public class NetworkManager {
                     completion(.failure(error))
                 }
             }
-    }
-    
-    
-    enum NetworkError: Error {
-        case invalidResponse
-        case noData
-        // 필요에 따라 추가적인 에러 케이스를 정의
     }
     
     // Ws : whitespaces & Nl : Newlines

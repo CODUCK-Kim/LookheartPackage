@@ -401,8 +401,12 @@ class LineChartVC : UIViewController {
                 
             case .failure(let error):
                 
+                let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
+                                
                 self.activityIndicator.stopAnimating()
-                ToastHelper.shared.showToast(self.view, "serverErr".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
+
+                ToastHelper.shared.showToast(self.view, errorMessage, withDuration: 1.0, delay: 1.0, bottomPosition: false)
+                
                 print("responseBpmData error : \(error)")
                 
             }
