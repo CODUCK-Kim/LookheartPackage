@@ -325,12 +325,10 @@ class LineChartVC : UIViewController, Refreshable {
 
         var chartDataSets: [LineChartDataSet] = []
         var entries: [String : [ChartDataEntry]] = [:]
-        var bpmIdx: [String : Int] = [:]    // 날짜 별 그래프 xValue 값
         var timeSets: Set<String> = []
 
         for (date, dataForDate) in dataDict {
             
-            bpmIdx[date] = 0
             entries[date] = [ChartDataEntry]()
             
             let timeSet = Set(dataForDate.map { $0.writeTime })
@@ -369,30 +367,15 @@ class LineChartVC : UIViewController, Refreshable {
                         entries[date]?.append(entry)
                     }
                 }
-                
-//                if let idx = bpmIdx[date] {
-//                    if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
-//                        // 데이터 존재
-//                        let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
-//                        let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
-//                        entries[date]?.append(entry)
-//                    } else if i + 1 < timeTable.count {
-//                        // 데이터 없음
-//                        // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
-//                        let nextTime = timeTable[i + 1].prefix(7)
-//                        if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
-//                            let entry = ChartDataEntry(x: Double(idx), y: 70.0)
-//                            entries[date]?.append(entry)
-//                        }
-//                    }
-//                    bpmIdx[date] = idx + 1
-//                }
             }
         }
         
+        let graphColor = setGraphColor(type)
+        var graphIdx = 0
         for (date, entry) in entries {
-            let chartDataSet = chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: LineChartDataSet(entries: entry, label: date))
+            let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
             chartDataSets.append(chartDataSet)
+            graphIdx += 1
         }
         
         setChart(chartData: LineChartData(dataSets: chartDataSets),
@@ -410,21 +393,7 @@ class LineChartVC : UIViewController, Refreshable {
         }
         return groupedData
     }
-    
-//    func setChartData(_ bpmDataList: [BpmData], _ type: DateType) {
-//        
-//        switch (type) {
-//        
-//        case .TODAY_FLAG:
-//            viewTodayChart(bpmDataList, type)
-//        case .TWO_DAYS_FLAG:
-//            viewTwoDaysChart(bpmDataList, type)
-//        case .THREE_DAYS_FLAG:
-//            viewThreeDaysChart(bpmDataList, )
-//            
-//        }
-//    }
-    
+        
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         startTT = Date()
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
@@ -460,6 +429,32 @@ class LineChartVC : UIViewController, Refreshable {
         lineChartView.data?.notifyDataChanged()
         lineChartView.notifyDataSetChanged()
         lineChartView.moveViewToX(0)
+    }
+    
+    func setGraphColor(_ type : DateType) -> [UIColor] {
+        switch (type) {
+            
+        case .TODAY_FLAG:
+            return [NSUIColor.GRAPH_RED]
+        case .TWO_DAYS_FLAG:
+            return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE]
+        case .THREE_DAYS_FLAG:
+            return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
+        }
+    }
+    
+    func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
+        var dateComponents = dateString.components(separatedBy: "-")
+        
+        if yearFlag {
+            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            return "\(dateComponents[0])-\(dateComponents[1])"
+        } else {
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
+            return "\(dateComponents[1])-\(dateComponents[2])"
+        }
     }
     
     // MARK: - DATE FUNC
