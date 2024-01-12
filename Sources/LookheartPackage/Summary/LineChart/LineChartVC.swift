@@ -267,6 +267,7 @@ class LineChartVC : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("viewWillAppear")
         refreshView(chartType)
         
     }
@@ -392,6 +393,10 @@ class LineChartVC : UIViewController {
         
         initUI()
         
+        print(email)
+        print(startDate)
+        print(endDate)
+        print(type)
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
