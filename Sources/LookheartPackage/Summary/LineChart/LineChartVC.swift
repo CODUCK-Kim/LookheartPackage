@@ -4,7 +4,7 @@ import DGCharts
 
 
 @available(iOS 13.0, *)
-class LineChartVC : UIViewController, Refreshable {
+class LineChartVC : UIViewController {
 
     private var email = String()
     private var chartType: ChartType = .BPM
@@ -48,7 +48,7 @@ class LineChartVC : UIViewController, Refreshable {
     private var buttonList:[UIButton] = []
     // CHART END
 
-    // MARK: UI VAR
+    // MARK: - UI VAR
     private let safeAreaView = UIView()
     
     //    ----------------------------- Loding Bar -------------------    //
@@ -272,13 +272,12 @@ class LineChartVC : UIViewController, Refreshable {
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
+        print(startDate)
+        print(endDate)
+        
         getDataToServer(startDate, endDate, currentButtonFlag)
         
         setDisplayDateText()
-    }
-    
-    func refreshView() {
-        
     }
     
     func initVar() {
@@ -551,6 +550,16 @@ class LineChartVC : UIViewController, Refreshable {
         diffMin.text = "-0"
         diffMax.text = "+0"
         
+        switch (chartType) {
+        case .BPM:
+            avgLabel.text = "avgBPM".localized()
+            valueLabel.text = "fragment_bpm".localized()
+        case .HRV:
+            avgLabel.text = "avgHRV".localized()
+            valueLabel.text = "home_hrv_unit".localized()
+        default:
+            break
+        }
     }
     
     func calcMinMax(_ value: Double) {

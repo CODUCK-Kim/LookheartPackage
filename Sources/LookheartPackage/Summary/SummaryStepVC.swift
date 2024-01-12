@@ -92,13 +92,13 @@ class SummaryStep : UIViewController, Refreshable {
         $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
         $0.noDataText = ""
         $0.xAxis.labelPosition = .bottom
+        $0.xAxis.enabled = true
+        $0.xAxis.granularity = 1
         $0.xAxis.drawGridLinesEnabled = false
+        $0.xAxis.centerAxisLabelsEnabled = true
         $0.leftAxis.granularityEnabled = true
         $0.leftAxis.granularity = 1.0
         $0.leftAxis.axisMinimum = 0
-        $0.xAxis.enabled = true
-        $0.xAxis.centerAxisLabelsEnabled = true
-        $0.xAxis.granularity = 1
         $0.rightAxis.enabled = false
         $0.drawMarkers = false
         $0.dragEnabled = false
@@ -869,7 +869,6 @@ class SummaryStep : UIViewController, Refreshable {
             make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
         }
         
-        bottomLabel.addSubview(bottomContents)
         bottomLabel.addSubview(bottomContents)
         bottomContents.snp.makeConstraints { make in
             make.top.equalTo(middleContents.snp.bottom)

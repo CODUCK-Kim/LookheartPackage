@@ -93,12 +93,12 @@ class SummaryArr : UIViewController, Refreshable {
     
     //    ----------------------------- Chart -------------------    //
     private lazy var arrChartView = BarChartView().then {
+        $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
         $0.noDataText = ""
         $0.xAxis.enabled = true
         $0.xAxis.granularity = 1
         $0.xAxis.labelPosition = .bottom
         $0.xAxis.drawGridLinesEnabled = false
-        $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
         $0.leftAxis.granularityEnabled = true
         $0.leftAxis.granularity = 1.0
         $0.leftAxis.axisMinimum = 0

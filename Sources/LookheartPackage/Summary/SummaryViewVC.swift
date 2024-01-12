@@ -171,7 +171,6 @@ public class SummaryViewController : UIViewController {
         case ARR_BUTTON_TAG:
             setChild(selectChild: arrView, in: self.view)
         case HRV_BUTTON_TAG:
-            setChild(selectChild: lineChartView, in: self.view)
             lineChartView.refreshView(.HRV)
         case CAL_BUTTON_TAG:
             setChild(selectChild: calView, in: self.view)
