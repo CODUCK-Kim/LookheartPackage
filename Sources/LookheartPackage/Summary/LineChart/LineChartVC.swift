@@ -63,7 +63,7 @@ class LineChartVC : UIViewController, Refreshable {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag = 0   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .TODAY_FLAG   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     
     private var startTime = [String]()
@@ -143,7 +143,7 @@ class LineChartVC : UIViewController, Refreshable {
         $0.isSelected = true
         
         $0.tag = TODAY_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var twoDaysButton = UIButton().then {
@@ -162,7 +162,7 @@ class LineChartVC : UIViewController, Refreshable {
         $0.layer.cornerRadius = 15
         
         $0.tag = TWO_DAYS_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var threeDaysButton = UIButton().then {
@@ -181,7 +181,7 @@ class LineChartVC : UIViewController, Refreshable {
         $0.layer.cornerRadius = 15
         
         $0.tag = THREE_DAYS_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     
@@ -197,13 +197,13 @@ class LineChartVC : UIViewController, Refreshable {
     private lazy var yesterdayBpmButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
     private lazy var tomorrowBpmButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
     // MARK: - Bottom
@@ -277,6 +277,36 @@ class LineChartVC : UIViewController, Refreshable {
     }
     // Constructor END
     
+    
+    // MARK: - Button Evnet
+    @objc func selectDayButton(_ sender: UIButton) {
+        switch(sender.tag) {
+        case TWO_DAYS_FLAG:
+            currentButtonFlag = .TWO_DAYS_FLAG
+        case THREE_DAYS_FLAG:
+            currentButtonFlag = .THREE_DAYS_FLAG
+        default:
+            currentButtonFlag = .TODAY_FLAG
+        }
+        
+        getDataController(currentButtonFlag)
+        setButtonColor(sender)
+    }
+    
+    @objc func shiftDate(_ sender: UIButton) {
+        
+        switch(sender.tag) {
+        case YESTERDAY_BUTTON_FLAG:
+            startDate = dateCalculate(startDate, 1, MINUS_DATE)
+        default:    // TOMORROW_BUTTON_FLAG
+            startDate = dateCalculate(startDate, 1, PLUS_DATE)
+        }
+        
+        endDate = dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
+        
+        print("startDate : \(startDate), endDate : \(endDate)")
+    }
+    
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -284,8 +314,6 @@ class LineChartVC : UIViewController, Refreshable {
         initVar()
         
         addViews()
-        
-        todayChart()
         
     }
     
@@ -302,21 +330,17 @@ class LineChartVC : UIViewController, Refreshable {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         timeFormatter.dateFormat = "HH:mm:ss"
         
-        currentButtonFlag = TODAY_FLAG
-        
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, 2, MINUS_DATE)
+        endDate = dateCalculate(startDate, 1, PLUS_DATE)
         
     }
     
     // MARK: - CHART FUNC
-    func todayChart() {
+    func getDataController(_ type: DateType) {
         
-        startDate = "2024-01-08"
-        
-        getBpmDataToServer(startDate, dateCalculate(startDate, 3, PLUS_DATE), .THREE_DAYS_FLAG)
+//        getBpmDataToServer(startDate, endDate, type)
         
     }
     
@@ -398,7 +422,6 @@ class LineChartVC : UIViewController, Refreshable {
     }
         
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
-        startTT = Date()
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
@@ -472,6 +495,17 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     // MARK: - DATE FUNC
+    func setDate(_ type : DateType) -> Int {
+        switch (type) {
+        case .TODAY_FLAG:
+            return 1
+        case .TWO_DAYS_FLAG:
+            return 2
+        case .THREE_DAYS_FLAG:
+            return 3
+        }
+    }
+    
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
         guard let inputDate = dateFormatter.date(from: date) else { return date }
 
@@ -539,6 +573,16 @@ class LineChartVC : UIViewController, Refreshable {
             avgSum += intValue
             avgCnt += 1
             avg = avgSum/avgCnt
+        }
+    }
+    
+    func setButtonColor(_ sender: UIButton) {
+        for button in buttonList {
+            if button == sender {
+                button.isSelected = true
+            } else {
+                button.isSelected = false
+            }
         }
     }
     
