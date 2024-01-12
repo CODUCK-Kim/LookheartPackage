@@ -187,6 +187,7 @@ class LineChartVC : UIViewController, Refreshable {
     
     // MARK: - Middle
     private lazy var todayDisplay = UILabel().then {
+        $0.text = "-"
         $0.textColor = .black
         $0.textAlignment = .center
         $0.baselineAdjustment = .alignCenters
@@ -506,10 +507,12 @@ class LineChartVC : UIViewController, Refreshable {
     
     // MARK: - UI
     func setUI(_ dateText: [String]) {
-        var displayTest:String
+        var displayTest = startDate
         
         if dateText.count > 1 {
-            displayTest = "\(String(describing: dateText.first)) ~ \(String(describing: dateText.last))"
+            if let startDate = dateText.first, let endDate = dateText.last {
+                displayTest = "\(startDate) ~ \(endDate)"
+            }
         } else {
             displayTest = dateText.first ?? startDate
         }
