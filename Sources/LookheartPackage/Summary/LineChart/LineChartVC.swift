@@ -264,15 +264,9 @@ class LineChartVC : UIViewController {
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        print("viewWillAppear")
-        refreshView(chartType)
-        
-    }
-    
     public func refreshView(_ type: ChartType) {
+        
+        chartType = type
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
@@ -282,9 +276,6 @@ class LineChartVC : UIViewController {
         setDisplayDateText()
     }
     
-    public func setChartType(_ type: ChartType) {
-        chartType = type
-    }
     
     func initVar() {
 //        email = UserProfileManager.shared.getEmail()
@@ -333,7 +324,7 @@ class LineChartVC : UIViewController {
         setChart(chartData: LineChartData(dataSets: chartDataSets),
                  maximum: 1000,
                  axisMaximum: 200,
-                 axisMinimum: 40, 
+                 axisMinimum: chartType == .BPM ? 40 : 0,
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()

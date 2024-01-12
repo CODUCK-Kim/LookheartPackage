@@ -164,12 +164,12 @@ public class SummaryViewController : UIViewController {
         switch(sender.tag) {
         case BPM_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
-            lineChartView.setChartType(.BPM)
+            lineChartView.refreshView(.BPM)
         case ARR_BUTTON_TAG:
             setChild(selectChild: arrView, in: self.view)
         case HRV_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
-            lineChartView.setChartType(.HRV)
+            lineChartView.refreshView(.HRV)
         case CAL_BUTTON_TAG:
             setChild(selectChild: calView, in: self.view)
         case STEP_BUTTON_TAG:
