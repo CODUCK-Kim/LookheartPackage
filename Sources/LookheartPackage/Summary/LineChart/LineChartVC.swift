@@ -322,11 +322,10 @@ class LineChartVC : UIViewController, Refreshable {
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
         
         let dataDict = groupBpmDataByDate(bpmDataList)
-
-        var chartDataSets: [LineChartDataSet] = []
         var entries: [String : [ChartDataEntry]] = [:]
         var timeSets: Set<String> = []
 
+        // init
         for (date, dataForDate) in dataDict {
             
             entries[date] = [ChartDataEntry]()
@@ -336,18 +335,44 @@ class LineChartVC : UIViewController, Refreshable {
         }
             
         let timeTable = timeSets.sorted()    // 시간 정렬
+        
+        // setDictionary
+        let dataByTimeDict = setDict(dataDict: dataDict)
+        
+        // setEntries
+        entries = setEntries(timeTable: timeTable, dataByTimeDict: dataByTimeDict)
+        
+        // setChart
+        let chartDataSets = setChartDataSets(entries: entries, type: type)
+        setChart(chartData: LineChartData(dataSets: chartDataSets),
+                 maximum: 1000,
+                 axisMaximum: 200,
+                 axisMinimum: 40, 
+                 timeTable: timeTable)
 
+    }
+    
+    func setDict(dataDict: [String : [BpmData]]) -> [String: [String: [BpmData]]] {
         // [ 날짜 : [ 시간 : [BpmData] ]
-        // 효율적인 데이터 접근 처리를 위한 딕셔너리 생성
         var dataByTimeDict: [String: [String: [BpmData]]] = [:]
 
         for (date, dataForDate) in dataDict {
+            
             var timeDict: [String: [BpmData]] = [:]
+            
             for data in dataForDate {
                 timeDict[data.writeTime, default: []].append(data)
             }
+            
             dataByTimeDict[date] = timeDict
         }
+        
+        return dataByTimeDict
+    }
+    
+    func setEntries(timeTable: [String], dataByTimeDict: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
+        
+        var entries: [String : [ChartDataEntry]] = [:]
         
         for i in 0..<timeTable.count {
             let time = timeTable[i]
@@ -361,34 +386,14 @@ class LineChartVC : UIViewController, Refreshable {
                 }
             }
         }
-//        else if i + 1 < timeTable.count {
-//            // 데이터 없음
-//            // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
-//            let nextTime = timeTable[i + 1].prefix(7)
-//            if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
-//                let entry = ChartDataEntry(x: Double(i), y: 70.0)
-//                entries[date]?.append(entry)
-//            }
-//        }
-        let graphColor = setGraphColor(type)
-        var graphIdx = 0
-        for (date, entry) in entries {
-            let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
-            chartDataSets.append(chartDataSet)
-            graphIdx += 1
-        }
         
-        setChart(chartData: LineChartData(dataSets: chartDataSets),
-                 maximum: 1000,
-                 axisMaximum: 200,
-                 axisMinimum: 40, 
-                 timeTable: timeTable)
-
+        return entries
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
+        // 날짜별("YYYY-MM-DD")로 데이터 그룹
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
-            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 기준으로 분류하여 저장
+            let dateKey = String(bpmData.writeDate)
             dict[dateKey, default: []].append(bpmData)
         }
         return groupedData
@@ -399,9 +404,7 @@ class LineChartVC : UIViewController, Refreshable {
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
-                self.endTT = Date()
-                let duration = self.endTT.timeIntervalSince(self.startTT)
-                print("작업 시간: \(duration)초")
+                
                 self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
@@ -420,6 +423,22 @@ class LineChartVC : UIViewController, Refreshable {
         return chartDataSet
     }
     
+    func setChartDataSets(entries: [String : [ChartDataEntry]], type: DateType) -> [LineChartDataSet] {
+        let graphColor = setGraphColor(type)
+        var graphIdx = 0
+        
+        var chartDataSets: [LineChartDataSet] = []
+        
+        for (date, entry) in entries {
+            print(date)
+            let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
+            chartDataSets.append(chartDataSet)
+            graphIdx += 1
+        }
+        
+        return chartDataSets
+    }
+    
     func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double, timeTable: [String]) {
         lineChartView.data = chartData
         lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
@@ -433,7 +452,6 @@ class LineChartVC : UIViewController, Refreshable {
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
         switch (type) {
-            
         case .TODAY_FLAG:
             return [NSUIColor.GRAPH_RED]
         case .TWO_DAYS_FLAG:
