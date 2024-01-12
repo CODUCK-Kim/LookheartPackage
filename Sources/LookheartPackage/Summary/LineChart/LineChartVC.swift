@@ -346,18 +346,8 @@ class LineChartVC : UIViewController, Refreshable {
             dataByTimeDict[date] = timeDict
         }
         
-        for i in 0..<timeTable.count {
-            let time = timeTable[i]
-
-            for (date, timeDict) in dataByTimeDict {
-                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
-                    // 데이터 존재
-                    let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
-                    let entry = ChartDataEntry(x: Double(i), y: bpmValue)
-                    entries[date]?.append(entry)
-                }
-            }
-        }
+        // setEntries
+        entries = setEntries(entries: entries, timeTable: timeTable, dictionary: dataByTimeDict)
         
         // setChart
         let chartDataSets = setChartDataSets(entries: entries, type: type)
@@ -367,6 +357,25 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMinimum: 40, 
                  timeTable: timeTable)
 
+    }
+    
+    func setEntries(entries: [String : [ChartDataEntry]], timeTable: [String], dictionary: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
+        
+        var resultEntries = entries
+
+        for i in 0..<timeTable.count {
+            let time = timeTable[i]
+
+            for (date, timeDict) in dictionary {
+                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
+                    // 데이터 존재
+                    let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                    let entry = ChartDataEntry(x: Double(i), y: bpmValue)
+                    resultEntries[date]?.append(entry)
+                }
+            }
+        }
+        return resultEntries
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
