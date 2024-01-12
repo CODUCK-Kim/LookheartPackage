@@ -5,8 +5,9 @@ import DGCharts
 
 @available(iOS 13.0, *)
 class LineChartVC : UIViewController, Refreshable {
-    
+
     private var email = String()
+    private var chartType: ChartType = .BPM
     
     enum DateType {
         case TODAY
@@ -219,20 +220,6 @@ class LineChartVC : UIViewController, Refreshable {
         $0.text = "fragment_bpm".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
-    // ----------------------------- Constructor ------------------- //
-    // 생성자
-    var chartType: ChartType
-    
-    init(chartType: ChartType) {
-        self.chartType = chartType
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    // Constructor END
-    
     
     // MARK: - Button Evnet
     @objc func selectDayButton(_ sender: UIButton) {
@@ -274,6 +261,15 @@ class LineChartVC : UIViewController, Refreshable {
         initVar()
         
         addViews()
+        
+        
+    }
+    
+    public func refreshView(_ type: ChartType) {
+        
+        chartType = type
+        
+        getBpmDataToServer(startDate, endDate, currentButtonFlag)
         
     }
     
@@ -332,6 +328,7 @@ class LineChartVC : UIViewController, Refreshable {
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()
+        
     }
     
     
@@ -360,11 +357,11 @@ class LineChartVC : UIViewController, Refreshable {
             for (date, timeDict) in dictionary {
                 if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
                     // 데이터 존재
-                    let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
+                    let value = chartType == .BPM ? Double(bpmDataArray[0].bpm) ?? 0 : Double(bpmDataArray[0].hrv) ?? 0
                     
-                    calcMinMax(bpmValue)
+                    calcMinMax(value)
                     
-                    let entry = ChartDataEntry(x: Double(i), y: bpmValue)
+                    let entry = ChartDataEntry(x: Double(i), y: value)
                     resultEntries[date]?.append(entry)
                 }
             }
@@ -394,8 +391,11 @@ class LineChartVC : UIViewController, Refreshable {
                 self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
+                
                 self.activityIndicator.stopAnimating()
+                ToastHelper.shared.showToast(self.view, "serverErr".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
                 print("responseBpmData error : \(error)")
+                
             }
         }
     }

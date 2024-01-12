@@ -22,7 +22,8 @@ public class SummaryViewController : UIViewController {
     private let STEP_BUTTON_TAG = 5
     
 //    private let bpmView = SummaryBpm()
-    private let bpmView = LineChartVC(chartType: .BPM)
+    private let bpmView = LineChartVC()
+    private let lineChartView = LineChartVC()
     private let arrView = SummaryArr()
     private let hrvView = SummaryHrv()
     private let calView = SummaryCalorie()
@@ -39,7 +40,7 @@ public class SummaryViewController : UIViewController {
     }()
     
     private lazy var childs: [UIViewController] = {
-        return [bpmView, arrView, hrvView, calView, stepView]
+        return [lineChartView, arrView, hrvView, calView, stepView]
     }()
     
     // MARK: -
@@ -165,11 +166,13 @@ public class SummaryViewController : UIViewController {
         
         switch(sender.tag) {
         case BPM_BUTTON_TAG:
-            setChild(selectChild: bpmView, in: self.view)
+            setChild(selectChild: lineChartView, in: self.view)
+            lineChartView.refreshView(.BPM)
         case ARR_BUTTON_TAG:
             setChild(selectChild: arrView, in: self.view)
         case HRV_BUTTON_TAG:
-            setChild(selectChild: hrvView, in: self.view)
+            setChild(selectChild: lineChartView, in: self.view)
+            lineChartView.refreshView(.HRV)
         case CAL_BUTTON_TAG:
             setChild(selectChild: calView, in: self.view)
         case STEP_BUTTON_TAG:
@@ -200,15 +203,15 @@ public class SummaryViewController : UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // refresh view
-        for child in arrChild {
-            if let refreshableChild = child as? Refreshable {
-                refreshableChild.refreshView()
-            }
-        }
-        
-        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
-        setChild(selectChild: bpmView, in: self.view)
+//        // refresh view
+//        for child in arrChild {
+//            if let refreshableChild = child as? Refreshable {
+//                refreshableChild.refreshView()
+//            }
+//        }
+//        
+//        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
+//        setChild(selectChild: bpmView, in: self.view)
     }
     
     func setButtonColor(_ sender: UIButton) {
