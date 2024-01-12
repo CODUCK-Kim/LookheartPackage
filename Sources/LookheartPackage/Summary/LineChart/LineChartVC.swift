@@ -329,6 +329,9 @@ class LineChartVC : UIViewController, Refreshable {
         var timeSets: Set<String> = []
 
         for (date, dataForDate) in dataDict {
+            
+            entries[date] = [ChartDataEntry]()
+
             let timeSet = Set(dataForDate.map { $0.writeTime })
             timeSets.formUnion(timeSet)
         }
@@ -356,14 +359,14 @@ class LineChartVC : UIViewController, Refreshable {
                         // 데이터 존재
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
-                        entries[date, default: [ChartDataEntry]()].append(entry)
+                        entries[date]?.append(entry)
                     } else if i + 1 < timeTable.count {
                         // 데이터 없음
                         // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
                         let nextTime = timeTable[i + 1].prefix(7)
                         if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
                             let entry = ChartDataEntry(x: Double(idx), y: 70.0)
-                            entries[date, default: [ChartDataEntry]()].append(entry)
+                            entries[date]?.append(entry)
                         }
                     }
                     bpmIdx[date, default: idx] = idx + 1
