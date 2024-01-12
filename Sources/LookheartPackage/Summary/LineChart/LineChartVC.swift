@@ -337,6 +337,7 @@ class LineChartVC : UIViewController, Refreshable {
 
         // setDictionary
         let dataByTimeDict = setDictionary(dataDict)
+        
         // setEntries
         entries = setEntries(entries: entries, timeTable: timeTable, dictionary: dataByTimeDict)
         
@@ -347,7 +348,6 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMaximum: 200,
                  axisMinimum: 40, 
                  timeTable: timeTable)
-
     }
     
     func setDictionary(_ dataDict: [String : [BpmData]]) -> [String: [String: [BpmData]]] {
@@ -422,11 +422,21 @@ class LineChartVC : UIViewController, Refreshable {
         var graphIdx = 0
         
         var chartDataSets: [LineChartDataSet] = []
+        var dateChartDict: [String : LineChartDataSet] = [:]
         
         for (date, entry) in entries {
             let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
-            chartDataSets.append(chartDataSet)
+            dateChartDict[date] = chartDataSet
             graphIdx += 1
+        }
+        
+        let sortedDates = dateChartDict.keys.sorted()
+    
+        print(sortedDates)
+        for date in sortedDates {
+            if let chartDataSet = dateChartDict[date] {
+                chartDataSets.append(chartDataSet)
+            }
         }
         
         return chartDataSets
