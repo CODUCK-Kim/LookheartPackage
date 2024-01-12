@@ -289,7 +289,6 @@ class LineChartVC : UIViewController, Refreshable {
             currentButtonFlag = .TODAY_FLAG
         }
         
-        endDate = dateCalculate(startDate, 1, PLUS_DATE)
         startDate = dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
         
 //        getDataController(currentButtonFlag)
