@@ -9,9 +9,9 @@ class LineChartVC : UIViewController, Refreshable {
     private var email = String()
     
     enum DateType {
-        case TODAY_FLAG
-        case TWO_DAYS_FLAG
-        case THREE_DAYS_FLAG
+        case TODAY
+        case TWO_DAYS
+        case THREE_DAYS
     }
     
     // ----------------------------- TAG ------------------- //
@@ -23,17 +23,12 @@ class LineChartVC : UIViewController, Refreshable {
     private let TWO_DAYS_FLAG = 2
     private let THREE_DAYS_FLAG = 3
     
-    private let PLUS_DATE = true
-    private let MINUS_DATE = false
+    private let PLUS_DATE = true, MINUS_DATE = false
     // TAG END
     
     // ----------------------------- UI ------------------- //
     // 보여지는 변수
-    private var min = 70
-    private var max = 0
-    private var avg = 0
-    private var avgSum = 0
-    private var avgCnt = 0
+    private var min = 70, max = 0, avg = 0, avgSum = 0, avgCnt = 0
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -44,61 +39,22 @@ class LineChartVC : UIViewController, Refreshable {
     
     private var startDate = String()
     private var endDate = String()
-    
-    private var targetDate:String = ""
-    private var targetYear:String = ""
-    private var targetMonth:String = ""
-    private var targetDay:String = ""
-    
-    private var twoDaysTargetDate:String = ""
-    private var twoDaysTargetYear:String = ""
-    private var twoDaysTargetMonth:String = ""
-    private var twoDaysTargetDay:String = ""
-    
-    private var threeDaysTargetDate:String = ""
-    private var threeDaysTargetYear:String = ""
-    private var threeDaysTargetMonth:String = ""
-    private var threeDaysTargetDay:String = ""
     // DATE END
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateType = .TODAY_FLAG   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .TODAY   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
-    
-    private var startTime = [String]()
-    private var endTime = [String]()
-    
-    private var earliestStartTime = String()
-    private var latestEndTime = String()
-    
-    private var xAxisTotal = 0
-    private var startTimeInMinutes = 0
-    private var endTimeInMinutes = 0
-    
-    private var timeCount = 0
-    private var timeTableCount = 0
-    
-    private var targetData: [Double] = []
-    private var targetTimeData: [String] = []
-    
-    private var twoDaysData: [Double] = []
-    private var twoDaysTimeData: [String] = []
-        
-    private var threeDaysData: [Double] = []
-    private var threeDaysTimeData: [String] = []
-    
-    private var targetEntries = [ChartDataEntry]()
-    private var twoDaysEntries = [ChartDataEntry]()
-    private var threeDaysEntries = [ChartDataEntry]()
     // CHART END
-    
-    
-    private var startTT = Date()
-    private var endTT = Date()
-    
+
     // MARK: UI VAR
     private let safeAreaView = UIView()
+    
+    //    ----------------------------- Loding Bar -------------------    //
+    private lazy var activityIndicator = UIActivityIndicatorView().then {
+        // indicator 스타일 설정
+        $0.style = UIActivityIndicatorView.Style.large
+    }
     
     private lazy var lineChartView = LineChartView().then {
         $0.noDataText = ""
@@ -282,19 +238,18 @@ class LineChartVC : UIViewController, Refreshable {
     @objc func selectDayButton(_ sender: UIButton) {
         switch(sender.tag) {
         case TWO_DAYS_FLAG:
-            currentButtonFlag = .TWO_DAYS_FLAG
+            currentButtonFlag = .TWO_DAYS
         case THREE_DAYS_FLAG:
-            currentButtonFlag = .THREE_DAYS_FLAG
+            currentButtonFlag = .THREE_DAYS
         default:
-            currentButtonFlag = .TODAY_FLAG
+            currentButtonFlag = .TODAY
         }
         
         startDate = dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
         
-//        getDataController(currentButtonFlag)
-        print("startDate : \(startDate), endDate : \(endDate)")
-        setButtonColor(sender)
+        getBpmDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
+        setButtonColor(sender)
     }
     
     @objc func shiftDate(_ sender: UIButton) {
@@ -308,7 +263,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         endDate = dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
         
-        print("startDate : \(startDate), endDate : \(endDate)")
+        getBpmDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
     }
     
@@ -338,18 +293,13 @@ class LineChartVC : UIViewController, Refreshable {
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, setDate(.TODAY_FLAG), PLUS_DATE)
+        endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
         setDisplayDateText()
     }
     
-    // MARK: - CHART FUNC
-    func getDataController(_ type: DateType) {
-        
-//        getBpmDataToServer(startDate, endDate, type)
-        
-    }
     
+    // MARK: - CHART FUNC
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
         
         let dataDict = groupBpmDataByDate(bpmDataList)
@@ -380,6 +330,8 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMaximum: 200,
                  axisMinimum: 40, 
                  timeTable: timeTable)
+        
+        activityIndicator.stopAnimating()
     }
     
     
@@ -421,7 +373,7 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
-        // 날짜별("YYYY-MM-DD")로 데이터 그룹
+        // 날짜별("YYYY-MM-DD")로 데이터 그룹화
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
             let dateKey = String(bpmData.writeDate)
             dict[dateKey, default: []].append(bpmData)
@@ -430,6 +382,11 @@ class LineChartVC : UIViewController, Refreshable {
     }
         
     func getBpmDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+        
+        activityIndicator.startAnimating()
+        
+        initUI()
+        
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
@@ -437,6 +394,7 @@ class LineChartVC : UIViewController, Refreshable {
                 self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
+                self.activityIndicator.stopAnimating()
                 print("responseBpmData error : \(error)")
             }
         }
@@ -448,7 +406,6 @@ class LineChartVC : UIViewController, Refreshable {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = 0.7
         chartDataSet.drawValuesEnabled = true
-        
         return chartDataSet
     }
     
@@ -493,11 +450,11 @@ class LineChartVC : UIViewController, Refreshable {
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
         switch (type) {
-        case .TODAY_FLAG:
+        case .TODAY:
             return [NSUIColor.GRAPH_RED]
-        case .TWO_DAYS_FLAG:
+        case .TWO_DAYS:
             return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE]
-        case .THREE_DAYS_FLAG:
+        case .THREE_DAYS:
             return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
         }
     }
@@ -505,11 +462,11 @@ class LineChartVC : UIViewController, Refreshable {
     // MARK: - DATE FUNC
     func setDate(_ type : DateType) -> Int {
         switch (type) {
-        case .TODAY_FLAG:
+        case .TODAY:
             return 1
-        case .TWO_DAYS_FLAG:
+        case .TWO_DAYS:
             return 2
-        case .THREE_DAYS_FLAG:
+        case .THREE_DAYS:
             return 3
         }
     }
@@ -555,11 +512,11 @@ class LineChartVC : UIViewController, Refreshable {
         
         switch (currentButtonFlag) {
             
-        case .TODAY_FLAG:
+        case .TODAY:
             displayText = startDate
-        case .TWO_DAYS_FLAG:
+        case .TWO_DAYS:
             fallthrough
-        case .THREE_DAYS_FLAG:
+        case .THREE_DAYS:
             displayText = "\(startDateText) ~ \(endDateText)"
         }
         
@@ -572,6 +529,22 @@ class LineChartVC : UIViewController, Refreshable {
         avgValue.text = String(avg)
         diffMin.text = "-\(avg - min)"
         diffMax.text = "+\(max - avg)"
+    }
+    
+    func initUI() {
+        
+        min = 70
+        max = 0
+        avg = 0
+        avgSum = 0
+        avgCnt = 0
+        
+        maxValue.text = "0"
+        minValue.text = "0"
+        avgValue.text = "0"
+        diffMin.text = "-0"
+        diffMax.text = "+0"
+        
     }
     
     func calcMinMax(_ value: Double) {
