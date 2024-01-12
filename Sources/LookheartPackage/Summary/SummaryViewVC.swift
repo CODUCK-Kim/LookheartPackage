@@ -21,11 +21,8 @@ public class SummaryViewController : UIViewController {
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
     
-//    private let bpmView = SummaryBpm()
-    private let bpmView = LineChartVC()
     private let lineChartView = LineChartVC()
     private let arrView = SummaryArr()
-    private let hrvView = SummaryHrv()
     private let calView = SummaryCalorie()
     private let stepView = SummaryStep()
     
@@ -40,7 +37,7 @@ public class SummaryViewController : UIViewController {
     }()
     
     private lazy var childs: [UIViewController] = {
-        return [lineChartView, arrView, hrvView, calView, stepView]
+        return [lineChartView, arrView, calView, stepView]
     }()
     
     // MARK: -
@@ -337,10 +334,10 @@ public class SummaryViewController : UIViewController {
             make.centerX.equalTo(stepButton)
         }
         
-        addChild(bpmView)
-        view.addSubview(bpmView.view)
-        bpmView.didMove(toParent: self)
-        bpmView.view.snp.makeConstraints { make in
+        addChild(lineChartView)
+        view.addSubview(lineChartView.view)
+        lineChartView.didMove(toParent: self)
+        lineChartView.view.snp.makeConstraints { make in
             make.top.equalTo(calorieButton.snp.bottom)
             make.left.right.bottom.equalTo(safeAreaView)
         }
