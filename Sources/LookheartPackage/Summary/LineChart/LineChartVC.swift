@@ -358,18 +358,18 @@ class LineChartVC : UIViewController, Refreshable {
                     let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                     let entry = ChartDataEntry(x: Double(i), y: bpmValue)
                     entries[date]?.append(entry)
-                } else if i + 1 < timeTable.count {
-                    // 데이터 없음
-                    // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
-                    let nextTime = timeTable[i + 1].prefix(7)
-                    if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
-                        let entry = ChartDataEntry(x: Double(i), y: 70.0)
-                        entries[date]?.append(entry)
-                    }
                 }
             }
         }
-        
+//        else if i + 1 < timeTable.count {
+//            // 데이터 없음
+//            // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
+//            let nextTime = timeTable[i + 1].prefix(7)
+//            if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
+//                let entry = ChartDataEntry(x: Double(i), y: 70.0)
+//                entries[date]?.append(entry)
+//            }
+//        }
         let graphColor = setGraphColor(type)
         var graphIdx = 0
         for (date, entry) in entries {
