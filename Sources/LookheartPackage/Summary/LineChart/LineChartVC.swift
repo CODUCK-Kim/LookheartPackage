@@ -405,7 +405,7 @@ class LineChartVC : UIViewController {
                                 
                 self.activityIndicator.stopAnimating()
 
-                ToastHelper.shared.showToast(self.view, errorMessage, withDuration: 1.0, delay: 1.0, bottomPosition: false)
+                ToastHelper.shared.showToast(self.view, errorMessage, withDuration: 1.0, delay: 1.0, bottomPosition: true)
                 
                 print("responseBpmData error : \(error)")
                 
