@@ -431,7 +431,6 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
-                print(data)
                 if let responseString = String(data: data, encoding: .utf8) {
                     if !(responseString.contains("result = 0")) {
                         let newlineData = responseString.split(separator: "\n")
@@ -461,6 +460,8 @@ public class NetworkManager {
                         }
                         
                         completion(.success(bpmData))
+                    } else {
+                        completion(.failure("result = 0" as! Error))
                     }
                 } else {
                     completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패

@@ -306,7 +306,7 @@ class LineChartVC : UIViewController {
     
     // MARK: - CHART FUNC
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
-        
+    
         let dataDict = groupDataByDate(bpmDataList)
         var entries: [String : [ChartDataEntry]] = [:]
         var timeSets: Set<String> = []
