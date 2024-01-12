@@ -313,7 +313,7 @@ class LineChartVC : UIViewController, Refreshable {
     // MARK: - CHART FUNC
     func todayChart() {
         
-        startDate = "2024-01-09"
+        startDate = "2024-01-08"
         
         getBpmDataToServer(startDate, dateCalculate(startDate, 2, PLUS_DATE), .TODAY_FLAG)
         
