@@ -511,7 +511,7 @@ class LineChartVC : UIViewController, Refreshable {
         
         if dateText.count > 1 {
             if let startDate = dateText.first, let endDate = dateText.last {
-                displayTest = "\(startDate) ~ \(endDate)"
+                displayTest = "\(changeDateFormat(startDate, false)) ~ \(changeDateFormat(endDate, false))"
             }
         } else {
             displayTest = dateText.first ?? startDate
