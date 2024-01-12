@@ -533,6 +533,8 @@ class LineChartVC : UIViewController, Refreshable {
     
     func initUI() {
         
+        lineChartView.clear()
+        
         min = 70
         max = 0
         avg = 0
@@ -592,6 +594,11 @@ class LineChartVC : UIViewController, Refreshable {
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
+        }
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(lineChartView)
         }
         
         view.addSubview(bottomLabel)
