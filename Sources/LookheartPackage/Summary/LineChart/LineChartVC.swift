@@ -330,8 +330,9 @@ class LineChartVC : UIViewController, Refreshable {
 
         for (date, dataForDate) in dataDict {
             
+            bpmIdx[date] = 0
             entries[date] = [ChartDataEntry]()
-
+            
             let timeSet = Set(dataForDate.map { $0.writeTime })
             timeSets.formUnion(timeSet)
         }
@@ -369,7 +370,7 @@ class LineChartVC : UIViewController, Refreshable {
                             entries[date]?.append(entry)
                         }
                     }
-                    bpmIdx[date, default: idx] = idx + 1
+                    bpmIdx[date] = idx + 1
                 }
             }
         }
