@@ -289,8 +289,13 @@ class LineChartVC : UIViewController, Refreshable {
             currentButtonFlag = .TODAY_FLAG
         }
         
-        getDataController(currentButtonFlag)
+        endDate = dateCalculate(startDate, 1, PLUS_DATE)
+        startDate = dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
+        
+//        getDataController(currentButtonFlag)
+        print("startDate : \(startDate), endDate : \(endDate)")
         setButtonColor(sender)
+        setDisplayDateText()
     }
     
     @objc func shiftDate(_ sender: UIButton) {
