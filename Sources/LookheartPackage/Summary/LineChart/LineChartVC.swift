@@ -320,24 +320,23 @@ class LineChartVC : UIViewController, Refreshable {
     }
     
     func viewChart(_ bpmDataList: [BpmData], _ type: DateType) {
-        startTT = Date()
+        
         let dataDict = groupBpmDataByDate(bpmDataList)
 
         var chartDataSets: [LineChartDataSet] = []
         var entries: [String : [ChartDataEntry]] = [:]
-        var bpmIdx: [String : Int] = [:]
+        var bpmIdx: [String : Int] = [:]    // 날짜 별 그래프 xValue 값
         var timeSets: Set<String> = []
 
         for (date, dataForDate) in dataDict {
-            bpmIdx[date] = 0
-            entries[date] = [ChartDataEntry]()
-
             let timeSet = Set(dataForDate.map { $0.writeTime })
             timeSets.formUnion(timeSet)
         }
             
         let timeTable = timeSets.sorted()    // 시간 정렬
 
+        // [ 날짜 : [ 시간 : [BpmData] ]
+        // 효율적인 데이터 접근 처리를 위한 딕셔너리 생성
         var dataByTimeDict: [String: [String: [BpmData]]] = [:]
 
         for (date, dataForDate) in dataDict {
@@ -354,17 +353,20 @@ class LineChartVC : UIViewController, Refreshable {
             for (date, timeDict) in dataByTimeDict {
                 if let idx = bpmIdx[date] {
                     if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
+                        // 데이터 존재
                         let bpmValue = Double(bpmDataArray[0].bpm) ?? 0
                         let entry = ChartDataEntry(x: Double(idx), y: bpmValue)
-                        entries[date]?.append(entry)
+                        entries[date, default: [ChartDataEntry]()].append(entry)
                     } else if i + 1 < timeTable.count {
+                        // 데이터 없음
+                        // 다음 시간 테이블에 데이터가 있다면 데이터를 넣지 않음
                         let nextTime = timeTable[i + 1].prefix(7)
                         if let nextTimeDataArray = timeDict[String(nextTime)], nextTimeDataArray.isEmpty {
                             let entry = ChartDataEntry(x: Double(idx), y: 70.0)
-                            entries[date]?.append(entry)
+                            entries[date, default: [ChartDataEntry]()].append(entry)
                         }
                     }
-                    bpmIdx[date] = idx + 1
+                    bpmIdx[date, default: 0] = idx + 1
                 }
             }
         }
@@ -379,15 +381,12 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMaximum: 200,
                  axisMinimum: 40, 
                  timeTable: timeTable)
-        
-        endTT = Date()
-        let duration = endTT.timeIntervalSince(startTT)
-        print("작업 시간: \(duration)초")
+
     }
     
     func groupBpmDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
-            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 기준 저장
+            let dateKey = String(bpmData.writeDate) // "YYYY-MM-DD" 기준으로 분류하여 저장
             dict[dateKey, default: []].append(bpmData)
         }
         return groupedData
