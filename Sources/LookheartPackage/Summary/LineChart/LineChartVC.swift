@@ -392,29 +392,20 @@ class LineChartVC : UIViewController {
         activityIndicator.startAnimating()
         
         initUI()
-        
-        print(email)
-        print(startDate)
-        print(endDate)
-        print(type)
-        
-        do {
-            NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
-                switch(result){
-                case .success(let bpmDataList):
-                    print("check")
-                    self.viewChart(bpmDataList, type)
-                    
-                case .failure(let error):
-                    
-                    self.activityIndicator.stopAnimating()
-                    ToastHelper.shared.showToast(self.view, "serverErr".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
-                    print("responseBpmData error : \(error)")
-                    
-                }
+
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
+            switch(result){
+            case .success(let bpmDataList):
+                
+                self.viewChart(bpmDataList, type)
+                
+            case .failure(let error):
+                
+                self.activityIndicator.stopAnimating()
+                ToastHelper.shared.showToast(self.view, "serverErr".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
+                print("responseBpmData error : \(error)")
+                
             }
-        } catch {
-            print("An error occurred: \(error)")
         }
     }
     

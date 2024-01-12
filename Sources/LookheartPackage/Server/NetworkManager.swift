@@ -414,6 +414,7 @@ public class NetworkManager {
     }
     
     func getBpmDataToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
+        print("id : \(id), startDate : \(startDate), endDate : \(endDate)")
         
         var bpmData: [BpmData] = []
         let endpoint = "/mslbpm/api_getdata"
@@ -427,6 +428,8 @@ public class NetworkManager {
             "startDate": startDate,
             "endDate": endDate
         ]
+        
+        print(parameters)
         
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
