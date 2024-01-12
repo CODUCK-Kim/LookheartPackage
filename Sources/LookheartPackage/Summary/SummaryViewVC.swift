@@ -194,6 +194,8 @@ public class SummaryViewController : UIViewController {
         super.viewDidLoad()
         
         addViews()
+        
+        ButtonEvent(bpmButton)
 
     }
     
