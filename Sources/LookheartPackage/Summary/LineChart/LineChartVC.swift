@@ -274,6 +274,7 @@ class LineChartVC : UIViewController {
         getDataToServer(startDate, endDate, currentButtonFlag)
         
         setDisplayDateText()
+        setButtonColor(todayButton)
     }
     
     
