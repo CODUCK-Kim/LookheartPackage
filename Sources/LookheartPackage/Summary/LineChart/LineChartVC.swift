@@ -325,7 +325,6 @@ class LineChartVC : UIViewController, Refreshable {
         var entries: [String : [ChartDataEntry]] = [:]
         var timeSets: Set<String> = []
 
-        // init
         for (date, dataForDate) in dataDict {
             
             entries[date] = [ChartDataEntry]()
@@ -335,13 +334,20 @@ class LineChartVC : UIViewController, Refreshable {
         }
             
         let timeTable = timeSets.sorted()    // 시간 정렬
+
+        // [ 날짜 : [ 시간 : [BpmData] ]
+        var dataByTimeDict: [String: [String: [BpmData]]] = [:]
+
+        for (date, dataForDate) in dataDict {
+            var timeDict: [String: [BpmData]] = [:]
+            for data in dataForDate {
+                timeDict[data.writeTime, default: []].append(data)
+            }
+            dataByTimeDict[date] = timeDict
+        }
         
-        // setDictionary
-        let dataByTimeDict = setDict(dataDict: dataDict)
-        
-        // setEntries
         entries = setEntries(timeTable: timeTable, dataByTimeDict: dataByTimeDict)
-        
+
         // setChart
         let chartDataSets = setChartDataSets(entries: entries, type: type)
         setChart(chartData: LineChartData(dataSets: chartDataSets),
@@ -350,24 +356,6 @@ class LineChartVC : UIViewController, Refreshable {
                  axisMinimum: 40, 
                  timeTable: timeTable)
 
-    }
-    
-    func setDict(dataDict: [String : [BpmData]]) -> [String: [String: [BpmData]]] {
-        // [ 날짜 : [ 시간 : [BpmData] ]
-        var dataByTimeDict: [String: [String: [BpmData]]] = [:]
-
-        for (date, dataForDate) in dataDict {
-            
-            var timeDict: [String: [BpmData]] = [:]
-            
-            for data in dataForDate {
-                timeDict[data.writeTime, default: []].append(data)
-            }
-            
-            dataByTimeDict[date] = timeDict
-        }
-        
-        return dataByTimeDict
     }
     
     func setEntries(timeTable: [String], dataByTimeDict: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
@@ -430,7 +418,6 @@ class LineChartVC : UIViewController, Refreshable {
         var chartDataSets: [LineChartDataSet] = []
         
         for (date, entry) in entries {
-            print(date)
             let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
             chartDataSets.append(chartDataSet)
             graphIdx += 1
