@@ -272,9 +272,6 @@ class LineChartVC : UIViewController {
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
-        print(startDate)
-        print(endDate)
-        
         getDataToServer(startDate, endDate, currentButtonFlag)
         
         setDisplayDateText()
@@ -387,10 +384,11 @@ class LineChartVC : UIViewController {
         
         initUI()
         
+        print(email)
         NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
             switch(result){
             case .success(let bpmDataList):
-                
+                print("check")
                 self.viewChart(bpmDataList, type)
                 
             case .failure(let error):
