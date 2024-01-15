@@ -386,6 +386,8 @@ class BarChartVC : UIViewController {
                 
                 dataEntries.append(dataEntry)
                 timeTable.append(time)
+                
+                xValue += 1
             }
             
         case .YEAR:
