@@ -564,7 +564,7 @@ class BarChartVC : UIViewController {
             return MyDateTime.shared.dateCalculate(date, 7, PLUS_DATE)
         case .MONTH:
             let numDay = MyDateTime.shared.findNumDay(date) ?? 30
-            return MyDateTime.shared.dateCalculate(date, numDay + 1, PLUS_DATE)
+            return MyDateTime.shared.dateCalculate(date, numDay, PLUS_DATE)
         case .YEAR:
             return ""
         }
