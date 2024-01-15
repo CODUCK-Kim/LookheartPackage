@@ -612,7 +612,7 @@ class LineChartVC : UIViewController {
         let toastPositionX = chartViewCenterX - containerWidth / 2
         let toastPositionY = chartViewCenterY - containerHeight / 2
         
-        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
+        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: chartViewCenterX, y: chartViewCenterY))
     }
     
     // MARK: -
