@@ -303,7 +303,7 @@ class BarChartVC : UIViewController {
         addViews()
         
         // TEST
-        getDataToServer("2024-01-15", "2024-01-16", .DAY)
+        getDataToServer("2024-01-08", "2024-01-13", .WEEK)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -336,16 +336,29 @@ class BarChartVC : UIViewController {
             
             for (date, hourlyData) in dataDict {
                 for data in hourlyData.1 {
+                    
                     let arrCnt = Double(data.arrCnt) ?? 0.0
                     let arrDataEntry = BarChartDataEntry(x: Double(xValue), y: arrCnt)
+                    
                     arrDataEntries.append(arrDataEntry)
                     timeTable.append(data.hour)
+                    
                     xValue += 1
                 }
             }
             
         case .WEEK:
-            fallthrough
+            for (date, hourlyData) in dataDict {
+                
+                let arrCnt = Double(hourlyData.0)
+                let arrDataEntry = BarChartDataEntry(x: Double(xValue), y: arrCnt)
+                
+                arrDataEntries.append(arrDataEntry)
+                timeTable.append(String(date.suffix(2)))
+                
+                xValue += 1
+            }
+            
         case .MONTH:
             fallthrough
         case .YEAR:
