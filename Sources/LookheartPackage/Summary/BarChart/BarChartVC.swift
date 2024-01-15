@@ -335,7 +335,7 @@ class BarChartVC : UIViewController {
             
         case .DAY:
             
-            for (date, hourlyData) in dataDict {
+            for (_, hourlyData) in dataDict {
                 for data in hourlyData.1 {
                     
                     let arrCnt = Double(data.arrCnt) ?? 0.0
@@ -367,8 +367,7 @@ class BarChartVC : UIViewController {
                 
                 let arrDataEntry = BarChartDataEntry(x: Double(xValue), y: arrCnt)
                 arrDataEntries.append(arrDataEntry)
-                
-                timeTable.append(String(i))
+                timeTable.append(weekDays[i])
                 
                 checkDate = MyDateTime.shared.dateCalculate(checkDate, 1, true)
                 xValue += 1
@@ -387,7 +386,7 @@ class BarChartVC : UIViewController {
     }
     
     private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, [HourlyData])] {
-        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 arrCnt 총합 계산
+        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 총합 계산
         let groupedData = dataArray.reduce(into: [String: (Int, [HourlyData])]()) { dict, data in
             let dateKey = String(data.date)
 

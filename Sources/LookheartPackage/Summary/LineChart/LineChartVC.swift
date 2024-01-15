@@ -547,7 +547,7 @@ class LineChartVC : UIViewController {
     }
     
     func chartZoomOut() {
-        for i in 0..<20 {
+        for _ in 0..<20 {
             lineChartView.zoomOut()
         }
     }
