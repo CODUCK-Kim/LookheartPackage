@@ -396,6 +396,7 @@ class BarChartVC : UIViewController {
                 
                 xValue += 1
             }
+            setArrCntUI(hourlyData.0)
         }
         
         return (dataEntries, timeTable)
@@ -410,6 +411,7 @@ class BarChartVC : UIViewController {
         
         var checkDate = startDate
         var dayIdx = 0
+        var sumValue = 0
         
         let sortedDates = dataDict.keys.sorted()
         
@@ -422,6 +424,7 @@ class BarChartVC : UIViewController {
                 
                 if checkDate == day {
                     yValue = Double(dataDict[day]?.0 ?? 0)
+                    sumValue += Int(yValue)
                     dayIdx += 1
                 }
             }
@@ -435,6 +438,7 @@ class BarChartVC : UIViewController {
             xValue += 1
         }
         
+        setArrCntUI(sumValue)
         return (dataEntries, timeTable)
     }
     
@@ -443,6 +447,7 @@ class BarChartVC : UIViewController {
         var dataEntries = [BarChartDataEntry]()
         var timeTable:[String] = []
         var xValue = 0
+        var sumValue = 0
         
         let sortedDates = dataDict.keys.sorted()
         
@@ -456,8 +461,10 @@ class BarChartVC : UIViewController {
             timeTable.append(time)
             
             xValue += 1
+            sumValue += Int(yValue)
         }
         
+        setArrCntUI(sumValue)
         return (dataEntries, timeTable)
     }
     
@@ -466,6 +473,7 @@ class BarChartVC : UIViewController {
         var dataEntries = [BarChartDataEntry]()
         var timeTable:[String] = []
         var xValue = 0
+        var sumValue = 0
         
         var monthOfValue: [String : Int] = [:]
         
@@ -487,6 +495,7 @@ class BarChartVC : UIViewController {
                 if i == month - 1 {
                     yValue = Double(monthOfValue[sortedDates[monthIdx]] ?? 0)
                     monthIdx += 1
+                    sumValue += Int(yValue)
                 }
             }
             
@@ -497,6 +506,7 @@ class BarChartVC : UIViewController {
             xValue += 1
         }
         
+        setArrCntUI(sumValue)
         return (dataEntries, timeTable)
     }
     
@@ -676,8 +686,12 @@ class BarChartVC : UIViewController {
         }
     }
     
-    func initUI() {
+    private func initUI() {
         barChartView.clear()
+    }
+    
+    private func setArrCntUI(_ cnt : Int) {
+        
     }
     
     // MARK: - addViews
