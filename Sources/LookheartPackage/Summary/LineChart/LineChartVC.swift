@@ -452,7 +452,7 @@ class LineChartVC : UIViewController {
         lineChartView.data?.notifyDataChanged()
         lineChartView.notifyDataSetChanged()
         lineChartView.moveViewToX(0)
-        lineChartView.zoom(scaleX: 1.0, scaleY: 1.0, x: 0, y: 0)
+        chartZoomOut()
     }
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
