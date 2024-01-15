@@ -103,6 +103,15 @@ class MyDateTime {
         return date
     }
     
+    public func findNumDay(_ date: String) -> Int? {
+        guard let inputDate = dateFormatter.date(from: date) else { return nil}
+        if let range = calendar.range(of: .day, in: .month, for: inputDate) {
+            return range.count
+        } else {
+            return nil
+        }
+    }
+    
     public func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
         var dateComponents = dateString.components(separatedBy: "-")
         
@@ -116,4 +125,5 @@ class MyDateTime {
             return "\(dateComponents[1])-\(dateComponents[2])"
         }
     }
+    
 }

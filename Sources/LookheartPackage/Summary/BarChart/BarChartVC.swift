@@ -47,7 +47,7 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateType = .WEEK   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .MONTH   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     // CHART END
     
@@ -320,6 +320,8 @@ class BarChartVC : UIViewController {
     }
     
     public func refreshView(_ type: ChartType) {
+        startDate = "2024-01-01"
+        endDate = "2024-01-16"
         getDataToServer(startDate, endDate, currentButtonFlag)
     }
     
@@ -547,7 +549,8 @@ class BarChartVC : UIViewController {
             startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
             return MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
         case .MONTH:
-            return MyDateTime.shared.dateCalculate(date, 1, flag, .month)
+            startDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
+            return startDate + "01"
         case .YEAR:
             return MyDateTime.shared.dateCalculate(date, 1, flag, .year)
         }
@@ -560,7 +563,8 @@ class BarChartVC : UIViewController {
         case .WEEK:
             return MyDateTime.shared.dateCalculate(date, 7, PLUS_DATE)
         case .MONTH:
-            return ""
+            let numDay = MyDateTime.shared.findNumDay(date) ?? 30
+            return MyDateTime.shared.dateCalculate(date, numDay + 1, PLUS_DATE)
         case .YEAR:
             return ""
         }
