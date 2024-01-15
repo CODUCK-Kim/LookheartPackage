@@ -47,7 +47,7 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateType = .MONTH   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .YEAR   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     // CHART END
     
@@ -552,7 +552,8 @@ class BarChartVC : UIViewController {
             startDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
             return startDate + "01"
         case .YEAR:
-            return MyDateTime.shared.dateCalculate(date, 1, flag, .year)
+            startDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .year).prefix(4))
+            return startDate + "-01-01"
         }
     }
     
@@ -566,7 +567,9 @@ class BarChartVC : UIViewController {
             let numDay = MyDateTime.shared.findNumDay(date) ?? 30
             return MyDateTime.shared.dateCalculate(date, numDay, PLUS_DATE)
         case .YEAR:
-            return ""
+            let lastDate = String(date.prefix(4)) + "-12-01"
+            let numDay = MyDateTime.shared.findNumDay(lastDate) ?? 30
+            return MyDateTime.shared.dateCalculate(lastDate, numDay, PLUS_DATE)
         }
     }
     
@@ -620,9 +623,9 @@ class BarChartVC : UIViewController {
         case .WEEK:
             fallthrough
         case .MONTH:
-            fallthrough
-        case .YEAR:
             displayText = "\(startDateText) ~ \(endDateText)"
+        case .YEAR:
+            displayText = "\(startDateText.prefix(4))"
         }
         
         todayDisplay.text = displayText
