@@ -19,6 +19,12 @@ class MyDateTime {
     
     private let dateFormatter = DateFormatter()
     
+    private var calendar = Calendar.current
+    
+    init() {
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+    }
+    
     public func getCurrentDateTime(_ dateType : DateType ) -> String {
         
         let now = Date()
@@ -27,6 +33,8 @@ class MyDateTime {
         
         return dateFormatter.string(from: now)
     }
+    
+    
     
     public func getSplitDateTime(_ dateType : DateType ) -> [String] {
         let now = Date()
@@ -54,6 +62,39 @@ class MyDateTime {
             return "HH:mm:ss"
         case .DATETIME:
             return "yyyy-MM-dd HH:mm:ss"
+        }
+    }
+    
+    public func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
+        guard let inputDate = dateFormatter.date(from: date) else { return date }
+
+        let dayValue = shouldAdd ? day : -day
+        if let arrTargetDate = calendar.date(byAdding: .day, value: dayValue, to: inputDate) {
+            
+            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                let year = "\(year)"
+                let month = String(format: "%02d", month)
+                let day = String(format: "%02d", day)
+                
+                return "\(year)-\(month)-\(day)"
+            }
+        }
+        return date
+    }
+    
+    public func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
+        var dateComponents = dateString.components(separatedBy: "-")
+        
+        if yearFlag {
+            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            return "\(dateComponents[0])-\(dateComponents[1])"
+        } else {
+            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
+            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
+            return "\(dateComponents[1])-\(dateComponents[2])"
         }
     }
 }

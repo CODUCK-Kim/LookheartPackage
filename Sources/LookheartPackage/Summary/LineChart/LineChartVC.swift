@@ -33,11 +33,6 @@ class LineChartVC : UIViewController {
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
-    // 날짜 변수
-    private let dateFormatter = DateFormatter()
-    private let timeFormatter = DateFormatter()
-    private var calendar = Calendar.current
-    
     private var startDate = String()
     private var endDate = String()
     // DATE END
@@ -232,7 +227,7 @@ class LineChartVC : UIViewController {
             currentButtonFlag = .TODAY
         }
         
-        startDate = dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
+        startDate = MyDateTime.shared.dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
@@ -243,12 +238,12 @@ class LineChartVC : UIViewController {
         
         switch(sender.tag) {
         case YESTERDAY_BUTTON_FLAG:
-            startDate = dateCalculate(startDate, 1, MINUS_DATE)
+            startDate = MyDateTime.shared.dateCalculate(startDate, 1, MINUS_DATE)
         default:    // TOMORROW_BUTTON_FLAG
-            startDate = dateCalculate(startDate, 1, PLUS_DATE)
+            startDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
         }
         
-        endDate = dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
+        endDate = MyDateTime.shared.dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
@@ -270,7 +265,7 @@ class LineChartVC : UIViewController {
         currentButtonFlag = .TODAY
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
+        endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         
@@ -281,17 +276,12 @@ class LineChartVC : UIViewController {
     
     func initVar() {
 //        email = UserProfileManager.shared.getEmail()
-        
-        // test
-        email = "jhaseung@medsyslab.co.kr"
-        
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        timeFormatter.dateFormat = "HH:mm:ss"
-        
+        email = "jhaseung@medsyslab.co.kr"          // test
+
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
+        endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
         
         setDisplayDateText()
     }
@@ -419,7 +409,8 @@ class LineChartVC : UIViewController {
         var dateText: [String] = []
         
         for (date, entry) in entries {
-            let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: changeDateFormat(date, false)))
+            let label = MyDateTime.shared.changeDateFormat(date, false)
+            let chartDataSet = chartDataSet(color: graphColor[graphIdx], chartDataSet: LineChartDataSet(entries: entry, label: label))
             dateChartDict[date] = chartDataSet
             graphIdx += 1
         }
@@ -473,44 +464,11 @@ class LineChartVC : UIViewController {
         }
     }
     
-    func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
-        guard let inputDate = dateFormatter.date(from: date) else { return date }
-
-        let dayValue = shouldAdd ? day : -day
-        if let arrTargetDate = calendar.date(byAdding: .day, value: dayValue, to: inputDate) {
-            
-            let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
-            
-            if let year = components.year, let month = components.month, let day = components.day {
-                let year = "\(year)"
-                let month = String(format: "%02d", month)
-                let day = String(format: "%02d", day)
-                
-                return "\(year)-\(month)-\(day)"
-            }
-        }
-        return date
-    }
-    
-    func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
-        var dateComponents = dateString.components(separatedBy: "-")
-        
-        if yearFlag {
-            dateComponents[0] = String(format: "%02d", Int(dateComponents[0])!)
-            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
-            return "\(dateComponents[0])-\(dateComponents[1])"
-        } else {
-            dateComponents[1] = String(format: "%02d", Int(dateComponents[1])!)
-            dateComponents[2] = String(format: "%02d", Int(dateComponents[2])!)
-            return "\(dateComponents[1])-\(dateComponents[2])"
-        }
-    }
-    
     // MARK: - UI
     func setDisplayDateText() {
         var displayText = startDate
-        let startDateText = changeDateFormat(startDate, false)
-        let endDateText = changeDateFormat(dateCalculate(endDate, 1, false), false)
+        let startDateText = MyDateTime.shared.changeDateFormat(startDate, false)
+        let endDateText = MyDateTime.shared.changeDateFormat(MyDateTime.shared.dateCalculate(endDate, 1, false), false)
         
         switch (currentButtonFlag) {
             

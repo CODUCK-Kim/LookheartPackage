@@ -19,6 +19,8 @@ class BarChartVC : UIViewController {
     
     private let YESTERDAY_BUTTON_FLAG = 1, TOMORROW_BUTTON_FLAG = 2
     private let DAY_FLAG = 1, WEEK_FLAG = 2, MONTH_FLAG = 3, YEAR_FLAG = 4
+    
+    private let PLUS_DATE = true, MINUS_DATE = false
     // 상수 END
     
     // ----------------------------- UI ------------------- //
@@ -180,7 +182,7 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - middle Contents
-    private lazy var todayDispalay = UILabel().then {
+    private lazy var todayDisplay = UILabel().then {
         $0.text = "-"
         $0.textColor = .black
         $0.textAlignment = .center
@@ -296,12 +298,72 @@ class BarChartVC : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initVar()
+        
         addViews()
+        
+        // TEST
+        getDataToServer()
+    }
+    
+    public func refreshView(_ type: ChartType) {
         
     }
     
+    func initVar() {
+        //        email = UserProfileManager.shared.getEmail()
+        email = "jhaseung@medsyslab.co.kr"          // test
+        
+        buttonList = [dayButton, weekButton, monthButton, yearButton]
+        
+        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
+        
+        setDisplayDateText()
+    }
+    
+    // MARK: - CHART FUNC
+    private func getDataToServer() {
+        
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
+            switch(result){
+            case .success(let bpmDataList):
+                print(bpmDataList)
+            case .failure(let error):
+                
+                let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
+//                toastMessage(errorMessage)
+                print(errorMessage)
+                activityIndicator.stopAnimating()
+            }
+        }
+        
+    }
+    
+    // MARK: - DATE FUNC
+
+    // MARK: - UI
+    private func setDisplayDateText() {
+        var displayText = startDate
+        let startDateText = MyDateTime.shared.changeDateFormat(startDate, false)
+        let endDateText = MyDateTime.shared.changeDateFormat(MyDateTime.shared.dateCalculate(endDate, 1, false), false)
+        
+        switch (currentButtonFlag) {
+            
+        case .DAY:
+            displayText = startDate
+        case .WEEK:
+            fallthrough
+        case .MONTH:
+            fallthrough
+        case .YEAR:
+            displayText = "\(startDateText) ~ \(endDateText)"
+        }
+        
+        todayDisplay.text = displayText
+    }
     // MARK: - addViews
-    func addViews() {
+    private func addViews() {
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier
         
@@ -397,8 +459,8 @@ class BarChartVC : UIViewController {
             make.top.right.bottom.equalTo(middleContents)
         }
         
-        middleContents.addSubview(todayDispalay)
-        todayDispalay.snp.makeConstraints { make in
+        middleContents.addSubview(todayDisplay)
+        todayDisplay.snp.makeConstraints { make in
             make.top.centerX.bottom.equalTo(middleContents)
         }
      

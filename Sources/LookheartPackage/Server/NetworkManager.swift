@@ -473,6 +473,67 @@ public class NetworkManager {
     }
     
     
+    
+    func getHourlyDataToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
+                
+        var hourlyData: [HourlyData] = []
+        let endpoint = "/mslecgday/day"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": id,
+            "startDate": startDate,
+            "endDate": endDate
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    if !(responseString.contains("result = 0")) {
+                        let newlineData = responseString.split(separator: "\n")
+                        let splitData = newlineData[1].split(separator: "\r\n")
+
+                        for data in splitData {
+                            let fields = data.split(separator: "|")
+
+                            if fields.count == 12 {
+                                if let step = Int(fields[7]), let distance = Int(fields[8]), let cal = Int(fields[9]), let activityCal = Int(fields[10]), let arrCnt = Int(fields[11]) {
+                                    let record = HourlyData(
+                                        eq: String(fields[0]),
+                                        timezone: String(fields[2]),
+                                        hour: String(fields[6]),
+                                        step: String(step),
+                                        distance: String(distance),
+                                        cal: String(cal),
+                                        activityCal: String(activityCal),
+                                        arrCnt: String(arrCnt)
+                                    )
+                                    
+                                    hourlyData.append(record)
+                                }
+                            }
+                        }
+                        
+                        completion(.success(hourlyData))
+                        
+                    } else {
+                        completion(.failure(NetworkError.noData))
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
     public func getArrListToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
         
         let endpoint = "/mslecgarr/arrWritetime?"
