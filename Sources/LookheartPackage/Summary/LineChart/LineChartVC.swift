@@ -540,6 +540,7 @@ class LineChartVC : UIViewController {
     func initUI() {
         
         lineChartView.clear()
+        lineChartView.resetZoom()
         
         min = 70
         max = 0
