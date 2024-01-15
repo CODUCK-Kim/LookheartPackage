@@ -330,7 +330,7 @@ class LineChartVC : UIViewController {
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()
-        
+        lineChartView.resetZoom()
     }
     
     
@@ -540,7 +540,6 @@ class LineChartVC : UIViewController {
     func initUI() {
         
         lineChartView.clear()
-        lineChartView.resetZoom()
         
         min = 70
         max = 0
