@@ -84,6 +84,25 @@ class MyDateTime {
         return date
     }
     
+    public func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool, _ type: Calendar.Component) -> String {
+        guard let inputDate = dateFormatter.date(from: date) else { return date }
+        
+        let dayValue = shouldAdd ? day : -day
+        if let stepTargetDate = calendar.date(byAdding: type, value: dayValue, to: inputDate) {
+            
+            let components = calendar.dateComponents([.year, .month, .day], from: stepTargetDate)
+            
+            if let year = components.year, let month = components.month, let day = components.day {
+                let year = "\(year)"
+                let month = String(format: "%02d", month)
+                let day = String(format: "%02d", day)
+                
+                return "\(year)-\(month)-\(day)"
+            }
+        }
+        return date
+    }
+    
     public func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
         var dateComponents = dateString.components(separatedBy: "-")
         

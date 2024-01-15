@@ -193,12 +193,12 @@ class BarChartVC : UIViewController {
     private lazy var yesterdayArrButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     private lazy var tomorrowArrButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
-//        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
     // MARK: - bottom Contents
@@ -294,7 +294,20 @@ class BarChartVC : UIViewController {
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
     
-    // MARK: - VDL
+    // MARK: - Button Event
+    @objc func shiftDate(_ sender: UIButton) {
+        
+        startDate = setDate(startDate, sender.tag)
+     
+        endDate = MyDateTime.shared.dateCalculate(startDate, 1, true)
+        
+//        MyDateTime.shared.dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
+        
+        getDataToServer(startDate, endDate, currentButtonFlag)
+        setDisplayDateText()
+    }
+    
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -302,13 +315,10 @@ class BarChartVC : UIViewController {
         
         addViews()
         
-        startDate = "2023-01-01"
-        endDate = "2024-01-01"
-        getDataToServer(startDate, endDate, .YEAR)
     }
     
     public func refreshView(_ type: ChartType) {
-        
+        getDataToServer(startDate, endDate, currentButtonFlag)
     }
     
     func initVar() {
@@ -342,9 +352,9 @@ class BarChartVC : UIViewController {
         }
         
         // set ChartData
-        let arrChartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
+        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
         
-        setChart(chartData: BarChartData(dataSet: arrChartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
+        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
     }
     
     private func setDayChart(_ dataDict : [String: (Int, [HourlyData])]) -> ([BarChartDataEntry], [String]) {
@@ -489,6 +499,7 @@ class BarChartVC : UIViewController {
     
     private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
+        initUI()
         
         NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
@@ -523,7 +534,22 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
-
+    func setDate(_ date: String, _ tag : Int) -> String {
+        
+        let flag = tag == TOMORROW_BUTTON_FLAG ? PLUS_DATE : MINUS_DATE
+        
+        switch (currentButtonFlag) {
+        case .DAY:
+            return MyDateTime.shared.dateCalculate(date, 1, flag)
+        case .WEEK:
+            return MyDateTime.shared.dateCalculate(date, 7, flag)
+        case .MONTH:
+            return MyDateTime.shared.dateCalculate(date, 1, flag, .month)
+        case .YEAR:
+            return MyDateTime.shared.dateCalculate(date, 1, flag, .year)
+        }
+    }
+    
     // MARK: - UI
     private func setDisplayDateText() {
         var displayText = startDate
@@ -560,6 +586,10 @@ class BarChartVC : UIViewController {
         
         ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
 
+    }
+    
+    func initUI() {
+        barChartView.clear()
     }
     
     // MARK: - addViews

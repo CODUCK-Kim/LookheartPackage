@@ -167,7 +167,7 @@ public class SummaryViewController : UIViewController {
             lineChartView.refreshView(.BPM)
         case ARR_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
-            
+            barChartView.refreshView(.ARR)
         case HRV_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
             lineChartView.refreshView(.HRV)
