@@ -330,7 +330,7 @@ class LineChartVC : UIViewController {
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()
-        lineChartView.resetZoom()
+    
     }
     
     
@@ -449,9 +449,11 @@ class LineChartVC : UIViewController {
         lineChartView.setVisibleXRangeMaximum(maximum)
         lineChartView.leftAxis.axisMaximum = axisMaximum
         lineChartView.leftAxis.axisMinimum = axisMinimum
+        lineChartView.resetZoom()
         lineChartView.data?.notifyDataChanged()
         lineChartView.notifyDataSetChanged()
         lineChartView.moveViewToX(0)
+        lineChartView.resetZoom()
     }
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
