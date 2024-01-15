@@ -494,7 +494,7 @@ public class NetworkManager {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
                     if !(responseString.contains("result = 0")) {
-                        print(data)
+                        print(responseString)
                         let newlineData = responseString.split(separator: "\n")
                         let splitData = newlineData[1].split(separator: "\r\n")
 
