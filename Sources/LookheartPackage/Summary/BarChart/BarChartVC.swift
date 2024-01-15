@@ -47,7 +47,7 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateType = .YEAR   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .DAY   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     // CHART END
     
@@ -339,8 +339,7 @@ class BarChartVC : UIViewController {
     }
     
     public func refreshView(_ type: ChartType) {
-        startDate = "2024-01-01"
-        endDate = "2024-01-16"
+        
         getDataToServer(startDate, endDate, currentButtonFlag)
     }
     
