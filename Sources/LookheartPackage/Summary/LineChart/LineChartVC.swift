@@ -267,6 +267,7 @@ class LineChartVC : UIViewController {
     public func refreshView(_ type: ChartType) {
         
         chartType = type
+        currentButtonFlag = .TODAY
         
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         endDate = dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
