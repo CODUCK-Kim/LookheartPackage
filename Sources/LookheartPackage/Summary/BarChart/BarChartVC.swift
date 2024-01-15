@@ -302,8 +302,9 @@ class BarChartVC : UIViewController {
         
         addViews()
         
-        // TEST
-        getDataToServer("2024-01-08", "2024-01-15", .WEEK)
+        startDate = "2024-01-08"
+        endDate = "2024-01-15"
+        getDataToServer(startDate, endDate, .WEEK)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -350,14 +351,26 @@ class BarChartVC : UIViewController {
         case .WEEK:
             
             let sortedDates = dataDict.keys.sorted()
-            for date in sortedDates {
+            var checkDate = startDate
+            
+            for i in 0..<7 {
                 
-                let arrCnt = Double(dataDict[date]?.0 ?? 0)
+                var arrCnt = 0.0
+                
+                if sortedDates.indices.contains(i) {
+                    let date = sortedDates[i]
+                    
+                    if checkDate == date {
+                        arrCnt = Double(dataDict[date]?.0 ?? 0)
+                    }
+                }
+                
                 let arrDataEntry = BarChartDataEntry(x: Double(xValue), y: arrCnt)
-                
                 arrDataEntries.append(arrDataEntry)
-                timeTable.append(String(date.suffix(2)))
                 
+                timeTable.append(String(i))
+                
+                checkDate = MyDateTime.shared.dateCalculate(checkDate, 1, true)
                 xValue += 1
             }
             
@@ -381,8 +394,8 @@ class BarChartVC : UIViewController {
             // 기존에 그룹화된 데이터가 있다면 기존 arrCnt 총합에 더하고, 없다면 새로운 항목을 생성
             if var entry = dict[dateKey] {
                 let arrCnt = Int(data.arrCnt) ?? 0
-                entry.0 += arrCnt // arrCnt 총합 업데이트
-                entry.1.append(data)   // HourlyData 배열에 추가
+                entry.0 += arrCnt       // arrCnt 총합 업데이트
+                entry.1.append(data)    // HourlyData 배열에 추가
                 dict[dateKey] = entry
             } else {
                 dict[dateKey] = (Int(data.arrCnt) ?? 0, [data]) // 새로운 항목 생성
