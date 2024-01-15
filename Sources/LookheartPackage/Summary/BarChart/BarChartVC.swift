@@ -302,9 +302,9 @@ class BarChartVC : UIViewController {
         
         addViews()
         
-        startDate = "2024-01-01"
-        endDate = "2024-01-16"
-        getDataToServer(startDate, endDate, .MONTH)
+        startDate = "2023-01-01"
+        endDate = "2024-01-01"
+        getDataToServer(startDate, endDate, .YEAR)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -391,7 +391,14 @@ class BarChartVC : UIViewController {
             }
             
         case .YEAR:
-            break
+            
+            var monthOfValue: [String : Int] = [:]
+            
+            for (date, hourlyData) in dataDict {
+                monthOfValue[String(date.prefix(7)), default: 0] += hourlyData.0
+            }
+            
+            print(monthOfValue)
         }
         
         // set ChartData
