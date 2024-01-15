@@ -325,7 +325,7 @@ class BarChartVC : UIViewController {
     // MARK: - CHART FUNC
     private func getDataToServer() {
         
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
+        NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let bpmDataList):
                 print(bpmDataList)
