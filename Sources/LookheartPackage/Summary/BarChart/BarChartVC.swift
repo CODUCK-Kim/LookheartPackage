@@ -303,7 +303,7 @@ class BarChartVC : UIViewController {
         addViews()
         
         // TEST
-        getDataToServer("2024-01-01", "2024-01-02", .DAY)
+        getDataToServer("2024-01-01", "2024-01-16", .DAY)
     }
     
     public func refreshView(_ type: ChartType) {
