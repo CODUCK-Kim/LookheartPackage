@@ -352,16 +352,18 @@ class BarChartVC : UIViewController {
             
             let sortedDates = dataDict.keys.sorted()
             var checkDate = startDate
+            var dayIdx = 0
             
             for i in 0..<7 {
                 
                 var yValue = 0.0
                 
-                if sortedDates.indices.contains(i) {
-                    let date = sortedDates[i]
+                if sortedDates.indices.contains(dayIdx) {
+                    let day = sortedDates[dayIdx]
                     
-                    if checkDate == date {
-                        yValue = Double(dataDict[date]?.0 ?? 0)
+                    if checkDate == day {
+                        yValue = Double(dataDict[day]?.0 ?? 0)
+                        dayIdx += 1
                     }
                 }
                 
@@ -398,7 +400,27 @@ class BarChartVC : UIViewController {
                 monthOfValue[String(date.prefix(7)), default: 0] += hourlyData.0
             }
             
-            print(monthOfValue)
+            
+            let sortedDates = monthOfValue.keys.sorted()
+            var monthIdx = 0
+            
+            for i in 0..<12 {
+                
+                var yValue = 0.0
+                
+                if sortedDates.indices.contains(monthIdx) {
+                    let month = Int(sortedDates[monthIdx].suffix(2)) ?? 1
+                    
+                    if i == month - 1 {
+                        yValue = Double(dataDict[sortedDates[monthIdx]]?.0 ?? 0)
+                        monthIdx += 1
+                    }
+                }
+                
+                let dataEntry = BarChartDataEntry(x: Double(i), y: yValue)
+                dataEntries.append(dataEntry)
+                timeTable.append(String(i))
+            }
         }
         
         // set ChartData
