@@ -545,7 +545,7 @@ class BarChartVC : UIViewController {
             return MyDateTime.shared.dateCalculate(date, 1, flag)
         case .WEEK:
             startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
-            return MyDateTime.shared.dateCalculate(date, findMonday(), MINUS_DATE)
+            return MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
         case .MONTH:
             return MyDateTime.shared.dateCalculate(date, 1, flag, .month)
         case .YEAR:
