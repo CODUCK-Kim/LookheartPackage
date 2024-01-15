@@ -449,11 +449,12 @@ class LineChartVC : UIViewController {
         lineChartView.setVisibleXRangeMaximum(maximum)
         lineChartView.leftAxis.axisMaximum = axisMaximum
         lineChartView.leftAxis.axisMinimum = axisMinimum
-        lineChartView.resetZoom()
         lineChartView.data?.notifyDataChanged()
         lineChartView.notifyDataSetChanged()
         lineChartView.moveViewToX(0)
-        lineChartView.resetZoom()
+        lineChartView.zoomOut()
+        lineChartView.zoomOut()
+        lineChartView.zoomOut()
     }
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
