@@ -361,7 +361,7 @@ class LineChartVC : UIViewController {
         return resultEntries
     }
     
-    func groupDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
+    private func groupDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
         // 날짜별("YYYY-MM-DD")로 데이터 그룹화
         let groupedData = bpmDataArray.reduce(into: [String: [BpmData]]()) { dict, bpmData in
             let dateKey = String(bpmData.writeDate)
@@ -370,7 +370,7 @@ class LineChartVC : UIViewController {
         return groupedData
     }
         
-    func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+    private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
         activityIndicator.startAnimating()
         

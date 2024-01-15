@@ -489,12 +489,21 @@ public class NetworkManager {
             "endDate": endDate
         ]
         
+        // ex)
+        // eq(0) : jhaseung@medsyslab.co.kr
+        // date(1) : 2024-01-15 05:00:00
+        // timeZone(2) : +09:00/Asia/Seoul/KR
+        // year(3) : 2024
+        // month(4) : 1
+        // day(5) : 15
+        // hour(6) : 9
+        // data(7 ~ 11) : 1984|1495|307|98|9
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
                     if !(responseString.contains("result = 0")) {
-                        print(responseString)
+
                         let newlineData = responseString.split(separator: "\n")
                         let splitData = newlineData[1].split(separator: "\r\n")
 
@@ -506,7 +515,13 @@ public class NetworkManager {
                                     let record = HourlyData(
                                         eq: String(fields[0]),
                                         timezone: String(fields[2]),
+                                        
+                                        date: String(fields[1].split(separator: " ")[0]),
+                                        year: String(fields[3]),
+                                        month: String(fields[4]),
+                                        day: String(fields[5]),
                                         hour: String(fields[6]),
+                                        
                                         step: String(step),
                                         distance: String(distance),
                                         cal: String(cal),

@@ -7,7 +7,7 @@ class BarChartVC : UIViewController {
     
     private var email = String()
     
-    enum DateChangeType: Int {
+    enum DateType: Int {
         case DAY = 1
         case WEEK = 2
         case MONTH = 3
@@ -47,7 +47,7 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateChangeType = .DAY   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .DAY   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     // CHART END
     
@@ -303,7 +303,7 @@ class BarChartVC : UIViewController {
         addViews()
         
         // TEST
-        getDataToServer()
+        getDataToServer("2024-01-01", "2024-01-16", .DAY)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -323,17 +323,33 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - CHART FUNC
-    private func getDataToServer() {
+    private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
+        let dataDict = groupDataByDate(hourlyDataList)
+        print(dataDict)
+    }
+    
+    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: [HourlyData]] {
+        // 날짜별("YYYY-MM-DD")로 데이터 그룹화
+        let groupedData = dataArray.reduce(into: [String: [HourlyData]]()) { dict, data in
+            let dateKey = String(data.date)
+            dict[dateKey, default: []].append(data)
+        }
+        return groupedData
+    }
+    
+    private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+        
         
         NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let bpmDataList):
-                print(bpmDataList)
+                
+                viewChart(bpmDataList, type)
+                
             case .failure(let error):
                 
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-//                toastMessage(errorMessage)
-                print(errorMessage)
+                toastMessage(errorMessage)
                 activityIndicator.stopAnimating()
             }
         }
@@ -362,6 +378,24 @@ class BarChartVC : UIViewController {
         
         todayDisplay.text = displayText
     }
+    
+    func toastMessage(_ message: String) {
+        // chartView의 중앙 좌표 계산
+        let chartViewCenterX = barChartView.frame.size.width / 2
+        let chartViewCenterY = barChartView.frame.size.height / 2
+
+        // 토스트 컨테이너의 크기
+        let containerWidth: CGFloat = barChartView.frame.width - 60
+        let containerHeight: CGFloat = 35
+
+        // 토스트 컨테이너가 chartView 중앙에 오도록 위치 조정
+        let toastPositionX = chartViewCenterX - containerWidth / 2
+        let toastPositionY = chartViewCenterY - containerHeight / 2
+        
+        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
+
+    }
+    
     // MARK: - addViews
     private func addViews() {
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
