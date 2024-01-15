@@ -412,7 +412,7 @@ class BarChartVC : UIViewController {
                     let month = Int(sortedDates[monthIdx].suffix(2)) ?? 1
                     
                     if i == month - 1 {
-                        yValue = Double(dataDict[sortedDates[monthIdx]]?.0 ?? 0)
+                        yValue = Double(monthOfValue[sortedDates[monthIdx]] ?? 0)
                         monthIdx += 1
                     }
                 }
