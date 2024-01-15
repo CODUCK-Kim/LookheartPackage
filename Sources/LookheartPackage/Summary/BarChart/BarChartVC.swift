@@ -691,7 +691,7 @@ class BarChartVC : UIViewController {
     }
     
     private func setArrCntUI(_ cnt : Int) {
-        
+        arrCntLabel.text = String(cnt)
     }
     
     // MARK: - addViews
