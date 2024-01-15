@@ -301,6 +301,9 @@ class BarChartVC : UIViewController {
      
         endDate = setEndDate(startDate)
         
+        print(startDate)
+        print(endDate)
+        
         getDataToServer(startDate, endDate, currentButtonFlag)
         
         setDisplayDateText()
