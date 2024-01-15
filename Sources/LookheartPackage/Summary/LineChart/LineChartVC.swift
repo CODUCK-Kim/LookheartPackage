@@ -594,9 +594,25 @@ class LineChartVC : UIViewController {
     }
     
     func chartZoomOut() {
-        for i in 0..<10 {
+        for i in 0..<20 {
             lineChartView.zoomOut()
         }
+    }
+    
+    func toastMessage(_ message: String) {
+        // chartView의 중앙 좌표 계산
+        let chartViewCenterX = lineChartView.frame.size.width / 2
+        let chartViewCenterY = lineChartView.frame.size.height / 2
+
+        // 토스트 컨테이너의 크기
+        let containerWidth: CGFloat = lineChartView.frame.width - 60
+        let containerHeight: CGFloat = 35
+
+        // 토스트 컨테이너가 chartView 중앙에 오도록 위치 조정
+        let toastPositionX = chartViewCenterX - containerWidth / 2
+        let toastPositionY = chartViewCenterY - containerHeight / 2
+        
+        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
     }
     
     // MARK: -
