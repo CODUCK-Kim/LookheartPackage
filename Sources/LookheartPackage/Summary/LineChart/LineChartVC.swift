@@ -386,19 +386,21 @@ class LineChartVC : UIViewController {
         
         initUI()
 
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { result in
+        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let bpmDataList):
                 
-                self.viewChart(bpmDataList, type)
+                viewChart(bpmDataList, type)
                 
             case .failure(let error):
                 
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                                 
-                self.activityIndicator.stopAnimating()
+                activityIndicator.stopAnimating()
 
-                ToastHelper.shared.showToast(self.view, errorMessage, withDuration: 1.0, delay: 1.0, bottomPosition: true)
+                toastMessage(errorMessage)
+//                ToastHelper.shared.showToast(self.view, errorMessage, withDuration: 1.0, delay: 1.0, bottomPosition: true)
+            
                 
                 print("responseBpmData error : \(error)")
                 
@@ -612,7 +614,8 @@ class LineChartVC : UIViewController {
         let toastPositionX = chartViewCenterX - containerWidth / 2
         let toastPositionY = chartViewCenterY - containerHeight / 2
         
-        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: chartViewCenterX, y: chartViewCenterY))
+        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
+
     }
     
     // MARK: -
