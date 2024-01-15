@@ -417,9 +417,11 @@ class BarChartVC : UIViewController {
                     }
                 }
                 
-                let dataEntry = BarChartDataEntry(x: Double(i), y: yValue)
+                let dataEntry = BarChartDataEntry(x: Double(xValue), y: yValue)
                 dataEntries.append(dataEntry)
-                timeTable.append(String(i))
+                timeTable.append(String(xValue))
+                
+                xValue += 1
             }
         }
         
