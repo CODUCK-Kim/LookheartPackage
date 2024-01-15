@@ -452,9 +452,7 @@ class LineChartVC : UIViewController {
         lineChartView.data?.notifyDataChanged()
         lineChartView.notifyDataSetChanged()
         lineChartView.moveViewToX(0)
-        lineChartView.zoomOut()
-        lineChartView.zoomOut()
-        lineChartView.zoomOut()
+        chartZoomOut()
     }
     
     func setGraphColor(_ type : DateType) -> [UIColor] {
@@ -592,6 +590,12 @@ class LineChartVC : UIViewController {
             } else {
                 button.isSelected = false
             }
+        }
+    }
+    
+    func chartZoomOut() {
+        for i in 0..<10 {
+            lineChartView.zoomOut()
         }
     }
     
