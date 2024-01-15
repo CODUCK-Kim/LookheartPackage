@@ -123,7 +123,7 @@ class BarChartVC : UIViewController {
         $0.isSelected = true
         
         $0.tag = DAY_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var weekButton = UIButton().then {
@@ -142,7 +142,7 @@ class BarChartVC : UIViewController {
         $0.layer.cornerRadius = 15
         
         $0.tag = WEEK_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     private lazy var monthButton = UIButton().then {
@@ -160,7 +160,7 @@ class BarChartVC : UIViewController {
         $0.layer.cornerRadius = 15
         
         $0.tag = MONTH_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     lazy var yearButton = UIButton().then {
@@ -178,7 +178,7 @@ class BarChartVC : UIViewController {
         $0.layer.cornerRadius = 15
         
         $0.tag = YEAR_FLAG
-//        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectDayButton(_:)), for: .touchUpInside)
     }
     
     // MARK: - middle Contents
@@ -298,15 +298,34 @@ class BarChartVC : UIViewController {
     @objc func shiftDate(_ sender: UIButton) {
         
         startDate = setStartDate(startDate, sender.tag)
-     
         endDate = setEndDate(startDate)
         
-        print(startDate)
-        print(endDate)
+        getDataToServer(startDate, endDate, currentButtonFlag)
+        setDisplayDateText()
+    }
+    
+    @objc func selectDayButton(_ sender: UIButton) {
+        switch (sender.tag) {
+        case DAY_FLAG:
+            currentButtonFlag = .DAY
+        case WEEK_FLAG:
+            currentButtonFlag = .WEEK
+            startDate = MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
+        case MONTH_FLAG:
+            currentButtonFlag = .MONTH
+            startDate = String(startDate.prefix(8)) + "01"
+        case YEAR_FLAG:
+            currentButtonFlag = .YEAR
+            startDate = String(startDate.prefix(4)) + "-01-01"
+        default:
+            break
+        }
+        
+        endDate = setEndDate(startDate)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
-        
         setDisplayDateText()
+        setButtonColor(sender)
     }
     
     // MARK: - viewDidLoad
@@ -625,7 +644,7 @@ class BarChartVC : UIViewController {
         case .MONTH:
             displayText = "\(startDateText) ~ \(endDateText)"
         case .YEAR:
-            displayText = "\(startDateText.prefix(4))"
+            displayText = "\(startDate.prefix(4))"
         }
         
         todayDisplay.text = displayText
@@ -646,6 +665,16 @@ class BarChartVC : UIViewController {
         
         ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
 
+    }
+    
+    func setButtonColor(_ sender: UIButton) {
+        for button in buttonList {
+            if button == sender {
+                button.isSelected = true
+            } else {
+                button.isSelected = false
+            }
+        }
     }
     
     func initUI() {
