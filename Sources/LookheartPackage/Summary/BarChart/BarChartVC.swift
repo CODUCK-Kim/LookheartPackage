@@ -47,7 +47,7 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- CHART ------------------- //
     // 차트 관련 변수
-    private var currentButtonFlag: DateType = .DAY   // 현재 버튼 플래그가 저장되는 변수
+    private var currentButtonFlag: DateType = .WEEK   // 현재 버튼 플래그가 저장되는 변수
     private var buttonList:[UIButton] = []
     // CHART END
     
@@ -297,13 +297,12 @@ class BarChartVC : UIViewController {
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
         
-        startDate = setDate(startDate, sender.tag)
+        startDate = setStartDate(startDate, sender.tag)
      
-        endDate = MyDateTime.shared.dateCalculate(startDate, 1, true)
-        
-//        MyDateTime.shared.dateCalculate(startDate, setDate(currentButtonFlag), PLUS_DATE)
+        endDate = setEndDate(startDate)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
+        
         setDisplayDateText()
     }
     
@@ -534,7 +533,7 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
-    func setDate(_ date: String, _ tag : Int) -> String {
+    func setStartDate(_ date: String, _ tag : Int) -> String {
         
         let flag = tag == TOMORROW_BUTTON_FLAG ? PLUS_DATE : MINUS_DATE
         
@@ -542,11 +541,62 @@ class BarChartVC : UIViewController {
         case .DAY:
             return MyDateTime.shared.dateCalculate(date, 1, flag)
         case .WEEK:
-            return MyDateTime.shared.dateCalculate(date, 7, flag)
+            startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
+            return MyDateTime.shared.dateCalculate(date, findMonday(), MINUS_DATE)
         case .MONTH:
             return MyDateTime.shared.dateCalculate(date, 1, flag, .month)
         case .YEAR:
             return MyDateTime.shared.dateCalculate(date, 1, flag, .year)
+        }
+    }
+    
+    func setEndDate(_ date: String) -> String {
+        switch (currentButtonFlag) {
+        case .DAY:
+            return MyDateTime.shared.dateCalculate(date, 1, PLUS_DATE)
+        case .WEEK:
+            return MyDateTime.shared.dateCalculate(date, 8, PLUS_DATE)
+        case .MONTH:
+            return ""
+        case .YEAR:
+            return ""
+        }
+    }
+    
+    func findMonday() -> Int {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: "en_US_POSIX")
+        let weekdaySymbols = calendar.weekdaySymbols
+        
+        guard let weekdayName = findWeekday(),
+              let weekdayIndex = weekdaySymbols.firstIndex(of: weekdayName) else {
+            return 0
+        }
+        // 'calendar.firstWeekday'로 주의 시작 요일을 고려해 인덱스 조정
+        // 그레고리안 캘린더에서 'firstWeekday'는 일반적으로 1(일요일)
+        // 월요일을 0으로 만들기 위해, 인덱스에서 1을 빼고, 7로 나눈 나머지를 계산
+        let mondayIndex = (weekdayIndex + 7 - calendar.firstWeekday) % 7
+        return mondayIndex
+    }
+    
+    func findWeekday() -> String? {
+        var splitDate = startDate.split(separator: "-")
+        var dateComponents = DateComponents()
+        dateComponents.year = Int(splitDate[0])
+        dateComponents.month = Int(splitDate[1])
+        dateComponents.day = Int(splitDate[2])
+        
+        let calendar = Calendar.current
+        
+        if let specificDate = calendar.date(from: dateComponents) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX") // 로케일 설정
+            dateFormatter.dateFormat = "EEEE" // 요일의 전체 이름
+            let weekdayName = dateFormatter.string(from: specificDate)
+
+            return weekdayName
+        } else {
+            return nil
         }
     }
     
