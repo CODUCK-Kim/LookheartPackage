@@ -303,7 +303,7 @@ class BarChartVC : UIViewController {
         addViews()
         
         // TEST
-        getDataToServer("2024-01-01", "2024-01-16", .DAY)
+        getDataToServer("2024-01-01", "2024-01-02", .DAY)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -324,16 +324,30 @@ class BarChartVC : UIViewController {
     
     // MARK: - CHART FUNC
     private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
-        let dataDict = groupDataByDate(hourlyDataList)
-        print(dataDict)
+        
+        let dataDict = groupDataByDate(hourlyDataList, type)
+        
+        for (date, hourlyData) in dataDict {
+            print("date : \(date), hourlyData : \(hourlyData)")
+        }
     }
     
-    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: [HourlyData]] {
-        // 날짜별("YYYY-MM-DD")로 데이터 그룹화
-        let groupedData = dataArray.reduce(into: [String: [HourlyData]]()) { dict, data in
+    private func groupDataByDate(_ dataArray: [HourlyData], _ type: DateType) -> [String: (Int, [HourlyData])] {
+        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 arrCnt 총합 계산
+        let groupedData = dataArray.reduce(into: [String: (Int, [HourlyData])]()) { dict, data in
             let dateKey = String(data.date)
-            dict[dateKey, default: []].append(data)
+
+            // 기존에 그룹화된 데이터가 있다면 기존 arrCnt 총합에 더하고, 없다면 새로운 항목을 생성
+            if var entry = dict[dateKey] {
+                let arrCnt = Int(data.arrCnt) ?? 0
+                entry.0 += arrCnt // arrCnt 총합 업데이트
+                entry.1.append(data)   // HourlyData 배열에 추가
+                dict[dateKey] = entry
+            } else {
+                dict[dateKey] = (Int(data.arrCnt) ?? 0, [data]) // 새로운 항목 생성
+            }
         }
+
         return groupedData
     }
     
@@ -342,9 +356,9 @@ class BarChartVC : UIViewController {
         
         NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
-            case .success(let bpmDataList):
+            case .success(let hourlyDataList):
                 
-                viewChart(bpmDataList, type)
+                viewChart(hourlyDataList, type)
                 
             case .failure(let error):
                 
