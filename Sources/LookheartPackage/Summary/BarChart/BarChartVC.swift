@@ -101,6 +101,7 @@ class BarChartVC : UIViewController {
         $0.isHidden = true
     }
     
+    private let valueContents = UILabel()
     
     // MARK: - top Contents
     private lazy var dayButton = UIButton().then {
@@ -296,6 +297,7 @@ class BarChartVC : UIViewController {
         super.viewDidLoad()
         
         addViews()
+        
     }
     
     // MARK: - addViews
@@ -402,43 +404,11 @@ class BarChartVC : UIViewController {
      
         
         // --------------------- Cal, Step bottomContents --------------------- //
-//        bottomLabel.addSubview(stepValueContents)
-//        stepValueContents.snp.makeConstraints { make in
-//            make.top.equalTo(bottomContents)
-//            make.left.equalTo(bottomContents.snp.right)
-//            make.bottom.right.equalTo(safeAreaView)
-//        }
-//        
-//        stepValueContents.addSubview(walkCount)
-//        walkCount.snp.makeConstraints { make in
-//            make.centerX.equalTo(stepValueContents)
-//            make.centerY.equalTo(stepLabel)
-//        }
-//        
-//        stepValueContents.addSubview(targetStep)
-//        targetStep.snp.makeConstraints { make in
-//            make.centerX.equalTo(stepValueContents)
-//            make.centerY.equalTo(stepProgress)
-//        }
-//        
-//        stepValueContents.addSubview(walkDistance)
-//        walkDistance.snp.makeConstraints { make in
-//            make.centerX.equalTo(stepValueContents)
-//            make.centerY.equalTo(distanceLabel)
-//        }
-//        
-//        stepValueContents.addSubview(targetDistance)
-//        targetDistance.snp.makeConstraints { make in
-//            make.centerX.equalTo(stepValueContents)
-//            make.centerY.equalTo(distanceProgress)
-//        }
-//        
-//        stepValueContents.addSubview(bottomLine)
-//        bottomLine.snp.makeConstraints { make in
-//            make.centerY.equalTo(stepValueContents)
-//            make.left.equalTo(safeAreaView).offset(10)
-//            make.right.equalTo(safeAreaView).offset(-10)
-//            make.height.equalTo(1)
-//        }
+        bottomContents.addSubview(valueContents)
+        valueContents.snp.makeConstraints { make in
+            make.top.equalTo(bottomContents)
+            make.left.equalTo(bottomContents.snp.right)
+            make.bottom.right.equalTo(safeAreaView)
+        }
     }
 }

@@ -22,7 +22,7 @@ public class SummaryViewController : UIViewController {
     private let STEP_BUTTON_TAG = 5
     
     private let lineChartView = LineChartVC()
-    private let arrView = SummaryArr()
+    private let barChartView = BarChartVC()
     private let calView = SummaryCalorie()
     private let stepView = SummaryStep()
     
@@ -37,7 +37,7 @@ public class SummaryViewController : UIViewController {
     }()
     
     private lazy var childs: [UIViewController] = {
-        return [lineChartView, arrView, calView, stepView]
+        return [lineChartView, barChartView, calView, stepView]
     }()
     
     // MARK: -
@@ -166,7 +166,8 @@ public class SummaryViewController : UIViewController {
             setChild(selectChild: lineChartView, in: self.view)
             lineChartView.refreshView(.BPM)
         case ARR_BUTTON_TAG:
-            setChild(selectChild: arrView, in: self.view)
+            setChild(selectChild: barChartView, in: self.view)
+            
         case HRV_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
             lineChartView.refreshView(.HRV)
