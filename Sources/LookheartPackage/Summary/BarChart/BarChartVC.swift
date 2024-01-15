@@ -303,7 +303,7 @@ class BarChartVC : UIViewController {
         addViews()
         
         // TEST
-        getDataToServer("2024-01-01", "2024-01-16", .DAY)
+        getDataToServer("2024-01-15", "2024-01-16", .DAY)
     }
     
     public func refreshView(_ type: ChartType) {
@@ -325,14 +325,40 @@ class BarChartVC : UIViewController {
     // MARK: - CHART FUNC
     private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
         
-        let dataDict = groupDataByDate(hourlyDataList, type)
+        let dataDict = groupDataByDate(hourlyDataList)
+        var arrDataEntries = [BarChartDataEntry]()
+        var timeTable:[String] = []
+        var xValue = 0
         
-        for (date, hourlyData) in dataDict {
-            print("date : \(date), hourlyData : \(hourlyData)")
+        switch (type) {
+            
+        case .DAY:
+            
+            for (date, hourlyData) in dataDict {
+                for data in hourlyData.1 {
+                    let arrCnt = Double(data.arrCnt) ?? 0.0
+                    let arrDataEntry = BarChartDataEntry(x: Double(xValue), y: arrCnt)
+                    arrDataEntries.append(arrDataEntry)
+                    timeTable.append(data.hour)
+                    xValue += 1
+                }
+            }
+            
+        case .WEEK:
+            fallthrough
+        case .MONTH:
+            fallthrough
+        case .YEAR:
+            break
         }
+        
+        // set ChartData
+        let arrChartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: arrDataEntries, label: "arr".localized()))
+        
+        setChart(chartData: BarChartData(dataSet: arrChartDataSet), timeTable: timeTable, labelCnt: xValue)
     }
     
-    private func groupDataByDate(_ dataArray: [HourlyData], _ type: DateType) -> [String: (Int, [HourlyData])] {
+    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, [HourlyData])] {
         // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 arrCnt 총합 계산
         let groupedData = dataArray.reduce(into: [String: (Int, [HourlyData])]()) { dict, data in
             let dateKey = String(data.date)
@@ -368,6 +394,22 @@ class BarChartVC : UIViewController {
             }
         }
         
+    }
+    
+    func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {
+        chartDataSet.setColor(color)
+        chartDataSet.drawValuesEnabled = true
+        chartDataSet.valueFormatter = CombinedValueFormatter()
+        return chartDataSet
+    }
+    
+    func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
+        barChartView.data = chartData
+        barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        barChartView.xAxis.setLabelCount(labelCnt, force: false)
+        barChartView.data?.notifyDataChanged()
+        barChartView.notifyDataSetChanged()
+        barChartView.moveViewToX(0)
     }
     
     // MARK: - DATE FUNC
