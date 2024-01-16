@@ -674,6 +674,7 @@ class BarChartVC : UIViewController {
         var timeData:[String] = []
         var hourlyData:[HourlyDataStruct] = []
         
+        print(dataArray)
         for data in dataArray {
             
             var dataStruct = HourlyDataStruct()
@@ -689,6 +690,7 @@ class BarChartVC : UIViewController {
                 timeData.append(data.hour)
                 hourlyData.append(dataStruct)
             case .WEEK:
+
                 fallthrough
             case .MONTH:
                 break
