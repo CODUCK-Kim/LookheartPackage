@@ -377,6 +377,13 @@ class BarChartVC : UIViewController {
     private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
         
         let dataDict = groupDataByDate(hourlyDataList)
+        
+        let sortedDate = sortedKeys(dataDict)
+        
+        for date in sortedDate {
+            print("date : \(date), data : \(String(describing: dataDict[date]))")
+        }
+        
 //        var entriesAndTimeTable: ([BarChartDataEntry], [String])
         
 //        switch (type) {
@@ -406,6 +413,7 @@ class BarChartVC : UIViewController {
 //        
 //        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
     }
+    
     
     private func setDayChart(_ dataDict : [String: (Int, [HourlyData])]) -> ([BarChartDataEntry], [String]) {
         
@@ -547,12 +555,6 @@ class BarChartVC : UIViewController {
             hourlyDataDict[dateKey] = dataStruct
         }
         
-        let sortedDate = hourlyDataDict.keys.sorted()
-        
-        for date in sortedDate {
-            print(date)
-        }
-        
         return hourlyDataDict
     }
     
@@ -567,6 +569,15 @@ class BarChartVC : UIViewController {
         }
     }
 
+    private func sortedKeys(_ dict : [String : HourlyDataStruct]) -> [String] {
+        switch currentButtonFlag {
+        case .DAY:
+            return dict.keys.map { Int($0) ?? 0 }.sorted().map { String($0) } // [Int] 정렬 -> [String]
+        default:
+            return dict.keys.sorted()
+        }
+    }
+    
     private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
         initUI()
