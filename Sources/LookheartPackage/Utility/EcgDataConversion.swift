@@ -28,6 +28,7 @@ public class EcgDataConversion {
          
         var calcEcgData = changeEcgData[1] - changeEcgData[0]
          
+        // 75, 100
         if abs(calcEcgData) <= 50 {
             calcEcgData = 0
         }

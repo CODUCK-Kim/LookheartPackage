@@ -6,6 +6,7 @@ import DGCharts
 class BarChartVC : UIViewController {
     
     private var email = String()
+    private var chartType: ChartType = .ARR
     
     enum DateType: Int {
         case DAY = 1
@@ -339,6 +340,7 @@ class BarChartVC : UIViewController {
     }
     
     public func refreshView(_ type: ChartType) {
+        chartType = type
         
         getDataToServer(startDate, endDate, currentButtonFlag)
     }
@@ -362,7 +364,6 @@ class BarChartVC : UIViewController {
         var entriesAndTimeTable: ([BarChartDataEntry], [String])
         
         switch (type) {
-            
         case .DAY:
             entriesAndTimeTable = setDayChart(dataDict)
         case .WEEK:
@@ -389,14 +390,12 @@ class BarChartVC : UIViewController {
             for data in hourlyData.1 {
                 
                 let yValue = Double(data.arrCnt) ?? 0.0
-                let dataEntry = BarChartDataEntry(x: Double(xValue), y: yValue)
-                
-                dataEntries.append(dataEntry)
+                dataEntries.append(BarChartDataEntry(x: Double(xValue), y: yValue))
                 timeTable.append(data.hour)
                 
                 xValue += 1
             }
-            setArrCntUI(hourlyData.0)
+//            setArrCntUI(hourlyData.0)
         }
         
         return (dataEntries, timeTable)
@@ -509,25 +508,214 @@ class BarChartVC : UIViewController {
         setArrCntUI(sumValue)
         return (dataEntries, timeTable)
     }
+//    private func setDayChart(_ dataDict : [String: ([Int], [HourlyData])]) -> ([BarChartDataEntry], [BarChartDataEntry], [String]) {
+//        
+//        var dataEntries = [BarChartDataEntry]()
+//        var dataEntries2 = [BarChartDataEntry]()
+//        var timeTable:[String] = []
+//        var xValue = 0
+//        
+//        for (_, hourlyData) in dataDict {
+//            for data in hourlyData.1 {
+//                
+//                let yValue: Double
+//                let yValue2: Double
+//                
+//                switch chartType {
+//                case .ARR:
+//                    yValue = Double(data.arrCnt) ?? 0.0
+//                    dataEntries.append(BarChartDataEntry(x: Double(xValue), y: yValue))
+//                default:
+//                    yValue = (chartType == .CALORIE ? Double(data.cal) : Double(data.step)) ?? 0.0
+//                    yValue2 = (chartType == .CALORIE ? Double(data.activityCal) : Double(data.distance)) ?? 0.0
+//                    dataEntries.append(BarChartDataEntry(x: Double(xValue), y: yValue))
+//                    dataEntries2.append(BarChartDataEntry(x: Double(xValue), y: yValue2))
+//                }
+//                
+//                timeTable.append(data.hour)
+//                
+//                xValue += 1
+//            }
+////            setArrCntUI(hourlyData.0)
+//        }
+//        
+//        return (dataEntries, dataEntries2, timeTable)
+//    }
+//    
+//    
+//    private func setWeekChart(_ dataDict : [String: ([Int], [HourlyData])]) -> ([BarChartDataEntry], [String]) {
+//        
+//        var dataEntries = [BarChartDataEntry]()
+//        var timeTable:[String] = []
+//        var xValue = 0
+//        
+//        var checkDate = startDate
+//        var dayIdx = 0
+//        var sumValue = 0
+//        
+//        let sortedDates = dataDict.keys.sorted()
+//        
+//        for i in 0..<7 {
+//            
+//            var yValue = 0.0
+//            
+//            if sortedDates.indices.contains(dayIdx) {
+//                let day = sortedDates[dayIdx]
+//                
+//                if checkDate == day {
+//                    yValue = Double(dataDict[day]?.0 ?? 0)
+//                    sumValue += Int(yValue)
+//                    dayIdx += 1
+//                }
+//            }
+//            
+//            let dataEntry = BarChartDataEntry(x: Double(xValue), y: yValue)
+//            
+//            dataEntries.append(dataEntry)
+//            timeTable.append(weekDays[i])
+//            
+//            checkDate = MyDateTime.shared.dateCalculate(checkDate, 1, true)
+//            xValue += 1
+//        }
+//        
+//        setArrCntUI(sumValue)
+//        return (dataEntries, timeTable)
+//    }
+//    
+//    private func setMonthChart(_ dataDict : [String: ([Int], [HourlyData])]) -> ([BarChartDataEntry], [String]) {
+//        
+//        var dataEntries = [BarChartDataEntry]()
+//        var timeTable:[String] = []
+//        var xValue = 0
+//        var sumValue = 0
+//        
+//        let sortedDates = dataDict.keys.sorted()
+//        
+//        for date in sortedDates {
+//            
+//            let time = String(date.suffix(2)).first == "0" ? String(date.suffix(1)) : String(date.suffix(2))
+//            let yValue = Double(dataDict[date]?.0 ?? 0)
+//            let dataEntry = BarChartDataEntry(x: Double(xValue), y: yValue)
+//            
+//            dataEntries.append(dataEntry)
+//            timeTable.append(time)
+//            
+//            xValue += 1
+//            sumValue += Int(yValue)
+//        }
+//        
+//        setArrCntUI(sumValue)
+//        return (dataEntries, timeTable)
+//    }
+//    
+//    private func setYearChart(_ dataDict : [String: ([Int], [HourlyData])]) -> ([BarChartDataEntry], [String]) {
+//        
+//        var dataEntries = [BarChartDataEntry]()
+//        var timeTable:[String] = []
+//        var xValue = 0
+//        var sumValue = 0
+//        
+//        var monthOfValue: [String : Int] = [:]
+//        
+//        for (date, hourlyData) in dataDict {
+//            monthOfValue[String(date.prefix(7)), default: 0] += hourlyData.0
+//        }
+//        
+//        
+//        let sortedDates = monthOfValue.keys.sorted()
+//        var monthIdx = 0
+//        
+//        for i in 0..<12 {
+//            
+//            var yValue = 0.0
+//            
+//            if sortedDates.indices.contains(monthIdx) {
+//                let month = Int(sortedDates[monthIdx].suffix(2)) ?? 1
+//                
+//                if i == month - 1 {
+//                    yValue = Double(monthOfValue[sortedDates[monthIdx]] ?? 0)
+//                    monthIdx += 1
+//                    sumValue += Int(yValue)
+//                }
+//            }
+//            
+//            let dataEntry = BarChartDataEntry(x: Double(xValue), y: yValue)
+//            dataEntries.append(dataEntry)
+//            timeTable.append(String(xValue + 1))
+//            
+//            xValue += 1
+//        }
+//        
+//        setArrCntUI(sumValue)
+//        return (dataEntries, timeTable)
+//    }
     
+    // Arr
     private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, [HourlyData])] {
+        let test = dataArray.filter { $0.date.contains("2024-01-15")}
+        print(test)
         // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 총합 계산
         let groupedData = dataArray.reduce(into: [String: (Int, [HourlyData])]()) { dict, data in
             let dateKey = String(data.date)
 
             // 기존에 그룹화된 데이터가 있다면 기존 arrCnt 총합에 더하고, 없다면 새로운 항목을 생성
             if var entry = dict[dateKey] {
-                let arrCnt = Int(data.arrCnt) ?? 0
-                entry.0 += arrCnt       // arrCnt 총합 업데이트
+                let cnt = Int(data.arrCnt) ?? 0
+                entry.0 += cnt       // arrCnt 총합 업데이트
                 entry.1.append(data)    // HourlyData 배열에 추가
                 dict[dateKey] = entry
             } else {
                 dict[dateKey] = (Int(data.arrCnt) ?? 0, [data]) // 새로운 항목 생성
             }
         }
-
+        
         return groupedData
     }
+    
+    // Calorie, Step
+//    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, Int, [HourlyData])] {
+//        let groupedData = dataArray.reduce(into: [String: (Int, Int, [HourlyData])]()) { dict, data in
+//            let dateKey = String(data.date)
+//            let sumValue = Int(chartType == .CALORIE ? data.cal : data.step) ?? 0
+//            let sumValue2 = Int(chartType == .CALORIE ? data.activityCal : data.distance) ?? 0
+//            
+//            if var entry = dict[dateKey] {
+//                entry.0 += sumValue
+//                entry.1 += sumValue2
+//                entry.2.append(data)    // HourlyData 배열에 추가
+//                dict[dateKey] = entry
+//            } else {
+//                dict[dateKey] = (sumValue, sumValue2, [data]) // 새로운 항목 생성
+//            }
+//        }
+//        
+//        return groupedData
+//    }
+    
+    // TEST
+//    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: ([Int], [HourlyData])] {
+//        let test = dataArray.filter { $0.date.contains("2024-01-15")}
+//        print(test)
+//        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 총합 계산
+//        let groupedData = dataArray.reduce(into: [String: ([Int], [HourlyData])]()) { dict, data in
+//            let dateKey = String(data.date)
+//            let sumValue = Int(chartType == .CALORIE ? data.cal : 
+//                                chartType == .STEP ? data.step : data.arrCnt) ?? 0
+//            let sumValue2 = Int(chartType == .CALORIE ? data.activityCal :
+//                                    chartType == .STEP ? data.distance : "0") ?? 0
+//            
+//            // 기존에 그룹화된 데이터가 있다면 기존 총합에 더하고, 없다면 새로운 항목을 생성
+//            if var entry = dict[dateKey] {
+//                entry.0[0] += sumValue
+//                entry.0[1] += sumValue2
+//                entry.1.append(data)
+//                dict[dateKey] = entry
+//            } else {
+//                dict[dateKey] = ([sumValue, sumValue2], [data]) // 새로운 항목 생성
+//            }
+//        }
+//        return groupedData
+//    }
     
     private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
@@ -649,9 +837,9 @@ class BarChartVC : UIViewController {
         case .DAY:
             displayText = startDate
         case .WEEK:
-            fallthrough
-        case .MONTH:
             displayText = "\(startDateText) ~ \(endDateText)"
+        case .MONTH:
+            displayText = "\(startDate.prefix(7))"
         case .YEAR:
             displayText = "\(startDate.prefix(4))"
         }
@@ -688,6 +876,7 @@ class BarChartVC : UIViewController {
     
     private func initUI() {
         barChartView.clear()
+        arrCntLabel.text = "0"
     }
     
     private func setArrCntUI(_ cnt : Int) {
