@@ -672,11 +672,14 @@ class BarChartVC : UIViewController {
     private func groupDataByDate(_ dataArray: [HourlyData]) {
         
         var hourlyDataDict:[String : HourlyDataStruct] = [:]
-        var hourlyData = HourlyDataStruct()
         
         for data in dataArray {
             let dateKey = currentButtonFlag == .DAY ? data.hour :
                           currentButtonFlag == .YEAR ? String(data.date.prefix(7)) : data.date
+            
+            if hourlyDataDict[dateKey] == nil {
+                hourlyDataDict[dateKey] = HourlyDataStruct()
+            }
             
             hourlyDataDict[dateKey]?.arrCnt += Int(data.arrCnt) ?? 0
             hourlyDataDict[dateKey]?.activityCal += Int(data.activityCal) ?? 0
