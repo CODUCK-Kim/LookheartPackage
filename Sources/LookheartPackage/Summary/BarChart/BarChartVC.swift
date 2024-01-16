@@ -16,13 +16,21 @@ class BarChartVC : UIViewController {
     }
     
     struct HourlyDataStruct {
-        var arrCnt: Int = 0
-        var step: Int = 0
-        var distance: Int = 0
-        var cal: Int = 0
-        var activityCal: Int = 0
+        var arrCnt: Double = 0.0
+        var step: Double = 0.0
+        var distance: Double = 0.0
+        var cal: Double = 0.0
+        var activityCal: Double = 0.0
+        
+        mutating func updateData(_ data: HourlyData) {
+            arrCnt += data.toDouble(data.arrCnt)
+            activityCal += data.toDouble(data.activityCal)
+            cal += data.toDouble(data.cal)
+            step += data.toDouble(data.step)
+            distance += data.toDouble(data.distance)
+        }
     }
-    
+
     // ----------------------------- 상수 ------------------- //
     let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
     
@@ -669,76 +677,32 @@ class BarChartVC : UIViewController {
 //        return (dataEntries, timeTable)
 //    }
     
-    private func groupDataByDate(_ dataArray: [HourlyData]) {
+    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String : HourlyDataStruct] {
         
         var hourlyDataDict:[String : HourlyDataStruct] = [:]
         
         for data in dataArray {
-            let dateKey = currentButtonFlag == .DAY ? data.hour :
-                          currentButtonFlag == .YEAR ? String(data.date.prefix(7)) : data.date
-            
-            if hourlyDataDict[dateKey] == nil {
-                hourlyDataDict[dateKey] = HourlyDataStruct()
-            }
-            
-            hourlyDataDict[dateKey]?.arrCnt += Int(data.arrCnt) ?? 0
-            hourlyDataDict[dateKey]?.activityCal += Int(data.activityCal) ?? 0
-            hourlyDataDict[dateKey]?.cal += Int(data.cal) ?? 0
-            hourlyDataDict[dateKey]?.step += Int(data.step) ?? 0
-            hourlyDataDict[dateKey]?.distance += Int(data.distance) ?? 0
+            let dateKey = getKeyForGrouping(for: data)
+            var dataStruct = hourlyDataDict[dateKey, default: HourlyDataStruct()]
+            dataStruct.updateData(data)
+            hourlyDataDict[dateKey] = dataStruct
         }
         
-        print("====================================================================")
-        for (date, data) in hourlyDataDict {
-            print("date : \(date), \ndata : \(data)")
-        }
+        print(hourlyDataDict)
+        return hourlyDataDict
     }
     
-    // Calorie, Step
-//    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, Int, [HourlyData])] {
-//        let groupedData = dataArray.reduce(into: [String: (Int, Int, [HourlyData])]()) { dict, data in
-//            let dateKey = String(data.date)
-//            let sumValue = Int(chartType == .CALORIE ? data.cal : data.step) ?? 0
-//            let sumValue2 = Int(chartType == .CALORIE ? data.activityCal : data.distance) ?? 0
-//            
-//            if var entry = dict[dateKey] {
-//                entry.0 += sumValue
-//                entry.1 += sumValue2
-//                entry.2.append(data)    // HourlyData 배열에 추가
-//                dict[dateKey] = entry
-//            } else {
-//                dict[dateKey] = (sumValue, sumValue2, [data]) // 새로운 항목 생성
-//            }
-//        }
-//        
-//        return groupedData
-//    }
-    
-    // TEST
-//    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: ([Int], [HourlyData])] {
-//        let test = dataArray.filter { $0.date.contains("2024-01-15")}
-//        print(test)
-//        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 총합 계산
-//        let groupedData = dataArray.reduce(into: [String: ([Int], [HourlyData])]()) { dict, data in
-//            let dateKey = String(data.date)
-//            let sumValue = Int(chartType == .CALORIE ? data.cal : 
-//                                chartType == .STEP ? data.step : data.arrCnt) ?? 0
-//            let sumValue2 = Int(chartType == .CALORIE ? data.activityCal :
-//                                    chartType == .STEP ? data.distance : "0") ?? 0
-//            
-//            // 기존에 그룹화된 데이터가 있다면 기존 총합에 더하고, 없다면 새로운 항목을 생성
-//            if var entry = dict[dateKey] {
-//                entry.0[0] += sumValue
-//                entry.0[1] += sumValue2
-//                entry.1.append(data)
-//                dict[dateKey] = entry
-//            } else {
-//                dict[dateKey] = ([sumValue, sumValue2], [data]) // 새로운 항목 생성
-//            }
-//        }
-//        return groupedData
-//    }
-    
+    private func getKeyForGrouping(for data: HourlyData) -> String {
+        switch currentButtonFlag {
+        case .DAY:
+            return data.hour
+        case .YEAR:
+            return String(data.date.prefix(7))
+        default:
+            return data.date
+        }
+    }
+
     private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
         
         initUI()

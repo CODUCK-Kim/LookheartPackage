@@ -13,4 +13,8 @@ struct HourlyData {
     var cal: String
     var activityCal: String
     var arrCnt: String
+    
+    func toDouble(_ value: String) -> Double {
+        return Double(value) ?? 0
+    }
 }
