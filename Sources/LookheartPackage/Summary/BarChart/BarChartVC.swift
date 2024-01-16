@@ -15,6 +15,14 @@ class BarChartVC : UIViewController {
         case YEAR = 4
     }
     
+    struct HourlyDataStruct {
+        var arrCnt: Int = 0
+        var step: Int = 0
+        var distance: Int = 0
+        var cal: Int = 0
+        var activityCal: Int = 0
+    }
+    
     // ----------------------------- 상수 ------------------- //
     let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
     
@@ -363,21 +371,32 @@ class BarChartVC : UIViewController {
         let dataDict = groupDataByDate(hourlyDataList)
         var entriesAndTimeTable: ([BarChartDataEntry], [String])
         
-        switch (type) {
-        case .DAY:
-            entriesAndTimeTable = setDayChart(dataDict)
-        case .WEEK:
-            entriesAndTimeTable = setWeekChart(dataDict)
-        case .MONTH:
-            entriesAndTimeTable = setMonthChart(dataDict)
-        case .YEAR:
-            entriesAndTimeTable = setYearChart(dataDict)
+//        switch (type) {
+//        case .DAY:
+//            entriesAndTimeTable = setDayChart(dataDict)
+//        case .WEEK:
+//            entriesAndTimeTable = setWeekChart(dataDict)
+//        case .MONTH:
+//            entriesAndTimeTable = setMonthChart(dataDict)
+//        case .YEAR:
+//            entriesAndTimeTable = setYearChart(dataDict)
+//        }
+        
+        var dataEntries = [BarChartDataEntry]()
+        var xValue = 0
+        for data in dataDict.1 {
+
+            dataEntries.append(BarChartDataEntry(x: Double(xValue), y: Double(data.arrCnt)))
+            xValue += 1
         }
-        
         // set ChartData
-        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
+        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: dataEntries, label: "arr".localized()))
         
-        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
+        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: dataDict.0, labelCnt: dataDict.0.count)
+        
+//        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
+//        
+//        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
     }
     
     private func setDayChart(_ dataDict : [String: (Int, [HourlyData])]) -> ([BarChartDataEntry], [String]) {
@@ -650,26 +669,35 @@ class BarChartVC : UIViewController {
 //        return (dataEntries, timeTable)
 //    }
     
-    // Arr
-    private func groupDataByDate(_ dataArray: [HourlyData]) -> [String: (Int, [HourlyData])] {
-        let test = dataArray.filter { $0.date.contains("2024-01-15")}
-        print(test)
-        // 날짜별("YYYY-MM-DD")로 데이터 그룹화 및 총합 계산
-        let groupedData = dataArray.reduce(into: [String: (Int, [HourlyData])]()) { dict, data in
-            let dateKey = String(data.date)
-
-            // 기존에 그룹화된 데이터가 있다면 기존 arrCnt 총합에 더하고, 없다면 새로운 항목을 생성
-            if var entry = dict[dateKey] {
-                let cnt = Int(data.arrCnt) ?? 0
-                entry.0 += cnt       // arrCnt 총합 업데이트
-                entry.1.append(data)    // HourlyData 배열에 추가
-                dict[dateKey] = entry
-            } else {
-                dict[dateKey] = (Int(data.arrCnt) ?? 0, [data]) // 새로운 항목 생성
+    private func groupDataByDate(_ dataArray: [HourlyData]) -> ([String], [HourlyDataStruct]) {
+        
+        var timeData:[String] = []
+        var hourlyData:[HourlyDataStruct] = []
+        
+        for data in dataArray {
+            
+            var dataStruct = HourlyDataStruct()
+            
+            dataStruct.arrCnt = Int(data.arrCnt) ?? 0
+            dataStruct.activityCal = Int(data.activityCal) ?? 0
+            dataStruct.cal = Int(data.cal) ?? 0
+            dataStruct.step = Int(data.step) ?? 0
+            dataStruct.distance = Int(data.distance) ?? 0
+            
+            switch (currentButtonFlag) {
+            case .DAY:
+                timeData.append(data.hour)
+                hourlyData.append(dataStruct)
+            case .WEEK:
+                fallthrough
+            case .MONTH:
+                break
+            case .YEAR:
+                break
             }
         }
-        
-        return groupedData
+    
+        return (timeData, hourlyData)
     }
     
     // Calorie, Step
