@@ -369,7 +369,7 @@ class BarChartVC : UIViewController {
     private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
         
         let dataDict = groupDataByDate(hourlyDataList)
-        var entriesAndTimeTable: ([BarChartDataEntry], [String])
+//        var entriesAndTimeTable: ([BarChartDataEntry], [String])
         
 //        switch (type) {
 //        case .DAY:
@@ -382,18 +382,18 @@ class BarChartVC : UIViewController {
 //            entriesAndTimeTable = setYearChart(dataDict)
 //        }
         
-        var dataEntries = [BarChartDataEntry]()
-        var xValue = 0
-        for data in dataDict.1 {
-
-            dataEntries.append(BarChartDataEntry(x: Double(xValue), y: Double(data.arrCnt)))
-            xValue += 1
-        }
-        // set ChartData
-        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: dataEntries, label: "arr".localized()))
-        
-        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: dataDict.0, labelCnt: dataDict.0.count)
-        
+//        var dataEntries = [BarChartDataEntry]()
+//        var xValue = 0
+//        for data in dataDict.1 {
+//
+//            dataEntries.append(BarChartDataEntry(x: Double(xValue), y: Double(data.arrCnt)))
+//            xValue += 1
+//        }
+//        // set ChartData
+//        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: dataEntries, label: "arr".localized()))
+//        
+//        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: dataDict.0, labelCnt: dataDict.0.count)
+//        
 //        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
 //        
 //        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
@@ -669,37 +669,26 @@ class BarChartVC : UIViewController {
 //        return (dataEntries, timeTable)
 //    }
     
-    private func groupDataByDate(_ dataArray: [HourlyData]) -> ([String], [HourlyDataStruct]) {
+    private func groupDataByDate(_ dataArray: [HourlyData]) {
         
-        var timeData:[String] = []
-        var hourlyData:[HourlyDataStruct] = []
+        var hourlyDataDict:[String : HourlyDataStruct] = [:]
+        var hourlyData = HourlyDataStruct()
         
-        print(dataArray)
         for data in dataArray {
+            let dateKey = currentButtonFlag == .DAY ? data.hour :
+                          currentButtonFlag == .YEAR ? String(data.date.prefix(7)) : data.date
             
-            var dataStruct = HourlyDataStruct()
-            
-            dataStruct.arrCnt = Int(data.arrCnt) ?? 0
-            dataStruct.activityCal = Int(data.activityCal) ?? 0
-            dataStruct.cal = Int(data.cal) ?? 0
-            dataStruct.step = Int(data.step) ?? 0
-            dataStruct.distance = Int(data.distance) ?? 0
-            
-            switch (currentButtonFlag) {
-            case .DAY:
-                timeData.append(data.hour)
-                hourlyData.append(dataStruct)
-            case .WEEK:
-
-                fallthrough
-            case .MONTH:
-                break
-            case .YEAR:
-                break
-            }
+            hourlyDataDict[dateKey]?.arrCnt += Int(data.arrCnt) ?? 0
+            hourlyDataDict[dateKey]?.activityCal += Int(data.activityCal) ?? 0
+            hourlyDataDict[dateKey]?.cal += Int(data.cal) ?? 0
+            hourlyDataDict[dateKey]?.step += Int(data.step) ?? 0
+            hourlyDataDict[dateKey]?.distance += Int(data.distance) ?? 0
         }
-    
-        return (timeData, hourlyData)
+        
+        print("====================================================================")
+        for (date, data) in hourlyDataDict {
+            print("date : \(date), \ndata : \(data)")
+        }
     }
     
     // Calorie, Step
