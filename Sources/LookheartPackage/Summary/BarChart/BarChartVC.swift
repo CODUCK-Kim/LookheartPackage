@@ -377,6 +377,12 @@ class BarChartVC : UIViewController {
     private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
         
         let dataDict = groupDataByDate(hourlyDataList)
+        
+        let sortedDate = dataDict.keys.sorted()
+        
+        for date in sortedDate {
+            print("date : \(date), data : \(dataDict[date])")
+        }
 //        var entriesAndTimeTable: ([BarChartDataEntry], [String])
         
 //        switch (type) {
@@ -535,6 +541,7 @@ class BarChartVC : UIViewController {
         setArrCntUI(sumValue)
         return (dataEntries, timeTable)
     }
+    
 //    private func setDayChart(_ dataDict : [String: ([Int], [HourlyData])]) -> ([BarChartDataEntry], [BarChartDataEntry], [String]) {
 //        
 //        var dataEntries = [BarChartDataEntry]()
@@ -687,8 +694,6 @@ class BarChartVC : UIViewController {
             dataStruct.updateData(data)
             hourlyDataDict[dateKey] = dataStruct
         }
-        
-        print(hourlyDataDict)
         return hourlyDataDict
     }
     
