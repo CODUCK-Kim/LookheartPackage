@@ -604,7 +604,7 @@ class BarChartVC : UIViewController {
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
         
         let monthFlag = currentButtonFlag == .MONTH
-        let labelCount = monthFlag ? Double(labelCnt / 2) : Double(labelCnt)
+        let labelCount = monthFlag ? 14.3 : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
         
         configureBarChartSettings(chartData: chartData, labelCnt: labelCnt)
@@ -805,7 +805,20 @@ class BarChartVC : UIViewController {
     }
     
     private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
-        print(dayCnt)
+        
+        let label1 = chartType == .CALORIE ? "eCalValue2".localized() : "stepValue2".localized()
+        let label2 = chartType == .CALORIE ? "eCalValue2".localized() : "distanceValue2".localized()
+        
+        // Progress
+        let firstGoalProgress = Double(value1) / Double(firstGoal * dayCnt)
+        topProgress.progress = Float(firstGoalProgress)
+        
+        let secondGoalProgress = Double(value2) / Double(secondGoal * dayCnt)
+        bottomProgress.progress = Float(secondGoalProgress)
+            
+        // text
+        topValue.text = String(value1) + " " + label1
+        bottomValue.text = String(value2) + " " + label2
     }
     
     func chartZoomOut() {
