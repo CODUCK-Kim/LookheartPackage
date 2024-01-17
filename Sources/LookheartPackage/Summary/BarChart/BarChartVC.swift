@@ -549,7 +549,7 @@ class BarChartVC : UIViewController {
         
         barChartView.data = chartData
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
-        barChartView.xAxis.setLabelCount(labelCnt, force: false)
+        barChartView.xAxis.setLabelCount(labelCount, force: false)
         barChartView.data?.notifyDataChanged()
         barChartView.notifyDataSetChanged()
         barChartView.moveViewToX(moveToX)
