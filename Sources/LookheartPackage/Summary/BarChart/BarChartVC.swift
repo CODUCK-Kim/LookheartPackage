@@ -415,6 +415,12 @@ class BarChartVC : UIViewController {
             let time = getTime(buttonFlag ? String(i) : sortedDate[i])
             var yValue = 0.0
             
+            if index != sortedDate.count {
+                // 고정 index 예외 처리 : WEEK(7), YEAR(12)
+                print(startDate)
+                print(endDate)
+            }
+            
             if sortedDate.indices.contains(i) {
                 // 고정 index 예외 처리 : WEEK(7), YEAR(12)
                 yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
