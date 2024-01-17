@@ -241,6 +241,7 @@ class BarChartVC : UIViewController {
         $0.isLayoutMarginsRelativeArrangement = true
         $0.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
     }
+    
     private let topProgress = UIProgressView().then {
         $0.trackTintColor = UIColor.MY_LIGHT_GRAY_BORDER
         $0.progressTintColor = UIColor.GRAPH_RED
@@ -282,6 +283,20 @@ class BarChartVC : UIViewController {
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
+    }
+    
+    private let topValueProcent = UILabel().then {
+        $0.text = "-"
+        $0.textAlignment = .center
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        $0.textColor = UIColor.MY_BLUE
+    }
+    
+    private let bottomValueProcent = UILabel().then {
+        $0.text = "-"
+        $0.textAlignment = .center
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        $0.textColor = UIColor.MY_PINK
     }
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
@@ -762,6 +777,12 @@ class BarChartVC : UIViewController {
         barChartView.clear()
         
         singleContentsValueLabel.text = "0"
+        
+        topValue.text = "-"
+        bottomValue.text = "-"
+        
+        topProgress.progress = 0
+        bottomProgress.progress = 0
     }
     
     private func setUI() {
@@ -805,9 +826,6 @@ class BarChartVC : UIViewController {
         
         let secondGoalProgress = Double(value2) / Double(secondGoal * dayCnt)
         bottomProgress.progress = Float(secondGoalProgress)
-            
-        print(firstGoalProgress)
-        print(secondGoalProgress)
         
         // text
         topValue.text = String(value1) + " " + label1
@@ -949,6 +967,16 @@ class BarChartVC : UIViewController {
             make.left.equalTo(safeAreaView).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
             make.height.equalTo(1)
+        }
+        
+        doubleGraphBottomContents.addSubview(topValueProcent)
+        bottomValue.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(topProgress)
+        }
+        
+        doubleGraphBottomContents.addSubview(bottomValueProcent)
+        bottomValueProcent.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(bottomProgress)
         }
     }
 }
