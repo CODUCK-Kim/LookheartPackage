@@ -278,14 +278,14 @@ class BarChartVC : UIViewController {
     }
         
     private let topValue = UILabel().then {
-        $0.text = "stepValue".localized()
+        $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
     }
     
     private let bottomValue = UILabel().then {
-        $0.text = "distanceValue3".localized()
+        $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
@@ -676,6 +676,9 @@ class BarChartVC : UIViewController {
             // double graph
             doubleGraphBottomContents.isHidden = false
             singleGraphBottomContents.isHidden = true
+            
+            topTitleLabel.text = (chartType == .CALORIE ? "tCalTitle".localized() : "summaryStep".localized())
+            bottomTitleLabel.text = (chartType == .CALORIE ? "eCalTitle".localized() : "distance".localized())
         default:
             // single graph
             singleGraphBottomContents.isHidden = false
