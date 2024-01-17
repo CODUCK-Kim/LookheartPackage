@@ -91,7 +91,7 @@ class BarChartVC : UIViewController {
         $0.leftAxis.axisMinimum = 0
         $0.rightAxis.enabled = false
         $0.drawMarkers = false
-        $0.dragEnabled = false
+        $0.dragEnabled = true
         $0.pinchZoomEnabled = false
         $0.doubleTapToZoomEnabled = false
         $0.highlightPerTapEnabled = false
@@ -443,9 +443,9 @@ class BarChartVC : UIViewController {
     private func getTime(_ time: String) -> String{
         switch (currentButtonFlag) {
         case .DAY:
-            fallthrough
-        case .YEAR:
             return time
+        case .YEAR:
+            return String((Int(time) ?? 0) + 1)
         case .WEEK:
             return weekDays[Int(time) ?? 0]
         case .MONTH:
