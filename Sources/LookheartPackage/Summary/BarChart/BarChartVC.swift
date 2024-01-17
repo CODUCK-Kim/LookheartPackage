@@ -43,9 +43,6 @@ class BarChartVC : UIViewController {
     // ----------------------------- UI ------------------- //
     // 보여지는 변수
     private var firstGoal = 0, secondGoal = 0   // 목표값
-    
-    private var dayCnt = 0 // progressbar Day Cnt
-    private var yearCnt: Set<String> = [] // progressbar Year(day) Cnt
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -542,10 +539,6 @@ class BarChartVC : UIViewController {
             hourlyDataDict[dateKey] = dataStruct
             
         }
-        
-        dayCnt = currentButtonFlag == .DAY ? 1 : 
-                 currentButtonFlag == .YEAR ? yearCnt.count : hourlyDataDict.keys.count
-        
         return hourlyDataDict
     }
     
@@ -554,7 +547,6 @@ class BarChartVC : UIViewController {
         case .DAY:
             return data.hour
         case .YEAR:
-            yearCnt.insert(data.date)
             return String(data.date.prefix(7))
         default:
             return data.date
@@ -770,10 +762,6 @@ class BarChartVC : UIViewController {
         barChartView.clear()
         
         singleContentsValueLabel.text = "0"
-        
-        // progressbar Cnt
-        dayCnt = 0
-        yearCnt = []
     }
     
     private func setUI() {
@@ -808,7 +796,9 @@ class BarChartVC : UIViewController {
         
         let label1 = chartType == .CALORIE ? "eCalValue2".localized() : "stepValue2".localized()
         let label2 = chartType == .CALORIE ? "eCalValue2".localized() : "distanceValue2".localized()
-        
+        let dayCnt = currentButtonFlag == .DAY ? 1 :
+                     currentButtonFlag == .WEEK ? 7 :
+                     currentButtonFlag == .MONTH ? 30 : 365
         // Progress
         let firstGoalProgress = Double(value1) / Double(firstGoal * dayCnt)
         topProgress.progress = Float(firstGoalProgress)
