@@ -538,9 +538,9 @@ class BarChartVC : UIViewController {
             var dataStruct = hourlyDataDict[dateKey, default: HourlyDataStruct()]
             dataStruct.updateData(data)
             hourlyDataDict[dateKey] = dataStruct
-            dayCnt += 1
+            
         }
-        
+        print(hourlyDataDict.keys.count)
         return hourlyDataDict
     }
     
@@ -797,7 +797,7 @@ class BarChartVC : UIViewController {
     }
     
     private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
-        print(dayCnt)
+        
     }
     
     func chartZoomOut() {
