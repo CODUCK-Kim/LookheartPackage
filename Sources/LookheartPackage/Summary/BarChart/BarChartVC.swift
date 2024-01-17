@@ -44,6 +44,7 @@ class BarChartVC : UIViewController {
     // 보여지는 변수
     private var firstGoal = 0, secondGoal = 0   // 목표값
     private var dayCnt = 0
+    private var yearCnt: Set<String> = []
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -541,7 +542,8 @@ class BarChartVC : UIViewController {
             
         }
 //        print(hourlyDataDict.keys.count) // week, month
-        
+        print(yearCnt)
+        print(yearCnt.count)
         return hourlyDataDict
     }
     
@@ -551,6 +553,7 @@ class BarChartVC : UIViewController {
             return data.hour
         case .YEAR:
             print(data.date)
+            yearCnt.insert(data.date)
             return String(data.date.prefix(7))
         default:
             return data.date
