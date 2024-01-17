@@ -840,7 +840,8 @@ class BarChartVC : UIViewController {
         
         // text
         topValue.text = String(value1) + " " + label1
-        bottomValue.text = String(value2) + " " + label2
+        bottomValue.text = chartType == .STEP ? String(Double(value2) / 1000.0) :
+                                                String(value2) + " " + label2
     }
     
     func chartZoomOut() {
