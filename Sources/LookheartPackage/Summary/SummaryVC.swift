@@ -196,8 +196,6 @@ public class SummaryViewController : UIViewController {
         
         addViews()
         
-        ButtonEvent(bpmButton)
-
     }
     
     public override func viewWillAppear(_ animated: Bool) {
