@@ -281,7 +281,7 @@ class BarChartVC : UIViewController {
     private let bottomValue = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
     }
     
@@ -295,7 +295,7 @@ class BarChartVC : UIViewController {
     private let bottomValueProcent = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         $0.textColor = .black
     }
     
