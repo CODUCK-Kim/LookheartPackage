@@ -356,9 +356,11 @@ class BarChartVC : UIViewController {
     }
     
     public func refreshView(_ type: ChartType) {
+        
         chartType = type
         
         getDataToServer(startDate, endDate, currentButtonFlag)
+        
     }
     
     func initVar() {
@@ -380,40 +382,69 @@ class BarChartVC : UIViewController {
         
         let sortedDate = sortedKeys(dataDict)
         
-        for date in sortedDate {
-            print("date : \(date), data : \(String(describing: dataDict[date]))")
-        }
+        let chartDataSet = getChartDataSet(sortedDate, dataDict)
         
-//        var entriesAndTimeTable: ([BarChartDataEntry], [String])
-        
-//        switch (type) {
-//        case .DAY:
-//            entriesAndTimeTable = setDayChart(dataDict)
-//        case .WEEK:
-//            entriesAndTimeTable = setWeekChart(dataDict)
-//        case .MONTH:
-//            entriesAndTimeTable = setMonthChart(dataDict)
-//        case .YEAR:
-//            entriesAndTimeTable = setYearChart(dataDict)
-//        }
-        
-//        var dataEntries = [BarChartDataEntry]()
-//        var xValue = 0
-//        for data in dataDict.1 {
-//
-//            dataEntries.append(BarChartDataEntry(x: Double(xValue), y: Double(data.arrCnt)))
-//            xValue += 1
-//        }
-//        // set ChartData
-//        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: dataEntries, label: "arr".localized()))
-//        
-//        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: dataDict.0, labelCnt: dataDict.0.count)
-//        
-//        let chartDataSet = chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entriesAndTimeTable.0, label: "arr".localized()))
-//        
-//        setChart(chartData: BarChartData(dataSet: chartDataSet), timeTable: entriesAndTimeTable.1, labelCnt: entriesAndTimeTable.1.count)
+        setChart(chartData: BarChartData(dataSet: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
     }
     
+    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], BarChartDataSet) {
+        
+        switch (chartType) {
+        case .CALORIE:
+            fallthrough
+        case .STEP:
+            // double graph
+            // 보류
+            fallthrough
+        default:
+            // single graph (ex : Arr)
+            let entries = createEntriesForSingleGraph(sortedDate, dataDict)
+            let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "arr".localized()))
+            return (entries.0, dataSet)
+        }
+    }
+    
+    private func createEntriesForSingleGraph(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry]) {
+        
+        var entries = [BarChartDataEntry]()
+        var timeTable: [String] = []
+        var index = getIndex(sortedDate)
+        
+        for i in 0..<index {
+            let time = getTime(currentButtonFlag == .WEEK ? String(i) : sortedDate[i])
+            let yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
+            let entry = BarChartDataEntry(x: Double(index), y: yValue)
+            
+            entries.append(entry)
+            timeTable.append(time)
+        }
+        
+        return (timeTable, entries)
+    }
+    
+    private func getIndex(_ date: [String]) -> Int {
+        switch (currentButtonFlag) {
+        case .WEEK:
+            return 7
+        case .YEAR:
+            return 12
+        default:
+            return date.count
+        }
+    }
+    
+    private func getTime(_ time: String) -> String{
+        switch (currentButtonFlag) {
+        case .DAY:
+            return time
+        case .WEEK:
+            return weekDays[Int(time) ?? 0]
+        case .MONTH:
+            fallthrough
+        case .YEAR:
+            return String(time.suffix(2)).first == "0" ? String(time.suffix(1)) : String(time.suffix(2))
+        }
+    }
     
     private func setDayChart(_ dataDict : [String: (Int, [HourlyData])]) -> ([BarChartDataEntry], [String]) {
         
@@ -574,7 +605,7 @@ class BarChartVC : UIViewController {
         case .DAY:
             return dict.keys.map { Int($0) ?? 0 }.sorted().map { String($0) } // [Int] 정렬 -> [String]
         default:
-            return dict.keys.sorted()
+            return dict.keys.sorted()   // 사전식(lexicographical) 정렬
         }
     }
     
