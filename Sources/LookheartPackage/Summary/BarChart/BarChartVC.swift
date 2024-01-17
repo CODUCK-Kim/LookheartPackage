@@ -544,12 +544,13 @@ class BarChartVC : UIViewController {
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
         
         let monthFlag = currentButtonFlag == .MONTH
-        let labelCount = monthFlag ? 15 : labelCnt
+        let labelCount = Double(monthFlag ? 15 : labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
         
         barChartView.data = chartData
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
-        barChartView.xAxis.setLabelCount(labelCount, force: false)
+        barChartView.setVisibleXRangeMaximum(labelCount)
+        barChartView.xAxis.setLabelCount(labelCnt, force: false)
         barChartView.data?.notifyDataChanged()
         barChartView.notifyDataSetChanged()
         barChartView.moveViewToX(moveToX)
