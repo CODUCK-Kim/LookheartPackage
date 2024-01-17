@@ -816,6 +816,9 @@ class BarChartVC : UIViewController {
         let secondGoalProgress = Double(value2) / Double(secondGoal * dayCnt)
         bottomProgress.progress = Float(secondGoalProgress)
             
+        print(firstGoalProgress)
+        print(secondGoalProgress)
+        
         // text
         topValue.text = String(value1) + " " + label1
         bottomValue.text = String(value2) + " " + label2
