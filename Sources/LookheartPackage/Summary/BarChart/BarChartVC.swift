@@ -830,7 +830,7 @@ class BarChartVC : UIViewController {
         let firstGoalProgress = Double(value1) / Double(firstGoal * dayCount)
         topProgress.progress = Float(firstGoalProgress)
         
-        let secondGoalProgress = Double(value2) / Double(secondGoal * dayCount)
+        let secondGoalProgress = chartType == .STEP ? (Double(value2) / 1000.0) / Double(secondGoal * dayCount) : Double(value2) / Double(secondGoal * dayCount)
         bottomProgress.progress = Float(secondGoalProgress)
         
         // procent
