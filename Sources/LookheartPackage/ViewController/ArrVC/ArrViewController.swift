@@ -234,17 +234,15 @@ public class ArrViewController : UIViewController {
     // MARK: - selectArrData
     func selectArrData(_ startDate: String) {
         activityIndicator.startAnimating()
-        NetworkManager.shared.selectArrDataToServer(id: email, startDate: startDate ) { [weak self] result in
+        NetworkManager.shared.selectArrDataToServer(id: email, startDate: startDate ) { [self] result in
             DispatchQueue.main.async {
-                self?.activityIndicator.stopAnimating()
-                guard let self = self else { return }
-                
                 switch(result) {
                 case .success(let arrData):
                     self.arrChart(arrData)
                 case .failure(let error):
-                    ToastHelper.shared.showToast(self.view, "againLater".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
-                    print("select Arr Data error : \(error)")
+                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
+                    self.toastMessage(errorMessage)
+                    self.activityIndicator.stopAnimating()
                 }
             }
         }
@@ -288,6 +286,9 @@ public class ArrViewController : UIViewController {
     
     // MARK: - Chart
     private func arrChart(_ arrData: ArrData) {
+        
+        activityIndicator.stopAnimating()
+        
         if arrData.data.count < 400 {   return  }
         
         let ecgDataConversion = EcgDataConversion()
