@@ -203,15 +203,10 @@ public class SummaryViewController : UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        // refresh view
-//        for child in arrChild {
-//            if let refreshableChild = child as? Refreshable {
-//                refreshableChild.refreshView()
-//            }
-//        }
-//        
-//        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
-//        setChild(selectChild: bpmView, in: self.view)
+        setChild(selectChild: lineChartView, in: self.view)
+        lineChartView.refreshView(.BPM)
+        setButtonColor(buttons[BPM_BUTTON_TAG - 1])
+        
     }
     
     func setButtonColor(_ sender: UIButton) {
