@@ -43,8 +43,9 @@ class BarChartVC : UIViewController {
     // ----------------------------- UI ------------------- //
     // 보여지는 변수
     private var firstGoal = 0, secondGoal = 0   // 목표값
-    private var dayCnt = 0
-    private var yearCnt: Set<String> = []
+    
+    private var dayCnt = 0 // progressbar Day Cnt
+    private var yearCnt: Set<String> = [] // progressbar Year(day) Cnt
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -541,9 +542,10 @@ class BarChartVC : UIViewController {
             hourlyDataDict[dateKey] = dataStruct
             
         }
-//        print(hourlyDataDict.keys.count) // week, month
-        print(yearCnt)
-        print(yearCnt.count)
+        
+        dayCnt = currentButtonFlag == .DAY ? 1 : 
+                 currentButtonFlag == .YEAR ? yearCnt.count : hourlyDataDict.keys.count
+        
         return hourlyDataDict
     }
     
@@ -552,7 +554,6 @@ class BarChartVC : UIViewController {
         case .DAY:
             return data.hour
         case .YEAR:
-            print(data.date)
             yearCnt.insert(data.date)
             return String(data.date.prefix(7))
         default:
@@ -770,7 +771,9 @@ class BarChartVC : UIViewController {
         
         singleContentsValueLabel.text = "0"
         
+        // progressbar Cnt
         dayCnt = 0
+        yearCnt = []
     }
     
     private func setUI() {
@@ -802,7 +805,7 @@ class BarChartVC : UIViewController {
     }
     
     private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
-        
+        print(dayCnt)
     }
     
     func chartZoomOut() {
