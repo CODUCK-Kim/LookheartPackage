@@ -406,13 +406,13 @@ class BarChartVC : UIViewController {
     
     private func createEntriesForSingleGraph(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry]) {
         
+        let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
         var entries = [BarChartDataEntry]()
         var timeTable: [String] = []
-        var index = getIndex(sortedDate)
+        var index = getChartIndexCount(sortedDate)
         
         for i in 0..<index {
-            
-            let time = getTime(currentButtonFlag == .WEEK ? String(i) : sortedDate[i])
+            let time = getTime(buttonFlag ? String(i) : sortedDate[i])
             var yValue = 0.0
             
             if sortedDate.indices.contains(i) {
@@ -429,7 +429,7 @@ class BarChartVC : UIViewController {
         return (timeTable, entries)
     }
     
-    private func getIndex(_ date: [String]) -> Int {
+    private func getChartIndexCount(_ date: [String]) -> Int {
         switch (currentButtonFlag) {
         case .WEEK:
             return 7
@@ -443,12 +443,12 @@ class BarChartVC : UIViewController {
     private func getTime(_ time: String) -> String{
         switch (currentButtonFlag) {
         case .DAY:
+            fallthrough
+        case .YEAR:
             return time
         case .WEEK:
             return weekDays[Int(time) ?? 0]
         case .MONTH:
-            fallthrough
-        case .YEAR:
             return String(time.suffix(2)).first == "0" ? String(time.suffix(1)) : String(time.suffix(2))
         }
     }
