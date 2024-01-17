@@ -378,6 +378,8 @@ class BarChartVC : UIViewController {
         let chartDataSet = getChartDataSet(sortedDate, dataDict)
         
         setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
+        
+        activityIndicator.stopAnimating()
     }
     
     private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataSet]) {
@@ -578,6 +580,8 @@ class BarChartVC : UIViewController {
     }
     
     private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+        
+        activityIndicator.startAnimating()
         
         initUI()
         
@@ -862,6 +866,11 @@ class BarChartVC : UIViewController {
         barChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
+        }
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(barChartView)
         }
         
         view.addSubview(bottomContents)
