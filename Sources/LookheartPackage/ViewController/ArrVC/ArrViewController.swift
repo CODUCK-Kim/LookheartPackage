@@ -222,8 +222,10 @@ public class ArrViewController : UIViewController {
                     }
                     self.setArrList()
                 case .failure(let error):
-                    ToastHelper.shared.showToast(self.view, "againLater".localized(), withDuration: 1.0, delay: 1.0, bottomPosition: false)
-                    print("getArrList error : \(error)")
+                    
+                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
+                    self.toastMessage(errorMessage)
+                    self.activityIndicator.stopAnimating()
                 }
             }
         }
@@ -713,6 +715,23 @@ public class ArrViewController : UIViewController {
         emergencyIdxButtonList = []
         emergencyTitleButtonList = []
         emergencyNumber = 1
+    }
+    
+    func toastMessage(_ message: String) {
+        // chartView의 중앙 좌표 계산
+        let chartViewCenterX = chartView.frame.size.width / 2
+        let chartViewCenterY = chartView.frame.size.height / 2
+
+        // 토스트 컨테이너의 크기
+        let containerWidth: CGFloat = chartView.frame.width - 60
+        let containerHeight: CGFloat = 35
+
+        // 토스트 컨테이너가 chartView 중앙에 오도록 위치 조정
+        let toastPositionX = chartViewCenterX - containerWidth / 2
+        let toastPositionY = chartViewCenterY - containerHeight / 2
+        
+        ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
+
     }
     
     // MARK: - addViews

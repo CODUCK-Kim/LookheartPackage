@@ -571,6 +571,8 @@ public class NetworkManager {
                     let result = String(data: data, encoding: .utf8)
                     if !(result!.contains("result = 0")) {
                         completion(.success(try JSONDecoder().decode([ArrDateEntry].self, from: data)))
+                    } else {
+                        completion(.failure(NetworkError.noData))
                     }
                 } catch {
                     completion(.failure(error))
