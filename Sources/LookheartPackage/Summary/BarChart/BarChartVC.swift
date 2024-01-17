@@ -369,27 +369,95 @@ class BarChartVC : UIViewController {
         
         let chartDataSet = getChartDataSet(sortedDate, dataDict)
         
-        setChart(chartData: BarChartData(dataSet: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
+        setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
     }
     
-    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], BarChartDataSet) {
+    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataSet]) {
         
         switch (chartType) {
-        case .CALORIE:
-            fallthrough
-        case .STEP:
+        case .CALORIE, .STEP:
             // double graph
-            // 보류
-            fallthrough
+            let entries = createDoubleGraphEntries(sortedDate, dataDict)
+            
+            let label1 = chartType == .CALORIE ? "summaryTCal".localized() : "step".localized()
+            let label2 = chartType == .CALORIE ? "summaryECal".localized() : "distanceM".localized()
+            
+            let dataSet1 =  chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: label1))
+            let dataSet2 =  chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: BarChartDataSet(entries: entries.2, label: label2))
+            
+            let dataSets: [BarChartDataSet] = [dataSet1, dataSet2]
+            
+            return (entries.0, dataSets)
+            
         default:
-            // single graph (ex : Arr)
-            let entries = createEntriesForSingleGraph(sortedDate, dataDict)
+            // single graph
+            let entries = createSingleGraphEntries(sortedDate, dataDict)
             let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "arr".localized()))
-            return (entries.0, dataSet)
+            return (entries.0, [dataSet])
         }
     }
     
-    private func createEntriesForSingleGraph(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry]) {
+    private func createDoubleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry], [BarChartDataEntry]) {
+        
+        let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
+        var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
+        
+        var index = getChartIndexCount(sortedDate)
+        var weekAndYearIdx = 0
+        
+        var entries1 = [BarChartDataEntry]()
+        var entries2 = [BarChartDataEntry]()
+        
+        var sumValue1 = 0
+        var sumValue2 = 0
+        
+        var timeTable: [String] = []
+        
+        for i in 0..<index {
+            let time = getTime(buttonFlag ? String(i) : sortedDate[i])
+            var yValue1 = 0.0
+            var yValue2 = 0.0
+            
+            if index != sortedDate.count {
+                // 고정 index WEEK(7), YEAR(12) 예외 처리
+                if dataDict.keys.contains(findDate) {
+                    (yValue1, yValue2) = getYValues(for: sortedDate, at: weekAndYearIdx, with: dataDict)
+
+                    weekAndYearIdx += 1
+                }
+                
+                findDate = currentButtonFlag == .YEAR ? getYearDate(findDate) : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
+            } else {
+                yValue1 = dataDict[sortedDate[i]]?.arrCnt ?? 0
+                yValue2 = dataDict[sortedDate[i]]?.arrCnt ?? 0
+            }
+            
+            let entry1 = BarChartDataEntry(x: Double(i), y: yValue1)
+            let entry2 = BarChartDataEntry(x: Double(i), y: yValue2)
+            
+            entries1.append(entry1)
+            entries2.append(entry2)
+            
+            sumValue1 += Int(yValue1)
+            sumValue2 += Int(yValue2)
+            
+            timeTable.append(time)
+            
+        }
+        
+        return (timeTable, entries1, entries2)
+    }
+    
+    private func getYValues(for sortedDate: [String], at index: Int, with dataDict: [String : HourlyDataStruct]) -> (Double, Double) {
+        let checkType = chartType == .CALORIE
+        let yValue1 = checkType ? dataDict[sortedDate[index]]?.cal ?? 0 :
+                                  dataDict[sortedDate[index]]?.step ?? 0
+        let yValue2 = checkType ? dataDict[sortedDate[index]]?.activityCal ?? 0 :
+                                  dataDict[sortedDate[index]]?.distance ?? 0
+        return (yValue1, yValue2)
+    }
+    
+    private func createSingleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry]) {
         
         // ButtonFlag에 따라 x축에 들어가는 time String 설정
         let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
@@ -521,8 +589,12 @@ class BarChartVC : UIViewController {
     
     func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {
         chartDataSet.setColor(color)
-        chartDataSet.drawValuesEnabled = true
-        chartDataSet.valueFormatter = CombinedValueFormatter()
+        chartDataSet.drawValuesEnabled = chartType == .ARR ? true : false
+        
+        if chartType == .ARR {
+            chartDataSet.valueFormatter = CombinedValueFormatter()
+        }
+        
         return chartDataSet
     }
     
@@ -532,6 +604,8 @@ class BarChartVC : UIViewController {
         let labelCount = Double(monthFlag ? 15 : labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
         
+        configureBarChartSettings(chartData: chartData, labelCnt: labelCnt)
+        
         barChartView.data = chartData
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
         barChartView.setVisibleXRangeMaximum(labelCount)
@@ -540,6 +614,29 @@ class BarChartVC : UIViewController {
         barChartView.notifyDataSetChanged()
         barChartView.moveViewToX(moveToX)
         chartZoomOut()
+    }
+    
+    private func configureBarChartSettings(chartData: BarChartData, labelCnt: Int) {
+        switch (chartType) {
+        case .CALORIE, .STEP:
+            
+            let groupSpace = 0.3
+            let barSpace = 0.05
+            let barWidth = 0.3
+            
+            chartData.barWidth = barWidth
+            
+            barChartView.xAxis.axisMinimum = Double(0)
+            barChartView.xAxis.axisMaximum = Double(0) + chartData.groupWidth(groupSpace: groupSpace, barSpace: barSpace) * Double(labelCnt)  // group count : 2
+            chartData.groupBars(fromX: Double(0), groupSpace: groupSpace, barSpace: barSpace)
+            
+        default:
+            let defaultBarWidth = 0.85 // 기본 바 너비 (적절한 값으로 설정)
+            chartData.barWidth = defaultBarWidth
+
+            barChartView.xAxis.axisMinimum = 0
+            barChartView.xAxis.axisMaximum = Double(labelCnt)
+        }
     }
     
     // MARK: - DATE FUNC
@@ -670,9 +767,7 @@ class BarChartVC : UIViewController {
     
     private func setUI() {
         switch (chartType) {
-        case .CALORIE:
-            fallthrough
-        case .STEP:
+        case .CALORIE, .STEP:
             // double graph
             doubleGraphBottomContents.isHidden = false
             singleGraphBottomContents.isHidden = true
