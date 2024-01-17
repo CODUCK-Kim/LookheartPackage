@@ -521,6 +521,7 @@ class BarChartVC : UIViewController {
         case .DAY:
             return time
         case .YEAR:
+            print(time)
             return String((Int(time) ?? 0) + 1)
         case .WEEK:
             return weekDays[Int(time) ?? 0]
@@ -540,7 +541,8 @@ class BarChartVC : UIViewController {
             hourlyDataDict[dateKey] = dataStruct
             
         }
-        print(hourlyDataDict.keys.count)
+//        print(hourlyDataDict.keys.count) // week, month
+        
         return hourlyDataDict
     }
     
