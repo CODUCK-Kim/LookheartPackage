@@ -427,7 +427,7 @@ class BarChartVC : UIViewController {
                     weekAndYearIdx += 1
                 }
                 let month = i > 10 ? "0" + String(i) : String(i)
-                findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(4)) + month : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
+                findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(5)) + month : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
             } else {
                 yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
             }
