@@ -410,27 +410,21 @@ class BarChartVC : UIViewController {
         var entries = [BarChartDataEntry]()
         var timeTable: [String] = []
         var index = getChartIndexCount(sortedDate)
-        var findDate = startDate
+        var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
         var weekAndYearIdx = 0
-        
-        print(startDate)
-        print(endDate)
-        print(index)
-        print(sortedDate.count)
         
         for i in 0..<index {
             let time = getTime(buttonFlag ? String(i) : sortedDate[i])
             var yValue = 0.0
             
             if index != sortedDate.count {
-                // 고정 index 예외 처리 : WEEK(7), YEAR(12)
-                print("findDate : \(findDate)")
+                // 고정 index WEEK(7), YEAR(12) 예외 처리
                 if dataDict.keys.contains(findDate) {
                     yValue = dataDict[sortedDate[weekAndYearIdx]]?.arrCnt ?? 0
                     weekAndYearIdx += 1
                 }
-                
-                findDate = MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
+                let month = i > 10 ? "0" + String(i) : String(i)
+                findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(4)) + month : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
             } else {
                 yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
             }
