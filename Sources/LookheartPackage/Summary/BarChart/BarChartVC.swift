@@ -445,7 +445,7 @@ class BarChartVC : UIViewController {
             sumValue += Int(yValue)
         }
         
-        setArrCntUI(sumValue)
+        setSingleGraphUI(sumValue)
         
         return (timeTable, entries)
     }
@@ -542,12 +542,17 @@ class BarChartVC : UIViewController {
     }
     
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
+        
+        let monthFlag = currentButtonFlag == .MONTH
+        let labelCount = monthFlag ? 15 : labelCnt
+        let moveToX = monthFlag ? Double(labelCnt) : 0.0
+        
         barChartView.data = chartData
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
         barChartView.xAxis.setLabelCount(labelCnt, force: false)
         barChartView.data?.notifyDataChanged()
         barChartView.notifyDataSetChanged()
-        barChartView.moveViewToX(0)
+        barChartView.moveViewToX(moveToX)
     }
     
     // MARK: - DATE FUNC
@@ -676,7 +681,7 @@ class BarChartVC : UIViewController {
         arrCntLabel.text = "0"
     }
     
-    private func setArrCntUI(_ cnt : Int) {
+    private func setSingleGraphUI(_ cnt : Int) {
         arrCntLabel.text = String(cnt)
     }
     
