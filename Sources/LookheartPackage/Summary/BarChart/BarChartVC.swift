@@ -601,7 +601,7 @@ class BarChartVC : UIViewController {
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
         
         let monthFlag = currentButtonFlag == .MONTH
-        let labelCount = Double(monthFlag ? 15 : labelCnt)
+        let labelCount = monthFlag ? 14.5 : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
         
         configureBarChartSettings(chartData: chartData, labelCnt: labelCnt)
@@ -632,7 +632,7 @@ class BarChartVC : UIViewController {
             
             barChartView.xAxis.centerAxisLabelsEnabled = true
         default:
-            let defaultBarWidth = 0.85 // 기본 바 너비 (적절한 값으로 설정)
+            let defaultBarWidth = 0.85 // 기본 바 너비
             chartData.barWidth = defaultBarWidth
 
             barChartView.xAxis.axisMinimum = 0
