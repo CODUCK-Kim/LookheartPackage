@@ -104,20 +104,18 @@ class BarChartVC : UIViewController {
     private let middleContents = UILabel().then {  $0.isUserInteractionEnabled = true  }
     
     // CAL, STEP
-    private lazy var stepBottomContents = UIStackView(arrangedSubviews: [topBackground, bottomBackground]).then {
+    private lazy var doubleGraphBottomContents = UIStackView(arrangedSubviews: [topBackground, bottomBackground]).then {
         $0.axis = .vertical
         $0.distribution = .fillEqually // default
         $0.alignment = .fill // default
         $0.spacing = 5
-        $0.isHidden = true
     }
     
     // ARR
-    private lazy var arrBottomContents = UIStackView(arrangedSubviews: [arrLabel, arrCntLabel]).then {
+    private lazy var singleGraphBottomContents = UIStackView(arrangedSubviews: [singleContentsLabel, singleContentsValueLabel]).then {
         $0.axis = .horizontal
         $0.distribution = .fillEqually
         $0.alignment = .fill
-//        $0.isHidden = true
     }
     
     private let valueContents = UILabel()
@@ -220,7 +218,7 @@ class BarChartVC : UIViewController {
     
     // MARK: - bottom Contents
     //    ----------------------------- ARR -------------------    //
-    private let arrLabel = UILabel().then {
+    private let singleContentsLabel = UILabel().then {
         $0.text = "arrTimes".localized()
         $0.numberOfLines = 2
         $0.textColor = .darkGray
@@ -228,7 +226,7 @@ class BarChartVC : UIViewController {
         $0.textAlignment = .center
     }
     
-    private let arrCntLabel = UILabel().then {
+    private let singleContentsValueLabel = UILabel().then {
         $0.text = "0"
         $0.textColor = .darkGray
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -358,6 +356,8 @@ class BarChartVC : UIViewController {
     public func refreshView(_ type: ChartType) {
         
         chartType = type
+        
+        setUI()
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         
@@ -554,6 +554,7 @@ class BarChartVC : UIViewController {
         barChartView.data?.notifyDataChanged()
         barChartView.notifyDataSetChanged()
         barChartView.moveViewToX(moveToX)
+        chartZoomOut()
     }
     
     // MARK: - DATE FUNC
@@ -679,11 +680,33 @@ class BarChartVC : UIViewController {
     
     private func initUI() {
         barChartView.clear()
-        arrCntLabel.text = "0"
+        singleContentsValueLabel.text = "0"
+    }
+    
+    private func setUI() {
+        switch (chartType) {
+        case .CALORIE:
+            fallthrough
+        case .STEP:
+            // double graph
+            doubleGraphBottomContents.isHidden = false
+            singleGraphBottomContents.isHidden = true
+        default:
+            // single graph
+            singleGraphBottomContents.isHidden = false
+            doubleGraphBottomContents.isHidden = true
+        }
     }
     
     private func setSingleGraphUI(_ cnt : Int) {
-        arrCntLabel.text = String(cnt)
+        singleContentsValueLabel.text = String(cnt)
+    }
+    
+    
+    func chartZoomOut() {
+        for _ in 0..<20 {
+            barChartView.zoomOut()
+        }
     }
     
     // MARK: - addViews
@@ -728,15 +751,15 @@ class BarChartVC : UIViewController {
         }
         
         // ARR Contents StackView
-        bottomContents.addSubview(arrBottomContents)
-        arrBottomContents.snp.makeConstraints { make in
+        bottomContents.addSubview(singleGraphBottomContents)
+        singleGraphBottomContents.snp.makeConstraints { make in
             make.top.equalTo(middleContents.snp.bottom)
             make.left.right.bottom.equalTo(bottomContents)
         }
         
         // CAL, STEP Contents StackView
-        bottomContents.addSubview(stepBottomContents)
-        stepBottomContents.snp.makeConstraints { make in
+        bottomContents.addSubview(doubleGraphBottomContents)
+        doubleGraphBottomContents.snp.makeConstraints { make in
             make.top.equalTo(middleContents.snp.bottom)
             make.left.equalTo(bottomContents).offset(20)
             make.right.equalTo(safeAreaView.snp.centerX).offset(40)
