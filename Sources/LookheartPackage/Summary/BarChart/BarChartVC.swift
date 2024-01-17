@@ -423,6 +423,7 @@ class BarChartVC : UIViewController {
                 // 고정 index 예외 처리 : WEEK(7), YEAR(12)
                 if dataDict.keys.contains(findDate) {
                     yValue = dataDict[sortedDate[weekAndYearIdx]]?.arrCnt ?? 0
+                    findDate = MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
                     weekAndYearIdx += 1
                 }
             } else {
