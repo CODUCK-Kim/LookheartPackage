@@ -349,11 +349,17 @@ class BarChartVC : UIViewController {
     public func refreshView(_ type: ChartType) {
         
         chartType = type
+        currentButtonFlag = .DAY
+        
+        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
         
         setUI()
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         
+        setDisplayDateText()
+        setButtonColor(dayButton)
     }
     
     func initVar() {
