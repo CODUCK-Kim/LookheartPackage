@@ -413,7 +413,7 @@ class BarChartVC : UIViewController {
         for i in 0..<index {
             let time = getTime(currentButtonFlag == .WEEK ? String(i) : sortedDate[i])
             let yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
-            let entry = BarChartDataEntry(x: Double(index), y: yValue)
+            let entry = BarChartDataEntry(x: Double(i), y: yValue)
             
             entries.append(entry)
             timeTable.append(time)
