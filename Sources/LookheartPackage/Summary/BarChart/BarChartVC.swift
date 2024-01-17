@@ -118,8 +118,6 @@ class BarChartVC : UIViewController {
         $0.alignment = .fill
     }
     
-    private let valueContents = UILabel()
-    
     // MARK: - top Contents
     private lazy var dayButton = UIButton().then {
         $0.setTitle ("fragment_day".localized(), for: .normal )
@@ -278,21 +276,7 @@ class BarChartVC : UIViewController {
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
     }
-    
-    private let topGoal = UILabel().then {
-        $0.text = "stepValue".localized()
-        $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
-    }
-    
-    private let bottomGoal = UILabel().then {
-        $0.text = "distanceValue3".localized()
-        $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .black
-    }
-    
+        
     private let topValue = UILabel().then {
         $0.text = "stepValue".localized()
         $0.textAlignment = .center
@@ -308,6 +292,7 @@ class BarChartVC : UIViewController {
     }
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
+    private let bottomValueContents = UILabel()
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
@@ -813,11 +798,31 @@ class BarChartVC : UIViewController {
      
         
         // --------------------- Cal, Step bottomContents --------------------- //
-        bottomContents.addSubview(valueContents)
-        valueContents.snp.makeConstraints { make in
-            make.top.equalTo(bottomContents)
-            make.left.equalTo(bottomContents.snp.right)
+        doubleGraphBottomContents.addSubview(bottomValueContents)
+        bottomValueContents.snp.makeConstraints { make in
+            make.top.equalTo(doubleGraphBottomContents)
+            make.left.equalTo(doubleGraphBottomContents.snp.right)
             make.bottom.right.equalTo(safeAreaView)
+        }
+        
+        doubleGraphBottomContents.addSubview(topValue)
+        topValue.snp.makeConstraints { make in
+            make.centerX.equalTo(bottomValueContents)
+            make.centerY.equalTo(topProgress)
+        }
+        
+        doubleGraphBottomContents.addSubview(bottomValue)
+        bottomValue.snp.makeConstraints { make in
+            make.centerX.equalTo(bottomValueContents)
+            make.centerY.equalTo(bottomProgress)
+        }
+        
+        doubleGraphBottomContents.addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { make in
+            make.centerY.equalTo(bottomValueContents)
+            make.left.equalTo(safeAreaView).offset(10)
+            make.right.equalTo(safeAreaView).offset(-10)
+            make.height.equalTo(1)
         }
     }
 }
