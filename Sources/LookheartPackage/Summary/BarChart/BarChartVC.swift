@@ -289,14 +289,14 @@ class BarChartVC : UIViewController {
         $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = UIColor.MY_RED
+        $0.textColor = .red
     }
     
     private let bottomValueProcent = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = UIColor.MY_BLUE
+        $0.textColor = .blue
     }
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }

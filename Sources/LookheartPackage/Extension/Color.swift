@@ -38,8 +38,8 @@ public extension UIColor {
     static let GRAPH_GREEN = UIColor(red: 0/255, green: 128/255, blue: 0/255, alpha: 1.0)
     
     // PROGRESSBAR
-    static let PROGRESSBAR_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.5)
-    static let PROGRESSBAR_BLUE = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.5)
+    static let PROGRESSBAR_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.7)
+    static let PROGRESSBAR_BLUE = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.7)
     
     // -------------------------- Assets Color --------------------------
     class var buttonBackground: UIColor? { return UIColor(named: "buttonBackground") }
