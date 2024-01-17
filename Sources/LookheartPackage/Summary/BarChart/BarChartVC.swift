@@ -444,7 +444,7 @@ class BarChartVC : UIViewController {
     private func getYearDate(_ date : String) -> String {
         let year = String(date.prefix(5))
         let month = (Int(date.suffix(2)) ?? 0) + 1
-        return month > 10 ? year + String(month) : year + "0" + String(month)
+        return month > 9 ? year + String(month) : year + "0" + String(month)
     }
     
     private func getChartIndexCount(_ date: [String]) -> Int {
