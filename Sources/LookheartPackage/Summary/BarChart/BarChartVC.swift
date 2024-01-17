@@ -244,14 +244,14 @@ class BarChartVC : UIViewController {
     
     private let topProgress = UIProgressView().then {
         $0.trackTintColor = UIColor.MY_LIGHT_GRAY_BORDER
-        $0.progressTintColor = UIColor.GRAPH_RED
+        $0.progressTintColor = UIColor.PROGRESSBAR_RED
         $0.progress = 0.0
         $0.layer.cornerRadius = 10
         $0.layer.masksToBounds = true
     }
     private let bottomProgress = UIProgressView().then {
         $0.trackTintColor = UIColor.MY_LIGHT_GRAY_BORDER
-        $0.progressTintColor = UIColor.MY_BLUE
+        $0.progressTintColor = UIColor.PROGRESSBAR_BLUE
         $0.progress = 0.0
         $0.layer.cornerRadius = 10
         $0.layer.masksToBounds = true
@@ -289,14 +289,14 @@ class BarChartVC : UIViewController {
         $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = UIColor.MY_BLUE
+        $0.textColor = UIColor.MY_RED
     }
     
     private let bottomValueProcent = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = UIColor.MY_PINK
+        $0.textColor = UIColor.MY_BLUE
     }
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
@@ -831,8 +831,8 @@ class BarChartVC : UIViewController {
         bottomProgress.progress = Float(secondGoalProgress)
         
         // procent
-        topValueProcent.text = String(firstGoalProgress * 100)
-        bottomValueProcent.text = String(secondGoalProgress * 100)
+        topValueProcent.text = String(Int(firstGoalProgress * 100))
+        bottomValueProcent.text = String(Int(secondGoalProgress * 100))
         
         // text
         topValue.text = String(value1) + " " + label1
