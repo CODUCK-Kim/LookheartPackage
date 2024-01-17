@@ -428,8 +428,7 @@ class BarChartVC : UIViewController {
                 
                 findDate = currentButtonFlag == .YEAR ? getYearDate(findDate) : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
             } else {
-                yValue1 = dataDict[sortedDate[i]]?.arrCnt ?? 0
-                yValue2 = dataDict[sortedDate[i]]?.arrCnt ?? 0
+                (yValue1, yValue2) = getYValues(for: sortedDate, at: i, with: dataDict)
             }
             
             let entry1 = BarChartDataEntry(x: Double(i), y: yValue1)
@@ -447,6 +446,7 @@ class BarChartVC : UIViewController {
         
         return (timeTable, entries1, entries2)
     }
+    
     
     private func getYValues(for sortedDate: [String], at index: Int, with dataDict: [String : HourlyDataStruct]) -> (Double, Double) {
         let checkType = chartType == .CALORIE
@@ -630,12 +630,15 @@ class BarChartVC : UIViewController {
             barChartView.xAxis.axisMaximum = Double(0) + chartData.groupWidth(groupSpace: groupSpace, barSpace: barSpace) * Double(labelCnt)  // group count : 2
             chartData.groupBars(fromX: Double(0), groupSpace: groupSpace, barSpace: barSpace)
             
+            barChartView.xAxis.centerAxisLabelsEnabled = true
         default:
             let defaultBarWidth = 0.85 // 기본 바 너비 (적절한 값으로 설정)
             chartData.barWidth = defaultBarWidth
 
             barChartView.xAxis.axisMinimum = 0
             barChartView.xAxis.axisMaximum = Double(labelCnt)
+            
+            barChartView.xAxis.centerAxisLabelsEnabled = false
         }
     }
     
