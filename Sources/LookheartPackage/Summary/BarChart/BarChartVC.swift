@@ -824,14 +824,13 @@ class BarChartVC : UIViewController {
         
         let label1 = chartType == .CALORIE ? "eCalValue2".localized() : "stepValue2".localized()
         let label2 = chartType == .CALORIE ? "eCalValue2".localized() : "distanceValue2".localized()
-        let dayCnt = currentButtonFlag == .DAY ? 1 :
-                     currentButtonFlag == .WEEK ? 7 :
-                     currentButtonFlag == .MONTH ? 30 : 365
+        let dayCount = getDayCount(for: currentButtonFlag)
+        
         // Progress
-        let firstGoalProgress = Double(value1) / Double(firstGoal * dayCnt)
+        let firstGoalProgress = Double(value1) / Double(firstGoal * dayCount)
         topProgress.progress = Float(firstGoalProgress)
         
-        let secondGoalProgress = Double(value2) / Double(secondGoal * dayCnt)
+        let secondGoalProgress = Double(value2) / Double(secondGoal * dayCount)
         bottomProgress.progress = Float(secondGoalProgress)
         
         // procent
@@ -842,6 +841,15 @@ class BarChartVC : UIViewController {
         topValue.text = String(value1) + " " + label1
         bottomValue.text = chartType == .STEP ? String(Double(value2) / 1000.0) + " " + label2:
                                                 String(value2) + " " + label2
+    }
+    
+    private func getDayCount(for buttonFlag: DateType) -> Int {
+        switch buttonFlag {
+        case .DAY: return 1
+        case .WEEK: return 7
+        case .MONTH: return 30
+        case .YEAR: return 365
+        }
     }
     
     func chartZoomOut() {
