@@ -412,6 +412,8 @@ class BarChartVC : UIViewController {
         var index = getChartIndexCount(sortedDate)
         var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
         var weekAndYearIdx = 0
+    
+        print(dataDict.keys)
         
         for i in 0..<index {
             let time = getTime(buttonFlag ? String(i) : sortedDate[i])
@@ -419,6 +421,7 @@ class BarChartVC : UIViewController {
             
             if index != sortedDate.count {
                 // 고정 index WEEK(7), YEAR(12) 예외 처리
+                print(findDate)
                 if dataDict.keys.contains(findDate) {
                     yValue = dataDict[sortedDate[weekAndYearIdx]]?.arrCnt ?? 0
                     weekAndYearIdx += 1
