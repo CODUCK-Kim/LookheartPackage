@@ -281,22 +281,22 @@ class BarChartVC : UIViewController {
     private let bottomValue = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         $0.textColor = .black
     }
     
     private let topValueProcent = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .white
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        $0.textColor = .black
     }
     
     private let bottomValueProcent = UILabel().then {
         $0.text = "-"
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        $0.textColor = .white
+        $0.textColor = .black
     }
     
     private let bottomLine = UILabel().then {   $0.backgroundColor = .lightGray }
@@ -831,8 +831,8 @@ class BarChartVC : UIViewController {
         bottomProgress.progress = Float(secondGoalProgress)
         
         // procent
-        topValueProcent.text = String(Int(firstGoalProgress * 100))
-        bottomValueProcent.text = String(Int(secondGoalProgress * 100))
+        topValueProcent.text = String(Int(firstGoalProgress * 100)) + "%"
+        bottomValueProcent.text = String(Int(secondGoalProgress * 100)) + "%"
         
         // text
         topValue.text = String(value1) + " " + label1
