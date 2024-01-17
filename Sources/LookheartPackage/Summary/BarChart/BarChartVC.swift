@@ -42,14 +42,8 @@ class BarChartVC : UIViewController {
     
     // ----------------------------- UI ------------------- //
     // 보여지는 변수
-    // ARR
-    private var arrCnt = 0  // 비정상 맥박 횟수
-    // CAL
-    private var burnTotalCal = 0, burnActivityCal = 0   // 소모 칼로리
-    private var targetToTalCal = 0, targetActivityCal = 0   // 목표 칼로리
-    // STEP
-    private var step = 0, distance = 0   // 걸음, 이동 거리
-    private var targetStep = 0, targetDistance = 0   // 목표 걸음, 이동 거리
+    private var firstGoal = 0, secondGoal = 0   // 목표값
+    private var dayCnt = 0
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -444,6 +438,8 @@ class BarChartVC : UIViewController {
             
         }
         
+        setDoubleGraphUI(sumValue1, sumValue2)
+        
         return (timeTable, entries1, entries2)
     }
     
@@ -542,6 +538,7 @@ class BarChartVC : UIViewController {
             var dataStruct = hourlyDataDict[dateKey, default: HourlyDataStruct()]
             dataStruct.updateData(data)
             hourlyDataDict[dateKey] = dataStruct
+            dayCnt += 1
         }
         
         return hourlyDataDict
@@ -601,7 +598,7 @@ class BarChartVC : UIViewController {
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
         
         let monthFlag = currentButtonFlag == .MONTH
-        let labelCount = monthFlag ? 14.5 : Double(labelCnt)
+        let labelCount = monthFlag ? Double(labelCnt / 2) : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
         
         configureBarChartSettings(chartData: chartData, labelCnt: labelCnt)
@@ -765,7 +762,10 @@ class BarChartVC : UIViewController {
     
     private func initUI() {
         barChartView.clear()
+        
         singleContentsValueLabel.text = "0"
+        
+        dayCnt = 0
     }
     
     private func setUI() {
@@ -775,8 +775,16 @@ class BarChartVC : UIViewController {
             doubleGraphBottomContents.isHidden = false
             singleGraphBottomContents.isHidden = true
             
-            topTitleLabel.text = (chartType == .CALORIE ? "tCalTitle".localized() : "summaryStep".localized())
-            bottomTitleLabel.text = (chartType == .CALORIE ? "eCalTitle".localized() : "distance".localized())
+            let type = chartType == .CALORIE
+            topTitleLabel.text = (type ? "tCalTitle".localized() : "summaryStep".localized())
+            bottomTitleLabel.text = (type ? "eCalTitle".localized() : "distance".localized())
+            
+            
+            firstGoal = type ? UserProfileManager.shared.getTCal() : 
+                               UserProfileManager.shared.getStep()
+            secondGoal = type ? UserProfileManager.shared.getACal() :
+                                UserProfileManager.shared.getDistance()
+                        
         default:
             // single graph
             singleGraphBottomContents.isHidden = false
@@ -788,6 +796,9 @@ class BarChartVC : UIViewController {
         singleContentsValueLabel.text = String(cnt)
     }
     
+    private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
+        
+    }
     
     func chartZoomOut() {
         for _ in 0..<20 {
