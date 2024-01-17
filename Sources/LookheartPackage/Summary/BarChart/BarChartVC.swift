@@ -977,7 +977,7 @@ class BarChartVC : UIViewController {
         }
         
         doubleGraphBottomContents.addSubview(topValueProcent)
-        bottomValue.snp.makeConstraints { make in
+        topValueProcent.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(topProgress)
         }
         
