@@ -427,9 +427,10 @@ class BarChartVC : UIViewController {
                 print("findDate : \(findDate)")
                 if dataDict.keys.contains(findDate) {
                     yValue = dataDict[sortedDate[weekAndYearIdx]]?.arrCnt ?? 0
-                    findDate = MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
                     weekAndYearIdx += 1
                 }
+                
+                findDate = MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
             } else {
                 yValue = dataDict[sortedDate[i]]?.arrCnt ?? 0
             }
