@@ -840,7 +840,7 @@ class BarChartVC : UIViewController {
         
         // text
         topValue.text = String(value1) + " " + label1
-        bottomValue.text = chartType == .STEP ? String(Double(value2) / 1000.0) :
+        bottomValue.text = chartType == .STEP ? String(Double(value2) / 1000.0) + " " + label2:
                                                 String(value2) + " " + label2
     }
     
