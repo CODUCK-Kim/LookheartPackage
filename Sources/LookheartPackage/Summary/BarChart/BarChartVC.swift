@@ -521,7 +521,6 @@ class BarChartVC : UIViewController {
         case .DAY:
             return time
         case .YEAR:
-            print(time)
             return String((Int(time) ?? 0) + 1)
         case .WEEK:
             return weekDays[Int(time) ?? 0]
@@ -551,6 +550,7 @@ class BarChartVC : UIViewController {
         case .DAY:
             return data.hour
         case .YEAR:
+            print(data.date)
             return String(data.date.prefix(7))
         default:
             return data.date
