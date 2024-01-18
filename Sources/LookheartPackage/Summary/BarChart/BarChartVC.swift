@@ -377,7 +377,7 @@ class BarChartVC : UIViewController {
         chartType = type
         currentButtonFlag = .DAY
         
-        let startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
             
         getDataToServer(startDate, endDate, currentButtonFlag)
