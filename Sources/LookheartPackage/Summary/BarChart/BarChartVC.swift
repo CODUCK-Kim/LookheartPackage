@@ -323,7 +323,7 @@ class BarChartVC : UIViewController {
         startDate = setStartDate(startDate, sender.tag)
         let endDate = setEndDate(startDate)
         
-        getDataToServer(startDate, endDate, currentButtonFlag)
+        getDataToServer(startDate, endDate)
         setDisplayDateText(startDate, endDate)
         
     }
@@ -353,7 +353,7 @@ class BarChartVC : UIViewController {
         print("targetDate : \(targetDate)")
         print("endDate : \(endDate)")
         
-        getDataToServer(targetDate, endDate, currentButtonFlag)
+        getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
     }
@@ -381,7 +381,7 @@ class BarChartVC : UIViewController {
         startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
         let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
             
-        getDataToServer(startDate, endDate, currentButtonFlag)
+        getDataToServer(startDate, endDate)
     
         setUI()
         setDisplayDateText(startDate, endDate)
@@ -397,12 +397,13 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - CHART FUNC
-    private func viewChart(_ hourlyDataList: [HourlyData], _ type: DateType) {
+    private func viewChart(_ hourlyDataList: [HourlyData]) {
         
         let dataDict = groupDataByDate(hourlyDataList)
         
         let sortedDate = sortedKeys(dataDict)
         
+        print(sortedDate)
         let chartDataSet = getChartDataSet(sortedDate, dataDict)
         
         setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
@@ -607,19 +608,17 @@ class BarChartVC : UIViewController {
         }
     }
     
-    private func getDataToServer(_ startDate: String, _ endDate: String, _ type: DateType) {
+    private func getDataToServer(_ startDate: String, _ endDate: String) {
         
         activityIndicator.startAnimating()
         
         initUI()
-        print(startDate)
-        print(endDate)
+
         NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let hourlyDataList):
                 
-                print(hourlyDataList)
-                viewChart(hourlyDataList, type)
+                viewChart(hourlyDataList)
                 
             case .failure(let error):
                 
@@ -643,7 +642,7 @@ class BarChartVC : UIViewController {
     }
     
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
-        
+        print(chartData)
         let monthFlag = currentButtonFlag == .MONTH
         let labelCount = monthFlag ? 14.3 : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
@@ -733,14 +732,10 @@ class BarChartVC : UIViewController {
               let weekdayIndex = weekdaySymbols.firstIndex(of: weekdayName) else {
             return 0
         }
-        print(weekdayName)
         // 'calendar.firstWeekday'로 주의 시작 요일을 고려해 인덱스 조정
         // 그레고리안 캘린더에서 'firstWeekday'는 일반적으로 1(일요일)
         // 월요일을 0으로 만들기 위해, 인덱스에서 1을 빼고, 7로 나눈 나머지를 계산
         let mondayIndex = (weekdayIndex + 7 - calendar.firstWeekday) % 7
-        
-        print(mondayIndex)
-        
         return mondayIndex
     }
     
@@ -775,8 +770,7 @@ class BarChartVC : UIViewController {
             let startDate = MyDateTime.shared.getDateFormat().string(from: date)
             let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
             
-            getDataToServer(startDate, endDate, currentButtonFlag)
-            
+            getDataToServer(startDate, endDate)
             setDisplayDateText(startDate, endDate)
             setButtonColor(dayButton)
         }
