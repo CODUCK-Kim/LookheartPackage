@@ -58,7 +58,8 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
     }
     
     private lazy var calendar = FSCalendar().then {
-        $0.backgroundColor = UIColor.MY_BLUE
+        $0.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
+        $0.appearance.headerTitleColor = UIColor.MY_BLUE
         $0.appearance.selectionColor = UIColor.MY_BLUE
         $0.appearance.todayColor = UIColor.MY_RED
         $0.scrollEnabled = true
