@@ -643,6 +643,8 @@ class BarChartVC : UIViewController {
     
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
         print(chartData)
+        print(labelCnt)
+        print(currentButtonFlag)
         let monthFlag = currentButtonFlag == .MONTH
         let labelCount = monthFlag ? 14.3 : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
