@@ -371,6 +371,15 @@ class BarChartVC : UIViewController {
         setCalendarClosure()
     }
     
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        if (!fsCalendar.isHidden) {
+            fsCalendar.isHidden = true
+            barChartView.isHidden = false
+        }
+    }
+    
     public func refreshView(_ type: ChartType) {
         
         chartType = type

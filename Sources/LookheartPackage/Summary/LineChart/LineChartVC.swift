@@ -282,6 +282,14 @@ class LineChartVC : UIViewController {
 
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        if (!fsCalendar.isHidden) {
+            fsCalendar.isHidden = true
+            lineChartView.isHidden = false
+        }
+    }
+    
     public func refreshView(_ type: ChartType) {
         
         chartType = type
