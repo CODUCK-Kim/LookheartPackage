@@ -655,7 +655,7 @@ class BarChartVC : UIViewController {
             barChartView.xAxis.centerAxisLabelsEnabled = true
         default:
             
-            let barWidth = 0.2     // 기본값: 0.2
+            let barWidth = 0.85
 
             chartData.barWidth = barWidth
 
