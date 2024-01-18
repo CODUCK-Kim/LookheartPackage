@@ -484,8 +484,18 @@ class LineChartVC : UIViewController {
     }
     
     private func setCalendarClosure() {
-        calendar.didSelectDate = { date in            
-            print("선택된 날짜: \(date)")
+        calendar.didSelectDate = { [self] date in
+            
+            calendar.isHidden = true
+            currentButtonFlag = .TODAY
+            
+            startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
+            
+            getDataToServer(startDate, endDate, currentButtonFlag)
+            
+            setDisplayDateText()
+            setButtonColor(todayButton)
         }
     }
     
