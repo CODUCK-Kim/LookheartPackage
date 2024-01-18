@@ -482,8 +482,8 @@ class LineChartVC : UIViewController {
     }
     
     private func setCalendarClosure() {
-        calendar.didSelectDate = { date in
-            print("선택된 날짜: \(MyDateTime.shared.getDateFormat().string(from: date))")
+        calendar.didSelectDate = { date in            
+            print("선택된 날짜: \(date)")
         }
     }
     
