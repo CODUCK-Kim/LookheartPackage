@@ -485,17 +485,16 @@ class LineChartVC : UIViewController {
     
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
+                        
+            currentButtonFlag = .TODAY
             
             startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
             
-            switch (currentButtonFlag) {
-            case .TODAY:
-                selectDayButton(todayButton)
-            case .TWO_DAYS:
-                selectDayButton(twoDaysButton)
-            case .THREE_DAYS:
-                selectDayButton(threeDaysButton)
-            }
+            getDataToServer(startDate, endDate, currentButtonFlag)
+            
+            setDisplayDateText()
+            setButtonColor(todayButton)
             
             fsCalendar.isHidden = true
             lineChartView.isHidden = false
