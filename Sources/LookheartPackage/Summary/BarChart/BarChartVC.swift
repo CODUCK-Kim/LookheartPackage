@@ -736,6 +736,9 @@ class BarChartVC : UIViewController {
         // 그레고리안 캘린더에서 'firstWeekday'는 일반적으로 1(일요일)
         // 월요일을 0으로 만들기 위해, 인덱스에서 1을 빼고, 7로 나눈 나머지를 계산
         let mondayIndex = (weekdayIndex + 7 - calendar.firstWeekday) % 7
+        
+        print(mondayIndex)
+        
         return mondayIndex
     }
     
