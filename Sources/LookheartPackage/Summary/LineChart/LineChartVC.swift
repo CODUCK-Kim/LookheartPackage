@@ -15,7 +15,7 @@ class LineChartVC : UIViewController {
     }
     
     // ----------------------------- Image ------------------- //
-    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
     private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
     // Image End
     
@@ -657,7 +657,8 @@ class LineChartVC : UIViewController {
         // --------------------- middleContents --------------------- //
         middleContents.addSubview(todayDisplay)
         todayDisplay.snp.makeConstraints { make in
-            make.top.bottom.centerX.equalTo(middleContents)
+            make.top.bottom.equalTo(middleContents)
+            make.centerX.equalTo(middleContents).offset(5)
         }
         
         middleContents.addSubview(yesterdayBpmButton)

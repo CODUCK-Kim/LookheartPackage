@@ -32,7 +32,7 @@ class BarChartVC : UIViewController {
     }
 
     // ----------------------------- Image ------------------- //
-    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
     private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
     // Image End
     
@@ -973,6 +973,7 @@ class BarChartVC : UIViewController {
         middleContents.addSubview(yesterdayArrButton)
         yesterdayArrButton.snp.makeConstraints { make in
             make.top.left.bottom.equalTo(middleContents)
+            make.centerX.equalTo(middleContents).offset(5)
         }
         
         middleContents.addSubview(tomorrowArrButton)
