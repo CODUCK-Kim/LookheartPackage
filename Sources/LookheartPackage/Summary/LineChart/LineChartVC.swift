@@ -173,6 +173,7 @@ class LineChartVC : UIViewController {
         // 오른쪽으로 터치 영역 확장
         $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
         $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: -100, bottom: 0, right: 0)
+        
         $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
@@ -706,7 +707,7 @@ class LineChartVC : UIViewController {
         middleContents.addSubview(calendarButton)
         calendarButton.snp.makeConstraints { make in
             make.centerY.equalTo(todayDisplay)
-            make.right.equalTo(todayDisplay.snp.left).offset(-5)
+            make.left.equalTo(todayDisplay.snp.left).offset(-25)
         }
         
         // --------------------- bottomContents --------------------- //
