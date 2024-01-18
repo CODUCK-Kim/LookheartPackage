@@ -373,10 +373,8 @@ class BarChartVC : UIViewController {
     }
     
     func initVar() {
-//        email = UserProfileManager.shared.getEmail()
         
-        // test
-        email = "jhaseung@medsyslab.co.kr"
+        email = UserProfileManager.shared.getEmail()
         
         buttonList = [dayButton, weekButton, monthButton, yearButton]
         
@@ -972,8 +970,7 @@ class BarChartVC : UIViewController {
         
         middleContents.addSubview(yesterdayArrButton)
         yesterdayArrButton.snp.makeConstraints { make in
-            make.top.left.bottom.equalTo(middleContents)
-            make.centerX.equalTo(middleContents).offset(5)
+            make.top.left.centerX.bottom.equalTo(middleContents)
         }
         
         middleContents.addSubview(tomorrowArrButton)
@@ -983,7 +980,8 @@ class BarChartVC : UIViewController {
         
         middleContents.addSubview(todayDisplay)
         todayDisplay.snp.makeConstraints { make in
-            make.top.centerX.bottom.equalTo(middleContents)
+            make.top.bottom.equalTo(middleContents)
+            make.centerX.equalTo(middleContents).offset(5)
         }
      
         middleContents.addSubview(calendarButton)
