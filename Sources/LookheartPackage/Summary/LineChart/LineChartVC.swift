@@ -1,9 +1,10 @@
 import Foundation
 import UIKit
 import DGCharts
+import FSCalendar
 
 @available(iOS 13.0, *)
-class LineChartVC : UIViewController {
+class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
 
     private var email = String()
     private var chartType: ChartType = .BPM
@@ -54,6 +55,18 @@ class LineChartVC : UIViewController {
     private lazy var activityIndicator = UIActivityIndicatorView().then {
         // indicator 스타일 설정
         $0.style = UIActivityIndicatorView.Style.large
+    }
+    
+    private lazy var calendar = FSCalendar().then {
+        $0.backgroundColor = UIColor.MY_SKY
+        $0.appearance.selectionColor = UIColor.MY_BLUE
+        $0.appearance.todayColor = UIColor.MY_RED
+        $0.scrollEnabled = true
+        $0.scrollDirection = .vertical
+        $0.delegate = self
+        $0.dataSource = self
+        $0.isHidden = true
+        
     }
     
     private lazy var lineChartView = LineChartView().then {
@@ -165,7 +178,7 @@ class LineChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
-//        $0.addTarget(self, action: #selector(birthdayButtonEvent(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
     // MARK: - Bottom
@@ -257,6 +270,10 @@ class LineChartVC : UIViewController {
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
+    }
+    
+    @objc func calendarButtonEvent(_ sender: UIButton) {
+        calendar.isHidden = false
     }
     
     // MARK: - VDL
@@ -678,6 +695,11 @@ class LineChartVC : UIViewController {
             make.centerY.equalTo(todayDisplay)
             make.right.equalTo(todayDisplay.snp.left).offset(-5)
         }
+        middleContents.addSubview(calendar)
+        calendar.snp.makeConstraints { make in
+            make.centerY.centerX.equalTo(safeAreaView)
+            make.height.width.equalTo(300)
+        }
         
         // --------------------- bottomContents --------------------- //
         bottomContents.addSubview(centerContents)
@@ -697,7 +719,7 @@ class LineChartVC : UIViewController {
             make.top.bottom.right.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
-        
+                
         // --------------------- centerBpmContents --------------------- //
         centerContents.addSubview(avgValue)
         avgValue.snp.makeConstraints { make in

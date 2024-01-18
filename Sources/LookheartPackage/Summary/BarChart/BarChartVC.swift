@@ -428,7 +428,7 @@ class BarChartVC : UIViewController {
         let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
         var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
         
-        var index = getChartIndexCount(sortedDate)
+        let index = getChartIndexCount(sortedDate)
         var weekAndYearIdx = 0
         
         var entries1 = [BarChartDataEntry]()
@@ -495,7 +495,7 @@ class BarChartVC : UIViewController {
         var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
         
         // Week(7), Year(12)는 고정 인덱스
-        var index = getChartIndexCount(sortedDate)
+        let index = getChartIndexCount(sortedDate)
         // sortedDate idx : 값이 있고 값을 넣었을 경우에만 +1
         var weekAndYearIdx = 0
         
@@ -727,7 +727,7 @@ class BarChartVC : UIViewController {
     }
     
     func findWeekday() -> String? {
-        var splitDate = startDate.split(separator: "-")
+        let splitDate = startDate.split(separator: "-")
         var dateComponents = DateComponents()
         dateComponents.year = Int(splitDate[0])
         dateComponents.month = Int(splitDate[1])
