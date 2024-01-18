@@ -707,6 +707,7 @@ public class ArrViewController : UIViewController {
     func initArray() {
         
         resetArrList()
+        dissmissCalendar()
         stateIsHidden(isHidden: true)
         
         chartView.clear()
