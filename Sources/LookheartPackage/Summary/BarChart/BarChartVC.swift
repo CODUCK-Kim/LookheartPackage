@@ -320,11 +320,11 @@ class BarChartVC : UIViewController {
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
         
-        startDate = setStartDate(startDate, sender.tag)
+        let targetDate = setStartDate(startDate, sender.tag)
         let endDate = setEndDate(startDate)
         
-        getDataToServer(startDate, endDate)
-        setDisplayDateText(startDate, endDate)
+        getDataToServer(targetDate, endDate)
+        setDisplayDateText(targetDate, endDate)
         
     }
         
@@ -349,10 +349,7 @@ class BarChartVC : UIViewController {
         }
         
         let endDate = setEndDate(targetDate)
-        
-        print("targetDate : \(targetDate)")
-        print("endDate : \(endDate)")
-        
+
         getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
@@ -641,9 +638,6 @@ class BarChartVC : UIViewController {
     }
     
     func setChart(chartData: BarChartData, timeTable: [String], labelCnt: Int) {
-        print(chartData)
-        print(labelCnt)
-        print(currentButtonFlag)
         let monthFlag = currentButtonFlag == .MONTH
         let labelCount = monthFlag ? 14.3 : Double(labelCnt)
         let moveToX = monthFlag ? Double(labelCnt) : 0.0
@@ -697,14 +691,14 @@ class BarChartVC : UIViewController {
         case .DAY:
             return MyDateTime.shared.dateCalculate(date, 1, flag)
         case .WEEK:
-            let setDate = MyDateTime.shared.dateCalculate(date, 7, flag)
-            return MyDateTime.shared.dateCalculate(setDate, findMonday(setDate), MINUS_DATE)
+            startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
+            return MyDateTime.shared.dateCalculate(startDate, findMonday(startDate), MINUS_DATE)
         case .MONTH:
-            let setDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
-            return setDate + "01"
+            startDate = MyDateTime.shared.dateCalculate(date, 1, flag, .month)
+            return String(startDate.prefix(8)) + "01"
         case .YEAR:
-            let setDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .year).prefix(4))
-            return setDate + "-01-01"
+            startDate = MyDateTime.shared.dateCalculate(date, 1, flag, .year)
+            return String(startDate.prefix(4)) + "-01-01"
         }
     }
     
@@ -741,7 +735,6 @@ class BarChartVC : UIViewController {
     }
     
     func findWeekday(_ startDate: String) -> String? {
-        print(startDate)
         let splitDate = startDate.split(separator: "-")
         var dateComponents = DateComponents()
         dateComponents.year = Int(splitDate[0])
