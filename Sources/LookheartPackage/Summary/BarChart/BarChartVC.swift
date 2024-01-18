@@ -328,7 +328,7 @@ class BarChartVC : UIViewController {
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
-        fsCalendar.isHidden = false
+        fsCalendar.isHidden = !fsCalendar.isHidden
     }
     
     @objc func selectDayButton(_ sender: UIButton) {

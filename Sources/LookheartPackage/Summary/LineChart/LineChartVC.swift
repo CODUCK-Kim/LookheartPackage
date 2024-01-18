@@ -170,6 +170,9 @@ class LineChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
+        // 오른쪽으로 터치 영역 확장
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
+        $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: -100, bottom: 0, right: 0)
         $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
@@ -265,7 +268,7 @@ class LineChartVC : UIViewController {
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
-        fsCalendar.isHidden = false
+        fsCalendar.isHidden = !fsCalendar.isHidden
     }
     
     // MARK: - VDL

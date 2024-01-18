@@ -25,7 +25,7 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
     private func setupCalendar() {
         calendar.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
         calendar.appearance.headerTitleColor = UIColor.MY_BLUE
-        calendar.appearance.titleFont = UIFont.systemFont(ofSize: 20, weight: .bold)
+        calendar.appearance.headerTitleFont = UIFont.systemFont(ofSize: 20, weight: .bold)
         calendar.appearance.selectionColor = UIColor.MY_BLUE
         calendar.appearance.weekdayTextColor = UIColor.MY_BLUE
         calendar.appearance.todayColor = UIColor.MY_RED
@@ -37,6 +37,7 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
         calendar.clipsToBounds = true
         calendar.delegate = self
         calendar.dataSource = self
+        
         addSubview(calendar)
     }
     
