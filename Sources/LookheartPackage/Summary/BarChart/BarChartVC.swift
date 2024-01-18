@@ -350,6 +350,9 @@ class BarChartVC : UIViewController {
         
         let endDate = setEndDate(targetDate)
         
+        print("targetDate : \(targetDate)")
+        print("endDate : \(endDate)")
+        
         getDataToServer(targetDate, endDate, currentButtonFlag)
         setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
