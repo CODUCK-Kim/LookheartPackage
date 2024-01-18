@@ -695,7 +695,7 @@ class BarChartVC : UIViewController {
             return MyDateTime.shared.dateCalculate(date, 1, flag)
         case .WEEK:
             let setDate = MyDateTime.shared.dateCalculate(date, 7, flag)
-            return MyDateTime.shared.dateCalculate(setDate, findMonday(), MINUS_DATE)
+            return MyDateTime.shared.dateCalculate(setDate, findMonday(setDate), MINUS_DATE)
         case .MONTH:
             let setDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
             return setDate + "01"
@@ -721,12 +721,12 @@ class BarChartVC : UIViewController {
         }
     }
     
-    func findMonday() -> Int {
+    func findMonday(_ startDate: String) -> Int {
         var calendar = Calendar(identifier: .gregorian)
         calendar.locale = Locale(identifier: "en_US_POSIX")
         let weekdaySymbols = calendar.weekdaySymbols
         
-        guard let weekdayName = findWeekday(),
+        guard let weekdayName = findWeekday(startDate),
               let weekdayIndex = weekdaySymbols.firstIndex(of: weekdayName) else {
             return 0
         }
@@ -737,7 +737,7 @@ class BarChartVC : UIViewController {
         return mondayIndex
     }
     
-    func findWeekday() -> String? {
+    func findWeekday(_ startDate: String) -> String? {
         let splitDate = startDate.split(separator: "-")
         var dateComponents = DateComponents()
         dateComponents.year = Int(splitDate[0])
