@@ -56,7 +56,7 @@ class LineChartVC : UIViewController {
         $0.style = UIActivityIndicatorView.Style.large
     }
     
-    private lazy var calendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 300)).then {
+    private lazy var calendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: 0, height: 0)).then {
         $0.isHidden = true
     }
     
