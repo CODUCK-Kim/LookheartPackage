@@ -36,7 +36,7 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
     }
     
     internal func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        calendar.isHidden = true
+        print("선택된 날짜: \(date)")
     }
     
     internal func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
