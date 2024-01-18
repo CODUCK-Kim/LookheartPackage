@@ -31,12 +31,12 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
         calendar.layer.borderWidth = 2
         calendar.clipsToBounds = true
         calendar.delegate = self
-        calendar.dataSource = self        
+        calendar.dataSource = self
         addSubview(calendar)
     }
     
     internal func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print("선택된 날짜: \(date)")
+        calendar.isHidden = true
     }
     
     internal func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
