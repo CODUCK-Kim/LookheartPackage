@@ -63,6 +63,8 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         $0.appearance.todayColor = UIColor.MY_RED
         $0.scrollEnabled = true
         $0.scrollDirection = .vertical
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
         $0.delegate = self
         $0.dataSource = self
         $0.isHidden = true
@@ -609,13 +611,6 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
             make.top.bottom.left.right.equalToSuperview()
         }
         
-        
-        view.addSubview(calendar)
-        calendar.snp.makeConstraints { make in
-            make.centerY.centerX.equalTo(safeAreaView)
-            make.height.width.equalTo(300)
-        }
-        
         view.addSubview(lineChartView)
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
@@ -779,6 +774,13 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         diffMax.snp.makeConstraints { make in
             make.centerX.equalTo(rightContents)
             make.centerY.equalTo(valueLabel)
+        }
+        
+        
+        view.addSubview(calendar)
+        calendar.snp.makeConstraints { make in
+            make.centerY.centerX.equalTo(safeAreaView)
+            make.height.width.equalTo(300)
         }
     }
 }
