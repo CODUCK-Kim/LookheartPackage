@@ -31,9 +31,7 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
         calendar.layer.borderWidth = 2
         calendar.clipsToBounds = true
         calendar.delegate = self
-        calendar.dataSource = self
-        calendar.isHidden = true
-        
+        calendar.dataSource = self        
         addSubview(calendar)
     }
     
