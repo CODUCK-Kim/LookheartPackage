@@ -757,16 +757,21 @@ class BarChartVC : UIViewController {
     
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
+                        
+            startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            
+            switch (currentButtonFlag) {
+            case .DAY:
+                selectDayButton(dayButton)
+            case .WEEK:
+                selectDayButton(weekButton)
+            case .MONTH:
+                selectDayButton(monthButton)
+            case .YEAR:
+                selectDayButton(yearButton)
+            }
             
             fsCalendar.isHidden = true
-            currentButtonFlag = .DAY
-            
-            let startDate = MyDateTime.shared.getDateFormat().string(from: date)
-            let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
-            
-            getDataToServer(startDate, endDate)
-            setDisplayDateText(startDate, endDate)
-            setButtonColor(dayButton)
         }
     }
     
