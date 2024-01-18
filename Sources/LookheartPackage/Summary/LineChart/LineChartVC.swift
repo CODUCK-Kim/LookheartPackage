@@ -170,7 +170,7 @@ class LineChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
-        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100) // 오른쪽으로 터치 영역 확장
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
         $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
@@ -297,14 +297,11 @@ class LineChartVC : UIViewController {
     
     
     func initVar() {
+        
         email = UserProfileManager.shared.getEmail()
 
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
-        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
-        
-        setDisplayDateText()
     }
     
     

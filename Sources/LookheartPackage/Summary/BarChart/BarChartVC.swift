@@ -37,7 +37,7 @@ class BarChartVC : UIViewController {
     // Image End
     
     // ----------------------------- 상수 ------------------- //
-    let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
+    private let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
     
     private let YESTERDAY_BUTTON_FLAG = 1, TOMORROW_BUTTON_FLAG = 2
     private let DAY_FLAG = 1, WEEK_FLAG = 2, MONTH_FLAG = 3, YEAR_FLAG = 4
@@ -48,6 +48,7 @@ class BarChartVC : UIViewController {
     // ----------------------------- UI ------------------- //
     // 보여지는 변수
     private var firstGoal = 0, secondGoal = 0   // 목표값
+    
     // UI VAR END
     
     // ----------------------------- DATE ------------------- //
@@ -55,9 +56,7 @@ class BarChartVC : UIViewController {
     private let dateFormatter = DateFormatter()
     private let timeFormatter = DateFormatter()
     private var calendar = Calendar.current
-    
     private var startDate = String()
-    private var endDate = String()
     // DATE END
     
     // ----------------------------- CHART ------------------- //
@@ -219,6 +218,7 @@ class BarChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
         $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
@@ -321,38 +321,44 @@ class BarChartVC : UIViewController {
     @objc func shiftDate(_ sender: UIButton) {
         
         startDate = setStartDate(startDate, sender.tag)
-        endDate = setEndDate(startDate)
+        let endDate = setEndDate(startDate)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
-        setDisplayDateText()
+        setDisplayDateText(startDate, endDate)
+        
     }
-    
-    @objc func calendarButtonEvent(_ sender: UIButton) {
-        fsCalendar.isHidden = !fsCalendar.isHidden
-    }
-    
+        
     @objc func selectDayButton(_ sender: UIButton) {
+        
+        var targetDate = startDate
+        
         switch (sender.tag) {
         case DAY_FLAG:
             currentButtonFlag = .DAY
         case WEEK_FLAG:
             currentButtonFlag = .WEEK
-            startDate = MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
+            targetDate = MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
         case MONTH_FLAG:
             currentButtonFlag = .MONTH
-            startDate = String(startDate.prefix(8)) + "01"
+            targetDate = String(startDate.prefix(8)) + "01"
         case YEAR_FLAG:
             currentButtonFlag = .YEAR
-            startDate = String(startDate.prefix(4)) + "-01-01"
+            targetDate = String(startDate.prefix(4)) + "-01-01"
         default:
             break
         }
         
-        endDate = setEndDate(startDate)
+        print(startDate)
         
-        getDataToServer(startDate, endDate, currentButtonFlag)
-        setDisplayDateText()
+        let endDate = setEndDate(targetDate)
+        
+        getDataToServer(targetDate, endDate, currentButtonFlag)
+        setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
+    }
+    
+    @objc func calendarButtonEvent(_ sender: UIButton) {
+        fsCalendar.isHidden = !fsCalendar.isHidden
     }
     
     // MARK: - viewDidLoad
@@ -371,14 +377,13 @@ class BarChartVC : UIViewController {
         chartType = type
         currentButtonFlag = .DAY
         
-        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
-        
-        setUI()
-        
+        let startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
+        let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
+            
         getDataToServer(startDate, endDate, currentButtonFlag)
-        
-        setDisplayDateText()
+    
+        setUI()
+        setDisplayDateText(startDate, endDate)
         setButtonColor(dayButton)
     }
     
@@ -387,11 +392,7 @@ class BarChartVC : UIViewController {
         email = UserProfileManager.shared.getEmail()
         
         buttonList = [dayButton, weekButton, monthButton, yearButton]
-        
-        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
-        
-        setDisplayDateText()
+
     }
     
     // MARK: - CHART FUNC
@@ -693,14 +694,14 @@ class BarChartVC : UIViewController {
         case .DAY:
             return MyDateTime.shared.dateCalculate(date, 1, flag)
         case .WEEK:
-            startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
-            return MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
+            let setDate = MyDateTime.shared.dateCalculate(date, 7, flag)
+            return MyDateTime.shared.dateCalculate(setDate, findMonday(), MINUS_DATE)
         case .MONTH:
-            startDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
-            return startDate + "01"
+            let setDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .month).prefix(8))
+            return setDate + "01"
         case .YEAR:
-            startDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .year).prefix(4))
-            return startDate + "-01-01"
+            let setDate = String(MyDateTime.shared.dateCalculate(date, 1, flag, .year).prefix(4))
+            return setDate + "-01-01"
         }
     }
     
@@ -763,24 +764,23 @@ class BarChartVC : UIViewController {
             fsCalendar.isHidden = true
             currentButtonFlag = .DAY
             
-            startDate = MyDateTime.shared.getDateFormat().string(from: date)
-            endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
+            let startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
             
             getDataToServer(startDate, endDate, currentButtonFlag)
             
-            setDisplayDateText()
+            setDisplayDateText(startDate, endDate)
             setButtonColor(dayButton)
         }
     }
     
     // MARK: - UI
-    private func setDisplayDateText() {
+    private func setDisplayDateText(_ startDate: String, _ endDate: String) {
         var displayText = startDate
         let startDateText = MyDateTime.shared.changeDateFormat(startDate, false)
         let endDateText = MyDateTime.shared.changeDateFormat(MyDateTime.shared.dateCalculate(endDate, 1, false), false)
         
         switch (currentButtonFlag) {
-            
         case .DAY:
             displayText = startDate
         case .WEEK:
