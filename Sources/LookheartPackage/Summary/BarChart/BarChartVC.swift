@@ -655,13 +655,14 @@ class BarChartVC : UIViewController {
             barChartView.xAxis.centerAxisLabelsEnabled = true
         default:
             
-            let defaultBarWidth = 0.85 // 기본 바 너비
-            chartData.barWidth = defaultBarWidth
-
-            barChartView.xAxis.axisMinimum = 0
-            barChartView.xAxis.axisMaximum = Double(labelCnt) - defaultBarWidth / 2
-            
-            barChartView.xAxis.centerAxisLabelsEnabled = false
+//            let defaultBarWidth = 0.85 // 기본 바 너비
+//            chartData.barWidth = defaultBarWidth
+//
+//            barChartView.xAxis.axisMinimum = 0
+//            barChartView.xAxis.axisMaximum = Double(labelCnt)
+//            
+//            barChartView.xAxis.centerAxisLabelsEnabled = false
+            break
         }
     }
     
