@@ -284,10 +284,7 @@ class LineChartVC : UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        if (!fsCalendar.isHidden) {
-            fsCalendar.isHidden = true
-            lineChartView.isHidden = false
-        }
+        dissmissCalendar()
     }
     
     public func refreshView(_ type: ChartType) {
@@ -552,6 +549,8 @@ class LineChartVC : UIViewController {
         diffMin.text = "-0"
         diffMax.text = "+0"
         
+        dissmissCalendar()
+        
         switch (chartType) {
         case .BPM:
             avgLabel.text = "avgBPM".localized()
@@ -614,8 +613,15 @@ class LineChartVC : UIViewController {
 
     }
     
+    private func dissmissCalendar() {
+        if (!fsCalendar.isHidden) {
+            fsCalendar.isHidden = true
+            lineChartView.isHidden = false
+        }
+    }
+    
     // MARK: -
-    func addViews() {
+    private func addViews() {
         
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier

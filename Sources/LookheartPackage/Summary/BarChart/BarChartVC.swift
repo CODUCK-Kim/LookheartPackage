@@ -374,10 +374,8 @@ class BarChartVC : UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        if (!fsCalendar.isHidden) {
-            fsCalendar.isHidden = true
-            barChartView.isHidden = false
-        }
+        
+        dissmissCalendar()
     }
     
     public func refreshView(_ type: ChartType) {
@@ -847,6 +845,8 @@ class BarChartVC : UIViewController {
         
         topProgress.progress = 0
         bottomProgress.progress = 0
+                
+        dissmissCalendar()
     }
     
     private func setUI() {
@@ -912,6 +912,13 @@ class BarChartVC : UIViewController {
     func chartZoomOut() {
         for _ in 0..<20 {
             barChartView.zoomOut()
+        }
+    }
+    
+    private func dissmissCalendar() {
+        if (!fsCalendar.isHidden) {
+            fsCalendar.isHidden = true
+            barChartView.isHidden = false
         }
     }
     
