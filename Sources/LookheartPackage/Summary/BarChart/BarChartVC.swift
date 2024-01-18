@@ -612,11 +612,13 @@ class BarChartVC : UIViewController {
         activityIndicator.startAnimating()
         
         initUI()
-        
+        print(startDate)
+        print(endDate)
         NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let hourlyDataList):
                 
+                print(hourlyDataList)
                 viewChart(hourlyDataList, type)
                 
             case .failure(let error):
