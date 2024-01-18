@@ -728,6 +728,7 @@ class BarChartVC : UIViewController {
               let weekdayIndex = weekdaySymbols.firstIndex(of: weekdayName) else {
             return 0
         }
+        print(weekdayName)
         // 'calendar.firstWeekday'로 주의 시작 요일을 고려해 인덱스 조정
         // 그레고리안 캘린더에서 'firstWeekday'는 일반적으로 1(일요일)
         // 월요일을 0으로 만들기 위해, 인덱스에서 1을 빼고, 7로 나눈 나머지를 계산
@@ -736,6 +737,7 @@ class BarChartVC : UIViewController {
     }
     
     func findWeekday(_ startDate: String) -> String? {
+        print(startDate)
         let splitDate = startDate.split(separator: "-")
         var dateComponents = DateComponents()
         dateComponents.year = Int(splitDate[0])
