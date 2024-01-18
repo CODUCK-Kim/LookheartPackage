@@ -337,7 +337,7 @@ class BarChartVC : UIViewController {
             currentButtonFlag = .DAY
         case WEEK_FLAG:
             currentButtonFlag = .WEEK
-            targetDate = MyDateTime.shared.dateCalculate(startDate, findMonday(), MINUS_DATE)
+            targetDate = MyDateTime.shared.dateCalculate(startDate, findMonday(targetDate), MINUS_DATE)
         case MONTH_FLAG:
             currentButtonFlag = .MONTH
             targetDate = String(startDate.prefix(8)) + "01"
