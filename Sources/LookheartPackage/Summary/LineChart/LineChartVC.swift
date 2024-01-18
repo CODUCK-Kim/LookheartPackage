@@ -151,13 +151,13 @@ class LineChartVC : UIViewController {
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private lazy var yesterdayBpmButton = UIButton().then {
+    private lazy var yesterdayButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
     
-    private lazy var tomorrowBpmButton = UIButton().then {
+    private lazy var tomorrowButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
@@ -661,14 +661,14 @@ class LineChartVC : UIViewController {
             make.centerX.equalTo(middleContents).offset(5)
         }
         
-        middleContents.addSubview(yesterdayBpmButton)
-        yesterdayBpmButton.snp.makeConstraints { make in
+        middleContents.addSubview(yesterdayButton)
+        yesterdayButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.left.equalTo(middleContents).offset(10)
         }
         
-        middleContents.addSubview(tomorrowBpmButton)
-        tomorrowBpmButton.snp.makeConstraints { make in
+        middleContents.addSubview(tomorrowButton)
+        tomorrowButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.right.equalTo(middleContents).offset(-10)
         }

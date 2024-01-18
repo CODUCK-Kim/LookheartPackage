@@ -201,12 +201,12 @@ class BarChartVC : UIViewController {
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
-    private lazy var yesterdayArrButton = UIButton().then {
+    private lazy var yesterdayButton = UIButton().then {
         $0.setImage(leftArrow, for: UIControl.State.normal)
         $0.tag = YESTERDAY_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
     }
-    private lazy var tomorrowArrButton = UIButton().then {
+    private lazy var tomorrowButton = UIButton().then {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
@@ -967,21 +967,20 @@ class BarChartVC : UIViewController {
         }
         
         // --------------------- middleContents --------------------- //
-        
-        middleContents.addSubview(yesterdayArrButton)
-        yesterdayArrButton.snp.makeConstraints { make in
-            make.top.left.centerX.bottom.equalTo(middleContents)
-        }
-        
-        middleContents.addSubview(tomorrowArrButton)
-        tomorrowArrButton.snp.makeConstraints { make in
-            make.top.right.bottom.equalTo(middleContents)
-        }
-        
         middleContents.addSubview(todayDisplay)
         todayDisplay.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.centerX.equalTo(middleContents).offset(5)
+        }
+        
+        middleContents.addSubview(yesterdayButton)
+        yesterdayButton.snp.makeConstraints { make in
+            make.top.left.bottom.equalTo(middleContents)
+        }
+        
+        middleContents.addSubview(tomorrowButton)
+        tomorrowButton.snp.makeConstraints { make in
+            make.top.right.bottom.equalTo(middleContents)
         }
      
         middleContents.addSubview(calendarButton)
