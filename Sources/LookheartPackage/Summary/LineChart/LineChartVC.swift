@@ -1,10 +1,9 @@
 import Foundation
 import UIKit
 import DGCharts
-import FSCalendar
 
 @available(iOS 13.0, *)
-class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
+class LineChartVC : UIViewController {
 
     private var email = String()
     private var chartType: ChartType = .BPM
@@ -57,22 +56,7 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         $0.style = UIActivityIndicatorView.Style.large
     }
     
-    private lazy var calendar = FSCalendar().then {
-        $0.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
-        $0.appearance.headerTitleColor = UIColor.MY_BLUE
-        $0.appearance.selectionColor = UIColor.MY_BLUE
-        $0.appearance.weekdayTextColor = UIColor.MY_BLUE
-        $0.appearance.todayColor = UIColor.MY_RED
-        $0.scrollEnabled = true
-        $0.scrollDirection = .vertical
-        $0.layer.cornerRadius = 10
-        $0.layer.borderColor = UIColor.MY_SKY.cgColor
-        $0.layer.borderWidth = 2
-        $0.clipsToBounds = true
-        $0.delegate = self
-        $0.dataSource = self
-        $0.isHidden = true
-    }
+    private lazy var calendar = CustomCalendar()
     
     private lazy var lineChartView = LineChartView().then {
         $0.noDataText = ""
@@ -495,15 +479,6 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         }
     }
     
-    // 날짜 선택 시 콜백 메소드
-    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print(MyDateTime.shared.getDateFormat().string(from: date) + " 선택됨")
-    }
-    
-    // 날짜 선택 해제 시 콜백 메소드
-    public func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print(MyDateTime.shared.getDateFormat().string(from: date) + " 해제됨")
-    }
     
     // MARK: - UI
     func setDisplayDateText() {
