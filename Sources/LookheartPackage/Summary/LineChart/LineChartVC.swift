@@ -5,6 +5,11 @@ import DGCharts
 @available(iOS 13.0, *)
 class LineChartVC : UIViewController {
 
+    // ----------------------------- Image ------------------- //
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
+    private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
+    // Image End
+    
     private var email = String()
     private var chartType: ChartType = .BPM
     
@@ -13,11 +18,7 @@ class LineChartVC : UIViewController {
         case TWO_DAYS
         case THREE_DAYS
     }
-    
-    // ----------------------------- Image ------------------- //
-    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
-    private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
-    // Image End
+
     
     // ----------------------------- TAG ------------------- //
     // 버튼 상수
@@ -147,7 +148,6 @@ class LineChartVC : UIViewController {
     
     
     // MARK: - Middle
-    
     private lazy var todayDisplay = UILabel().then {
         $0.text = "-"
         $0.textColor = .black

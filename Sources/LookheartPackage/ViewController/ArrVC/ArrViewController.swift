@@ -5,6 +5,11 @@ import UIKit
 @available(iOS 13.0, *)
 public class ArrViewController : UIViewController {
     
+    // ----------------------------- Image ------------------- //
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
+    private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
+    // Image End
+    
     struct FileDataStruct {
         var hour: Int
         var minutes: Int
@@ -26,13 +31,8 @@ public class ArrViewController : UIViewController {
     private let YESTERDAY = false
     private let TOMORROW = true
     
-    private let IDX_BUTTON = false
-    private let TITLE_BUTTON = true
-    
     private let YEAR_FLAG = true
     private let TIME_FLAG = false
-    
-    private let ALL_DESELECTED = 9999
     
     private var calendar = Calendar.current
     private let dateFormatter = DateFormatter()
@@ -77,6 +77,17 @@ public class ArrViewController : UIViewController {
     private lazy var activityIndicator = UIActivityIndicatorView().then {
         // indicator 스타일 설정
         $0.style = UIActivityIndicatorView.Style.large
+    }
+    
+    private lazy var calendarButton = UIButton(type: .custom).then {
+        $0.setImage(calendarImage, for: .normal)
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
+        $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
+    }
+    
+    //    ----------------------------- FSCalendar -------------------    //
+    private lazy var fsCalendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: 300, height: 300)).then {
+        $0.isHidden = true
     }
     
     //    ----------------------------- Chart -------------------    //
@@ -130,7 +141,7 @@ public class ArrViewController : UIViewController {
     //    ----------------------------- ARR List Contents -------------------    //
     private let listBackground = UILabel().then {   $0.isUserInteractionEnabled = true   }
     
-    private lazy var todayDispalay = UILabel().then {
+    private lazy var todayDisplay = UILabel().then {
         $0.text = "\(currentYear)-\(currentMonth)-\(currentDay)"
         $0.textColor = .black
         $0.textAlignment = .center
@@ -157,21 +168,39 @@ public class ArrViewController : UIViewController {
         $0.spacing = 10
     }
     
+    // MARK: - Button Event
+    @objc func calendarButtonEvent(_ sender: UIButton) {
+        fsCalendar.isHidden = !fsCalendar.isHidden
+        chartView.isHidden = !chartView.isHidden
+    }
+    
+    @objc func shiftDate(_ sender: UIButton) {
+        
+        switch(sender.tag) {
+        case YESTERDAY_BUTTON_FLAG:
+            dateCalculate(targetDate, 1, YESTERDAY)
+        default:    // TOMORROW_BUTTON_FLAG
+            dateCalculate(targetDate, 1, TOMORROW)
+        }
+        arrTable()
+    }
+    
     // MARK: - viewDidLoad
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        initVar()
         addViews()
-        arrTable()
+    }
+    
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        dissmissCalendar()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isArrViewLoaded {
-            viewDidLoad()
-        }
-        isArrViewLoaded = true
+        initVar()
+        arrTable()
     }
     
     func initVar() {
@@ -195,10 +224,9 @@ public class ArrViewController : UIViewController {
     
     //MARK: - setTable
     func arrTable() {
-        todayDispalay.text = changeTimeFormat(targetDate, YEAR_FLAG)
+        todayDisplay.text = changeTimeFormat(targetDate, YEAR_FLAG)
         initArray()
         getArrList(email, targetDate, tomorrowDate)
-        
     }
     
     
@@ -407,34 +435,7 @@ public class ArrViewController : UIViewController {
         }
     }
     
-    // MARK: -
-    @objc func shiftDate(_ sender: UIButton) {
-        
-        switch(sender.tag) {
-        case YESTERDAY_BUTTON_FLAG:
-            dateCalculate(targetDate, 1, YESTERDAY)
-        default:    // TOMORROW_BUTTON_FLAG
-            dateCalculate(targetDate, 1, TOMORROW)
-        }
-        arrTable()
-    }
-    
-    func fcmEvent() {
-        var arrIdxButton = UIButton()
-        var arrTitleButton = UIButton()
-        let background = UILabel()
-        background.isUserInteractionEnabled = true
-        arrList.addArrangedSubview(background)
-        
-        arrIdxButton = setEmergencyIdxButton("T")
-        arrTitleButton = setTitleButton("2000-00-00 00:00:00")
-        idxButtonList.append(arrIdxButton)
-        titleButtonList.append(arrTitleButton)
-        arrNumber += 1
-        
-        setButtonConstraint(background, arrIdxButton, arrTitleButton)
-    }
-    
+    // MARK: -    
     func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) {
         guard let inputDate = dateFormatter.date(from: date) else { return }
 
@@ -735,6 +736,28 @@ public class ArrViewController : UIViewController {
 
     }
     
+    private func setCalendarClosure() {
+        fsCalendar.didSelectDate = { [self] date in
+            
+            let startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            let endDate = MyDateTime.shared.dateCalculate(startDate, 1, true)
+
+            todayDisplay.text = changeTimeFormat(startDate, YEAR_FLAG)
+            initArray()
+            getArrList(email, startDate, endDate)
+            
+            fsCalendar.isHidden = true
+            chartView.isHidden = false
+        }
+    }
+    
+    private func dissmissCalendar() {
+        if (!fsCalendar.isHidden) {
+            fsCalendar.isHidden = true
+            chartView.isHidden = false
+        }
+    }
+    
     // MARK: - addViews
     private func addViews() {
         
@@ -784,27 +807,33 @@ public class ArrViewController : UIViewController {
             make.left.right.bottom.equalTo(safeAreaView)
         }
         
-        listBackground.addSubview(todayDispalay)
-        todayDispalay.snp.makeConstraints { make in
+        listBackground.addSubview(todayDisplay)
+        todayDisplay.snp.makeConstraints { make in
             make.top.equalTo(listBackground)
             make.centerX.equalTo(listBackground)
+        }
+        
+        listBackground.addSubview(calendarButton)
+        calendarButton.snp.makeConstraints { make in
+            make.centerY.equalTo(todayDisplay)
+            make.left.equalTo(todayDisplay.snp.left).offset(-30)
         }
         
         listBackground.addSubview(yesterdayButton)
         yesterdayButton.snp.makeConstraints { make in
             make.left.equalTo(listBackground).offset(10)
-            make.centerY.equalTo(todayDispalay)
+            make.centerY.equalTo(todayDisplay)
         }
         
         listBackground.addSubview(tomorrowButton)
         tomorrowButton.snp.makeConstraints { make in
             make.right.equalTo(listBackground).offset(-10)
-            make.centerY.equalTo(todayDispalay)
+            make.centerY.equalTo(todayDisplay)
         }
         
         listBackground.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(todayDispalay.snp.bottom).offset(20)
+            make.top.equalTo(todayDisplay.snp.bottom).offset(20)
             make.left.equalTo(listBackground).offset(10)
             make.right.equalTo(listBackground)
             make.bottom.equalTo(listBackground).offset(-10)
@@ -813,6 +842,13 @@ public class ArrViewController : UIViewController {
         scrollView.addSubview(arrList)
         arrList.snp.makeConstraints { make in
             make.top.bottom.width.equalTo(scrollView)
+        }
+        
+        view.addSubview(fsCalendar)
+        fsCalendar.snp.makeConstraints { make in
+            make.centerY.centerX.equalTo(chartView)
+            make.height.equalTo(300)
+            make.width.equalTo(300)
         }
     }
 }
