@@ -61,15 +61,17 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         $0.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
         $0.appearance.headerTitleColor = UIColor.MY_BLUE
         $0.appearance.selectionColor = UIColor.MY_BLUE
+        $0.appearance.weekdayTextColor = UIColor.MY_BLUE
         $0.appearance.todayColor = UIColor.MY_RED
         $0.scrollEnabled = true
         $0.scrollDirection = .vertical
         $0.layer.cornerRadius = 10
+        $0.layer.borderColor = UIColor.MY_BLUE.cgColor
+        $0.layer.borderWidth = 1
         $0.clipsToBounds = true
         $0.delegate = self
         $0.dataSource = self
         $0.isHidden = true
-        $0.isUserInteractionEnabled = true
     }
     
     private lazy var lineChartView = LineChartView().then {
