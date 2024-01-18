@@ -770,6 +770,8 @@ class LineChartVC : UIViewController {
         view.addSubview(calendar)
         calendar.snp.makeConstraints { make in
             make.centerY.centerX.equalTo(safeAreaView)
+            make.height.equalTo(300)
+            make.width.equalTo(300)
         }
     }
 }
