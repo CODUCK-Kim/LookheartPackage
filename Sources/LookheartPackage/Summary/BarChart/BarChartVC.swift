@@ -348,8 +348,6 @@ class BarChartVC : UIViewController {
             break
         }
         
-        print(startDate)
-        
         let endDate = setEndDate(targetDate)
         
         getDataToServer(targetDate, endDate, currentButtonFlag)
@@ -1012,7 +1010,7 @@ class BarChartVC : UIViewController {
         middleContents.addSubview(calendarButton)
         calendarButton.snp.makeConstraints { make in
             make.centerY.equalTo(todayDisplay)
-            make.right.equalTo(todayDisplay.snp.left).offset(-5)
+            make.left.equalTo(todayDisplay.snp.left).offset(-30)
         }
         
         // --------------------- Cal, Step bottomContents --------------------- //
