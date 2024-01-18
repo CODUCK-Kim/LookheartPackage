@@ -18,13 +18,14 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
         setupCalendar()
     }
  
-    // 클로저 정의
+    // 클로저
     var didSelectDate: ((Date) -> Void)?
     var didDeselectDate: ((Date) -> Void)?
     
     private func setupCalendar() {
         calendar.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
         calendar.appearance.headerTitleColor = UIColor.MY_BLUE
+        calendar.appearance.titleFont = UIFont.systemFont(ofSize: 20, weight: .bold)
         calendar.appearance.selectionColor = UIColor.MY_BLUE
         calendar.appearance.weekdayTextColor = UIColor.MY_BLUE
         calendar.appearance.todayColor = UIColor.MY_RED

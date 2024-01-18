@@ -75,6 +75,11 @@ class BarChartVC : UIViewController {
         $0.style = UIActivityIndicatorView.Style.large
     }
     
+    //    ----------------------------- FSCalendar -------------------    //
+    private lazy var fsCalendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: 300, height: 300)).then {
+        $0.isHidden = true
+    }
+    
     //    ----------------------------- Chart -------------------    //
     // Cal, Step : $0.xAxis.centerAxisLabelsEnabled = true
     private lazy var barChartView = BarChartView().then {
@@ -214,7 +219,7 @@ class BarChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
-//        $0.addTarget(self, action: #selector(birthdayButtonEvent(_:)), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(calendarButtonEvent(_:)), for: .touchUpInside)
     }
     
     // MARK: - bottom Contents
@@ -322,6 +327,10 @@ class BarChartVC : UIViewController {
         setDisplayDateText()
     }
     
+    @objc func calendarButtonEvent(_ sender: UIButton) {
+        fsCalendar.isHidden = false
+    }
+    
     @objc func selectDayButton(_ sender: UIButton) {
         switch (sender.tag) {
         case DAY_FLAG:
@@ -354,6 +363,7 @@ class BarChartVC : UIViewController {
         
         addViews()
         
+        setCalendarClosure()
     }
     
     public func refreshView(_ type: ChartType) {
@@ -747,6 +757,22 @@ class BarChartVC : UIViewController {
         }
     }
     
+    private func setCalendarClosure() {
+        fsCalendar.didSelectDate = { [self] date in
+            
+            fsCalendar.isHidden = true
+            currentButtonFlag = .DAY
+            
+            startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
+            
+            getDataToServer(startDate, endDate, currentButtonFlag)
+            
+            setDisplayDateText()
+            setButtonColor(dayButton)
+        }
+    }
+    
     // MARK: - UI
     private func setDisplayDateText() {
         var displayText = startDate
@@ -1025,6 +1051,13 @@ class BarChartVC : UIViewController {
         doubleGraphBottomContents.addSubview(bottomValueProcent)
         bottomValueProcent.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(bottomProgress)
+        }
+        
+        view.addSubview(fsCalendar)
+        fsCalendar.snp.makeConstraints { make in
+            make.centerY.centerX.equalTo(barChartView)
+            make.height.equalTo(300)
+            make.width.equalTo(300)
         }
     }
 }

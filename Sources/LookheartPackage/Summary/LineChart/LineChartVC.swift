@@ -56,7 +56,8 @@ class LineChartVC : UIViewController {
         $0.style = UIActivityIndicatorView.Style.large
     }
     
-    private lazy var calendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: 300, height: 300)).then {
+    //    ----------------------------- FSCalendar -------------------    //
+    private lazy var fsCalendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: 300, height: 300)).then {
         $0.isHidden = true
     }
     
@@ -264,7 +265,7 @@ class LineChartVC : UIViewController {
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
-        calendar.isHidden = false
+        fsCalendar.isHidden = false
     }
     
     // MARK: - VDL
@@ -484,9 +485,9 @@ class LineChartVC : UIViewController {
     }
     
     private func setCalendarClosure() {
-        calendar.didSelectDate = { [self] date in
+        fsCalendar.didSelectDate = { [self] date in
             
-            calendar.isHidden = true
+            fsCalendar.isHidden = true
             currentButtonFlag = .TODAY
             
             startDate = MyDateTime.shared.getDateFormat().string(from: date)
@@ -784,8 +785,8 @@ class LineChartVC : UIViewController {
         }
         
         
-        view.addSubview(calendar)
-        calendar.snp.makeConstraints { make in
+        view.addSubview(fsCalendar)
+        fsCalendar.snp.makeConstraints { make in
             make.centerY.centerX.equalTo(lineChartView)
             make.height.equalTo(300)
             make.width.equalTo(300)
