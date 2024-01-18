@@ -165,7 +165,6 @@ class LineChartVC : UIViewController {
     
     private lazy var calendarButton = UIButton(type: .custom).then {
         $0.setImage(calendarImage, for: .normal)
-        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 230)
 //        $0.addTarget(self, action: #selector(birthdayButtonEvent(_:)), for: .touchUpInside)
     }
     
