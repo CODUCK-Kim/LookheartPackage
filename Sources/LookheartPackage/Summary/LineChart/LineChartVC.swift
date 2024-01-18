@@ -609,6 +609,13 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
             make.top.bottom.left.right.equalToSuperview()
         }
         
+        
+        view.addSubview(calendar)
+        calendar.snp.makeConstraints { make in
+            make.centerY.centerX.equalTo(safeAreaView)
+            make.height.width.equalTo(300)
+        }
+        
         view.addSubview(lineChartView)
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
@@ -694,11 +701,6 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         calendarButton.snp.makeConstraints { make in
             make.centerY.equalTo(todayDisplay)
             make.right.equalTo(todayDisplay.snp.left).offset(-5)
-        }
-        middleContents.addSubview(calendar)
-        calendar.snp.makeConstraints { make in
-            make.centerY.centerX.equalTo(safeAreaView)
-            make.height.width.equalTo(300)
         }
         
         // --------------------- bottomContents --------------------- //
