@@ -357,6 +357,7 @@ class BarChartVC : UIViewController {
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
+        barChartView.isHidden = !barChartView.isHidden
     }
     
     // MARK: - viewDidLoad
@@ -773,6 +774,7 @@ class BarChartVC : UIViewController {
             }
             
             fsCalendar.isHidden = true
+            barChartView.isHidden = false
         }
     }
     

@@ -267,6 +267,7 @@ class LineChartVC : UIViewController {
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
+        lineChartView.isHidden = !lineChartView.isHidden
     }
     
     // MARK: - VDL
@@ -485,16 +486,19 @@ class LineChartVC : UIViewController {
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
             
-            fsCalendar.isHidden = true
-            currentButtonFlag = .TODAY
-            
             startDate = MyDateTime.shared.getDateFormat().string(from: date)
-            endDate = MyDateTime.shared.dateCalculate(startDate, setDate(.TODAY), PLUS_DATE)
             
-            getDataToServer(startDate, endDate, currentButtonFlag)
+            switch (currentButtonFlag) {
+            case .TODAY:
+                selectDayButton(todayButton)
+            case .TWO_DAYS:
+                selectDayButton(twoDaysButton)
+            case .THREE_DAYS:
+                selectDayButton(threeDaysButton)
+            }
             
-            setDisplayDateText()
-            setButtonColor(todayButton)
+            fsCalendar.isHidden = true
+            lineChartView.isHidden = false
         }
     }
     
