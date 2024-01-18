@@ -470,7 +470,7 @@ class LineChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
-    func setDate(_ type : DateType) -> Int {
+    private func setDate(_ type : DateType) -> Int {
         switch (type) {
         case .TODAY:
             return 1
@@ -481,9 +481,14 @@ class LineChartVC : UIViewController {
         }
     }
     
+    private func setCalendarClosure() {
+        calendar.didSelectDate = { date in
+            print("선택된 날짜: \(MyDateTime.shared.getDateFormat().string(from: date))")
+        }
+    }
     
     // MARK: - UI
-    func setDisplayDateText() {
+    private func setDisplayDateText() {
         var displayText = startDate
         let startDateText = MyDateTime.shared.changeDateFormat(startDate, false)
         let endDateText = MyDateTime.shared.changeDateFormat(MyDateTime.shared.dateCalculate(endDate, 1, false), false)

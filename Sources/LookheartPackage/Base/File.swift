@@ -17,6 +17,10 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
         super.init(coder: aDecoder)
         setupCalendar()
     }
+ 
+    // 클로저 정의
+    var didSelectDate: ((Date) -> Void)?
+    var didDeselectDate: ((Date) -> Void)?
     
     private func setupCalendar() {
         calendar.backgroundColor = UIColor(red: 241/255, green: 249/255, blue: 255/255, alpha: 1)
@@ -36,12 +40,11 @@ class CustomCalendar : UIView, FSCalendarDelegate, FSCalendarDataSource {
     }
     
     internal func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print("선택된 날짜: \(date)")
-        calendar.isHidden = true
+        didSelectDate?(date)  // 클로저 호출
     }
     
     internal func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print("해제된 날짜: \(date)")
+        didDeselectDate?(date)  // 클로저 호출
     }
     
 }
