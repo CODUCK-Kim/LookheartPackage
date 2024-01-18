@@ -188,7 +188,11 @@ public class ArrViewController : UIViewController {
     // MARK: - viewDidLoad
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         addViews()
+        
+        setCalendarClosure()
+        
     }
     
     
@@ -220,6 +224,8 @@ public class ArrViewController : UIViewController {
         targetDay = currentDay
         
         setTomorrow(targetDate)
+        
+        dissmissCalendar()
     }
     
     //MARK: - setTable
