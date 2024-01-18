@@ -56,7 +56,7 @@ class LineChartVC : UIViewController {
         $0.style = UIActivityIndicatorView.Style.large
     }
     
-    private lazy var calendar = CustomCalendar()
+    private lazy var calendar = CustomCalendar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width - 40, height: 300))
     
     private lazy var lineChartView = LineChartView().then {
         $0.noDataText = ""
