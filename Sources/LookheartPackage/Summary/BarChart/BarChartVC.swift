@@ -31,6 +31,11 @@ class BarChartVC : UIViewController {
         }
     }
 
+    // ----------------------------- Image ------------------- //
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
+    private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
+    // Image End
+    
     // ----------------------------- 상수 ------------------- //
     let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
     
@@ -205,6 +210,12 @@ class BarChartVC : UIViewController {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+    }
+    
+    private lazy var calendarButton = UIButton(type: .custom).then {
+        $0.setImage(calendarImage, for: .normal)
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 230)
+//        $0.addTarget(self, action: #selector(birthdayButtonEvent(_:)), for: .touchUpInside)
     }
     
     // MARK: - bottom Contents
@@ -975,6 +986,11 @@ class BarChartVC : UIViewController {
             make.top.centerX.bottom.equalTo(middleContents)
         }
      
+        middleContents.addSubview(calendarButton)
+        calendarButton.snp.makeConstraints { make in
+            make.centerY.equalTo(todayDisplay)
+            make.right.equalTo(todayDisplay.snp.left).offset(-5)
+        }
         
         // --------------------- Cal, Step bottomContents --------------------- //
         doubleGraphBottomContents.addSubview(bottomValueContents)

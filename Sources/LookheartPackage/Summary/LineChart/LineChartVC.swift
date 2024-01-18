@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import DGCharts
 
-
 @available(iOS 13.0, *)
 class LineChartVC : UIViewController {
 
@@ -14,6 +13,11 @@ class LineChartVC : UIViewController {
         case TWO_DAYS
         case THREE_DAYS
     }
+    
+    // ----------------------------- Image ------------------- //
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
+    private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
+    // Image End
     
     // ----------------------------- TAG ------------------- //
     // 버튼 상수
@@ -138,6 +142,7 @@ class LineChartVC : UIViewController {
     
     
     // MARK: - Middle
+    
     private lazy var todayDisplay = UILabel().then {
         $0.text = "-"
         $0.textColor = .black
@@ -156,6 +161,12 @@ class LineChartVC : UIViewController {
         $0.setImage(rightArrow, for: UIControl.State.normal)
         $0.tag = TOMORROW_BUTTON_FLAG
         $0.addTarget(self, action: #selector(shiftDate(_:)), for: .touchUpInside)
+    }
+    
+    private lazy var calendarButton = UIButton(type: .custom).then {
+        $0.setImage(calendarImage, for: .normal)
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 230)
+//        $0.addTarget(self, action: #selector(birthdayButtonEvent(_:)), for: .touchUpInside)
     }
     
     // MARK: - Bottom
@@ -660,6 +671,12 @@ class LineChartVC : UIViewController {
         tomorrowBpmButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(middleContents)
             make.right.equalTo(middleContents).offset(-10)
+        }
+        
+        middleContents.addSubview(calendarButton)
+        calendarButton.snp.makeConstraints { make in
+            make.centerY.equalTo(todayDisplay)
+            make.right.equalTo(todayDisplay.snp.left).offset(-5)
         }
         
         // --------------------- bottomContents --------------------- //

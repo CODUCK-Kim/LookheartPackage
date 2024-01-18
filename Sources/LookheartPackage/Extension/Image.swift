@@ -7,6 +7,7 @@ let leftArrow =  UIImage(systemName: "arrow.left.circle.fill", withConfiguration
 let rightArrow =  UIImage(systemName: "arrow.right.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 40, weight: .light))?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
 
 extension UIImage {
+
     // 이미지 크기 조정
     func imageWithColor(color: UIColor) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
