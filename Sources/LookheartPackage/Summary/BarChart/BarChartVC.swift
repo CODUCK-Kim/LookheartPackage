@@ -397,26 +397,25 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - CHART FUNC
-    private func viewChart(_ hourlyDataList: [HourlyData]) {
+    private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
         
         let dataDict = groupDataByDate(hourlyDataList)
         
         let sortedDate = sortedKeys(dataDict)
         
-        print(sortedDate)
-        let chartDataSet = getChartDataSet(sortedDate, dataDict)
+        let chartDataSet = getChartDataSet(sortedDate, dataDict, startDate)
         
         setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
         
         activityIndicator.stopAnimating()
     }
     
-    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataSet]) {
+    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataSet]) {
         
         switch (chartType) {
         case .CALORIE, .STEP:
             // double graph
-            let entries = createDoubleGraphEntries(sortedDate, dataDict)
+            let entries = createDoubleGraphEntries(sortedDate, dataDict, startDate)
             
             let label1 = chartType == .CALORIE ? "summaryTCal".localized() : "step".localized()
             let label2 = chartType == .CALORIE ? "summaryECal".localized() : "distanceM".localized()
@@ -430,13 +429,13 @@ class BarChartVC : UIViewController {
             
         default:
             // single graph
-            let entries = createSingleGraphEntries(sortedDate, dataDict)
+            let entries = createSingleGraphEntries(sortedDate, dataDict, startDate)
             let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "arr".localized()))
             return (entries.0, [dataSet])
         }
     }
     
-    private func createDoubleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry], [BarChartDataEntry]) {
+    private func createDoubleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataEntry], [BarChartDataEntry]) {
         
         let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
         var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
@@ -498,7 +497,7 @@ class BarChartVC : UIViewController {
         return (yValue1, yValue2)
     }
     
-    private func createSingleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct]) -> ([String], [BarChartDataEntry]) {
+    private func createSingleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataEntry]) {
         
         // ButtonFlag에 따라 x축에 들어가는 time String 설정
         let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
@@ -618,7 +617,7 @@ class BarChartVC : UIViewController {
             switch(result){
             case .success(let hourlyDataList):
                 
-                viewChart(hourlyDataList)
+                viewChart(hourlyDataList, startDate)
                 
             case .failure(let error):
                 
