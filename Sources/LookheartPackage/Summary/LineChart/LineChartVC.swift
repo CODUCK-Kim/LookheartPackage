@@ -274,6 +274,8 @@ class LineChartVC : UIViewController {
         initVar()
         
         addViews()
+        
+        setCalendarClosure()
 
     }
     
