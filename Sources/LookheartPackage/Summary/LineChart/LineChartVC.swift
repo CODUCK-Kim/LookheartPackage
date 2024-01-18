@@ -66,8 +66,8 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         $0.scrollEnabled = true
         $0.scrollDirection = .vertical
         $0.layer.cornerRadius = 10
-        $0.layer.borderColor = UIColor.MY_BLUE.cgColor
-        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.MY_SKY.cgColor
+        $0.layer.borderWidth = 2
         $0.clipsToBounds = true
         $0.delegate = self
         $0.dataSource = self
@@ -493,6 +493,16 @@ class LineChartVC : UIViewController, FSCalendarDelegate, FSCalendarDataSource {
         case .THREE_DAYS:
             return 3
         }
+    }
+    
+    // 날짜 선택 시 콜백 메소드
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        print(MyDateTime.shared.getDateFormat().string(from: date) + " 선택됨")
+    }
+    
+    // 날짜 선택 해제 시 콜백 메소드
+    public func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        print(MyDateTime.shared.getDateFormat().string(from: date) + " 해제됨")
     }
     
     // MARK: - UI

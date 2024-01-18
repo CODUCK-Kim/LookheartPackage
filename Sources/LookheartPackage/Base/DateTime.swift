@@ -126,4 +126,8 @@ class MyDateTime {
         }
     }
     
+    public func getDateFormat() -> DateFormatter {
+        return dateFormatter
+    }
+    
 }
