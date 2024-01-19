@@ -314,24 +314,26 @@ public class NetworkManager {
         }
     }
     
-    public func sendTenSecondDataToServer(_ identification: String, _ utcOffsetAndCountry: String, otherParams: [String: Any]) {
+    public func sendTenSecondDataToServer(tenSecondData: [String: Any]) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
+        let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslbpm/api_data"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
         }
-
-        let currentDateTime = NetworkManager.dateFormatter.string(from: Date())
-        // 파라미터 구성을 좀 더 동적으로 조정
+        
         var params: [String: Any] = [
             "kind": "BpmDataInsert",
             "eq": identification,
-            "timezone": utcOffsetAndCountry,
-            "writetime": currentDateTime
+            "timezone": timeZone,
+            "writetime": writeDateTime
         ]
         
-        params.merge(otherParams) { (current, _) in current }
+        params.merge(tenSecondData) { (current, _) in current }
                 
         request(url: url, method: .post, parameters: params) { result in
             switch result {
