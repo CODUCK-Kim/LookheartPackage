@@ -72,7 +72,6 @@ public class NetworkManager {
                     var phoneNumbers: [String] = []
                     
                     for profile in userProfiles { // 프로필이 여러개 있을 경우 보호자 핸드폰 번호 저장
-                        UserProfileManager.shared.setUserProfile(profile)
                         phoneNumbers.append(UserProfileManager.shared.getPhoneNumber())
                     }
                     
