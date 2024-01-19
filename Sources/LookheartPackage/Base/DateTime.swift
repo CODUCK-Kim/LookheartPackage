@@ -9,7 +9,7 @@ import Foundation
 
 public class MyDateTime {
     
-    enum DateType {
+    public enum DateType {
         case DATE
         case TIME
         case DATETIME
@@ -17,7 +17,7 @@ public class MyDateTime {
     
     public static let shared = MyDateTime()
     
-    private let dateFormatter = DateFormatter()
+    public let dateFormatter = DateFormatter()
     private let dateTimeFormatter = DateFormatter()
     
     private var calendar = Calendar.current
@@ -26,7 +26,7 @@ public class MyDateTime {
         dateFormatter.dateFormat = "yyyy-MM-dd"
     }
     
-    func getCurrentDateTime(_ dateType : DateType ) -> String {
+    public func getCurrentDateTime(_ dateType : DateType ) -> String {
         
         let now = Date()
         
@@ -37,7 +37,7 @@ public class MyDateTime {
     
     
     
-    func getSplitDateTime(_ dateType : DateType ) -> [String] {
+    public func getSplitDateTime(_ dateType : DateType ) -> [String] {
         let now = Date()
         
         dateFormatter.dateFormat = getFormatter(dateType)
@@ -55,7 +55,7 @@ public class MyDateTime {
         
     }
     
-    private func getFormatter(_ dateType : DateType) -> String {
+    public func getFormatter(_ dateType : DateType) -> String {
         switch (dateType) {
         case .DATE:
             return "yyyy-MM-dd"
