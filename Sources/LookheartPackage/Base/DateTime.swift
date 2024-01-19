@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MyDateTime {
+public class MyDateTime {
     
     enum DateType {
         case DATE
@@ -26,7 +26,7 @@ class MyDateTime {
         dateFormatter.dateFormat = "yyyy-MM-dd"
     }
     
-    public func getCurrentDateTime(_ dateType : DateType ) -> String {
+    func getCurrentDateTime(_ dateType : DateType ) -> String {
         
         let now = Date()
         
@@ -37,7 +37,7 @@ class MyDateTime {
     
     
     
-    public func getSplitDateTime(_ dateType : DateType ) -> [String] {
+    func getSplitDateTime(_ dateType : DateType ) -> [String] {
         let now = Date()
         
         dateFormatter.dateFormat = getFormatter(dateType)
