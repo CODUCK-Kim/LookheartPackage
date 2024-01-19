@@ -15,7 +15,7 @@ public class MyDateTime {
         case DATETIME
     }
     
-    static let shared = MyDateTime()
+    public static let shared = MyDateTime()
     
     private let dateFormatter = DateFormatter()
     private let dateTimeFormatter = DateFormatter()
