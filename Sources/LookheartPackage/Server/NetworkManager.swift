@@ -282,7 +282,11 @@ public class NetworkManager {
     }
     
     
-    public func sendByteEcgDataToServer(packet: [Int], identification: String, bpm: Int, timezone: String, writeTime: String) {
+    public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
+        let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslecgbyte/api_getdata"
         
@@ -294,10 +298,10 @@ public class NetworkManager {
         let parameters: [String: Any] = [
             "kind": "ecgByteInsert",
             "eq": identification,
-            "writetime": writeTime,
-            "timezone": timezone,
+            "writetime": writeDateTime,
+            "timezone": timeZone,
             "bpm": bpm,
-            "ecgPacket": packet
+            "ecgPacket": ecgData
         ]
         
         request(url: url, method: .post, parameters: parameters) { result in
