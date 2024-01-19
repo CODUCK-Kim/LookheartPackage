@@ -386,8 +386,15 @@ public class NetworkManager {
         }
     }
         
-    public func sendArrDataToServer(_ packet: String, _ identification: String, _ writeTime: String) {
+    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String) {
     
+        let identification = UserProfileManager.shared.getEmail()
+        let writeTime = MyDateTime.shared.getCurrentDateTime(.TIME)
+        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
+        let timeZone = MyDateTime.shared.getTimeZone()
+        
+        let arrData = "\(writeTime),\(timeZone),\(bodyStatus),\(arrStatus),\(arrEcgData)"
+        
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -397,8 +404,8 @@ public class NetworkManager {
         let params: [String: Any] = [
             "kind": "arrEcgInsert",
             "eq": identification,
-            "writetime": writeTime,
-            "ecgPacket": packet
+            "writetime": writeDateTime,
+            "ecgPacket": arrData
         ]
         
         request(url: url, method: .post, parameters: params) { result in

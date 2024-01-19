@@ -18,6 +18,7 @@ class MyDateTime {
     static let shared = MyDateTime()
     
     private let dateFormatter = DateFormatter()
+    private let dateTimeFormatter = DateFormatter()
     
     private var calendar = Calendar.current
     
@@ -128,6 +129,23 @@ class MyDateTime {
     
     public func getDateFormat() -> DateFormatter {
         return dateFormatter
+    }
+    
+    public func getTimeZone() -> String {
+        let currentTimeZone = TimeZone.current
+        let identifier = currentTimeZone.identifier
+        let utcOffsetInSeconds = currentTimeZone.secondsFromGMT()
+        
+        let hours = abs(utcOffsetInSeconds) / 3600
+        let minutes = (abs(utcOffsetInSeconds) % 3600) / 60
+
+        let offsetString = String(format: "%@%02d:%02d", utcOffsetInSeconds >= 0 ? "+" : "-", hours, minutes)
+
+        let currentCountryCode = Locale.current.regionCode ?? "Unknown"  // "US", "KR" 등
+        
+        // utcOffSet /. 현재 국가,도시 / 사용자 지정 국가
+        return "\(offsetString)/\(identifier)/\(currentCountryCode)"
+        
     }
     
 }
