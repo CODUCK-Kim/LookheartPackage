@@ -78,7 +78,6 @@ public class NetworkManager {
                     
                     // 첫 번째 프로필을 기본 프로필로 설정하고, 핸드폰 번호 목록을 저장
                     if let primaryProfile = userProfiles.first {
-                        UserProfileManager.shared.setUserProfile(primaryProfile)
                         UserProfileManager.shared.setPhoneNumbers(phoneNumbers)
                         completion(.success(primaryProfile))
                     } else {
