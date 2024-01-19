@@ -280,10 +280,9 @@ public class NetworkManager {
     }
     
     
-    public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int) {
+    public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int, writeDateTime: String) {
         
         let identification = UserProfileManager.shared.getEmail()
-        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslecgbyte/api_getdata"
