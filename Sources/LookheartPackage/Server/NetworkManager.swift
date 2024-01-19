@@ -390,11 +390,9 @@ public class NetworkManager {
         }
     }
         
-    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String) {
+    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String, _ writeTime: String, _ writeDateTime: String) {
     
         let identification = UserProfileManager.shared.getEmail()
-        let writeTime = MyDateTime.shared.getCurrentDateTime(.TIME)
-        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let arrData = "\(writeTime),\(timeZone),\(bodyStatus),\(arrStatus),\(arrEcgData)"
