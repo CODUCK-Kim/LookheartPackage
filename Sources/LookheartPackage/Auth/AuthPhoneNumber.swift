@@ -83,7 +83,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.backgroundColor = .white
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
-        let safeAreaView = UILabel().then {
+        let safeAreaView = UIView().then {
             $0.backgroundColor = .white
             $0.layer.cornerRadius = 10
             $0.layer.masksToBounds = true
