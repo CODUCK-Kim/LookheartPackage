@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import PhoneNumberKit
 
-class AuthPhoneNumber: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+public class AuthPhoneNumber: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
         return phoneNumberKit.allCountries()
@@ -10,22 +10,22 @@ class AuthPhoneNumber: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
 
     @IBOutlet weak var countryPicker: UIPickerView!
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         countryPicker.delegate = self
         countryPicker.dataSource = self
     }
 
     // UIPickerView DataSource & Delegate
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return countries.count
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let country = countries[row]
         let code = phoneNumberKit.countryCode(for: country)
         return "\(country) (\(code))"
