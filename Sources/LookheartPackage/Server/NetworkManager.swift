@@ -344,7 +344,9 @@ public class NetworkManager {
         }
     }
  
-    public func sendHourlyDataToServer(_ year: String, _ month: String, _ day: String, _ identification: String,  _ utcOffsetAndCountry: String, _ data: String) {
+    public func sendHourlyDataToServer(hourlyData: [String: Any]) {
+        
+        let identification = UserProfileManager.shared.getEmail()
         
         let endpoint = "/mslecgday/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -352,28 +354,12 @@ public class NetworkManager {
             return
         }
         
-        let dataArray = data.split(separator: ",").map { String($0) }
-        let dataHour = dataArray[0]
-        let hourlyStep = dataArray[2]
-        let hourlyDistance = dataArray[3]
-        let hourlyCal = dataArray[4]
-        let hourlyECal = dataArray[5]
-        let hourlyArrCnt = dataArray[6]
-        
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "kind": "calandInsert",
             "eq": identification,
-            "datayear": year,
-            "datamonth": month,
-            "dataday": day,
-            "datahour": dataHour,
-            "ecgtimezone": utcOffsetAndCountry,
-            "step": hourlyStep,
-            "distanceKM": hourlyDistance,
-            "cal": hourlyCal,
-            "calexe": hourlyECal,
-            "arrcnt": hourlyArrCnt
         ]
+        
+        params.merge(hourlyData) { (current, _) in current }
         
         request(url: url, method: .post, parameters: params) { result in
             switch result {
