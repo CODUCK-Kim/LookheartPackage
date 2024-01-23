@@ -6,6 +6,8 @@ import PhoneNumberKit
 
 public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableViewDelegate{
 
+    public let safeView = UIView()
+    
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
         return phoneNumberKit.allCountries()
@@ -33,6 +35,10 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
         addViews()
     }
     
+    public func getView() -> UIView {
+        return safeView
+    }
+    
     // MARK: tableView
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return countries.count
@@ -57,14 +63,21 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
     // MARK: -
     private func addViews(){
 
-        view.addSubview(toggleButton)
+        view.addSubview(safeView)
+        safeView.snp.makeConstraints { make in
+            make.top.bottom.left.right.equalToSuperview()
+        }
+        
+        safeView.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
         
-        view.addSubview(tableView)
+        safeView.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
+        
     }
+    
 }
