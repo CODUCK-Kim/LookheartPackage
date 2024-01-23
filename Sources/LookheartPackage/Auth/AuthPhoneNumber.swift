@@ -15,6 +15,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.text = "본인인증"
         $0.textColor = UIColor.darkGray
         $0.backgroundColor = UIColor.lightGray
+        $0.textAlignment = .center
     }
     
     private lazy var toggleButton = UIButton().then {
@@ -85,8 +86,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(10)
-            make.left.right.equalToSuperview()
+            make.top.left.right.equalToSuperview()
             make.height.equalTo(50)
         }
         
