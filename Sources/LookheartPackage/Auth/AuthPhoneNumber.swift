@@ -26,8 +26,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.textColor = .white
         $0.backgroundColor = UIColor.MY_BLUE
         $0.textAlignment = .center
-//        $0.layer.cornerRadius = 10
-//        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 10
+        $0.layer.masksToBounds = true
     }
     
     private lazy var toggleButton = UIButton().then {
@@ -107,6 +107,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.equalTo(safeAreaView).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
             make.bottom.equalTo(safeAreaView)
+            make.height.equalTo(100)
         }
         
         self.addSubview(authLabel)
