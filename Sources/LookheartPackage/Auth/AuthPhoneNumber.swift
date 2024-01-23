@@ -11,6 +11,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return phoneNumberKit.allCountries()
     }
     
+    private let safeAreaView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 10
+        $0.layer.masksToBounds = true
+    }
+    
     private let authLabel = UILabel().then {
         $0.text = "본인인증"
         $0.textColor = .white
@@ -82,12 +88,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.backgroundColor = .white
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        let safeAreaView = UIView().then {
-            $0.backgroundColor = .white
-            $0.layer.cornerRadius = 10
-            $0.layer.masksToBounds = true
-        }
         
         self.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
