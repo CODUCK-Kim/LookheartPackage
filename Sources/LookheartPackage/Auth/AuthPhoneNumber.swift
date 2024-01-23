@@ -88,7 +88,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         
         self.addSubview(safeAreaView)
-        authLabel.snp.makeConstraints { make in
+        safeAreaView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-10)
