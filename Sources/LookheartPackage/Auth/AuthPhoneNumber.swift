@@ -5,8 +5,6 @@ import SnapKit
 import PhoneNumberKit
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
-
-    public let safeView = UIView()
     
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
@@ -31,7 +29,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
     override init(frame: CGRect) {
         super.init(frame: frame)
-        // 여기에 초기화 코드를 추가합니다.
+        
+        addViews()
     }
     
     required init?(coder: NSCoder) {
@@ -63,20 +62,19 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: -
     private func addViews(){
-
-        self.addSubview(safeView)
-        safeView.snp.makeConstraints { make in
-            make.top.bottom.left.right.equalToSuperview()
-        }
         
-        safeView.addSubview(toggleButton)
+        self.backgroundColor = .white
+        
+        self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
+            make.height.width.equalTo(50)
         }
         
-        safeView.addSubview(tableView)
+        self.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
+            make.height.width.equalTo(50)
         }
         
     }
