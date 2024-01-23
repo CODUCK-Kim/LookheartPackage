@@ -246,8 +246,9 @@ class LineChartVC : UIViewController {
         startDate = MyDateTime.shared.dateCalculate(endDate, setDate(currentButtonFlag), MINUS_DATE)
         
         getDataToServer(startDate, endDate, currentButtonFlag)
-        setDisplayDateText()
         setButtonColor(sender)
+        setDisplayDateText()
+        buttonEnable()
     }
     
     @objc func shiftDate(_ sender: UIButton) {
@@ -263,11 +264,21 @@ class LineChartVC : UIViewController {
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
+        buttonEnable()
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         lineChartView.isHidden = !lineChartView.isHidden
+        buttonEnable()
+    }
+    
+    private func buttonEnable() {
+        yesterdayButton.isEnabled = !yesterdayButton.isEnabled
+        tomorrowButton.isEnabled = !tomorrowButton.isEnabled
+        todayButton.isEnabled = !todayButton.isEnabled
+        twoDaysButton.isEnabled = !twoDaysButton.isEnabled
+        threeDaysButton.isEnabled = !threeDaysButton.isEnabled
     }
     
     // MARK: - VDL
@@ -344,7 +355,7 @@ class LineChartVC : UIViewController {
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()
-    
+        buttonEnable()
     }
     
     
@@ -411,6 +422,7 @@ class LineChartVC : UIViewController {
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                 toastMessage(errorMessage)
                 activityIndicator.stopAnimating()
+                buttonEnable()
             }
         }
     }

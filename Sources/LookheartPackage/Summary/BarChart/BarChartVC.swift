@@ -325,7 +325,7 @@ class BarChartVC : UIViewController {
         
         getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
-        
+        buttonEnable()
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
@@ -353,11 +353,22 @@ class BarChartVC : UIViewController {
         getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
+        buttonEnable()
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         barChartView.isHidden = !barChartView.isHidden
+        buttonEnable()
+    }
+    
+    private func buttonEnable() {
+        yesterdayButton.isEnabled = !yesterdayButton.isEnabled
+        tomorrowButton.isEnabled = !tomorrowButton.isEnabled
+        dayButton.isEnabled = !dayButton.isEnabled
+        weekButton.isEnabled = !weekButton.isEnabled
+        monthButton.isEnabled = !monthButton.isEnabled
+        yearButton.isEnabled = !yearButton.isEnabled
     }
     
     // MARK: - viewDidLoad
@@ -413,6 +424,8 @@ class BarChartVC : UIViewController {
         setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
         
         activityIndicator.stopAnimating()
+        
+        buttonEnable()
     }
     
     private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataSet]) {
@@ -629,6 +642,7 @@ class BarChartVC : UIViewController {
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                 toastMessage(errorMessage)
                 activityIndicator.stopAnimating()
+                buttonEnable()
             }
         }
         

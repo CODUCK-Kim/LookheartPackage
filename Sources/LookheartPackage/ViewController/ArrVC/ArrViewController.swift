@@ -172,17 +172,27 @@ public class ArrViewController : UIViewController {
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         chartView.isHidden = !chartView.isHidden
+        buttonEnable()
     }
     
     @objc func shiftDate(_ sender: UIButton) {
         
         switch(sender.tag) {
         case YESTERDAY_BUTTON_FLAG:
+            
             dateCalculate(targetDate, 1, YESTERDAY)
         default:    // TOMORROW_BUTTON_FLAG
             dateCalculate(targetDate, 1, TOMORROW)
         }
+        
+        buttonEnable()
         arrTable()
+    }
+    
+    private func buttonEnable() {
+        yesterdayButton.isEnabled = !yesterdayButton.isEnabled
+        tomorrowButton.isEnabled = !tomorrowButton.isEnabled
+        calendarButton.isEnabled = !calendarButton.isEnabled
     }
     
     // MARK: - viewDidLoad
@@ -254,12 +264,13 @@ public class ArrViewController : UIViewController {
                             self.emergencyList[arrDate.writetime] = arrDate.address
                         }
                     }
+                    self.buttonEnable()
                     self.setArrList()
                 case .failure(let error):
-                    
                     let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                     self.toastMessage(errorMessage)
                     self.activityIndicator.stopAnimating()
+                    self.buttonEnable()
                 }
             }
         }

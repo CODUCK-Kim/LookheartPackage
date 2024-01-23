@@ -71,7 +71,7 @@ public class NetworkManager {
                     
                     var phoneNumbers: [String] = []
                     
-                    for profile in userProfiles { // 프로필이 여러개 있을 경우 보호자 핸드폰 번호 저장
+                    for _ in userProfiles { // 프로필이 여러개 있을 경우 보호자 핸드폰 번호 저장
                         phoneNumbers.append(UserProfileManager.shared.getPhoneNumber())
                     }
                     
@@ -286,7 +286,6 @@ public class NetworkManager {
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslecgbyte/api_getdata"
-        
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
