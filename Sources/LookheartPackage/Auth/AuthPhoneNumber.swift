@@ -91,15 +91,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview()
         }
         
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.left.right.equalTo(safeAreaView)
+            make.top.left.right.centerX.equalTo(safeAreaView)
             make.height.equalTo(40)
         }
         
