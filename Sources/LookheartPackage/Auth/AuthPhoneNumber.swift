@@ -13,8 +13,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private let authLabel = UILabel().then {
         $0.text = "본인인증"
-        $0.textColor = UIColor.darkGray
-        $0.backgroundColor = UIColor.lightGray
+        $0.textColor = .white
+        $0.backgroundColor = UIColor.MY_BLUE
         $0.textAlignment = .center
     }
     
@@ -85,6 +85,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         let safeAreaView = UILabel().then {
             $0.backgroundColor = .white
+            $0.layer.cornerRadius = 10
+            $0.layer.masksToBounds = true
         }
         
         self.addSubview(safeAreaView)
