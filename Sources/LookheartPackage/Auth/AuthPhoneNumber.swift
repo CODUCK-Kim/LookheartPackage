@@ -83,11 +83,22 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.backgroundColor = .white
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        let safeAreaView = UILabel().then {
+            $0.backgroundColor = .white
+        }
+        
+        self.addSubview(safeAreaView)
+        authLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
+        }
+        
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.left.right.equalToSuperview()
-            make.height.equalTo(50)
+            make.top.left.right.equalTo(safeAreaView)
+            make.height.equalTo(40)
         }
         
         self.addSubview(toggleButton)
