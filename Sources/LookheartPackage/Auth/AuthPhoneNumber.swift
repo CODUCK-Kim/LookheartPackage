@@ -11,6 +11,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return phoneNumberKit.allCountries()
     }
     
+    private let authLabel = UILabel().then {
+        $0.text = "본인인증"
+        $0.textColor = UIColor.darkGray
+        $0.backgroundColor = UIColor.lightGray
+    }
+    
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
         $0.setTitleColor(UIColor.black, for: .normal)
@@ -36,7 +42,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        // Interface Builder를 통해 뷰가 생성될 때 사용되는 초기화 코드입니다.
     }
         
     
@@ -75,8 +80,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func addViews(){
         
         self.backgroundColor = .white
-        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        self.addSubview(authLabel)
+        authLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(50)
+        }
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
