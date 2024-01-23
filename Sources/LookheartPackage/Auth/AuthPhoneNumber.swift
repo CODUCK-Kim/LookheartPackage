@@ -50,7 +50,11 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-        
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        safeAreaView.layer.cornerRadius = 10
+    }
     
     // MARK: tableView
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -91,7 +95,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(40)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview()
