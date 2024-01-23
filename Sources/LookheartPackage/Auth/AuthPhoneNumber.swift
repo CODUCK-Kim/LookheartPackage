@@ -13,7 +13,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private let safeAreaView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 10
         $0.layer.masksToBounds = true
     }
     
@@ -43,7 +42,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         addViews()
     }
     
@@ -100,6 +98,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.right.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview()
         }
+        
+        safeAreaView.layer.cornerRadius = 10
+        safeAreaView.layer.masksToBounds = true
         
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
