@@ -4,7 +4,7 @@ import Then
 import SnapKit
 import PhoneNumberKit
 
-public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableViewDelegate{
+public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
 
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
@@ -27,11 +27,17 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
         tableView.isHidden = !tableView.isHidden
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
         addViews()
     }
+    
+    //    public override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//        addViews()
+//    }
     
     // MARK: tableView
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,12 +62,13 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: -
     private func addViews(){
-        view.addSubview(toggleButton)
+
+        self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
         
-        view.addSubview(tableView)
+        self.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
