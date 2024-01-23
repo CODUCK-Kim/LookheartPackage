@@ -14,7 +14,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private let safeAreaView = UILabel().then {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
+        $0.clipsToBounds = true
     }
     
     private let authLabel = UILabel().then {
@@ -22,8 +22,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.textColor = .white
         $0.backgroundColor = UIColor.MY_BLUE
         $0.textAlignment = .center
-        $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
+//        $0.layer.cornerRadius = 10
+//        $0.layer.masksToBounds = true
     }
     
     private lazy var toggleButton = UIButton().then {
