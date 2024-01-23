@@ -65,6 +65,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.backgroundColor = .white
         
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
@@ -73,8 +75,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-            make.height.width.equalTo(50)
+            make.top.equalTo(toggleButton.snp.bottom).offset(10)  // toggleButton 아래에 위치
+            make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
+            make.bottom.equalToSuperview().inset(20)     // 하단 여백 설정
         }
         
     }
