@@ -4,7 +4,7 @@ import Then
 import SnapKit
 import PhoneNumberKit
 
-public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableViewDelegate{
+public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
 
     public let safeView = UIView()
     
@@ -28,16 +28,17 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
         // 리스트 뷰의 표시 상태 토글
         tableView.isHidden = !tableView.isHidden
     }
-    
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        addViews()
+        
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // 여기에 초기화 코드를 추가합니다.
     }
     
-    public func getView() -> UIView {
-        return safeView
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        // Interface Builder를 통해 뷰가 생성될 때 사용되는 초기화 코드입니다.
     }
+        
     
     // MARK: tableView
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -63,7 +64,7 @@ public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableVi
     // MARK: -
     private func addViews(){
 
-        view.addSubview(safeView)
+        self.addSubview(safeView)
         safeView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
         }
