@@ -12,7 +12,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var toggleButton = UIButton().then {
-        $0.setTitle("국가", for: .normal)
+        $0.setTitle("-", for: .normal)
         $0.setTitleColor(UIColor.black, for: .normal)
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
@@ -50,7 +50,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryCode = countries[indexPath.row]
         let currentLocale = Locale.current
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
-        cell.textLabel?.text = countryName
+        let flag = emojiFlag(for: countryCode)
+        cell.textLabel?.text = "\(flag) \(countryName)"
         return cell
     }
     
@@ -59,6 +60,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let selectedCountry = countries[indexPath.row]
         let countryCode = phoneNumberKit.countryCode(for: selectedCountry) ?? 0
         print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
+    }
+    
+    func emojiFlag(for countryCode: String) -> String {
+        let base: UInt32 = 127397
+        var s = ""
+        for v in countryCode.uppercased().unicodeScalars {
+            s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+        }
+        return s
     }
     
     // MARK: -
