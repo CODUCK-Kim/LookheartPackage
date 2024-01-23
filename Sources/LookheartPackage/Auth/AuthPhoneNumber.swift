@@ -1,34 +1,69 @@
 import Foundation
 import UIKit
+import Then
+import SnapKit
 import PhoneNumberKit
 
-public class AuthPhoneNumber: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+public class AuthPhoneNumber: UIViewController, UITableViewDataSource, UITableViewDelegate{
+
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
         return phoneNumberKit.allCountries()
     }
-
-    @IBOutlet weak var countryPicker: UIPickerView!
-
+    
+    private let toggleButton = UIButton().then {
+        $0.setTitle("국가", for: .normal)
+        $0.addTarget(AuthPhoneNumber.self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var tableView = UITableView().then {
+        $0.dataSource = self
+        $0.delegate = self
+        $0.isHidden = true  // 초기에는 숨김
+    }
+    
+    @objc func toggleButtonTapped() {
+        // 리스트 뷰의 표시 상태 토글
+        tableView.isHidden = !tableView.isHidden
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        countryPicker.delegate = self
-        countryPicker.dataSource = self
+        
+        addViews()
     }
-
-    // UIPickerView DataSource & Delegate
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    
+    // MARK: tableView
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return countries.count
     }
-
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let country = countries[row]
-        let code = phoneNumberKit.countryCode(for: country)
-        return "\(country) (\(code))"
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let countryCode = countries[indexPath.row]
+        let currentLocale = Locale.current
+        let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
+        cell.textLabel?.text = countryName
+        return cell
+    }
+    
+    // UITableViewDelegate
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedCountry = countries[indexPath.row]
+        let countryCode = phoneNumberKit.countryCode(for: selectedCountry) ?? 0
+        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
+    }
+    
+    // MARK: -
+    private func addViews(){
+        view.addSubview(toggleButton)
+        toggleButton.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
     }
 }
-
