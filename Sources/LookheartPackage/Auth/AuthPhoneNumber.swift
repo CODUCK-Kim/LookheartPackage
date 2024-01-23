@@ -11,7 +11,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return phoneNumberKit.allCountries()
     }
     
-    private let safeAreaView = UIView().then {
+    private let safeAreaView = UILabel().then {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 10
         $0.layer.masksToBounds = true
@@ -43,16 +43,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addViews()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        safeAreaView.layer.cornerRadius = 10
+    public func setLayout() {
+        addViews()
     }
     
     // MARK: tableView
