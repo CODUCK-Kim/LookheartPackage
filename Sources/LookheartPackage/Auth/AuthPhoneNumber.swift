@@ -27,10 +27,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         tableView.isHidden = !tableView.isHidden
     }
     
+    init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        addViews()
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-        addViews()
+        
     }
     
     //    public override func viewDidLoad() {
