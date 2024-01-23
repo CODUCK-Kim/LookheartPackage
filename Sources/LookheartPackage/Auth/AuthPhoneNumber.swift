@@ -11,9 +11,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return phoneNumberKit.allCountries()
     }
     
-    private let toggleButton = UIButton().then {
+    private lazy var toggleButton = UIButton().then {
         $0.setTitle("국가", for: .normal)
-        $0.addTarget(AuthPhoneNumber.self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+        $0.setTitleColor(UIColor.black, for: .normal)
+        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
     private lazy var tableView = UITableView().then {
