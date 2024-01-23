@@ -312,10 +312,9 @@ public class NetworkManager {
         }
     }
     
-    public func sendTenSecondDataToServer(tenSecondData: [String: Any]) {
+    public func sendTenSecondDataToServer(tenSecondData: [String: Any], writeDateTime: String) {
         
         let identification = UserProfileManager.shared.getEmail()
-        let writeDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslbpm/api_data"
