@@ -57,22 +57,20 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var phoneNumberTextField = UnderLineTextField().then {
+        $0.text = "핸드폰 입력"
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "핸드폰 입력"
-        $0.placeholderColor = UIColor.lightGray
         $0.tag = PHONE_NUMBER_TAG
     }
     
     private lazy var authTextField = UnderLineTextField().then {
+        $0.text = "인증번호 입력"
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "인증번호 입력"
-        $0.placeholderColor = UIColor.lightGray
         $0.tag = AUTH_NUMBER_TAG
 //        $0.isHidden = true
     }
