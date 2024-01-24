@@ -10,7 +10,7 @@ public protocol AuthDelegate: AnyObject {
 }
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate {
-    private weak var delegate: AuthDelegate?
+    public weak var delegate: AuthDelegate?
     
     private let numberRegex = try! NSRegularExpression(pattern: "[0-9]+")
     
@@ -179,6 +179,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - sendSMS Event
     @objc private func sendButtonEvent() {
+        
+        self.endEditing(true)
+        
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             authTextField.isHidden = false
             sendButton.isEnabled = false
@@ -224,6 +227,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - checkSMS Event
     @objc private func checkButtonEvent() {
+        
+        self.endEditing(true)
+        
         if authNumber.count == 6 && authNumberRegx {
             checkSMS()
         } else {
@@ -235,7 +241,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
             switch result {
             case .success(_):
-                print("success")
+                UserProfileManager.shared.setPhoneNumber(phoneNumber)
                 delegate?.complete()
             case .failure(_):
                 showAlert(title: "failVerification".localized(), message: "againMoment".localized())
@@ -245,6 +251,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - cancleButton Event
     @objc private func cancleButtonEvent() {
+        self.endEditing(true)
         delegate?.cancle()
     }
     
