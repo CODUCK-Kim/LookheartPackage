@@ -474,14 +474,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
 
         okButton.layer.cornerRadius = 10
         okButton.layer.masksToBounds = true
-        
-        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+
         calcleButton.layer.cornerRadius = 10
-        calcleButton.layer.borderWidth = 3
         calcleButton.layer.masksToBounds = true
-        
-//        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-//        calcleButton.layer.cornerRadius = 10
-//        calcleButton.layer.borderWidth = 3
+
     }
 }
