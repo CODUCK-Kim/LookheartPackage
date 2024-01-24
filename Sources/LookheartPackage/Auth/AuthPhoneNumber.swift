@@ -216,6 +216,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     @objc func updateCountdown() {
+        print(countdown)
         if countdown > 0 {
             countdown -= 1
             let sec = countdown % 60
