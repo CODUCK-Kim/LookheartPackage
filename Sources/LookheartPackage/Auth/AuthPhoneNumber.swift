@@ -105,30 +105,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     // MARK: -
-    private func setKeyboardUpDown() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
     @objc private func textFieldDidChange(_ textField: UITextField) {
         phoneNumber = textField.text ?? "Empty"
         print(phoneNumber)
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        print("keyboardWillShow")
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.frame.origin.y == 0 {
-                self.frame.origin.y -= keyboardSize.height - 200
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        print("keyboardWillHide")
-        if self.frame.origin.y != 0 {
-            self.frame.origin.y = 0
-        }
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.endEditing(true)
     }
     
     // MARK: -
