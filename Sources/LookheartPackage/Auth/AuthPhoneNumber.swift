@@ -56,7 +56,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var tableView = UITableView().then {
-        $0.backgroundColor = .white
         $0.dataSource = self
         $0.delegate = self
         $0.isHidden = true  // 초기에는 숨김
@@ -114,6 +113,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let currentLocale = Locale.current
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
         let flag = emojiFlag(for: countryCode)
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .darkGray
         cell.textLabel?.text = "\(flag)\(countryName)"
         return cell
     }
@@ -126,7 +127,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryName = currentLocale.localizedString(forRegionCode: selectedCountry) ?? selectedCountry
         let flag = emojiFlag(for: selectedCountry)
         
-        toggleButton.setTitle("\(countryName)", for: .normal)
+        toggleButton.setTitle("\(flag)\(countryName)", for: .normal)
         tableView.isHidden = !tableView.isHidden
         
 //        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
@@ -146,7 +147,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryCode = currentLocale.regionCode ?? "US"
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
         let flag = emojiFlag(for: countryCode)
-        toggleButton.setTitle("\(flag) \(countryName)", for: .normal)
+        toggleButton.setTitle("\(flag)\(countryName)", for: .normal)
     }
     
     // MARK: -
@@ -287,7 +288,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         tableView.snp.makeConstraints { make in
             make.top.equalTo(toggleButton.snp.bottom).offset(10)
             make.left.right.equalTo(toggleButton)
-            make.height.equalTo(200)
+            make.height.equalTo(300)
         }
         
         
