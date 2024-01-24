@@ -15,8 +15,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.setTitle("-", for: .normal)
         $0.setTitleColor(UIColor.black, for: .normal)
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
-        
-        updateToggleButtonTitle()
     }
     
     private lazy var tableView = UITableView().then {
@@ -33,6 +31,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
+        updateToggleButtonTitle()
     }
     
     required init?(coder: NSCoder) {
