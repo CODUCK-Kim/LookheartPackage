@@ -66,6 +66,7 @@ class UnderLineTextField: UITextField {
     
     func setUnderLineColor(_ color: UIColor) {
         underLineView.backgroundColor = color
+        underLineView.layoutIfNeeded()
     }
 }
 

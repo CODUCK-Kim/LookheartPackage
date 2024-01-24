@@ -20,6 +20,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private var authTextFieldHeightConstraint: Constraint?
     
     private var phoneNumber = ""
+    private var nationalCode = ""
     private var authNumber = ""
     
     private lazy var toggleButton = UIButton().then {
@@ -130,7 +131,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         toggleButton.setTitle("\(flag)\(countryName)", for: .normal)
         tableView.isHidden = !tableView.isHidden
         
-//        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
+        nationalCode = String(countryCode)
+        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
     }
     
     private func emojiFlag(for countryCode: String) -> String {
@@ -148,6 +150,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
         let flag = emojiFlag(for: countryCode)
         toggleButton.setTitle("\(flag)\(countryName)", for: .normal)
+        nationalCode = String(countryCode)
+        print(nationalCode)
     }
     
     // MARK: -
@@ -158,14 +162,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         case PHONE_NUMBER_TAG:
             
             phoneNumber = text
-            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE)
-            } else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
+            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE) }
+            else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
             
         case AUTH_NUMBER_TAG:
             
             authNumber = text
-            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE)
-            } else {    authTextField.setUnderLineColor(.lightGray) }
+            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE) }
+            else {    authTextField.setUnderLineColor(.lightGray) }
             
         default:
             break
@@ -179,11 +183,21 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func sendButtonEvent(_ textField: UITextField) {
         authTextField.isHidden = false
         
-        // 기존 높이 제약 조건을 업데이트
         authTextFieldHeightConstraint?.update(offset: 30)
-        // 레이아웃 즉시 업데이트
-        authTextField.layoutIfNeeded()
+        authTextField.layoutIfNeeded()  // 레이아웃 업데이트
         
+        sendSMS()
+    }
+    
+    private func sendSMS() {
+        NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
+            switch result {
+            case .success(_):
+                ToastHelper.shared.showToast(self, "성공")
+            case .failure(_):
+                ToastHelper.shared.showToast(self, "실패")
+            }
+        }
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

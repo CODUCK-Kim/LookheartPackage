@@ -13,7 +13,65 @@ public class NetworkManager {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return df
     }()
-            
+         
+    // MARK: - SMS
+    public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<Bool, Error>) -> Void) {
+    
+        let endpoint = "/mslSMS/sendSMS"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "phone": phoneNumber,
+            "nationalCode": nationalCode,
+        ]
+        
+        request(url: url, method: .get, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+//                    completion(.success(true))
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
+                }
+            case .failure(let error):
+                print("sendSMS Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    public func checkSMS(phoneNumber: String, code: String,completion: @escaping (Result<Bool, Error>) -> Void) {
+    
+        let endpoint = "/mslSMS/checkSMS"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "phone": phoneNumber,
+            "code": code,
+        ]
+        
+        request(url: url, method: .get, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+//                    completion(.success(true))
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
+                }
+            case .failure(let error):
+                print("sendSMS Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: -
     public func sendEmergencyData(_ identification: String, _ timezone: String,_ address: String) {
     
         let endpoint = "/mslecgarr/api_getdata"
