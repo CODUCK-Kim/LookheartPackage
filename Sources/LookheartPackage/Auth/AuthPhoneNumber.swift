@@ -8,12 +8,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
-        return phoneNumberKit.allCountries().filter { $0 != "979" }
+        return phoneNumberKit.allCountries().filter { $0 != "001" }
     }
             
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
-        $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.titleLabel?.textAlignment = .center
         $0.setTitleColor(UIColor.darkGray, for: .normal)
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
@@ -64,7 +64,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCountry = countries[indexPath.row]
         let countryCode = phoneNumberKit.countryCode(for: selectedCountry) ?? 0
-        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
+        let currentLocale = Locale.current
+        let countryName = currentLocale.localizedString(forRegionCode: selectedCountry) ?? selectedCountry
+        let flag = emojiFlag(for: selectedCountry)
+        
+        toggleButton.setTitle("\(flag) \(countryName)", for: .normal)
+        tableView.isHidden = !tableView.isHidden
+        
+//        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
     }
     
     func emojiFlag(for countryCode: String) -> String {
