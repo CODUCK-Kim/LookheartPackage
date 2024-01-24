@@ -155,7 +155,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         authTextField.isHidden = false
         
         // 기존 높이 제약 조건을 업데이트
-        authTextFieldHeightConstraint?.update(offset: 40)
+        authTextFieldHeightConstraint?.update(offset: 30)
         // 레이아웃 즉시 업데이트
         authTextField.layoutIfNeeded()
         
@@ -248,7 +248,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(phoneNumberTextField)
             // 초기 높이를 저장
-            authTextFieldHeightConstraint = make.height.equalTo(1).constraint
+            authTextFieldHeightConstraint = make.height.equalTo(0).constraint
         }
         
         //
