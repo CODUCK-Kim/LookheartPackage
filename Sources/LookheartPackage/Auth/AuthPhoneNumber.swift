@@ -14,6 +14,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return phoneNumberKit.allCountries().filter { $0 != "001" }
     }
     
+    // 기존 높이 제약 조건을 참조할 수 있도록 저장
+    private var authTextFieldHeightConstraint: Constraint?
+    
     private var phoneNumber = ""
     
     private lazy var toggleButton = UIButton().then {
@@ -151,9 +154,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func sendButtonEvent(_ textField: UITextField) {
         authTextField.isHidden = false
         
-        authTextField.snp.makeConstraints { make in
-            make.height.equalTo(40)
-        }
+        // 기존 높이 제약 조건을 업데이트
+        authTextFieldHeightConstraint?.update(offset: 40)
+        // 레이아웃 즉시 업데이트
+        authTextField.layoutIfNeeded()
         
     }
     
@@ -243,7 +247,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.top.equalTo(toggleButton.snp.bottom).offset(20)
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(phoneNumberTextField)
-            make.height.equalTo(1)
+            // 초기 높이를 저장
+            authTextFieldHeightConstraint = make.height.equalTo(1).constraint
         }
         
         //
