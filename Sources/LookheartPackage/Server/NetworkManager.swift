@@ -32,8 +32,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
-//                    completion(.success(true))
+                    completion(.success(true))
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
@@ -60,8 +59,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
-//                    completion(.success(true))
+                    completion(.success(true))
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }

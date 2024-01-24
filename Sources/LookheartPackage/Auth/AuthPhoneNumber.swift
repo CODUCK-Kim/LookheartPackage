@@ -10,14 +10,16 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private let PHONE_NUMBER_TAG = 0
     private let AUTH_NUMBER_TAG = 1
-    
+
     private let phoneNumberKit = PhoneNumberKit()
     private var countries: [String] {
         return phoneNumberKit.allCountries().filter { $0 != "001" }
     }
+
+    private var authTextFieldHeightConstraint: Constraint?  // 기존 높이 제약 조건을 참조할 수 있도록 저장
     
-    // 기존 높이 제약 조건을 참조할 수 있도록 저장
-    private var authTextFieldHeightConstraint: Constraint?
+    private var countdownTimer: Timer?
+    private var countdown: Int = 180
     
     private var phoneNumber = ""
     private var nationalCode = ""
@@ -155,8 +157,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         if let code = phoneNumberKit.countryCode(for: countryCode) {
             nationalCode = String(code)
         }
-        
-        print(nationalCode)
     }
     
     // MARK: -
@@ -187,17 +187,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     @objc private func sendButtonEvent(_ textField: UITextField) {
         authTextField.isHidden = false
+        sendButton.isEnabled = false
         
         authTextFieldHeightConstraint?.update(offset: 30)
         authTextField.layoutIfNeeded()  // 레이아웃 업데이트
         
-        sendSMS()
+//        sendSMS()
     }
     
     private func sendSMS() {
         NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
             switch result {
-            case .success(_):
+            case .success(let result):
                 ToastHelper.shared.showToast(self, "성공")
             case .failure(_):
                 ToastHelper.shared.showToast(self, "실패")
@@ -207,6 +208,29 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.endEditing(true)
+    }
+    
+    // MARK: - timer
+    func startCountdown() {
+        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateCountdown() {
+        if countdown > 0 {
+            countdown -= 1
+            let sec = countdown % 60
+            let min = (countdown / 60) % 60
+            
+            let secString = sec < 10 ? "0\(sec)" : "\(sec)"
+            let minString = min < 10 ? "0\(min)" : "\(min)"
+            
+            sendButton.setTitle("\(minString):\(secString)", for: .normal)
+        } else {
+            countdownTimer?.invalidate()
+            countdownTimer = nil
+            sendButton.isEnabled = true
+            sendButton.setTitle("재전송", for: .normal)
+        }
     }
     
     // MARK: -
