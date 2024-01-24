@@ -30,7 +30,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.titleLabel?.textAlignment = .center
         $0.setTitleColor(UIColor.white, for: .normal)
         $0.backgroundColor = UIColor.MY_BLUE
-//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
 
     private lazy var okButton = UIButton().then {
@@ -57,22 +56,24 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var phoneNumberTextField = UnderLineTextField().then {
-        $0.text = "핸드폰 입력"
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
+        $0.placeholderString = "핸드폰 입력"
+        $0.placeholderColor = UIColor.lightGray
         $0.tag = PHONE_NUMBER_TAG
     }
     
     private lazy var authTextField = UnderLineTextField().then {
-        $0.text = "인증번호 입력"
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
+        $0.placeholderString = "인증번호 입력"
+        $0.placeholderColor = UIColor.lightGray
         $0.tag = AUTH_NUMBER_TAG
-//        $0.isHidden = true
+        $0.isHidden = true
     }
     
     @objc func toggleButtonTapped() {
@@ -145,6 +146,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func textFieldDidChange(_ textField: UITextField) {
         phoneNumber = textField.text ?? "Empty"
         print(phoneNumber)
+    }
+    
+    @objc private func sendButtonEvent(_ textField: UITextField) {
+        authTextField.isHidden = false
+        
+        authTextField.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -233,6 +243,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.top.equalTo(toggleButton.snp.bottom).offset(20)
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(phoneNumberTextField)
+            make.height.equalTo(1)
         }
         
         //
@@ -294,6 +305,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func setLayoutSubviews() {
         
         phoneNumberTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        sendButton.addTarget(self, action: #selector(sendButtonEvent), for: .touchUpInside)
         
         setBorder()
         
