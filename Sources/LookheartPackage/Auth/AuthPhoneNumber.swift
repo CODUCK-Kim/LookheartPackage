@@ -176,7 +176,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(textField)
         textField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
-            make.right.equalTo(safeAreaView).offset(-100)
+            make.right.equalTo(safeAreaView).offset(-150)
             make.top.equalTo(toggleButton)
             make.bottom.equalTo(toggleButton).offset(1)
         }
@@ -184,7 +184,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(sendButton)
         sendButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(toggleButton)
-            make.left.equalTo(textField.snp.right).offset(10)
+            make.left.equalTo(textField.snp.right).offset(60)
             make.right.equalTo(safeAreaView).offset(-10)
         }
         
@@ -200,6 +200,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
+        sendButton.layer.cornerRadius = 10
+        sendButton.layer.masksToBounds = true
+        
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
         }
@@ -211,8 +214,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.right.equalTo(toggleButton)
             make.height.equalTo(2)
         }
-        
-        sendButton.layer.cornerRadius = 10
-        sendButton.layer.masksToBounds = true
     }
+    
 }
