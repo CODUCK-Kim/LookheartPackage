@@ -283,15 +283,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.equalTo(phoneNumberTextField.snp.right).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
         }
-        
-        self.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(10)
-            make.left.right.equalTo(toggleButton)
-            make.height.equalTo(300)
-        }
-        
-        
+    
         //
         let authHelpText = UILabel().then {
             $0.text = "◦ 3분 이내로 인증번호를 입력해 주세요."
@@ -330,6 +322,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.right.height.equalTo(okButton)
         }
         
+        self.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(toggleButton.snp.bottom).offset(10)
+            make.left.right.equalTo(toggleButton)
+            make.height.equalTo(300)
+        }
     }
     
     private func setLayoutSubviews() {
