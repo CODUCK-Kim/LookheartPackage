@@ -58,6 +58,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
+        $0.backgroundColor = UIColor.MY_LIGHT_GRAY_BORDER2
 //        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
