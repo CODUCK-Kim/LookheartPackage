@@ -139,7 +139,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         toggleButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalTo(safeAreaView).offset(10)
-            make.width.equalTo(200)
+            make.width.equalTo(100)
         }
         
         self.addSubview(tableView)
@@ -153,7 +153,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func setLayoutSubviews() {
         
         let underLine = UILabel().then {
-            $0.backgroundColor = UIColor.MY_LIGHT_GRAY
+            $0.backgroundColor = UIColor.darkGray
         }
         self.addSubview(underLine)
         underLine.snp.makeConstraints { make in
