@@ -254,7 +254,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(okButton)
         okButton.snp.makeConstraints { make in
-            make.top.equalTo(authHelpText2).offset(30)
+            make.top.equalTo(authHelpText2).offset(40)
             make.left.equalTo(safeAreaView).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
             make.height.equalTo(40)
@@ -262,7 +262,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(calcleButton)
         calcleButton.snp.makeConstraints { make in
-            make.top.equalTo(okButton).offset(10)
+            make.top.equalTo(okButton.snp.bottom).offset(10)
             make.left.right.height.equalTo(okButton)
         }
         
@@ -292,7 +292,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         sendButton.layer.masksToBounds = true
         
         okButton.layer.cornerRadius = 10
-        okButton.layer.borderWidth = 3
+        okButton.layer.masksToBounds = true
         
         calcleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
         calcleButton.layer.cornerRadius = 10
