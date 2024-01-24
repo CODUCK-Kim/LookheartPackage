@@ -217,6 +217,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - checkSMS Event
     @objc private func checkButtonEvent() {
+        print(authNumber)
+        print(authNumber.count)
+        print(authNumberRegx)
         if authNumber.count != 6 && authNumberRegx {
             checkSMS()
         } else {
@@ -469,13 +472,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         okButton.layer.cornerRadius = 10
         okButton.layer.masksToBounds = true
         
-//        okButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-//        okButton.layer.cornerRadius = 10
-//        okButton.layer.borderWidth = 3
-//        okButton.layer.masksToBounds = true
-        
         calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
         calcleButton.layer.cornerRadius = 10
         calcleButton.layer.borderWidth = 3
+        calcleButton.layer.masksToBounds = true
+        
+//        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+//        calcleButton.layer.cornerRadius = 10
+//        calcleButton.layer.borderWidth = 3
     }
 }
