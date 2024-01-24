@@ -113,6 +113,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             $0.layer.borderWidth = 2
             $0.layer.masksToBounds = true
             $0.backgroundColor = .clear
+            $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]   // 아래 모서리 테두리를 제거
         }
 
         self.addSubview(borderLabel)
@@ -123,7 +124,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(10)
+            make.width.equalTo(100)
             make.height.equalTo(50)
         }
         
@@ -133,10 +134,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
             make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
         }
-        
-    }
-    
-    public func setBorder() {
         
     }
 }
