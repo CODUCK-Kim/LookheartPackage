@@ -153,12 +153,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func setLayoutSubviews() {
         
         let underLine = UILabel().then {
-            $0.backgroundColor = UIColor.darkGray
+            $0.backgroundColor = UIColor.MY_BLUE
         }
         self.addSubview(underLine)
         underLine.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(3)
-            make.left.right.equalTo(toggleButton)
+            make.top.equalTo(toggleButton.snp.bottom).offset(1)
+            make.left.equalTo(toggleButton).offset(3)
+            make.right.equalTo(toggleButton)
             make.height.equalTo(1)
         }
     }
