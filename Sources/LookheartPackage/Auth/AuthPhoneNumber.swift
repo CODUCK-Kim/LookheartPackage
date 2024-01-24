@@ -219,7 +219,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(100)
         }
-        //
+        
+        // phoneNumberTextField
         self.addSubview(phoneNumberTextField)
         phoneNumberTextField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
@@ -231,9 +232,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         // authTextField
         self.addSubview(authTextField)
         authTextField.snp.makeConstraints { make in
-            make.left.equalTo(toggleButton)
+            make.top.equalTo(toggleButton.snp.bottom).offset(20)
+            make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(phoneNumberTextField)
-            make.top.equalTo(toggleButton.snp.bottom).offset(10)
         }
         
         //
