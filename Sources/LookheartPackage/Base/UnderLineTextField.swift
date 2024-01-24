@@ -32,7 +32,7 @@ class UnderLineTextField: UITextField {
         underLineView.snp.makeConstraints {
             $0.top.equalTo(self.snp.bottom)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(1)
+            $0.height.equalTo(2)
         }
 
         // textField 변경 시작과 종료에 대한 action

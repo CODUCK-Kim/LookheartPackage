@@ -35,7 +35,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.placeholderString = "setupGuardianTxt".localized()
         $0.placeholderColor = UIColor.MY_BLUE
         $0.tag = 0
-        $0.addTarget(AuthPhoneNumber.self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
     @objc func toggleButtonTapped() {
@@ -184,7 +183,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         textField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
-            make.centerY.equalTo(toggleButton)
+            make.top.equalTo(toggleButton)
+            make.bottom.equalTo(toggleButton).offset(1)
         }
         
         self.addSubview(tableView)
@@ -196,6 +196,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private func setLayoutSubviews() {
+        
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
