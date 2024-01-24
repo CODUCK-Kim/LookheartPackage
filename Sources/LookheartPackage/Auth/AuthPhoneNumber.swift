@@ -34,7 +34,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.setTitle("확인", for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        $0.setTitleColor(.darkGray, for: .normal)
+        $0.setTitleColor(.lightGray, for: .normal)
         $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
 //        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
@@ -254,7 +254,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(okButton)
         okButton.snp.makeConstraints { make in
-            make.top.equalTo(authHelpText2).offset(40)
+            make.top.equalTo(authHelpText2).offset(60)
             make.left.equalTo(safeAreaView).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
             make.height.equalTo(40)
