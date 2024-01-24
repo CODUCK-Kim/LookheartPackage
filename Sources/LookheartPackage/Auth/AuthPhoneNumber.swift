@@ -231,6 +231,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             sendButton.isEnabled = true
             sendButton.setTitle("재전송", for: .normal)
         }
+        
+        sendButton.layoutIfNeeded()
     }
     
     // MARK: -
