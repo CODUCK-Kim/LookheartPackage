@@ -218,10 +218,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - checkSMS Event
     @objc private func checkButtonEvent() {
-        print(authNumber)
-        print(authNumber.count)
-        print(authNumberRegx)
-        if authNumber.count != 6 && authNumberRegx {
+        if authNumber.count == 6 && authNumberRegx {
             checkSMS()
         } else {
             showAlert(title: "알림", message: "정확한 인증 번호를 입력해주세요.")
@@ -247,7 +244,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func textFieldDidChange(_ textField: UITextField) {
         let text = textField.text ?? "Empty"
         
-        print(textField.tag)
         switch (textField.tag) {
         case PHONE_NUMBER_TAG:
             
