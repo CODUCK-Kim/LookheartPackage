@@ -29,6 +29,23 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.backgroundColor = UIColor.MY_BLUE
 //        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
+
+    private lazy var okButton = UIButton().then {
+        $0.setTitle("확인", for: .normal)
+        $0.titleLabel?.textAlignment = .center
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.setTitleColor(.darkGray, for: .normal)
+        $0.setBackgroundColor(UIColor.MY_LIGHT_GRAY_BORDER, for: .normal)
+//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var calcleButton = UIButton().then {
+        $0.setTitle("취소", for: .normal)
+        $0.titleLabel?.textAlignment = .center
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.setTitleColor(.lightGray, for: .normal)
+//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+    }
     
     private lazy var tableView = UITableView().then {
         $0.dataSource = self
@@ -95,7 +112,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
 //        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
     }
     
-    func emojiFlag(for countryCode: String) -> String {
+    private func emojiFlag(for countryCode: String) -> String {
         let base: UInt32 = 127397
         var s = ""
         for v in countryCode.uppercased().unicodeScalars {
@@ -171,7 +188,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let helpText = UILabel().then {
             $0.text = "서비스 이용을 위한 본인 확인 절차입니다.\n계속하려면 인증을 진행해 주세요."
             $0.numberOfLines = 2
-            $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            $0.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
             $0.textColor = UIColor.MY_BLUE
             $0.textAlignment = .center
         }
@@ -231,8 +248,22 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         self.addSubview(authHelpText2)
         authHelpText2.snp.makeConstraints { make in
-            make.top.equalTo(authHelpText.snp.bottom).offset(10)
+            make.top.equalTo(authHelpText.snp.bottom).offset(5)
             make.left.equalTo(toggleButton).offset(10)
+        }
+        
+        self.addSubview(okButton)
+        okButton.snp.makeConstraints { make in
+            make.top.equalTo(authHelpText2).offset(30)
+            make.left.equalTo(safeAreaView).offset(10)
+            make.right.equalTo(safeAreaView).offset(-10)
+            make.height.equalTo(40)
+        }
+        
+        self.addSubview(calcleButton)
+        calcleButton.snp.makeConstraints { make in
+            make.top.equalTo(okButton).offset(10)
+            make.left.right.height.equalTo(okButton)
         }
         
     }
@@ -241,8 +272,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
-        sendButton.layer.cornerRadius = 10
-        sendButton.layer.masksToBounds = true
+        setBorder()
         
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
@@ -255,5 +285,17 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.right.equalTo(toggleButton)
             make.height.equalTo(2)
         }
+    }
+    
+    private func setBorder() {
+        sendButton.layer.cornerRadius = 10
+        sendButton.layer.masksToBounds = true
+        
+        okButton.layer.cornerRadius = 10
+        okButton.layer.borderWidth = 3
+        
+        calcleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
+        calcleButton.layer.cornerRadius = 10
+        calcleButton.layer.borderWidth = 3
     }
 }
