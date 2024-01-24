@@ -115,15 +115,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(borderLabel)
         authLabel.snp.makeConstraints {
-            $0.top.equalTo(authLabel.snp.bottom)
-            $0.left.right.equalTo(safeAreaView)
-            $0.bottom.equalTo(safeAreaView)
+            $0.top.bottom.right.left.equalTo(safeAreaView)
         }
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.height.width.equalTo(50)
+            make.width.equalTo(50)
+            make.height.equalTo(100)
         }
         
         self.addSubview(tableView)
