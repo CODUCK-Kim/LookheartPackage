@@ -246,6 +246,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func textFieldDidChange(_ textField: UITextField) {
         let text = textField.text ?? "Empty"
         
+        print(textField.tag)
         switch (textField.tag) {
         case PHONE_NUMBER_TAG:
             
