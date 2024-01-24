@@ -21,6 +21,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
+    private lazy var sendButton = UIButton().then {
+        $0.setTitle("인증 요청", for: .normal)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        $0.titleLabel?.textAlignment = .center
+        $0.setTitleColor(UIColor.white, for: .normal)
+        $0.backgroundColor = UIColor.MY_BLUE
+//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+    }
+    
     private lazy var tableView = UITableView().then {
         $0.dataSource = self
         $0.delegate = self
@@ -167,9 +176,16 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(textField)
         textField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
-            make.right.equalTo(safeAreaView).offset(-40)
+            make.right.equalTo(safeAreaView).offset(-100)
             make.top.equalTo(toggleButton)
             make.bottom.equalTo(toggleButton).offset(1)
+        }
+        
+        self.addSubview(sendButton)
+        sendButton.snp.makeConstraints { make in
+            make.top.bottom.equalTo(toggleButton)
+            make.left.equalTo(textField.snp.right).offset(10)
+            make.right.equalTo(safeAreaView).offset(-10)
         }
         
         self.addSubview(tableView)
@@ -187,6 +203,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
         }
+        
         self.addSubview(underLine)
         underLine.snp.makeConstraints { make in
             make.top.equalTo(toggleButton.snp.bottom).offset(1)
@@ -194,5 +211,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.right.equalTo(toggleButton)
             make.height.equalTo(2)
         }
+        
+        sendButton.layer.cornerRadius = 10
+        sendButton.layer.masksToBounds = true
     }
 }
