@@ -6,11 +6,13 @@ import PhoneNumberKit
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
     
-    let phoneNumberKit = PhoneNumberKit()
-    var countries: [String] {
+    private let phoneNumberKit = PhoneNumberKit()
+    private var countries: [String] {
         return phoneNumberKit.allCountries().filter { $0 != "001" }
     }
-            
+    
+    private var phoneNumber = ""
+    
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -23,6 +25,17 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.dataSource = self
         $0.delegate = self
         $0.isHidden = true  // 초기에는 숨김
+    }
+    
+    private let textField = UnderLineTextField().then {
+        $0.textColor = .darkGray
+        $0.keyboardType = .numberPad
+        $0.tintColor = UIColor.MY_BLUE
+        $0.font = UIFont.systemFont(ofSize: 14)
+        $0.placeholderString = "setupGuardianTxt".localized()
+        $0.placeholderColor = UIColor.MY_BLUE
+        $0.tag = 0
+        $0.addTarget(AuthPhoneNumber.self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
     @objc func toggleButtonTapped() {
@@ -92,6 +105,31 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     // MARK: -
+    private func setKeyboardUpDown() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        phoneNumber = textField.text ?? "Empty"
+        print(phoneNumber)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.frame.origin.y == 0 {
+                self.frame.origin.y -= keyboardSize.height - 200
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.frame.origin.y != 0 {
+            self.frame.origin.y = 0
+        }
+    }
+    
+    // MARK: -
     private func addViews(){
         
         self.backgroundColor = .white
@@ -137,9 +175,16 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-100)
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(100)
+        }
+        
+        self.addSubview(textField)
+        textField.snp.makeConstraints { make in
+            make.left.equalTo(toggleButton.snp.right).offset(10)
+            make.right.equalTo(safeAreaView).offset(-10)
+            make.centerY.equalTo(toggleButton)
         }
         
         self.addSubview(tableView)
