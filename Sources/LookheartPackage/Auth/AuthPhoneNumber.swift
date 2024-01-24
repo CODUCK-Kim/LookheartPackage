@@ -113,12 +113,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             $0.layer.borderWidth = 2
             $0.layer.masksToBounds = true
             $0.backgroundColor = .clear
-            $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]   // 아래 모서리 테두리를 제거
         }
 
         self.addSubview(borderLabel)
         borderLabel.snp.makeConstraints {
-            $0.top.bottom.right.left.equalTo(safeAreaView)
+            $0.top.right.left.equalTo(safeAreaView)
+            $0.bottom.equalToSuperview().offset(30)
         }
         
         self.addSubview(toggleButton)
