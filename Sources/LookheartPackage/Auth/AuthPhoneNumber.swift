@@ -150,7 +150,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
         let flag = emojiFlag(for: countryCode)
         toggleButton.setTitle("\(flag)\(countryName)", for: .normal)
-        nationalCode = String(countryCode)
+        
+        // nationalCode 업데이트
+        if let code = phoneNumberKit.countryCode(for: countryCode) {
+            nationalCode = String(code)
+        }
+        
         print(nationalCode)
     }
     
@@ -162,14 +167,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         case PHONE_NUMBER_TAG:
             
             phoneNumber = text
-            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE) }
-            else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
+//            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE) }
+//            else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
             
         case AUTH_NUMBER_TAG:
             
             authNumber = text
-            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE) }
-            else {    authTextField.setUnderLineColor(.lightGray) }
+//            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE) }
+//            else {    authTextField.setUnderLineColor(.lightGray) }
             
         default:
             break
