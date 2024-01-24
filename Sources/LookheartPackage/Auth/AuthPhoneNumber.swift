@@ -107,17 +107,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.height.equalTo(40)
         }
         
-//        let borderLabel = UILabel().then {
-//            $0.layer.borderColor = UIColor.MY_BLUE.cgColor
-//            $0.layer.borderWidth = 2
-//            $0.layer.masksToBounds = true
-//            $0.backgroundColor = .white
-//        }
-//        
-//        self.addSubview(borderLabel)
-//        authLabel.snp.makeConstraints {
-//            $0.top.bottom.right.left.equalTo(safeAreaView)
-//        }
+        let borderLabel = UILabel().then {
+            $0.layer.borderColor = UIColor.MY_BLUE.cgColor
+            $0.layer.cornerRadius = 10
+            $0.layer.borderWidth = 2
+            $0.layer.masksToBounds = true
+            $0.backgroundColor = .clear
+        }
+
+        self.addSubview(borderLabel)
+        authLabel.snp.makeConstraints {
+            $0.top.bottom.right.left.equalTo(safeAreaView)
+        }
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
