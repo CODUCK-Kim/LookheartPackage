@@ -154,6 +154,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let authLabel = UILabel().then {
             $0.text = "본인인증"
             $0.textColor = .white
+            $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.backgroundColor = UIColor.MY_BLUE
             $0.textAlignment = .center
             $0.layer.cornerRadius = 10
@@ -167,7 +168,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         
         let helpText = UILabel().then {
-            $0.text = "본인인증을 위한 핸드폰 번호를 입력해주세요"
+            $0.text = "서비스 이용을 위한 본인 확인 절차입니다.\n계속하려면 인증을 진행해 주세요."
+            $0.numberOfLines = 2
             $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.textColor = UIColor.MY_BLUE
             $0.textAlignment = .center
@@ -182,7 +184,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
-            make.top.equalTo(helpText.snp.bottom).offset(50)
+            make.top.equalTo(helpText.snp.bottom).offset(70)
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(100)
         }
