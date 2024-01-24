@@ -137,6 +137,20 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalToSuperview().offset(-50)
         }
         
+        let borderLabel = UILabel().then {
+            $0.layer.borderColor = UIColor.MY_BLUE.cgColor
+            $0.layer.cornerRadius = 10
+            $0.layer.borderWidth = 2
+            $0.layer.masksToBounds = true
+            $0.backgroundColor = .clear
+        }
+
+        self.addSubview(borderLabel)
+        borderLabel.snp.makeConstraints {
+            $0.top.right.left.equalTo(safeAreaView)
+            $0.bottom.equalToSuperview().offset(30)
+        }
+        
         let authLabel = UILabel().then {
             $0.text = "본인인증"
             $0.textColor = .white
@@ -154,32 +168,21 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         let helpText = UILabel().then {
             $0.text = "본인인증을 위한 핸드폰 번호를 입력해주세요"
+            $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.textColor = UIColor.MY_BLUE
             $0.textAlignment = .center
         }
+        
         self.addSubview(helpText)
         helpText.snp.makeConstraints { make in
-            make.top.equalTo(authLabel.snp.bottom).offset(30)
+            make.top.equalTo(authLabel.snp.bottom).offset(50)
             make.left.right.equalTo(safeAreaView)
         }
         
-        let borderLabel = UILabel().then {
-            $0.layer.borderColor = UIColor.MY_BLUE.cgColor
-            $0.layer.cornerRadius = 10
-            $0.layer.borderWidth = 2
-            $0.layer.masksToBounds = true
-            $0.backgroundColor = .clear
-        }
-
-        self.addSubview(borderLabel)
-        borderLabel.snp.makeConstraints {
-            $0.top.right.left.equalTo(safeAreaView)
-            $0.bottom.equalToSuperview().offset(30)
-        }
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview().offset(-100)
+            make.top.equalTo(helpText.snp.bottom).offset(50)
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(100)
         }
