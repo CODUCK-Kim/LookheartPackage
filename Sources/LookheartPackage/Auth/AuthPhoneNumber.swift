@@ -10,25 +10,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     var countries: [String] {
         return phoneNumberKit.allCountries()
     }
-    
-    private let safeAreaView = UILabel().then {
-        $0.backgroundColor = .white
-    }
-    
-    private let authLabel = UILabel().then {
-        $0.text = "본인인증"
-        $0.textColor = .white
-        $0.backgroundColor = UIColor.MY_BLUE
-        $0.textAlignment = .center
-        $0.layer.cornerRadius = 10
-        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        $0.clipsToBounds = true
-    }
-    
+            
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
         $0.setTitleColor(UIColor.black, for: .normal)
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+        
+        updateToggleButtonTitle()
     }
     
     private lazy var tableView = UITableView().then {
@@ -44,14 +32,11 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addViews()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-    }
-    
-    public func setLayout() {
-        addViews()
     }
     
     // MARK: tableView
@@ -85,12 +70,21 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return s
     }
     
+    private func updateToggleButtonTitle() {
+        let currentLocale = Locale.current
+        let countryCode = currentLocale.regionCode ?? "US"
+        let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
+        let flag = emojiFlag(for: countryCode)
+        toggleButton.setTitle("\(flag) \(countryName)", for: .normal)
+    }
+    
     // MARK: -
     private func addViews(){
         
         self.backgroundColor = .white
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        let safeAreaView = UILabel().then { $0.backgroundColor = .white }
         self.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(30)
@@ -99,10 +93,32 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalToSuperview().offset(-50)
         }
         
+        let authLabel = UILabel().then {
+            $0.text = "본인인증"
+            $0.textColor = .white
+            $0.backgroundColor = UIColor.MY_BLUE
+            $0.textAlignment = .center
+            $0.layer.cornerRadius = 10
+            $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]   // 왼쪽 위, 오른쪽 위 테두리 설정
+            $0.clipsToBounds = true
+        }
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
             make.top.left.right.centerX.equalTo(safeAreaView)
             make.height.equalTo(40)
+        }
+        
+        let borderLabel = UILabel().then {
+            $0.layer.borderColor = UIColor.MY_BLUE.cgColor
+            $0.layer.borderWidth = 2
+            $0.backgroundColor = .white
+        }
+        
+        self.addSubview(borderLabel)
+        authLabel.snp.makeConstraints {
+            $0.top.equalTo(authLabel.snp.bottom)
+            $0.left.right.equalTo(safeAreaView)
+            $0.bottom.equalTo(safeAreaView)
         }
         
         self.addSubview(toggleButton)
