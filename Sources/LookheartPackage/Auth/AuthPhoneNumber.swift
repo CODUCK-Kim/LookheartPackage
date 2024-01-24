@@ -44,7 +44,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var sendButton = UIButton().then {
-        $0.setTitle("인증 요청", for: .normal)
+        $0.setTitle("requestVerification".localized(), for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         $0.titleLabel?.textAlignment = .center
         $0.setTitleColor(UIColor.white, for: .normal)
@@ -52,7 +52,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     private lazy var okButton = UIButton().then {
-        $0.setTitle("확인", for: .normal)
+        $0.setTitle("ok".localized(), for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.white, for: .normal)
@@ -60,7 +60,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var calcleButton = UIButton().then {
-        $0.setTitle("취소", for: .normal)
+        $0.setTitle("reject".localized(), for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
@@ -78,7 +78,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "핸드폰 입력"
+        $0.placeholderString = "enterMobilePhone".localized()
         $0.placeholderColor = UIColor.lightGray
         $0.tag = PHONE_NUMBER_TAG
     }
@@ -89,7 +89,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.textContentType = .oneTimeCode
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "인증번호 입력"
+        $0.placeholderString = "enterVerificationCode".localized()
         $0.placeholderColor = UIColor.lightGray
         $0.tag = AUTH_NUMBER_TAG
         $0.isHidden = true
@@ -189,9 +189,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             sendSMS()
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
-            showAlert(title: "알림", message: "정확한 핸드폰 번호를 입력하세요")
+            showAlert(title: "noti".localized(), message: "validPhoneNumber".localized())
         } else {
-            showAlert(title: "알림", message: "인증 번호 요청 횟수 초과")
+            showAlert(title: "noti".localized(), message: "exceededNumber".localized())
         }
     }
     
@@ -203,10 +203,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                 startCountdown()
                 smsCnt -= 1
                 
-                showAlert(title: "인증 요청", message: "인증 번호를 발송하였습니다.\n요청 횟수가 \(smsCnt)회 남았습니다.")
+                showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"))
                 
             case .failure(_):
-                showAlert(title: "인증 실패", message: "잠시 후 다시 시도해주세요")
+                showAlert(title: "failVerification".localized(), message: "againMoment".localized())
             }
         }
     }
@@ -217,7 +217,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             return
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let action = UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
         alert.addAction(action)
         viewController.present(alert, animated: true)
     }
@@ -227,7 +227,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         if authNumber.count == 6 && authNumberRegx {
             checkSMS()
         } else {
-            showAlert(title: "알림", message: "정확한 인증 번호를 입력해주세요.")
+            showAlert(title: "noti".localized(), message: "correctVerification".localized())
         }
     }
     
@@ -238,7 +238,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                 print("success")
                 delegate?.complete()
             case .failure(_):
-                showAlert(title: "인증 실패", message: "잠시 후 다시 시도해주세요")
+                showAlert(title: "failVerification".localized(), message: "againMoment".localized())
             }
         }
     }
@@ -308,7 +308,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             countdownTimer?.invalidate()
             countdownTimer = nil
             sendButton.isEnabled = true
-            sendButton.setTitle("재전송", for: .normal)
+            sendButton.setTitle("resendText".localized(), for: .normal)
         }
     }
     
@@ -370,7 +370,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         
         let authLabel = UILabel().then {
-            $0.text = "본인인증"
+            $0.text = "identityVerification".localized()
             $0.textColor = .white
             $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.backgroundColor = UIColor.MY_BLUE
@@ -387,7 +387,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         //
         let helpText = UILabel().then {
-            $0.text = "서비스 이용을 위한 본인 확인 절차입니다.\n계속하려면 인증을 진행해 주세요."
+            $0.text = "helpAuthText".localized()
             $0.numberOfLines = 2
             $0.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
             $0.textColor = UIColor.MY_BLUE
@@ -435,7 +435,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
         //
         let authHelpText = UILabel().then {
-            $0.text = "◦ 3분 이내로 인증번호를 입력해 주세요."
+            $0.text = "threeMinutesHelpText".localized()
             $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
             $0.textColor = UIColor.lightGray
         }
@@ -447,7 +447,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         //
         let authHelpText2 = UILabel().then {
-            $0.text = "◦ 인증번호가 전송되지 않을 경우 재전송 버튼을 눌러주세요."
+            $0.text = "resendAuthNumber".localized()
             $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             $0.textColor = UIColor.lightGray
         }
