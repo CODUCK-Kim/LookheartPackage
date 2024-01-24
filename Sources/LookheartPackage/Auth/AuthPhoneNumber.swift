@@ -31,9 +31,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
-        $0.font = UIFont.systemFont(ofSize: 14)
+        $0.font = UIFont.systemFont(ofSize: 16)
         $0.placeholderString = "setupGuardianTxt".localized()
-        $0.placeholderColor = UIColor.MY_BLUE
+        $0.placeholderColor = UIColor.lightGray
         $0.tag = 0
     }
     
@@ -182,7 +182,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(textField)
         textField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
-            make.right.equalTo(safeAreaView).offset(-10)
+            make.right.equalTo(safeAreaView).offset(-40)
             make.top.equalTo(toggleButton)
             make.bottom.equalTo(toggleButton).offset(1)
         }
@@ -198,6 +198,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func setLayoutSubviews() {
         
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        setKeyboardUpDown()
         
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
@@ -207,7 +208,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.top.equalTo(toggleButton.snp.bottom).offset(1)
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(toggleButton)
-            make.height.equalTo(1)
+            make.height.equalTo(2)
         }
     }
 }
