@@ -33,7 +33,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private lazy var okButton = UIButton().then {
         $0.setTitle("확인", for: .normal)
         $0.titleLabel?.textAlignment = .center
-        $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.backgroundColor = UIColor.MY_LIGHT_GRAY_BORDER2
 //        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
@@ -42,7 +42,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private lazy var calcleButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.titleLabel?.textAlignment = .center
-        $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
 //        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
@@ -254,7 +254,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(okButton)
         okButton.snp.makeConstraints { make in
-            make.top.equalTo(authHelpText2).offset(100)
+            make.top.equalTo(authHelpText2).offset(50)
             make.left.equalTo(safeAreaView).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
             make.height.equalTo(40)
