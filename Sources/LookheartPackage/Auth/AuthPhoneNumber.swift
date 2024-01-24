@@ -294,6 +294,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         okButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
         okButton.layer.cornerRadius = 10
         okButton.layer.borderWidth = 3
+        okButton.layer.masksToBounds = true
         
         calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
         calcleButton.layer.cornerRadius = 10
