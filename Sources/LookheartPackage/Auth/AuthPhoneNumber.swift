@@ -6,6 +6,8 @@ import PhoneNumberKit
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
     
+    private let numberRegex = try! NSRegularExpression(pattern: "[0-9]+")
+    
     private let PHONE_NUMBER_TAG = 0
     private let AUTH_NUMBER_TAG = 1
     
@@ -18,6 +20,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private var authTextFieldHeightConstraint: Constraint?
     
     private var phoneNumber = ""
+    private var authNumber = ""
     
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
@@ -53,6 +56,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var tableView = UITableView().then {
+        $0.backgroundColor = .white
         $0.dataSource = self
         $0.delegate = self
         $0.isHidden = true  // 초기에는 숨김
@@ -110,7 +114,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let currentLocale = Locale.current
         let countryName = currentLocale.localizedString(forRegionCode: countryCode) ?? countryCode
         let flag = emojiFlag(for: countryCode)
-        cell.textLabel?.text = "\(flag) \(countryName)"
+        cell.textLabel?.text = "\(flag)\(countryName)"
         return cell
     }
     
@@ -122,7 +126,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let countryName = currentLocale.localizedString(forRegionCode: selectedCountry) ?? selectedCountry
         let flag = emojiFlag(for: selectedCountry)
         
-        toggleButton.setTitle("\(flag) \(countryName)", for: .normal)
+        toggleButton.setTitle("\(countryName)", for: .normal)
         tableView.isHidden = !tableView.isHidden
         
 //        print("Selected Country: \(selectedCountry) - Code: \(countryCode)")
@@ -147,8 +151,28 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: -
     @objc private func textFieldDidChange(_ textField: UITextField) {
-        phoneNumber = textField.text ?? "Empty"
-        print(phoneNumber)
+        let text = textField.text ?? "Empty"
+        
+        switch (textField.tag) {
+        case PHONE_NUMBER_TAG:
+            
+            phoneNumber = text
+            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE)
+            } else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
+            
+        case AUTH_NUMBER_TAG:
+            
+            authNumber = text
+            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE)
+            } else {    authTextField.setUnderLineColor(.lightGray) }
+            
+        default:
+            break
+        }
+    }
+    
+    private func isNumberValid(_ number: String) -> Bool {
+        return numberRegex.firstMatch(in: number, options: [], range: NSRange(location: 0, length: number.count)) != nil
     }
     
     @objc private func sendButtonEvent(_ textField: UITextField) {
@@ -261,9 +285,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(10)  // toggleButton 아래에 위치
-            make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
-            make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
+            make.top.equalTo(toggleButton.snp.bottom).offset(10)
+            make.left.right.equalTo(toggleButton)
+            make.height.equalTo(200)
         }
         
         
