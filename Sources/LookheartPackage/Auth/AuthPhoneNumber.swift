@@ -15,19 +15,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.backgroundColor = .white
     }
     
-    private let background = UILabel().then {
-        $0.backgroundColor = .white
-        $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
-    }
-    
     private let authLabel = UILabel().then {
         $0.text = "본인인증"
         $0.textColor = .white
         $0.backgroundColor = UIColor.MY_BLUE
         $0.textAlignment = .center
         $0.layer.cornerRadius = 10
-        $0.layer.masksToBounds = true
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        $0.clipsToBounds = true
     }
     
     private lazy var toggleButton = UIButton().then {
@@ -98,21 +93,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
-            make.top.left.right.bottom.equalToSuperview()
-        }
-        
-        self.addSubview(background)
-        background.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaView).offset(30)
-            make.left.equalTo(safeAreaView).offset(10)
-            make.right.equalTo(safeAreaView).offset(-10)
-            make.bottom.equalTo(safeAreaView)
-            make.height.equalTo(100)
+            make.top.equalToSuperview().offset(30)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-50)
         }
         
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
-            make.top.left.right.centerX.equalTo(background)
+            make.top.left.right.centerX.equalTo(safeAreaView)
             make.height.equalTo(40)
         }
         
@@ -126,7 +115,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         tableView.snp.makeConstraints { make in
             make.top.equalTo(toggleButton.snp.bottom).offset(10)  // toggleButton 아래에 위치
             make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
-            make.bottom.equalToSuperview().inset(20)     // 하단 여백 설정
+            make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
         }
         
     }
