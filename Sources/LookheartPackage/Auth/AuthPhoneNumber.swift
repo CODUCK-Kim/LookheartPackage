@@ -14,9 +14,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
         $0.setTitleColor(UIColor.black, for: .normal)
-        $0.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-        $0.layer.masksToBounds = true
-        $0.layer.cornerRadius = 10
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
@@ -39,6 +36,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        // Layout이 완료된 후 테두리 적용
+        toggleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+        toggleButton.layer.cornerRadius = 10
+        toggleButton.layer.borderWidth = 2
+        toggleButton.layer.masksToBounds = true
     }
     
     // MARK: tableView
