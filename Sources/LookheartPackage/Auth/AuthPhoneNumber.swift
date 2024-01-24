@@ -6,6 +6,9 @@ import PhoneNumberKit
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
     
+    private let PHONE_NUMBER_TAG = 0
+    private let AUTH_NUMBER_TAG = 1
+    
     private let phoneNumberKit = PhoneNumberKit()
     private var countries: [String] {
         return phoneNumberKit.allCountries().filter { $0 != "001" }
@@ -53,14 +56,25 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.isHidden = true  // 초기에는 숨김
     }
     
-    private let textField = UnderLineTextField().then {
+    private lazy var phoneNumberTextField = UnderLineTextField().then {
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "setupGuardianTxt".localized()
+        $0.placeholderString = "핸드폰 입력"
         $0.placeholderColor = UIColor.lightGray
-        $0.tag = 0
+        $0.tag = PHONE_NUMBER_TAG
+    }
+    
+    private lazy var authTextField = UnderLineTextField().then {
+        $0.textColor = .darkGray
+        $0.keyboardType = .numberPad
+        $0.tintColor = UIColor.MY_BLUE
+        $0.font = UIFont.systemFont(ofSize: 16)
+        $0.placeholderString = "인증번호 입력"
+        $0.placeholderColor = UIColor.lightGray
+        $0.tag = AUTH_NUMBER_TAG
+        $0.isHidden = true
     }
     
     @objc func toggleButtonTapped() {
@@ -201,23 +215,32 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         //
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
-            make.top.equalTo(helpText.snp.bottom).offset(70)
+            make.top.equalTo(helpText.snp.bottom).offset(50)
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(100)
         }
-        
-        self.addSubview(textField)
-        textField.snp.makeConstraints { make in
+        //
+        self.addSubview(phoneNumberTextField)
+        phoneNumberTextField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
             make.right.equalTo(safeAreaView).offset(-100)
             make.top.equalTo(toggleButton)
             make.bottom.equalTo(toggleButton).offset(1)
         }
         
+        // authTextField
+        self.addSubview(authTextField)
+        authTextField.snp.makeConstraints { make in
+            make.left.equalTo(toggleButton)
+            make.right.equalTo(phoneNumberTextField)
+            make.top.equalTo(toggleButton.snp.bottom).offset(10)
+        }
+        
+        //
         self.addSubview(sendButton)
         sendButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(toggleButton)
-            make.left.equalTo(textField.snp.right).offset(10)
+            make.left.equalTo(phoneNumberTextField.snp.right).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
         }
         
@@ -228,6 +251,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
         }
         
+        
         //
         let authHelpText = UILabel().then {
             $0.text = "◦ 3분 이내로 인증번호를 입력해 주세요."
@@ -236,7 +260,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         self.addSubview(authHelpText)
         authHelpText.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(15)
+            make.top.equalTo(authTextField.snp.bottom).offset(15)
             make.left.equalTo(toggleButton).offset(10)
         }
         
@@ -270,7 +294,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private func setLayoutSubviews() {
         
-        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        phoneNumberTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         setBorder()
         
