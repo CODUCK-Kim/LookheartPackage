@@ -46,6 +46,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         super.init(frame: frame)
         addViews()
         updateToggleButtonTitle()
+        setKeyboardUpDown()
     }
     
     required init?(coder: NSCoder) {
@@ -115,6 +116,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        print("keyboardWillShow")
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.frame.origin.y == 0 {
                 self.frame.origin.y -= keyboardSize.height - 200
@@ -123,6 +125,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
+        print("keyboardWillHide")
         if self.frame.origin.y != 0 {
             self.frame.origin.y = 0
         }

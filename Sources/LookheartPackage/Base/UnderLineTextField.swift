@@ -6,7 +6,7 @@ class UnderLineTextField: UITextField {
     lazy var placeholderString: String = ""
 
     // 입력 Text 여백
-    var textPadding = UIEdgeInsets (top: 0, left: 3, bottom: 3, right: 0)
+    var textPadding = UIEdgeInsets (top: 0, left: 3, bottom: 0, right: 0)
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.editingRect(forBounds: bounds)
