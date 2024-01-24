@@ -4,7 +4,13 @@ import Then
 import SnapKit
 import PhoneNumberKit
 
-public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate{
+public protocol AuthDelegate: AnyObject {
+    func complete()
+    func cancle()
+}
+
+public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate {
+    weak var delegate: AuthDelegate?
     
     private let numberRegex = try! NSRegularExpression(pattern: "[0-9]+")
     
@@ -59,7 +65,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.backgroundColor = UIColor.MY_LIGHT_GRAY_BORDER2
-//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
     private lazy var tableView = UITableView().then {
@@ -81,6 +86,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private lazy var authTextField = UnderLineTextField().then {
         $0.textColor = .darkGray
         $0.keyboardType = .numberPad
+        $0.textContentType = .oneTimeCode
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
         $0.placeholderString = "인증번호 입력"
@@ -228,12 +234,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func checkSMS() {
         NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
             switch result {
-            case .success(_): 
-                print("comp")
+            case .success(_):
+                print("success")
+                delegate?.complete()
             case .failure(_):
                 showAlert(title: "인증 실패", message: "잠시 후 다시 시도해주세요")
             }
         }
+    }
+    
+    // MARK: - cancleButton Event
+    @objc private func cancleButtonEvent() {
+        delegate?.cancle()
     }
     
     // MARK: - keyboard
@@ -310,7 +322,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         authTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         sendButton.addTarget(self, action: #selector(sendButtonEvent), for: .touchUpInside)
+        
         okButton.addTarget(self, action: #selector(checkButtonEvent), for: .touchUpInside)
+        calcleButton.addTarget(self, action: #selector(cancleButtonEvent), for: .touchUpInside)
         
         setBorder()
         
@@ -408,8 +422,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.top.equalTo(toggleButton.snp.bottom).offset(20)
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(phoneNumberTextField)
-            // 초기 높이를 저장
-            authTextFieldHeightConstraint = make.height.equalTo(0).constraint
+            authTextFieldHeightConstraint = make.height.equalTo(0).constraint // 초기 높이 저장
         }
         
         //
@@ -475,8 +488,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         okButton.layer.cornerRadius = 10
         okButton.layer.masksToBounds = true
 
+        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
         calcleButton.layer.cornerRadius = 10
+        calcleButton.layer.borderWidth = 3
         calcleButton.layer.masksToBounds = true
-
+        
+//        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+//        calcleButton.layer.cornerRadius = 10
+//        calcleButton.layer.borderWidth = 3
     }
 }
