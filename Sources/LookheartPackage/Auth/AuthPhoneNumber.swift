@@ -192,6 +192,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         authTextFieldHeightConstraint?.update(offset: 30)
         authTextField.layoutIfNeeded()  // 레이아웃 업데이트
         
+        startCountdown()
 //        sendSMS()
     }
     
@@ -232,8 +233,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             sendButton.isEnabled = true
             sendButton.setTitle("재전송", for: .normal)
         }
-        
-        sendButton.layoutIfNeeded()
     }
     
     // MARK: -
