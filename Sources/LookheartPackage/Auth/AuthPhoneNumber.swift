@@ -20,10 +20,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private var countdownTimer: Timer?
     private var countdown: Int = 180
+    private var smsCnt = 5
     
     private var phoneNumber = ""
     private var nationalCode = ""
     private var authNumber = ""
+    
+    private var phoneNumberRegx = false
+    private var authNumberRegx = false
     
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
@@ -45,9 +49,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.setTitle("확인", for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        $0.setTitleColor(.lightGray, for: .normal)
-        $0.backgroundColor = UIColor.MY_LIGHT_GRAY_BORDER2
-//        $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+        $0.setTitleColor(.white, for: .normal)
+        $0.backgroundColor = UIColor.MY_BLUE
     }
     
     private lazy var calcleButton = UIButton().then {
@@ -84,12 +87,16 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.tag = AUTH_NUMBER_TAG
         $0.isHidden = true
     }
+
     
-    @objc func toggleButtonTapped() {
-        // 리스트 뷰의 표시 상태 토글
-        tableView.isHidden = !tableView.isHidden
-    }
-        
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
@@ -106,6 +113,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     // MARK: tableView
+    @objc func toggleButtonTapped() {
+        tableView.isHidden = !tableView.isHidden            // 리스트 뷰의 표시 상태 토글
+    }
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return countries.count
     }
@@ -159,7 +170,76 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
     }
     
-    // MARK: -
+    // MARK: - sendSMS Event
+    @objc private func sendButtonEvent() {
+        if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
+            authTextField.isHidden = false
+            sendButton.isEnabled = false
+            
+            authTextFieldHeightConstraint?.update(offset: 30)
+            authTextField.layoutIfNeeded()  // 레이아웃 업데이트
+            
+            sendSMS()
+            
+        } else if phoneNumber.count < 4 || !phoneNumberRegx {
+            showAlert(title: "알림", message: "정확한 핸드폰 번호를 입력하세요")
+        } else {
+            showAlert(title: "알림", message: "인증 번호 요청 횟수 초과")
+        }
+    }
+    
+    private func sendSMS() {
+        NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
+            switch result {
+            case .success(_):
+                
+                startCountdown()
+                smsCnt -= 1
+                
+                showAlert(title: "인증 요청", message: "인증 번호를 발송하였습니다.\n요청 횟수가 \(smsCnt)회 남았습니다.")
+                
+            case .failure(_):
+                showAlert(title: "인증 실패", message: "잠시 후 다시 시도해주세요")
+            }
+        }
+    }
+    
+    func showAlert(title: String, message: String) {
+        guard let viewController = self.parentViewController else {
+            print("View controller not found")
+            return
+        }
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        viewController.present(alert, animated: true)
+    }
+    
+    // MARK: - checkSMS Event
+    @objc private func checkButtonEvent() {
+        if authNumber.count != 6 && authNumberRegx {
+            checkSMS()
+        } else {
+            showAlert(title: "알림", message: "정확한 인증 번호를 입력해주세요.")
+        }
+    }
+    
+    private func checkSMS() {
+        NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
+            switch result {
+            case .success(_): 
+                print("comp")
+            case .failure(_):
+                showAlert(title: "인증 실패", message: "잠시 후 다시 시도해주세요")
+            }
+        }
+    }
+    
+    // MARK: - keyboard
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.endEditing(true)
+    }
+    
     @objc private func textFieldDidChange(_ textField: UITextField) {
         let text = textField.text ?? "Empty"
         
@@ -167,14 +247,24 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         case PHONE_NUMBER_TAG:
             
             phoneNumber = text
-//            if isNumberValid(phoneNumber) { phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE) }
-//            else {    phoneNumberTextField.setUnderLineColor(.lightGray)  }
+            if isNumberValid(phoneNumber) {
+                phoneNumberRegx = true
+                phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE)
+            } else {
+                phoneNumberRegx = false
+                phoneNumberTextField.setUnderLineColor(.lightGray)
+            }
             
         case AUTH_NUMBER_TAG:
             
             authNumber = text
-//            if isNumberValid(authNumber) {  authTextField.setUnderLineColor(UIColor.MY_BLUE) }
-//            else {    authTextField.setUnderLineColor(.lightGray) }
+            if isNumberValid(authNumber) {
+                authNumberRegx = true
+                authTextField.setUnderLineColor(UIColor.MY_BLUE)
+            } else {
+                authNumberRegx = false
+                authTextField.setUnderLineColor(.lightGray)
+            }
             
         default:
             break
@@ -185,39 +275,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         return numberRegex.firstMatch(in: number, options: [], range: NSRange(location: 0, length: number.count)) != nil
     }
     
-    @objc private func sendButtonEvent(_ textField: UITextField) {
-        authTextField.isHidden = false
-        sendButton.isEnabled = false
-        
-        authTextFieldHeightConstraint?.update(offset: 30)
-        authTextField.layoutIfNeeded()  // 레이아웃 업데이트
-        
-        startCountdown()
-//        sendSMS()
-    }
-    
-    private func sendSMS() {
-        NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
-            switch result {
-            case .success(let result):
-                ToastHelper.shared.showToast(self, "성공")
-            case .failure(_):
-                ToastHelper.shared.showToast(self, "실패")
-            }
-        }
-    }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.endEditing(true)
-    }
-    
     // MARK: - timer
     func startCountdown() {
         countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
     }
     
     @objc func updateCountdown() {
-        print(countdown)
         if countdown > 0 {
             countdown -= 1
             let sec = countdown % 60
@@ -228,6 +291,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             
             sendButton.setTitle("\(minString):\(secString)", for: .normal)
         } else {
+            countdown = 180
             countdownTimer?.invalidate()
             countdownTimer = nil
             sendButton.isEnabled = true
@@ -235,7 +299,28 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
     }
     
-    // MARK: -
+    // MARK: - addViews
+    private func setLayoutSubviews() {
+        
+        phoneNumberTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        sendButton.addTarget(self, action: #selector(sendButtonEvent), for: .touchUpInside)
+        okButton.addTarget(self, action: #selector(checkButtonEvent), for: .touchUpInside)
+        
+        setBorder()
+        
+        let underLine = UILabel().then {
+            $0.backgroundColor = UIColor.MY_BLUE
+        }
+        
+        self.addSubview(underLine)
+        underLine.snp.makeConstraints { make in
+            make.top.equalTo(toggleButton.snp.bottom).offset(1)
+            make.left.equalTo(toggleButton).offset(3)
+            make.right.equalTo(toggleButton)
+            make.height.equalTo(2)
+        }
+    }
+    
     private func addViews(){
         
         self.backgroundColor = .white
@@ -377,34 +462,17 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
     }
     
-    private func setLayoutSubviews() {
-        
-        phoneNumberTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        sendButton.addTarget(self, action: #selector(sendButtonEvent), for: .touchUpInside)
-        
-        setBorder()
-        
-        let underLine = UILabel().then {
-            $0.backgroundColor = UIColor.MY_BLUE
-        }
-        
-        self.addSubview(underLine)
-        underLine.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(1)
-            make.left.equalTo(toggleButton).offset(3)
-            make.right.equalTo(toggleButton)
-            make.height.equalTo(2)
-        }
-    }
-    
     private func setBorder() {
         sendButton.layer.cornerRadius = 10
         sendButton.layer.masksToBounds = true
-        
-        okButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+
         okButton.layer.cornerRadius = 10
-        okButton.layer.borderWidth = 3
         okButton.layer.masksToBounds = true
+        
+//        okButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
+//        okButton.layer.cornerRadius = 10
+//        okButton.layer.borderWidth = 3
+//        okButton.layer.masksToBounds = true
         
         calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
         calcleButton.layer.cornerRadius = 10

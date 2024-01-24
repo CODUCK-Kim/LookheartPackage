@@ -75,7 +75,8 @@ extension UnderLineTextField {
         setPlaceholder()
         underLineView.backgroundColor = UIColor.MY_BLUE
     }
+    
     @objc func editingDidEnd(){
-        underLineView.backgroundColor = placeholderColor
+//        underLineView.backgroundColor = placeholderColor
     }
 }
