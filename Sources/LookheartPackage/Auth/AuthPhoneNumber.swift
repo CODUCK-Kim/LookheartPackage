@@ -116,7 +116,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
 
         self.addSubview(borderLabel)
-        authLabel.snp.makeConstraints {
+        borderLabel.snp.makeConstraints {
             $0.top.bottom.right.left.equalTo(safeAreaView)
         }
         
@@ -136,4 +136,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
     }
     
+    public func setBorder() {
+        
+    }
 }
