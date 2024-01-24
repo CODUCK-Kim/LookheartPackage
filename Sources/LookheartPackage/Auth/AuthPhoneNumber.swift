@@ -322,10 +322,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.right.height.equalTo(okButton)
         }
         
+        // tableView
         self.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(toggleButton.snp.bottom).offset(10)
-            make.left.right.equalTo(toggleButton)
+            make.left.equalTo(toggleButton)
+            make.right.equalToSuperview()
             make.height.equalTo(300)
         }
     }
