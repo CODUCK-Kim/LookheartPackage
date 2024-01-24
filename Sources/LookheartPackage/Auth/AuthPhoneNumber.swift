@@ -307,7 +307,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     // MARK: - addViews
     private func setLayoutSubviews() {
         
+        phoneNumberTextField.tag = PHONE_NUMBER_TAG
+        authTextField.tag = AUTH_NUMBER_TAG
+        
         phoneNumberTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        authTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        
         sendButton.addTarget(self, action: #selector(sendButtonEvent), for: .touchUpInside)
         okButton.addTarget(self, action: #selector(checkButtonEvent), for: .touchUpInside)
         
