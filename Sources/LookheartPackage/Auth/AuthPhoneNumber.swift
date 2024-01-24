@@ -74,7 +74,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.placeholderString = "인증번호 입력"
         $0.placeholderColor = UIColor.lightGray
         $0.tag = AUTH_NUMBER_TAG
-        $0.isHidden = true
+//        $0.isHidden = true
     }
     
     @objc func toggleButtonTapped() {
