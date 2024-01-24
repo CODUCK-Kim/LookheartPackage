@@ -121,8 +121,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(50)
-            make.height.equalTo(100)
+            make.width.equalTo(10)
+            make.height.equalTo(50)
         }
         
         self.addSubview(tableView)
