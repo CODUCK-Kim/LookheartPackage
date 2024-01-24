@@ -46,7 +46,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         super.init(frame: frame)
         addViews()
         updateToggleButtonTitle()
-        setKeyboardUpDown()
     }
     
     required init?(coder: NSCoder) {
@@ -184,7 +183,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func setLayoutSubviews() {
         
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        setKeyboardUpDown()
         
         let underLine = UILabel().then {
             $0.backgroundColor = UIColor.MY_BLUE
