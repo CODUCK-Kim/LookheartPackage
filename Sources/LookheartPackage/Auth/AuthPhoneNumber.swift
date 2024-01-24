@@ -8,12 +8,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     let phoneNumberKit = PhoneNumberKit()
     var countries: [String] {
-        return phoneNumberKit.allCountries()
+        return phoneNumberKit.allCountries().filter { $0 != "979" }
     }
             
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
-        $0.setTitleColor(UIColor.black, for: .normal)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        $0.titleLabel?.textAlignment = .center
+        $0.setTitleColor(UIColor.darkGray, for: .normal)
         $0.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
     }
     
@@ -40,11 +42,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        // Layout이 완료된 후 테두리 적용
-        toggleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-        toggleButton.layer.cornerRadius = 10
-        toggleButton.layer.borderWidth = 2
-        toggleButton.layer.masksToBounds = true
+        setLayoutSubviews()
     }
     
     // MARK: tableView
@@ -132,9 +130,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(100)
-            make.height.equalTo(50)
+            make.centerY.equalToSuperview()
+            make.left.equalTo(safeAreaView).offset(10)
+            make.width.equalTo(200)
         }
         
         self.addSubview(tableView)
@@ -143,6 +141,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
             make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
         }
+    }
+    
+    private func setLayoutSubviews() {
         
+        let underLine = UILabel().then {
+            $0.backgroundColor = UIColor.MY_LIGHT_GRAY
+        }
+        self.addSubview(underLine)
+        underLine.snp.makeConstraints { make in
+            make.top.equalTo(toggleButton.snp.bottom).offset(3)
+            make.left.right.equalTo(toggleButton)
+            make.height.equalTo(1)
+        }
     }
 }
