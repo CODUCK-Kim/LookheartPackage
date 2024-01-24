@@ -152,6 +152,17 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.height.equalTo(40)
         }
         
+        let helpText = UILabel().then {
+            $0.text = "본인인증을 위한 핸드폰 번호를 입력해주세요"
+            $0.textColor = UIColor.MY_BLUE
+            $0.textAlignment = .center
+        }
+        self.addSubview(helpText)
+        helpText.snp.makeConstraints { make in
+            make.top.equalTo(authLabel.snp.bottom).offset(30)
+            make.left.right.equalTo(safeAreaView)
+        }
+        
         let borderLabel = UILabel().then {
             $0.layer.borderColor = UIColor.MY_BLUE.cgColor
             $0.layer.cornerRadius = 10
@@ -176,7 +187,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(textField)
         textField.snp.makeConstraints { make in
             make.left.equalTo(toggleButton.snp.right).offset(10)
-            make.right.equalTo(safeAreaView).offset(-150)
+            make.right.equalTo(safeAreaView).offset(-100)
             make.top.equalTo(toggleButton)
             make.bottom.equalTo(toggleButton).offset(1)
         }
@@ -184,7 +195,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.addSubview(sendButton)
         sendButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(toggleButton)
-            make.left.equalTo(textField.snp.right).offset(60)
+            make.left.equalTo(textField.snp.right).offset(10)
             make.right.equalTo(safeAreaView).offset(-10)
         }
         
@@ -215,5 +226,4 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.height.equalTo(2)
         }
     }
-    
 }
