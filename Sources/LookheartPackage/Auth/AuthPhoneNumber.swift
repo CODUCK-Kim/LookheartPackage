@@ -10,7 +10,7 @@ public protocol AuthDelegate: AnyObject {
 }
 
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate {
-    weak var delegate: AuthDelegate?
+    private weak var delegate: AuthDelegate?
     
     private let numberRegex = try! NSRegularExpression(pattern: "[0-9]+")
     
