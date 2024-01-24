@@ -214,25 +214,25 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         //
         let authHelpText = UILabel().then {
             $0.text = "◦ 3분 이내로 인증번호를 입력해 주세요."
-            $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+            $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
             $0.textColor = UIColor.lightGray
         }
         self.addSubview(authHelpText)
         authHelpText.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(5)
-            make.left.equalTo(toggleButton)
+            make.top.equalTo(toggleButton.snp.bottom).offset(15)
+            make.left.equalTo(toggleButton).offset(10)
         }
         
         //
         let authHelpText2 = UILabel().then {
-            $0.text = "◦ 인증번호가 전송되지 않을 경우 '재전송' 버튼을 눌러주세요."
+            $0.text = "◦ 인증번호가 전송되지 않을 경우 재전송 버튼을 눌러주세요."
             $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             $0.textColor = UIColor.lightGray
         }
         self.addSubview(authHelpText2)
         authHelpText2.snp.makeConstraints { make in
-            make.top.equalTo(authHelpText.snp.bottom).offset(5)
-            make.left.equalTo(toggleButton)
+            make.top.equalTo(authHelpText.snp.bottom).offset(10)
+            make.left.equalTo(toggleButton).offset(10)
         }
         
     }
