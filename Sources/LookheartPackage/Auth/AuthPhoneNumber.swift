@@ -167,21 +167,21 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.height.equalTo(40)
         }
         
+        //
         let helpText = UILabel().then {
             $0.text = "서비스 이용을 위한 본인 확인 절차입니다.\n계속하려면 인증을 진행해 주세요."
             $0.numberOfLines = 2
-            $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
+            $0.font = UIFont.systemFont(ofSize: 16, weight: .bold)
             $0.textColor = UIColor.MY_BLUE
             $0.textAlignment = .center
         }
-        
         self.addSubview(helpText)
         helpText.snp.makeConstraints { make in
             make.top.equalTo(authLabel.snp.bottom).offset(50)
             make.left.right.equalTo(safeAreaView)
         }
         
-        
+        //
         self.addSubview(toggleButton)
         toggleButton.snp.makeConstraints { make in
             make.top.equalTo(helpText.snp.bottom).offset(70)
@@ -210,6 +210,31 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.left.right.equalToSuperview().inset(20)  // 양쪽 여백 설정
             make.bottom.equalToSuperview().inset(50)     // 하단 여백 설정
         }
+        
+        //
+        let authHelpText = UILabel().then {
+            $0.text = "◦ 3분 이내로 인증번호를 입력해 주세요."
+            $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+            $0.textColor = UIColor.lightGray
+        }
+        self.addSubview(authHelpText)
+        authHelpText.snp.makeConstraints { make in
+            make.top.equalTo(toggleButton.snp.bottom).offset(5)
+            make.left.equalTo(toggleButton)
+        }
+        
+        //
+        let authHelpText2 = UILabel().then {
+            $0.text = "◦ 인증번호가 전송되지 않을 경우 '재전송' 버튼을 눌러주세요."
+            $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+            $0.textColor = UIColor.lightGray
+        }
+        self.addSubview(authHelpText2)
+        authHelpText2.snp.makeConstraints { make in
+            make.top.equalTo(authHelpText.snp.bottom).offset(5)
+            make.left.equalTo(toggleButton)
+        }
+        
     }
     
     private func setLayoutSubviews() {
