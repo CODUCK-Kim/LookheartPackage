@@ -60,7 +60,12 @@ public class NetworkManager {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
                     print(responseString)
-                    completion(.success(true))
+                    if responseString.contains("true") {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }
+    
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }

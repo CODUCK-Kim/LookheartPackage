@@ -95,7 +95,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.isHidden = true
     }
 
-    
+    private let verifyNumberLabel = UILabel().then {
+        $0.text = "verifyNumber".localized()
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        $0.textColor = UIColor.darkGray
+        $0.isHidden = true
+    }
     
     
     
@@ -183,6 +188,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.endEditing(true)
         
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
+            verifyNumberLabel.isHidden = false
             authTextField.isHidden = false
             sendButton.isEnabled = false
             
@@ -240,9 +246,16 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func checkSMS() {
         NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
             switch result {
-            case .success(_):
-                UserProfileManager.shared.setPhoneNumber(phoneNumber)
-                delegate?.complete()
+            case .success(let result):
+                
+                if result {
+                    UserProfileManager.shared.setPhoneNumber(phoneNumber)
+                    delegate?.complete()
+                } else {
+                    // 시간 초과
+                    showAlert(title: "failVerification".localized(), message: "exceededTime".localized())
+                }
+                
             case .failure(_):
                 showAlert(title: "failVerification".localized(), message: "againMoment".localized())
             }
@@ -423,12 +436,19 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalTo(toggleButton).offset(1)
         }
         
+        //
+        self.addSubview(verifyNumberLabel)
+        verifyNumberLabel.snp.makeConstraints { make in
+            make.top.equalTo(toggleButton.snp.bottom).offset(20)
+            make.left.equalTo(toggleButton).offset(3)
+            make.right.equalTo(toggleButton)
+        }
+        
         // authTextField
         self.addSubview(authTextField)
         authTextField.snp.makeConstraints { make in
             make.top.equalTo(toggleButton.snp.bottom).offset(20)
-            make.left.equalTo(toggleButton).offset(3)
-            make.right.equalTo(phoneNumberTextField)
+            make.left.right.equalTo(phoneNumberTextField)
             authTextFieldHeightConstraint = make.height.equalTo(0).constraint // 초기 높이 저장
         }
         
