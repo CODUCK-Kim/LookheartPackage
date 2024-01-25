@@ -196,6 +196,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             authTextFieldHeightConstraint?.update(offset: 30)
             authTextField.layoutIfNeeded()  // 레이아웃 업데이트
             
+            verifyNumberLabel.snp.makeConstraints { make in
+                make.centerY.equalTo(authTextField)
+            }
+            verifyNumberLabel.layoutIfNeeded()
             sendSMS()
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
