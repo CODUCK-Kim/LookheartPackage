@@ -190,21 +190,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
-            verifyNumberLabel.isHidden = false
-            authTextField.isHidden = false
-            sendButton.isEnabled = false
-            
-            authTextFieldHeightConstraint?.update(offset: 30)
-            authTextField.layoutIfNeeded()  // 레이아웃 업데이트
-            
-            self.addSubview(verifyNumberLabel)
-            verifyNumberLabel.snp.makeConstraints { make in
-                make.top.bottom.equalTo(authTextField)
-                make.left.equalTo(toggleButton).offset(3)
-                make.right.equalTo(toggleButton)
-            }
-            verifyNumberLabel.layoutIfNeeded()
-            
+            updateUI()
             sendSMS()
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
@@ -245,6 +231,24 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         let action = UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
         alert.addAction(action)
         viewController.present(alert, animated: true)
+    }
+    
+    private func updateUI() {
+        verifyNumberLabel.isHidden = false
+        authTextField.isHidden = false
+        sendButton.isEnabled = false
+        
+        authTextFieldHeightConstraint?.update(offset: 30)
+        authTextField.layoutIfNeeded()  // 레이아웃 업데이트
+                
+        self.addSubview(verifyNumberLabel)
+        verifyNumberLabel.snp.makeConstraints { make in
+            make.top.bottom.equalTo(authTextField)
+            make.left.equalTo(toggleButton).offset(3)
+            make.right.equalTo(toggleButton)
+        }
+        
+        verifyNumberLabel.layoutIfNeeded()
     }
     
     // MARK: - checkSMS Event
@@ -349,7 +353,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     // MARK: - addViews
-    private func setLayoutSubviews() {
+    private func addTarget() {
         
         phoneNumberTextField.tag = PHONE_NUMBER_TAG
         authTextField.tag = AUTH_NUMBER_TAG
@@ -362,6 +366,11 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         okButton.addTarget(self, action: #selector(checkButtonEvent), for: .touchUpInside)
         calcleButton.addTarget(self, action: #selector(cancleButtonEvent), for: .touchUpInside)
         
+    }
+    
+    private func setLayoutSubviews() {
+        
+        addTarget()
         setBorder()
         
         let underLine = UILabel().then {
@@ -528,4 +537,5 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         calcleButton.layer.borderWidth = 3
         calcleButton.layer.masksToBounds = true
     }
+    
 }
