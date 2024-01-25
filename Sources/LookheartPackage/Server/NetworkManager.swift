@@ -19,6 +19,9 @@ public class NetworkManager {
         struct Email: Codable {
             let eq: String
         }
+        print(name)
+        print(phoneNumber)
+        print(birthday)
         
         let endpoint = "/msl/findID"
         guard let url = URL(string: baseURL + endpoint) else {
