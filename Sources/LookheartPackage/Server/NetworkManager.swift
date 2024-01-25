@@ -79,7 +79,7 @@ public class NetworkManager {
         }
     }
     
-    public func checkSMS(phoneNumber: String, code: String,completion: @escaping (Result<String, Error>) -> Void) {
+    public func checkSMS(phoneNumber: String, code: String,completion: @escaping (Result<Bool, Error>) -> Void) {
     
         let endpoint = "/mslSMS/checkSMS"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -96,7 +96,11 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    completion(.success(responseString))
+                    if responseString.contains("true") {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }    
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
