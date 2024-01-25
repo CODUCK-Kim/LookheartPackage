@@ -99,6 +99,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.text = "verifyNumber".localized()
         $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         $0.textColor = UIColor.darkGray
+        $0.textAlignment = .center
         $0.isHidden = true
     }
     
