@@ -204,16 +204,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
             switch result {
             case .success(let result):
-                
-                if result {
+                print(result)
+                if result.contains("true") {
                     
                     startCountdown()
                     smsCnt -= 1
                     
                     showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"))
                     
-                } else {
+                } else if result.contains("false") {
                     showAlert(title: "failVerification".localized(), message: "againMoment".localized())
+                } else {
+                    // 몰라
                 }
                 
             case .failure(_):
@@ -267,13 +269,15 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
             switch result {
             case .success(let result):
-                
-                if result {
+                print(result)
+                if result.contains("true") {
                     UserProfileManager.shared.setPhoneNumber(phoneNumber)
                     delegate?.complete(phoneNumber: phoneNumber)
-                } else {
+                } else if result.contains("false") {
                     // 시간 초과
                     showAlert(title: "failVerification".localized(), message: "exceededTime".localized())
+                } else {
+                    // 몰라
                 }
                 
             case .failure(_):
