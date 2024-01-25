@@ -36,9 +36,8 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 do {
-                    let decoder = JSONDecoder()
-                    let email = try decoder.decode(Email.self, from: data) // 디코딩
-                    completion(.success(email.eq))
+                    let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
+                    completion(.success(email[0].eq))
                 } catch {
                     print("JSON 디코딩 실패: \(error)")
                     completion(.failure(NetworkError.noData))
