@@ -16,15 +16,15 @@ public class NetworkManager {
     // MARK: - Find
     public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
         
+        struct Email: Codable {
+            let eq: String
+        }
+        
         let endpoint = "/msl/findID"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
         }
-        
-        print(name)
-        print(phoneNumber)
-        print(birthday)
         
         let params: [String: Any] = [
             "성명": name,
@@ -35,13 +35,16 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: params) { result in
             switch result {
             case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    completion(.success(responseString))
-                } else {
-                    completion(.failure(NetworkError.invalidResponse))
+                do {
+                    let decoder = JSONDecoder()
+                    let email = try decoder.decode(Email.self, from: data) // 디코딩
+                    completion(.success(email.eq))
+                } catch {
+                    print("JSON 디코딩 실패: \(error)")
+                    completion(.failure(NetworkError.noData))
                 }
             case .failure(let error):
-                print("sendSMS Error: \(error.localizedDescription)")
+                print("findID Error: \(error.localizedDescription)")
             }
         }
         

@@ -1,16 +1,16 @@
 import Foundation
 
 
-enum NetworkError: Error {
+public enum NetworkError: Error {
     case invalidResponse
     case noData
 }
 
 public class NetworkErrorManager {
     
-    static let shared = NetworkErrorManager()
+    public static let shared = NetworkErrorManager()
     
-    func getErrorMessage(_ error: NetworkError) -> String {
+    public func getErrorMessage(_ error: NetworkError) -> String {
         switch (error) {
             
         case .invalidResponse:
