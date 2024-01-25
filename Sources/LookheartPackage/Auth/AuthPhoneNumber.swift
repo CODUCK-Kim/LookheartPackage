@@ -5,7 +5,7 @@ import SnapKit
 import PhoneNumberKit
 
 public protocol AuthDelegate: AnyObject {
-    func complete()
+    func complete(phoneNumber: String)
     func cancle()
 }
 
@@ -270,7 +270,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                 
                 if result {
                     UserProfileManager.shared.setPhoneNumber(phoneNumber)
-                    delegate?.complete()
+                    delegate?.complete(phoneNumber: phoneNumber)
                 } else {
                     // 시간 초과
                     showAlert(title: "failVerification".localized(), message: "exceededTime".localized())
