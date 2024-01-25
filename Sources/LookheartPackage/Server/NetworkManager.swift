@@ -30,9 +30,9 @@ public class NetworkManager {
         }
         
         let params: [String: Any] = [
-            "성명": name,
-            "핸드폰": phoneNumber,
-            "생년월일": birthday
+            "eqname": name,
+            "phone": phoneNumber,
+            "birth": birthday
         ]
         
         request(url: url, method: .get, parameters: params) { result in
