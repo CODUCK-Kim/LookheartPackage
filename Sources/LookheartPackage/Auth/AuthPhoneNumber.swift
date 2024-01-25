@@ -189,6 +189,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         self.endEditing(true)
         
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
+            
             verifyNumberLabel.isHidden = false
             authTextField.isHidden = false
             sendButton.isEnabled = false
@@ -196,9 +197,17 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             authTextFieldHeightConstraint?.update(offset: 30)
             authTextField.layoutIfNeeded()  // 레이아웃 업데이트
             
+//            verifyNumberLabel.snp.makeConstraints { make in
+//                make.centerY.equalTo(authTextField)
+//            }
+            
+            //
+            self.addSubview(verifyNumberLabel)
             verifyNumberLabel.snp.makeConstraints { make in
+                make.top.equalTo(toggleButton.snp.bottom).offset(30)
+                make.left.equalTo(toggleButton).offset(3)
+                make.right.equalTo(toggleButton)
                 make.centerY.equalTo(authTextField)
-                make.height.equalTo(30)
             }
             
             verifyNumberLabel.layoutIfNeeded()
@@ -443,14 +452,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalTo(toggleButton).offset(1)
         }
         
-        //
-        self.addSubview(verifyNumberLabel)
-        verifyNumberLabel.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(30)
-            make.left.equalTo(toggleButton).offset(3)
-            make.right.equalTo(toggleButton)
-        }
-        
         // authTextField
         self.addSubview(authTextField)
         authTextField.snp.makeConstraints { make in
@@ -526,9 +527,5 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         calcleButton.layer.cornerRadius = 10
         calcleButton.layer.borderWidth = 3
         calcleButton.layer.masksToBounds = true
-        
-//        calcleButton.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-//        calcleButton.layer.cornerRadius = 10
-//        calcleButton.layer.borderWidth = 3
     }
 }
