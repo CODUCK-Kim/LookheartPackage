@@ -325,7 +325,6 @@ class BarChartVC : UIViewController {
         
         getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
-        buttonEnable()
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
@@ -353,13 +352,11 @@ class BarChartVC : UIViewController {
         getDataToServer(targetDate, endDate)
         setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
-        buttonEnable()
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         barChartView.isHidden = !barChartView.isHidden
-        buttonEnable()
     }
     
     private func buttonEnable() {
@@ -425,7 +422,6 @@ class BarChartVC : UIViewController {
         
         activityIndicator.stopAnimating()
         
-        buttonEnable()
     }
     
     private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataSet]) {
@@ -642,7 +638,7 @@ class BarChartVC : UIViewController {
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                 toastMessage(errorMessage)
                 activityIndicator.stopAnimating()
-                buttonEnable()
+
             }
         }
         

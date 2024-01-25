@@ -248,7 +248,7 @@ class LineChartVC : UIViewController {
         getDataToServer(startDate, endDate, currentButtonFlag)
         setButtonColor(sender)
         setDisplayDateText()
-        buttonEnable()
+
     }
     
     @objc func shiftDate(_ sender: UIButton) {
@@ -264,13 +264,11 @@ class LineChartVC : UIViewController {
         
         getDataToServer(startDate, endDate, currentButtonFlag)
         setDisplayDateText()
-        buttonEnable()
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         lineChartView.isHidden = !lineChartView.isHidden
-        buttonEnable()
     }
     
     private func buttonEnable() {
@@ -355,7 +353,6 @@ class LineChartVC : UIViewController {
                  timeTable: timeTable)
         
         activityIndicator.stopAnimating()
-        buttonEnable()
     }
     
     
@@ -422,7 +419,6 @@ class LineChartVC : UIViewController {
                 let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
                 toastMessage(errorMessage)
                 activityIndicator.stopAnimating()
-                buttonEnable()
             }
         }
     }
