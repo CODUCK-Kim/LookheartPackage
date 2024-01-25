@@ -38,6 +38,7 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: params) { result in
             switch result {
             case .success(let data):
+                print(data)
                 do {
                     let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
                     completion(.success(email[0].eq))
