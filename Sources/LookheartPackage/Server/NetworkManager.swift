@@ -22,6 +22,10 @@ public class NetworkManager {
             return
         }
         
+        print(name)
+        print(phoneNumber)
+        print(birthday)
+        
         let params: [String: Any] = [
             "eqname": name,
             "phone": phoneNumber,
