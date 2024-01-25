@@ -198,7 +198,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             
             verifyNumberLabel.snp.makeConstraints { make in
                 make.centerY.equalTo(authTextField)
+                make.height.equalTo(30)
             }
+            
             verifyNumberLabel.layoutIfNeeded()
             sendSMS()
             
