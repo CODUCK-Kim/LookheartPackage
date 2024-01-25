@@ -440,7 +440,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         //
         self.addSubview(verifyNumberLabel)
         verifyNumberLabel.snp.makeConstraints { make in
-            make.top.equalTo(toggleButton.snp.bottom).offset(20)
+            make.top.equalTo(toggleButton.snp.bottom).offset(40)
             make.left.equalTo(toggleButton).offset(3)
             make.right.equalTo(toggleButton)
         }
