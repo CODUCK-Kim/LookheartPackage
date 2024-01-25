@@ -38,9 +38,6 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: params) { result in
             switch result {
             case .success(let data):
-//                if let responseString = String(data: data, encoding: .utf8) {
-//                    print(responseString)
-//                }
                 do {
                     let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
                     completion(.success(email[0].eq))
@@ -54,53 +51,8 @@ public class NetworkManager {
         }
     }
     
-//    public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
-//
-//        struct Email: Codable {
-//            let eq: String
-//        }
-//        print(name)
-//        print(phoneNumber)
-//        print(birthday)
-//
-//        let endpoint = "/msl/findID"
-//        guard var urlComponents = URLComponents(string: baseURL + endpoint) else {
-//            print("Invalid URL")
-//            return
-//        }
-//
-//        // URL 쿼리 스트링 설정
-//        let queryItems = [
-//            URLQueryItem(name: "eqname", value: name),
-//            URLQueryItem(name: "phone", value: phoneNumber),
-//            URLQueryItem(name: "birth", value: birthday)
-//        ]
-//        urlComponents.queryItems = queryItems
-//
-//        // 완성된 URL
-//        guard let url = urlComponents.url else {
-//            print("Invalid URL")
-//            return
-//        }
-//
-//        request(url: url, method: .get, parameters: nil) { result in
-//            switch result {
-//            case .success(let data):
-//                do {
-//                    let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
-//                    completion(.success(email[0].eq))
-//                } catch {
-//                    print("JSON 디코딩 실패: \(error)")
-//                    completion(.failure(NetworkError.noData))
-//                }
-//            case .failure(let error):
-//                print("findID Error: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-    
     // MARK: - SMS
-    public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<String, Error>) -> Void) {
     
         let endpoint = "/mslSMS/sendSMS"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -117,11 +69,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    if responseString.contains("true") {
-                        completion(.success(true))
-                    } else {
-                        completion(.success(false))
-                    }
+                    completion(.success(responseString))
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
@@ -131,7 +79,7 @@ public class NetworkManager {
         }
     }
     
-    public func checkSMS(phoneNumber: String, code: String,completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkSMS(phoneNumber: String, code: String,completion: @escaping (Result<String, Error>) -> Void) {
     
         let endpoint = "/mslSMS/checkSMS"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -148,12 +96,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    if responseString.contains("true") {
-                        completion(.success(true))
-                    } else {
-                        completion(.success(false))
-                    }
-    
+                    completion(.success(responseString))
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
