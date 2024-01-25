@@ -23,7 +23,7 @@ public class NetworkManager {
         print(phoneNumber)
         print(birthday)
         
-        let endpoint = "/msl/findID"
+        let endpoint = "/msl/findID?"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
