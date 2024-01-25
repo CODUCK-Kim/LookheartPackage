@@ -38,12 +38,10 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: params) { result in
             switch result {
             case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
-                }
+//                if let responseString = String(data: data, encoding: .utf8) {
+//                    print(responseString)
+//                }
                 do {
-                    
-                    let decodedArray = try JSONDecoder().decode([String].self, from: data)
                     let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
                     completion(.success(email[0].eq))
                 } catch {
