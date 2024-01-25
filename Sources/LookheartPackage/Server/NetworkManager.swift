@@ -32,7 +32,6 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
                     if responseString.contains("true") {
                         completion(.success(true))
                     } else {
@@ -64,7 +63,6 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
                     if responseString.contains("true") {
                         completion(.success(true))
                     } else {

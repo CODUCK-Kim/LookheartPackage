@@ -217,12 +217,18 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private func sendSMS() {
         NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
             switch result {
-            case .success(_):
+            case .success(let result):
                 
-                startCountdown()
-                smsCnt -= 1
-                
-                showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"))
+                if result {
+                    
+                    startCountdown()
+                    smsCnt -= 1
+                    
+                    showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"))
+                    
+                } else {
+                    showAlert(title: "failVerification".localized(), message: "againMoment".localized())
+                }
                 
             case .failure(_):
                 showAlert(title: "failVerification".localized(), message: "againMoment".localized())
