@@ -13,7 +13,36 @@ public class NetworkManager {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return df
     }()
-         
+    // MARK: - Find
+    public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
+        
+        let endpoint = "/msl/findID"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "eqname": name,
+            "phone": phoneNumber,
+            "birth": birthday
+        ]
+        
+        request(url: url, method: .get, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    completion(.success(responseString))
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
+                }
+            case .failure(let error):
+                print("sendSMS Error: \(error.localizedDescription)")
+            }
+        }
+        
+    }
+    
     // MARK: - SMS
     public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<Bool, Error>) -> Void) {
     
