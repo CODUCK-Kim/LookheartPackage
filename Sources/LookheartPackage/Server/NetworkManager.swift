@@ -26,11 +26,19 @@ public class NetworkManager {
             return
         }
         
+        // test
         let params: [String: Any] = [
-            "eqname": name,
-            "phone": phoneNumber,
-            "birth": birthday
+            "성명": name,
+            "핸드폰": phoneNumber,
+            "생년월일": birthday
         ]
+        
+        // real
+//        let params: [String: Any] = [
+//            "eqname": name,
+//            "phone": phoneNumber,
+//            "birth": birthday
+//        ]
         
         request(url: url, method: .get, parameters: params) { result in
             switch result {
