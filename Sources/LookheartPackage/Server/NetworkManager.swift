@@ -56,7 +56,7 @@ public class NetworkManager {
         }
     }
     
-    public func updatePassword(id: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func updatePassword(id: String, password: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -74,8 +74,17 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
+                    
+                    if responseString.contains("true") {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
                 }
+                
             case .failure(let error):
                 print("findID Error: \(error.localizedDescription)")
             }
@@ -83,7 +92,7 @@ public class NetworkManager {
     }
     
     // MARK: - SMS
-    public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<String, Error>) -> Void) {
     
         let endpoint = "/mslSMS/sendSMS"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -100,13 +109,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    
-                    if responseString.contains("true") {
-                        completion(.success(true))
-                    } else {
-                        completion(.failure(NetworkError.invalidResponse))
-                    }
-                    
+                    completion(.success(responseString))
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
