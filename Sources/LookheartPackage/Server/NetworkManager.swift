@@ -38,7 +38,6 @@ public class NetworkManager {
                 if let responseString = String(data: data, encoding: .utf8) {
                     print(responseString)
                 }
-                
                 do {
                     let email = try JSONDecoder().decode([Email].self, from: data) // 디코딩
                     completion(.success(email[0].eq))
