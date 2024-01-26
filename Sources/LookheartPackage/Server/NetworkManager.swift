@@ -59,6 +59,32 @@ public class NetworkManager {
         }
     }
     
+    public func updatePassword(id: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
+        
+        let endpoint = "/msl/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "kind": "updatePWD",
+            "eq": id,
+            "password": password
+        ]
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+                }
+            case .failure(let error):
+                print("findID Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     // MARK: - SMS
     public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<String, Error>) -> Void) {
     
