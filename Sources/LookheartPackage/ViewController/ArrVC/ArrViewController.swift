@@ -333,7 +333,8 @@ public class ArrViewController : UIViewController {
     private func arrChart(_ arrData: ArrData) {
         
         activityIndicator.stopAnimating()
-        
+        print(arrData)
+        print(arrData.data.count)
         if arrData.data.count < 400 {   return  }
         
         let ecgDataConversion = EcgDataConversion()
