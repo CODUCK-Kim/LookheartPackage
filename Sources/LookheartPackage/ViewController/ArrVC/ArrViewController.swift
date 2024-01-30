@@ -283,6 +283,7 @@ public class ArrViewController : UIViewController {
             DispatchQueue.main.async {
                 switch(result) {
                 case .success(let arrData):
+                    print(arrData)
                     self.arrChart(arrData)
                 case .failure(let error):
                     let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
