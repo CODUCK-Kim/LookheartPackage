@@ -503,6 +503,7 @@ public class NetworkManager {
             case .success(let data):
                 if let _ = String(data: data, encoding: .utf8) {
 //                    print("HourlyData Received response: \(responseString)")
+                    print("sendHourlyDataToServer check")
                 }
             case .failure(let error):
                 print("sendHourlyDataToServer Send Error: \(error.localizedDescription)")
