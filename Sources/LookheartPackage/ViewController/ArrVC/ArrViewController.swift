@@ -279,7 +279,6 @@ public class ArrViewController : UIViewController {
             DispatchQueue.main.async {
                 switch(result) {
                 case .success(let arrData):
-                    print(arrData)
                     self.arrChart(arrData)
                 case .failure(let error):
                     let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
@@ -330,8 +329,7 @@ public class ArrViewController : UIViewController {
     private func arrChart(_ arrData: ArrData) {
         
         activityIndicator.stopAnimating()
-        print(arrData)
-        print(arrData.data.count)
+        
         if arrData.data.count < 400 {   return  }
         
         let ecgDataConversion = EcgDataConversion()
