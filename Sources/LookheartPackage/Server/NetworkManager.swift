@@ -787,9 +787,8 @@ public class NetworkManager {
                     let arrData = try JSONDecoder().decode([ArrEcgData].self, from: data)
                     let resultString = arrData[0].ecgpacket.split(separator: ",")
                     
-                    print(resultString)
-                    print(resultString.count)
                     if resultString.count > 500 {
+                        
                         let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
 
                         completion(.success(ArrData.init(
@@ -800,7 +799,9 @@ public class NetworkManager {
                             bodyStatus: self.removeWsAndNl(resultString[2]),
                             type: self.removeWsAndNl(resultString[3]),
                             data: ecgData)))
+                        
                     } else {
+                        
                         completion(.success(ArrData.init(
                             idx: "",
                             writeTime: "",
@@ -810,6 +811,7 @@ public class NetworkManager {
                             type: "응급 상황",
                             data: [])))
                     }
+                    
                 } catch {
                     print("arrData 변환 Error : \(error.localizedDescription)")
                     completion(.failure(error))
