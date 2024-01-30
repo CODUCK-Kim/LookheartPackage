@@ -13,6 +13,7 @@ public class NetworkManager {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return df
     }()
+    
     // MARK: - Find
     public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
         
@@ -208,13 +209,14 @@ public class NetworkManager {
                     
                     var phoneNumbers: [String] = []
                     
-                    for _ in userProfiles { // 프로필이 여러개 있을 경우 보호자 핸드폰 번호 저장
-                        phoneNumbers.append(UserProfileManager.shared.getPhoneNumber())
+                    for profile in userProfiles { // 프로필이 여러개 있을 경우 보호자 핸드폰 번호 저장
+                        if let phones = profile.phone {
+                            phoneNumbers.append(phones)
+                        }
                     }
                     
                     // 첫 번째 프로필을 기본 프로필로 설정하고, 핸드폰 번호 목록을 저장
                     if let primaryProfile = userProfiles.first {
-                        print(phoneNumbers)
                         UserProfileManager.shared.setPhoneNumbers(phoneNumbers)
                         completion(.success(primaryProfile))
                     } else {
@@ -359,12 +361,15 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print("setProfileToServer: \(responseString)")
                     
                     if responseString.contains("true"){
+                        
                         completion(.success(true))
+                        
                     } else if responseString.contains("false"){
+                        
                         completion(.success(false))
+                        
                     } else {
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
                     }
