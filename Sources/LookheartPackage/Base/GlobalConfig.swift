@@ -43,6 +43,12 @@ public var propCurrentDateTime: String {
     }
 }
 
+public var propCurrentHour: String {
+    get {
+        return MyDateTime.shared.getSplitDateTime(.TIME)[0]
+    }
+}
+
 public var propTimeZone: String {
     get {
         return MyDateTime.shared.getTimeZone()
