@@ -8,11 +8,6 @@ public class NetworkManager {
     
     public static let shared = NetworkManager()
 
-    private static let dateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return df
-    }()
     
     // MARK: - Find
     public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -27,14 +22,14 @@ public class NetworkManager {
             return
         }
         
-        // test
+        // Test
         let params: [String: Any] = [
             "성명": name,
             "핸드폰": phoneNumber,
             "생년월일": birthday
         ]
         
-        // real
+        // Real
 //        let params: [String: Any] = [
 //            "eqname": name,
 //            "phone": phoneNumber,
@@ -91,6 +86,8 @@ public class NetworkManager {
             }
         }
     }
+    
+    
     
     // MARK: - SMS
     public func sendSMS(phoneNumber: String, nationalCode: String,completion: @escaping (Result<String, Error>) -> Void) {
@@ -151,42 +148,7 @@ public class NetworkManager {
         }
     }
     
-    // MARK: -
-    public func sendEmergencyData(_ identification: String, _ timezone: String,_ address: String) {
-    
-        let endpoint = "/mslecgarr/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let currentDateTime = NetworkManager.dateFormatter.string(from: Date())
-        
-        let params: [String: Any] = [
-            "kind": "arrEcgInsert",
-            "eq": identification,
-            "timezone": timezone,
-            "writetime": currentDateTime,
-            "ecgPacket": "",
-            "arrStatus": "",
-            "bodystate": "1",
-            "address": address
-        ]
-        
-        request(url: url, method: .post, parameters: params) { result in
-            switch result {
-            case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("Emergency Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("send EmergencyData Send Error: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    
-    
+    // MARK: - GET
     public func getProfileToServer(id: String, completion: @escaping (Result<UserProfile, Error>) -> Void) {
         
         let endpoint = "/msl/Profile"
@@ -217,8 +179,10 @@ public class NetworkManager {
                     
                     // 첫 번째 프로필을 기본 프로필로 설정하고, 핸드폰 번호 목록을 저장
                     if let primaryProfile = userProfiles.first {
+                        
                         UserProfileManager.shared.setPhoneNumbers(phoneNumbers)
                         completion(.success(primaryProfile))
+                        
                     } else {
                         completion(.failure(NetworkError.noData))
                     }
@@ -233,42 +197,6 @@ public class NetworkManager {
         }
     }
     
-    public func setGuardianToServer(id: String, timezone: String, phone:[String],  completion: @escaping (Result<Bool, Error>) -> Void) {
-        
-        let endpoint = "/mslparents/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let currentDateTime = NetworkManager.dateFormatter.string(from: Date())
-        let parameters: [String: Any] = [
-            "eq": id,
-            "timezone": timezone,
-            "writetime": currentDateTime,
-            "phones": phone
-        ]
-        
-        request(url: url, method: .post, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("setGuardian Received response: \(responseString)")
-                    if responseString.contains("true"){
-                        completion(.success(true))
-                    } else if responseString.contains("false"){
-                        completion(.success(false))
-                    } else {
-                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                    }
-                } else {
-                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
-                }
-            case .failure(let error):
-                print("setGuardian Server Request Error : \(error.localizedDescription)")
-            }
-        }
-    }
     
     public func checkLoginToServer(id: String, pw: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
@@ -290,12 +218,19 @@ public class NetworkManager {
                     print("checkID Received response: \(responseString)")
                     
                     if responseString.contains("true"){
+                        
                         completion(.success(true))
+                        
                     } else if responseString.contains("false"){
+                        
                         completion(.success(false))
+                        
                     } else {
+                        
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                        
                     }
+                    
                 } else {
                     completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
                 }
@@ -304,6 +239,8 @@ public class NetworkManager {
             }
         }
     }
+    
+    
     
     public func checkIDToServer(id: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
@@ -324,12 +261,19 @@ public class NetworkManager {
                     print("checkID Received response: \(responseString)")
                     
                     if responseString.contains("true"){
+                                                
                         completion(.success(true))
+                        
                     } else if responseString.contains("false"){
+                        
                         completion(.success(false))
+                        
                     } else {
+                        
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                        
                     }
+                    
                 } else {
                     completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
                 }
@@ -339,218 +283,12 @@ public class NetworkManager {
         }
     }
     
-    
-    
-    
+    // MARK: -
+    func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
 
-    
-    
-    
-    
-    
-    
-    public func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
-        
-        let endpoint = "/msl/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        request(url: url, method: .post, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    
-                    if responseString.contains("true"){
-                        
-                        completion(.success(true))
-                        
-                    } else if responseString.contains("false"){
-                        
-                        completion(.success(false))
-                        
-                    } else {
-                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                    }
-                    
-                } else {
-                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
-                }
-                
-            case .failure(let error):
-                print("signupToServer Send Error : \(error.localizedDescription)")
-            }
-        }
-    }
-    
-
-    
-    
-    
-    
-    
-    
-    
-    public func sendEcgDataToServer(packet: String, identification: String, bpm: Int, timezone: String, writeTime: String) {
-        
-        let endpoint = "/mslecg/api_getdata"
-        
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let parameters: [String: Any] = [
-            "kind": "ecgdataInsert",
-            "eq": identification,
-            "writetime": writeTime,
-            "ecgtimezone": timezone,
-            "bpm": bpm,
-            "ecgPacket": packet
-        ]
-        
-        request(url: url, method: .post, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if String(data: data, encoding: .utf8) != nil {
-//                    print("EcgData Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("sendEcgDataToServer Send Error : \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    
-    public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int, writeDateTime: String) {
-        
         let identification = UserProfileManager.shared.getEmail()
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
-        let endpoint = "/mslecgbyte/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-
-        let parameters: [String: Any] = [
-            "kind": "ecgByteInsert",
-            "eq": identification,
-            "writetime": writeDateTime,
-            "timezone": timeZone,
-            "bpm": bpm,
-            "ecgPacket": ecgData
-        ]
-        
-        request(url: url, method: .post, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if String(data: data, encoding: .utf8) != nil {
-//                    print("EcgData Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("sendEcgDataToServer Send Error : \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    public func sendTenSecondDataToServer(tenSecondData: [String: Any], writeDateTime: String) {
-        
-        let identification = UserProfileManager.shared.getEmail()
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
-        let endpoint = "/mslbpm/api_data"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        var params: [String: Any] = [
-            "kind": "BpmDataInsert",
-            "eq": identification,
-            "timezone": timeZone,
-            "writetime": writeDateTime
-        ]
-        
-        params.merge(tenSecondData) { (current, _) in current }
-                
-        request(url: url, method: .post, parameters: params) { result in
-            switch result {
-            case .success(let data):
-                if String(data: data, encoding: .utf8) != nil {
-//                    print("TenSecondData Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("sendTenSecondDataToServer Send Error : \(error.localizedDescription)")
-            }
-        }
-    }
- 
-    public func sendHourlyDataToServer(hourlyData: [String: Any]) {
-        
-        let identification = UserProfileManager.shared.getEmail()
-        
-        let endpoint = "/mslecgday/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        var params: [String: Any] = [
-            "kind": "calandInsert",
-            "eq": identification,
-        ]
-        
-        params.merge(hourlyData) { (current, _) in current }
-        
-        request(url: url, method: .post, parameters: params) { result in
-            switch result {
-            case .success(let data):
-                if let _ = String(data: data, encoding: .utf8) {
-//                    print("HourlyData Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("sendHourlyDataToServer Send Error: \(error.localizedDescription)")
-            }
-        }
-    }
-        
-    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String, _ writeTime: String, _ writeDateTime: String) {
-    
-        let identification = UserProfileManager.shared.getEmail()
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
-        let arrData = "\(writeTime),\(timeZone),\(bodyStatus),\(arrStatus),\(arrEcgData)"
-        
-        let endpoint = "/mslecgarr/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let params: [String: Any] = [
-            "kind": "arrEcgInsert",
-            "eq": identification,
-            "writetime": writeDateTime,
-            "ecgPacket": arrData
-        ]
-        
-        request(url: url, method: .post, parameters: params) { result in
-            switch result {
-            case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("ArrData Received response: \(responseString)")
-                }
-            case .failure(let error):
-                print("sendArrDataToServer Send Error: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func getBpmDataToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
-
         var bpmData: [BpmData] = []
+        
         let endpoint = "/mslbpm/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -558,7 +296,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": id,
+            "eq": identification,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -574,14 +312,14 @@ public class NetworkManager {
                             let fields = data.split(separator: "|")
                             
                             if fields.count == 7 {
-                                if let bpm = Int(fields[4]), 
+                                if let bpm = Int(fields[4]),
                                     let temp = Double(fields[5]),
                                     let hrv = Int(fields[6]) {
                                     let dateTime = fields[2].split(separator: " ")
                                     
                                     bpmData.append( BpmData(
                                         idx: String(fields[0]),
-                                        eq: String(fields[1]), 
+                                        eq: String(fields[1]),
                                         writeDateTime: String(fields[2]),
                                         writeDate: String(dateTime[0]),
                                         writeTime: String(dateTime[1]),
@@ -609,9 +347,11 @@ public class NetworkManager {
     
     
     
-    func getHourlyDataToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
+    func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
                 
+        let identification = UserProfileManager.shared.getEmail()
         var hourlyData: [HourlyData] = []
+        
         let endpoint = "/mslecgday/day"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -619,7 +359,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": id,
+            "eq": identification,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -685,7 +425,9 @@ public class NetworkManager {
     }
     
     
-    public func getArrListToServer(id: String, startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
+    public func getArrListToServer(startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
+        
+        let identification = UserProfileManager.shared.getEmail()
         
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -694,7 +436,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": id,
+            "eq": identification,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -718,6 +460,363 @@ public class NetworkManager {
             }
         }
     }
+    
+    
+    
+    public func selectArrDataToServer(startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        
+        let endpoint = "/mslecgarr/arrWritetime?"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": identification,
+            "startDate": startDate,
+            "endDate": ""
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let arrData = try JSONDecoder().decode([ArrEcgData].self, from: data)
+                    let resultString = arrData[0].ecgpacket.split(separator: ",")
+                    
+                    if resultString.count > 500 {
+                        
+                        let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+
+                        completion(.success(ArrData.init(
+                            idx: "0",
+                            writeTime: "0",
+                            time: self.removeWsAndNl(resultString[0]),
+                            timezone: "0",
+                            bodyStatus: self.removeWsAndNl(resultString[2]),
+                            type: self.removeWsAndNl(resultString[3]),
+                            data: ecgData)))
+                        
+                    } else {
+                        
+                        completion(.success(ArrData.init(
+                            idx: "",
+                            writeTime: "",
+                            time: "",
+                            timezone: "",
+                            bodyStatus: "응급 상황",
+                            type: "응급 상황",
+                            data: [])))
+                    }
+                    
+                } catch {
+                    print("arrData 변환 Error : \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                print("selectArrDataToServer Request Error : \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
+    
+    // MARK: - POST
+    public func sendEmergencyData(_ timezone: String,_ address: String, _ currentDateTime: String) {
+    
+        let identification = UserProfileManager.shared.getEmail()
+        
+        let endpoint = "/mslecgarr/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "kind": "arrEcgInsert",
+            "eq": identification,
+            "timezone": timezone,
+            "writetime": currentDateTime,
+            "ecgPacket": "",
+            "arrStatus": "",
+            "bodystate": "1",
+            "address": address
+        ]
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Emergency Received response: \(responseString)")
+                }
+            case .failure(let error):
+                print("send EmergencyData Send Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+
+    
+    public func setGuardianToServer(timezone: String, phone:[String],  _ currentDateTime: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        
+        let endpoint = "/mslparents/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": identification,
+            "timezone": timezone,
+            "writetime": currentDateTime,
+            "phones": phone
+        ]
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("setGuardian Received response: \(responseString)")
+                    if responseString.contains("true"){
+                        completion(.success(true))
+                    } else if responseString.contains("false"){
+                        completion(.success(false))
+                    } else {
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                    }
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("setGuardian Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
+    public func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/msl/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    
+                    if responseString.contains("true"){
+                        
+                        completion(.success(true))
+                        
+                    } else if responseString.contains("false"){
+                        
+                        completion(.success(false))
+                        
+                    } else {
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+                
+            case .failure(let error):
+                print("signupToServer Send Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+
+    
+    // MARK: -
+    public func sendEcgDataToServer(packet: String, identification: String, bpm: Int, timezone: String, writeTime: String) {
+        
+        let endpoint = "/mslecg/api_getdata"
+        
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "kind": "ecgdataInsert",
+            "eq": identification,
+            "writetime": writeTime,
+            "ecgtimezone": timezone,
+            "bpm": bpm,
+            "ecgPacket": packet
+        ]
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if String(data: data, encoding: .utf8) != nil {
+//                    print("EcgData Received response: \(responseString)")
+                }
+            case .failure(let error):
+                print("sendEcgDataToServer Send Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
+    
+    
+    public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int, writeDateTime: String) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        let timeZone = MyDateTime.shared.getTimeZone()
+        
+        let endpoint = "/mslecgbyte/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+
+        let parameters: [String: Any] = [
+            "kind": "ecgByteInsert",
+            "eq": identification,
+            "writetime": writeDateTime,
+            "timezone": timeZone,
+            "bpm": bpm,
+            "ecgPacket": ecgData
+        ]
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if String(data: data, encoding: .utf8) != nil {
+//                    print("EcgData Received response: \(responseString)")
+                }
+            case .failure(let error):
+                print("sendEcgDataToServer Send Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
+    
+    
+    public func sendTenSecondDataToServer(tenSecondData: [String: Any], writeDateTime: String) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        let timeZone = MyDateTime.shared.getTimeZone()
+        
+        let endpoint = "/mslbpm/api_data"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        var params: [String: Any] = [
+            "kind": "BpmDataInsert",
+            "eq": identification,
+            "timezone": timeZone,
+            "writetime": writeDateTime
+        ]
+        
+        params.merge(tenSecondData) { (current, _) in current }
+                
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if String(data: data, encoding: .utf8) != nil {
+//                    print("TenSecondData Received response: \(responseString)")
+                }
+            case .failure(let error):
+                print("sendTenSecondDataToServer Send Error : \(error.localizedDescription)")
+            }
+        }
+    }
+ 
+    
+    
+    
+    public func sendHourlyDataToServer(hourlyData: [String: Any]) {
+        
+        let identification = UserProfileManager.shared.getEmail()
+        
+        let endpoint = "/mslecgday/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        var params: [String: Any] = [
+            "kind": "calandInsert",
+            "eq": identification,
+        ]
+        
+        params.merge(hourlyData) { (current, _) in current }
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let _ = String(data: data, encoding: .utf8) {
+//                    print("HourlyData Received response: \(responseString)")
+                }
+            case .failure(let error):
+                print("sendHourlyDataToServer Send Error: \(error.localizedDescription)")
+            }
+        }
+    }
+        
+    
+    
+    
+    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String, _ writeTime: String, _ writeDateTime: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    
+        let identification = UserProfileManager.shared.getEmail()
+        let timeZone = MyDateTime.shared.getTimeZone()
+        
+        let arrData = "\(writeTime),\(timeZone),\(bodyStatus),\(arrStatus),\(arrEcgData)"
+        
+        let endpoint = "/mslecgarr/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "kind": "arrEcgInsert",
+            "eq": identification,
+            "writetime": writeDateTime,
+            "ecgPacket": arrData
+        ]
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    
+                    print("ArrData Received response: \(responseString)")
+                    
+                    if responseString.contains("true"){
+                        completion(.success(true))
+                    } else {
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                    }
+                    
+                }
+            case .failure(let error):
+                print("sendArrDataToServer Send Error: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
+    
+    // MARK: -
+
     
 //    func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
 //
@@ -771,74 +870,6 @@ public class NetworkManager {
 //            }
 //        }
 //    }
-    
-    public func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
-        
-        let endpoint = "/mslecgarr/arrWritetime?"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let parameters: [String: Any] = [
-            "eq": id,
-            "startDate": startDate,
-            "endDate": ""
-        ]
-        
-        request(url: url, method: .get, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let arrData = try JSONDecoder().decode([ArrEcgData].self, from: data)
-                    let resultString = arrData[0].ecgpacket.split(separator: ",")
-                    
-                    if resultString.count > 500 {
-                        
-                        let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-
-                        completion(.success(ArrData.init(
-                            idx: "0",
-                            writeTime: "0",
-                            time: self.removeWsAndNl(resultString[0]),
-                            timezone: "0",
-                            bodyStatus: self.removeWsAndNl(resultString[2]),
-                            type: self.removeWsAndNl(resultString[3]),
-                            data: ecgData)))
-                        
-                    } else {
-                        
-                        completion(.success(ArrData.init(
-                            idx: "",
-                            writeTime: "",
-                            time: "",
-                            timezone: "",
-                            bodyStatus: "응급 상황",
-                            type: "응급 상황",
-                            data: [])))
-                    }
-                    
-                } catch {
-                    print("arrData 변환 Error : \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("selectArrDataToServer Request Error : \(error.localizedDescription)")
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    private func getEcgArray(_ ecgData: String) -> [Double] {
-        let formattedStr = ecgData
-            .replacingOccurrences(of: ";", with: "")
-            .replacingOccurrences(of: "][", with: ",")
-            .replacingOccurrences(of: "[", with: "")
-            .replacingOccurrences(of: "]", with: "")
-        return formattedStr
-            .components(separatedBy: ",")
-            .compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-    }
     
     private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
         

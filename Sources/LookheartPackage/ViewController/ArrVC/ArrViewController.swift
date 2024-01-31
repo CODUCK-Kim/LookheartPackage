@@ -247,7 +247,7 @@ public class ArrViewController : UIViewController {
     
     func getArrList(_ email: String, _ startDate: String, _ endDate: String) {
         activityIndicator.startAnimating()
-        NetworkManager.shared.getArrListToServer(id: email, startDate: startDate, endDate: endDate){ [weak self] result in
+        NetworkManager.shared.getArrListToServer(startDate: startDate, endDate: endDate){ [weak self] result in
             DispatchQueue.main.async {
                 self?.activityIndicator.stopAnimating()
                 guard let self = self else { return }
@@ -275,7 +275,7 @@ public class ArrViewController : UIViewController {
     // MARK: - selectArrData
     func selectArrData(_ startDate: String) {
         activityIndicator.startAnimating()
-        NetworkManager.shared.selectArrDataToServer(id: email, startDate: startDate ) { [self] result in
+        NetworkManager.shared.selectArrDataToServer(startDate: startDate ) { [self] result in
             DispatchQueue.main.async {
                 switch(result) {
                 case .success(let arrData):

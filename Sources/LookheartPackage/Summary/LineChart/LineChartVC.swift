@@ -408,7 +408,7 @@ class LineChartVC : UIViewController {
         
         initUI()
 
-        NetworkManager.shared.getBpmDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
+        NetworkManager.shared.getBpmDataToServer(startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let bpmDataList):
                 

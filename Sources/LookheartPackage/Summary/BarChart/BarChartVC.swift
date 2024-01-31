@@ -627,7 +627,7 @@ class BarChartVC : UIViewController {
         
         initUI()
 
-        NetworkManager.shared.getHourlyDataToServer(id: email, startDate: startDate, endDate: endDate) { [self] result in
+        NetworkManager.shared.getHourlyDataToServer(startDate: startDate, endDate: endDate) { [self] result in
             switch(result){
             case .success(let hourlyDataList):
                 
