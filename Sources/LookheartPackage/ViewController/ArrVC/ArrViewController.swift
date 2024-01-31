@@ -219,7 +219,6 @@ public class ArrViewController : UIViewController {
         
         let currentDate = MyDateTime.shared.getSplitDateTime(.DATE)
         
-        email = UserProfileManager.shared.getEmail()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         currentYear = currentDate[0]

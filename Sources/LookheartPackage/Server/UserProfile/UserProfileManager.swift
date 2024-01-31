@@ -1,5 +1,11 @@
 import Foundation
 
+var email:String {
+    get {
+        return UserProfileManager.shared.getEmail
+    }
+}
+
 public class UserProfileManager {
     
     public static let shared = UserProfileManager()

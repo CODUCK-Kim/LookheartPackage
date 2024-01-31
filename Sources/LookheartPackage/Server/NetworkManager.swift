@@ -286,7 +286,7 @@ public class NetworkManager {
     // MARK: -
     func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
 
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         var bpmData: [BpmData] = []
         
         let endpoint = "/mslbpm/api_getdata"
@@ -349,7 +349,7 @@ public class NetworkManager {
     
     func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
                 
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         var hourlyData: [HourlyData] = []
         
         let endpoint = "/mslecgday/day"
@@ -427,7 +427,7 @@ public class NetworkManager {
     
     public func getArrListToServer(startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -465,7 +465,7 @@ public class NetworkManager {
     
     public func selectArrDataToServer(startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -527,7 +527,7 @@ public class NetworkManager {
     // MARK: - POST
     public func sendEmergencyData(_ timezone: String,_ address: String, _ currentDateTime: String) {
     
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -562,7 +562,7 @@ public class NetworkManager {
     
     public func setGuardianToServer(timezone: String, phone:[String], completion: @escaping (Result<Bool, Error>) -> Void) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         let currentDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
         
         let endpoint = "/mslparents/api_getdata"
@@ -673,7 +673,7 @@ public class NetworkManager {
     
     public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int, writeDateTime: String) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslecgbyte/api_getdata"
@@ -708,7 +708,7 @@ public class NetworkManager {
     
     public func sendTenSecondDataToServer(tenSecondData: [String: Any], writeDateTime: String) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         let timeZone = MyDateTime.shared.getTimeZone()
         
         let endpoint = "/mslbpm/api_data"
@@ -743,7 +743,7 @@ public class NetworkManager {
     
     public func sendHourlyDataToServer(hourlyData: [String: Any]) {
         
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         
         let endpoint = "/mslecgday/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -776,7 +776,7 @@ public class NetworkManager {
     
     public func sendArrDataToServer(arrData: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
     
-        let identification = UserProfileManager.shared.getEmail()
+        let identification = email
         guard let arrWriteTime = arrData["writetime"] as? String else {
             completion(.failure(NetworkError.invalidResponse))
             return

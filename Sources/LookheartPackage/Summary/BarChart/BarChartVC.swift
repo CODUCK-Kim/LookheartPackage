@@ -402,9 +402,7 @@ class BarChartVC : UIViewController {
     }
     
     func initVar() {
-        
-        email = UserProfileManager.shared.getEmail()
-        
+                
         buttonList = [dayButton, weekButton, monthButton, yearButton]
 
     }

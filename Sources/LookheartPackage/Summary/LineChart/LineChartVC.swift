@@ -313,8 +313,6 @@ class LineChartVC : UIViewController {
     
     func initVar() {
         
-        email = UserProfileManager.shared.getEmail()
-
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
         
     }
