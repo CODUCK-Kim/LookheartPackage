@@ -818,6 +818,8 @@ public class NetworkManager {
                 
                 if arrRetryCount[arrWriteTime]! < 3 {
                     
+                    print("arrRetryCount : \(arrRetryCount[arrWriteTime]!)")
+                    
                     arrRetryCount[arrWriteTime]! += 1
                     sendArrDataToServer(arrData: arrData, completion: completion)
                     
