@@ -560,9 +560,10 @@ public class NetworkManager {
     
 
     
-    public func setGuardianToServer(timezone: String, phone:[String],  _ currentDateTime: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func setGuardianToServer(timezone: String, phone:[String], completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let identification = UserProfileManager.shared.getEmail()
+        let currentDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
         
         let endpoint = "/mslparents/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
