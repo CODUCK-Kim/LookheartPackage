@@ -518,7 +518,7 @@ public class NetworkManager {
     
     
     // MARK: - POST
-    public func sendEmergencyData(_ timezone: String,_ address: String, _ currentDateTime: String) {
+    public func sendEmergencyData(_ address: String, _ currentDateTime: String) {
     
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -529,7 +529,7 @@ public class NetworkManager {
         let params: [String: Any] = [
             "kind": "arrEcgInsert",
             "eq": propEmail,
-            "timezone": timezone,
+            "timezone": propTimeZone,
             "writetime": currentDateTime,
             "ecgPacket": "",
             "arrStatus": "",
@@ -626,7 +626,7 @@ public class NetworkManager {
 
     
     // MARK: -
-    public func sendEcgDataToServer(packet: String, identification: String, bpm: Int, timezone: String, writeTime: String) {
+    public func sendEcgDataToServer(packet: String, identification: String, bpm: Int, writeTime: String) {
         
         let endpoint = "/mslecg/api_getdata"
         
@@ -639,7 +639,7 @@ public class NetworkManager {
             "kind": "ecgdataInsert",
             "eq": identification,
             "writetime": writeTime,
-            "ecgtimezone": timezone,
+            "ecgtimezone": propTimeZone,
             "bpm": bpm,
             "ecgPacket": packet
         ]
