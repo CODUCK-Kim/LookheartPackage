@@ -270,7 +270,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             switch result {
             case .success(let result):
                 if result {
-                    UserProfileManager.shared.setPhoneNumber(phoneNumber)
+                    UserProfileManager.shared.phone = phoneNumber
                     delegate?.complete(phoneNumber: phoneNumber)
                 } else {
                     // 시간 초과

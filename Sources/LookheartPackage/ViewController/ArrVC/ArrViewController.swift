@@ -332,7 +332,7 @@ public class ArrViewController : UIViewController {
         if arrData.data.count < 400 {   return  }
         
         let ecgDataConversion = EcgDataConversion()
-        let conversionFlag = UserProfileManager.shared.getConversionFalg() == 0 ? true : false
+        let conversionFlag = UserProfileManager.shared.conversionFlag
         
         var arrDataEntry: ChartDataEntry
         arrDataEntries = []

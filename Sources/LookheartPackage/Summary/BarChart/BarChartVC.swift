@@ -869,10 +869,10 @@ class BarChartVC : UIViewController {
             bottomTitleLabel.text = (type ? "eCalTitle".localized() : "distance".localized())
             
             
-            firstGoal = type ? UserProfileManager.shared.getTCal() : 
-                               UserProfileManager.shared.getStep()
-            secondGoal = type ? UserProfileManager.shared.getACal() :
-                                UserProfileManager.shared.getDistance()
+            firstGoal = type ? UserProfileManager.shared.targetCalorie :
+                               UserProfileManager.shared.targetStep
+            secondGoal = type ? UserProfileManager.shared.targetActivityCalorie :
+                                UserProfileManager.shared.targetDistance
                         
         default:
             // single graph

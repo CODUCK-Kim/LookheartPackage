@@ -1,10 +1,5 @@
 import Foundation
 
-var email:String {
-    get {
-        return UserProfileManager.shared.getEmail
-    }
-}
 
 public class UserProfileManager {
     
@@ -15,163 +10,211 @@ public class UserProfileManager {
     
     public init() { }
     
+    // MARK: - PROFILE
+    
     // UserProfile
-    public func setUserProfile(_ profile: UserProfile) {
-        self.userProfile = profile
+    public var profile: UserProfile {
+        get {
+            return userProfile!
+        }
+        set {
+            userProfile = newValue
+        }
     }
     
-    public func getUserProfile() -> UserProfile {
-        return userProfile!
-    }
-    
-    
-    // ---------------------------- PROFILE ---------------------------- //
     
     // Email
-    public var getEmail :String{
+    public var email: String{
         get{
             return userProfile?.eq ?? "isEmpty"
         }
     }
-        
-    
+
     
     // name
-    public func setName(_ name: String) {
-        userProfile?.eqname = name;
-    }
-    
-    public func getName() -> String {
-        return userProfile?.eqname ?? "isEmpty"
+    public var name: String {
+        get {
+            return userProfile?.eqname ?? "isEmpty"
+        }
+        set {
+            userProfile?.eqname = newValue
+        }
     }
     
     // phone
-    public func setPhoneNumber(_ phoneNumber: String) {
-        userProfile?.userphone = phoneNumber;
-    }
-    public func getPhoneNumber() -> String {
-        return userProfile?.userphone ?? "01012345678"
+    public var phone: String {
+        get {
+            return userProfile?.userphone ?? "01012345678"
+        }
+        set {
+            userProfile?.userphone = newValue
+        }
     }
     
+
     // birth
-    public func setBirthDate(_ birthDate: String) {
-        userProfile?.birth = birthDate;
-    }
-    public func getBirthDate() -> String {
-        return userProfile?.birth ?? "isEmpty"
+    public var birthDate: String {
+        get {
+            return userProfile?.birth ?? "isEmpty"
+        }
+        set {
+            userProfile?.birth = newValue
+        }
     }
     
     // age
-    public func setAge(_ age: String) {
-        userProfile?.age = age;
-    }
-    public func getAge() -> String {
-        return userProfile?.age ?? "isEmpty"
+    public var age: String {
+        get {
+            return userProfile?.age ?? "isEmpty"
+        }
+        set {
+            userProfile?.age = newValue
+        }
     }
     
+
     // gender
-    public func setGender(_ gender: String) {
-        userProfile?.sex = gender;
+    public var gender: String {
+        get {
+            return userProfile?.sex ?? "isEmpty"
+        }
+        set {
+            userProfile?.sex = newValue
+        }
     }
-    public func getGender() -> String {
-        return userProfile?.sex ?? "isEmpty"
-    }
+    
     
     // height
-    public func setHeight(_ height: String) {
-        userProfile?.height = height;
+    public var height: String {
+        get {
+            return userProfile?.height ?? "isEmpty"
+        }
+        set {
+            userProfile?.height = newValue
+        }
     }
-    public func getHeight() -> String {
-        return userProfile?.height ?? "isEmpty"
-    }
+    
     
     // weight
-    public func setWeight(_ weight: String) {
-        userProfile?.weight = weight;
-    }
-    public func getWeight() -> String {
-        return userProfile?.weight ?? "isEmpty"
+    public var weight: String {
+        get {
+            return userProfile?.weight ?? "isEmpty"
+        }
+        set {
+            userProfile?.weight = newValue
+        }
     }
     
+
     // sleep time
-    public func setBedtime(_ bedtime: Int) {
-        userProfile?.sleeptime = bedtime;
+    public var bedTime: Int {
+        get {
+            return userProfile?.sleeptime ?? 23
+        }
+        set {
+            userProfile?.sleeptime = newValue
+        }
     }
-    public func getBedtime() -> Int {
-        return userProfile?.sleeptime ?? 23
-    }
+    
+    
     
     // wake time
-    public func setWakeUpTime(_ WakeUpTime: Int) {
-        userProfile?.uptime = WakeUpTime;
-    }
-    public func getWakeUpTime() -> Int {
-        return userProfile?.uptime ?? 7
-    }
-    
-    public func getJoinDate() -> String {
-        return userProfile?.signupdate ?? "2023-01-01"
+    public var wakeUpTime: Int {
+        get {
+            return userProfile?.uptime ?? 7
+        }
+        set {
+            userProfile?.uptime = newValue
+        }
     }
     
-    // guardianPhoneNumber
-    public func setPhoneNumbers(_ numbers: [String]) {
-        guardianPhoneNumbers = numbers
+
+    // joinDate
+    public var joinDate: String {
+        get {
+            return userProfile?.signupdate ?? "2023-01-01"
+        }
+    }
+
+
+    public var guardianPhoneNumber: [String] {
+        get {
+            return guardianPhoneNumbers
+        }
+        set {
+            guardianPhoneNumbers = newValue
+        }
     }
     
-    public func getPhoneNumbers() -> [String] {
-        return guardianPhoneNumbers
+    
+
+    
+    // MARK: - SETTING
+    
+    // Activity Bpm
+    public var targetBpm: Int {
+        get {
+            return userProfile?.bpm ?? 90
+        }
+        set {
+            userProfile?.bpm = newValue
+        }
     }
     
-    // ---------------------------- SETTING ---------------------------- //
     
-    // A.bpm
-    public func setBpm(_ bpm: Int) {
-        userProfile?.bpm = bpm;
-    }
-    public func getBpm() -> Int {
-        return userProfile?.bpm ?? 90
-    }
-    
-    // step
-    public func setStep(_ step: Int) {
-        userProfile?.step = step;
-    }
-    public func getStep() -> Int {
-        return userProfile?.step ?? 2000
+    // Step
+    public var targetStep: Int {
+        get {
+            return userProfile?.step ?? 2000
+        }
+        set {
+            userProfile?.step = newValue
+        }
     }
     
-    // distance
-    public func setDistance(_ distance: Int) {
-        userProfile?.distanceKM = distance;
-    }
-    public func getDistance() -> Int {
-        return userProfile?.distanceKM ?? 5
+    
+    // Distance
+    public var targetDistance: Int {
+        get {
+            return userProfile?.distanceKM ?? 5
+        }
+        set {
+            userProfile?.distanceKM = newValue
+        }
     }
     
-    // A.cal
-    public func setACal(_ aCal: Int) {
-        userProfile?.calexe = aCal;
-    }
-    public func getACal() -> Int {
-        return userProfile?.calexe ?? 500
+    
+    // Calorie
+    public var targetCalorie: Int {
+        get {
+            return userProfile?.cal ?? 3000
+        }
+        set {
+            userProfile?.cal = newValue
+        }
     }
     
-    // total cal
-    public func setTCal(_ tCal: Int) {
-        userProfile?.cal = tCal;
-    }
-    public func getTCal() -> Int {
-        return userProfile?.cal ?? 500
-    }
     
-    // ---------------------------- Conversion FLAG ---------------------------- //
     
-    public func setConversionFalg(_ flag : Bool) {
-        userProfile?.alarm_sms = flag == true ? 0 : 1
+    // Activity Calorie
+    public var targetActivityCalorie: Int {
+        get {
+            return userProfile?.calexe ?? 500
+        }
+        set {
+            userProfile?.calexe = newValue
+        }
     }
     
-    public func getConversionFalg() -> Int {
-        return userProfile?.alarm_sms ?? 0
-    }
     
+    
+    // Conversion FLAG ( peak(0) : ecg(1) )
+    public var conversionFlag: Bool {
+        get {
+            return userProfile?.alarm_sms == 0 ? true : false
+        }
+        set {
+            userProfile?.alarm_sms = newValue == true ? 0 : 1
+        }
+    }
 }

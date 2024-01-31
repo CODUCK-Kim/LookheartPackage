@@ -179,8 +179,7 @@ public class NetworkManager {
                     
                     // 첫 번째 프로필을 기본 프로필로 설정하고, 핸드폰 번호 목록을 저장
                     if let primaryProfile = userProfiles.first {
-                        
-                        UserProfileManager.shared.setPhoneNumbers(phoneNumbers)
+                        UserProfileManager.shared.guardianPhoneNumber = phoneNumbers
                         completion(.success(primaryProfile))
                         
                     } else {
@@ -286,7 +285,6 @@ public class NetworkManager {
     // MARK: -
     func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
 
-        let identification = email
         var bpmData: [BpmData] = []
         
         let endpoint = "/mslbpm/api_getdata"
@@ -296,7 +294,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": identification,
+            "eq": propEmail,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -349,7 +347,6 @@ public class NetworkManager {
     
     func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
                 
-        let identification = email
         var hourlyData: [HourlyData] = []
         
         let endpoint = "/mslecgday/day"
@@ -359,7 +356,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": identification,
+            "eq": propEmail,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -427,8 +424,6 @@ public class NetworkManager {
     
     public func getArrListToServer(startDate: String, endDate: String, completion: @escaping (Result<[ArrDateEntry], Error>) -> Void) {
         
-        let identification = email
-        
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -436,7 +431,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": identification,
+            "eq": propEmail,
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -465,8 +460,6 @@ public class NetworkManager {
     
     public func selectArrDataToServer(startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
         
-        let identification = email
-        
         let endpoint = "/mslecgarr/arrWritetime?"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -474,7 +467,7 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": identification,
+            "eq": propEmail,
             "startDate": startDate,
             "endDate": ""
         ]
@@ -527,8 +520,6 @@ public class NetworkManager {
     // MARK: - POST
     public func sendEmergencyData(_ timezone: String,_ address: String, _ currentDateTime: String) {
     
-        let identification = email
-        
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -537,7 +528,7 @@ public class NetworkManager {
         
         let params: [String: Any] = [
             "kind": "arrEcgInsert",
-            "eq": identification,
+            "eq": propEmail,
             "timezone": timezone,
             "writetime": currentDateTime,
             "ecgPacket": "",
@@ -560,10 +551,7 @@ public class NetworkManager {
     
 
     
-    public func setGuardianToServer(timezone: String, phone:[String], completion: @escaping (Result<Bool, Error>) -> Void) {
-        
-        let identification = email
-        let currentDateTime = MyDateTime.shared.getCurrentDateTime(.DATETIME)
+    public func setGuardianToServer(phone:[String], completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/mslparents/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -572,9 +560,9 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "eq": identification,
-            "timezone": timezone,
-            "writetime": currentDateTime,
+            "eq": propEmail,
+            "timezone": propTimeZone,
+            "writetime": propCurrentDateTime,
             "phones": phone
         ]
         
@@ -672,10 +660,7 @@ public class NetworkManager {
     
     
     public func sendByteEcgDataToServer(ecgData: [Int], bpm: Int, writeDateTime: String) {
-        
-        let identification = email
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
+                
         let endpoint = "/mslecgbyte/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -684,9 +669,9 @@ public class NetworkManager {
 
         let parameters: [String: Any] = [
             "kind": "ecgByteInsert",
-            "eq": identification,
+            "eq": propEmail,
             "writetime": writeDateTime,
-            "timezone": timeZone,
+            "timezone": propTimeZone,
             "bpm": bpm,
             "ecgPacket": ecgData
         ]
@@ -708,9 +693,6 @@ public class NetworkManager {
     
     public func sendTenSecondDataToServer(tenSecondData: [String: Any], writeDateTime: String) {
         
-        let identification = email
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
         let endpoint = "/mslbpm/api_data"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -719,8 +701,8 @@ public class NetworkManager {
         
         var params: [String: Any] = [
             "kind": "BpmDataInsert",
-            "eq": identification,
-            "timezone": timeZone,
+            "eq": propEmail,
+            "timezone": propTimeZone,
             "writetime": writeDateTime
         ]
         
@@ -743,8 +725,6 @@ public class NetworkManager {
     
     public func sendHourlyDataToServer(hourlyData: [String: Any]) {
         
-        let identification = email
-        
         let endpoint = "/mslecgday/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -753,7 +733,7 @@ public class NetworkManager {
         
         var params: [String: Any] = [
             "kind": "calandInsert",
-            "eq": identification,
+            "eq": propEmail,
         ]
         
         params.merge(hourlyData) { (current, _) in current }
@@ -776,7 +756,6 @@ public class NetworkManager {
     
     public func sendArrDataToServer(arrData: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
     
-        let identification = email
         guard let arrWriteTime = arrData["writetime"] as? String else {
             completion(.failure(NetworkError.invalidResponse))
             return
@@ -794,7 +773,7 @@ public class NetworkManager {
         
         var params: [String: Any] = [
             "kind": "arrEcgInsert",
-            "eq": identification,
+            "eq": propEmail,
         ]
 
         params.merge(arrData) { (current, _) in current }
