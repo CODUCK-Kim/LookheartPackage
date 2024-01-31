@@ -22,9 +22,13 @@ public class UserProfileManager {
     // ---------------------------- PROFILE ---------------------------- //
     
     // Email
-    public func getEmail() -> String {
-        return userProfile?.eq ?? "isEmpty"
+    public var getEmail :String{
+        get{
+            return userProfile?.eq ?? "isEmpty"
+        }
     }
+        
+    
     
     // name
     public func setName(_ name: String) {
