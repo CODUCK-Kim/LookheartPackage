@@ -773,12 +773,9 @@ public class NetworkManager {
     
     
     
-    public func sendArrDataToServer(_ bodyStatus: String, _ arrStatus: String,_ arrEcgData: String, _ writeTime: String, _ writeDateTime: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func sendArrDataToServer(arrData: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
     
         let identification = UserProfileManager.shared.getEmail()
-        let timeZone = MyDateTime.shared.getTimeZone()
-        
-        let arrData = "\(writeTime),\(timeZone),\(bodyStatus),\(arrStatus),\(arrEcgData)"
         
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -786,12 +783,12 @@ public class NetworkManager {
             return
         }
         
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "kind": "arrEcgInsert",
             "eq": identification,
-            "writetime": writeDateTime,
-            "ecgPacket": arrData
         ]
+        
+        params.merge(arrData) { (current, _) in current }
         
         request(url: url, method: .post, parameters: params) { result in
             switch result {
