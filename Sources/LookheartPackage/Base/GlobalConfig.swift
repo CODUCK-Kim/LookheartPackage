@@ -1,49 +1,49 @@
 
 
-let ECG_MAX_ARRAY = 500
-let ECG_DATA_MAX = 140
+public let ECG_MAX_ARRAY = 500
+public let ECG_DATA_MAX = 140
 
-let PrevDateKey = "prevDate"
-let PrevHourKey = "prevHour"
+public let PrevDateKey = "prevDate"
+public let PrevHourKey = "prevHour"
 
-let ARR_TAG = 1, ARR_STATE = "arr"
-let EMERGENCY_TAG = 2
-let NONCONTACT_TAG = 3
-let MYO_TAG = 4
-let FAST_ARR_TAG = 5, FAST_ARR_STATE = "fast"
-let SLOW_ARR_TAG = 6, SLOW_ARR_STATE = "slow"
-let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
+public let ARR_TAG = 1, ARR_STATE = "arr"
+public let EMERGENCY_TAG = 2
+public let NONCONTACT_TAG = 3
+public let MYO_TAG = 4
+public let FAST_ARR_TAG = 5, FAST_ARR_STATE = "fast"
+public let SLOW_ARR_TAG = 6, SLOW_ARR_STATE = "slow"
+public let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
 
-let ArrState:[Int : String] = [ARR_TAG : ARR_STATE, FAST_ARR_TAG : FAST_ARR_STATE, SLOW_ARR_TAG : SLOW_ARR_STATE, HEAVY_ARR_TAG : HEAVY_ARR_STATE]
+public let ArrState:[Int : String] = [ARR_TAG : ARR_STATE, FAST_ARR_TAG : FAST_ARR_STATE, SLOW_ARR_TAG : SLOW_ARR_STATE, HEAVY_ARR_TAG : HEAVY_ARR_STATE]
 
-var propEmail : String {
+public var propEmail : String {
     get {
         return UserProfileManager.shared.email
     }
 }
 
 
-var propCurrentTime : String {
+public var propCurrentTime : String {
     get {
         return MyDateTime.shared.getCurrentDateTime(.TIME)
     }
 }
 
 
-var propCurrentDate : String {
+public var propCurrentDate : String {
     get {
         return MyDateTime.shared.getCurrentDateTime(.DATE)
     }
 }
 
 
-var propCurrentDateTime: String {
+public var propCurrentDateTime: String {
     get {
         return MyDateTime.shared.getCurrentDateTime(.DATETIME)
     }
 }
 
-var propTimeZone: String {
+public var propTimeZone: String {
     get {
         return MyDateTime.shared.getTimeZone()
     }
