@@ -772,10 +772,19 @@ public class NetworkManager {
         
     
     
+    private var arrRetryCount: [String : Int] = [:]
     
     public func sendArrDataToServer(arrData: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
     
         let identification = UserProfileManager.shared.getEmail()
+        guard let arrWriteTime = arrData["writetime"] as? String else {
+            completion(.failure(NetworkError.invalidResponse))
+            return
+        }
+
+        if arrRetryCount[arrWriteTime] == nil {
+            arrRetryCount[arrWriteTime] = 0
+        }
         
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -787,10 +796,10 @@ public class NetworkManager {
             "kind": "arrEcgInsert",
             "eq": identification,
         ]
-        
+
         params.merge(arrData) { (current, _) in current }
         
-        request(url: url, method: .post, parameters: params) { result in
+        request(url: url, method: .post, parameters: params) { [self] result in
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
@@ -798,15 +807,25 @@ public class NetworkManager {
                     print("ArrData Received response: \(responseString)")
                     
                     if responseString.contains("true"){
+                        arrRetryCount.removeValue(forKey: arrWriteTime)
                         completion(.success(true))
-                    } else {
-                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
                     }
                     
                 }
             case .failure(let error):
+                
                 print("sendArrDataToServer Send Error: \(error.localizedDescription)")
-                completion(.failure(error))
+                
+                if arrRetryCount[arrWriteTime]! < 3 {
+                    
+                    arrRetryCount[arrWriteTime]! += 1
+                    sendArrDataToServer(arrData: arrData, completion: completion)
+                    
+                } else {
+                    arrRetryCount.removeValue(forKey: arrWriteTime)
+                    completion(.failure(error))
+                }
+                
             }
         }
     }
