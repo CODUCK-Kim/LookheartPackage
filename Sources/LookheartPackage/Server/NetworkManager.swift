@@ -538,6 +538,11 @@ public class NetworkManager {
             return
         }
         
+        print(id)
+        print(propCurrentDateTime)
+        print(userType.rawValue)
+        print(action.rawValue)
+        
         let params: [String: Any] = [
             "eq": id,
             "writetime": propCurrentDateTime,
