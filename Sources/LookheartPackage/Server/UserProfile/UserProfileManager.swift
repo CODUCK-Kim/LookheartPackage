@@ -7,6 +7,7 @@ public class UserProfileManager {
     
     private(set) var userProfile: UserProfile? // 싱글톤
     private var guardianPhoneNumbers: [String] = [] // 보호자 번호
+    private var checkLogin:Bool = true
     
     public init() { }
     
@@ -128,7 +129,15 @@ public class UserProfileManager {
         }
     }
     
-
+    public var isLogin: Bool {
+        get {
+            return checkLogin
+        }
+        set {
+            checkLogin = newValue
+        }
+    }
+    
     // joinDate
     public var joinDate: String {
         get {
