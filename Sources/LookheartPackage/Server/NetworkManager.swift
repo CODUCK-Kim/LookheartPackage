@@ -12,7 +12,7 @@ public class NetworkManager {
         case Login
         case AutoLogin
         case Logout
-        case Shutdonw
+        case Shutdown
     }
     
     public enum UserType: String {
@@ -537,11 +537,6 @@ public class NetworkManager {
             print("Invalid URL")
             return
         }
-        
-        print(id)
-        print(propCurrentDateTime)
-        print(userType.rawValue)
-        print(action.rawValue)
         
         let params: [String: Any] = [
             "eq": id,
