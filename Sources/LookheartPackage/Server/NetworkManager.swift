@@ -8,6 +8,17 @@ public class NetworkManager {
     
     public static let shared = NetworkManager()
 
+    public enum LogType: String {
+        case Login
+        case AutoLogin
+        case Logout
+        case Shutdonw
+    }
+    
+    public enum UserType: String {
+        case User
+        case Guardian
+    }
     
     // MARK: - Find
     public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -517,7 +528,36 @@ public class NetworkManager {
     
     
     
+    
     // MARK: - POST
+    public func sendLog(id: String, userType: UserType, action: LogType) {
+        
+        let endpoint = "/app_log/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params: [String: Any] = [
+            "eq": id,
+            "writetime": propCurrentDateTime,
+            "gubun": userType.rawValue,
+            "activity": action.rawValue
+        ]
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+                }
+            case .failure(let error):
+                print("sendLog: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
     public func sendEmergencyData(_ address: String, _ currentDateTime: String) {
     
         let endpoint = "/mslecgarr/api_getdata"
