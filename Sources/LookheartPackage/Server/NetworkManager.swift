@@ -13,6 +13,7 @@ public class NetworkManager {
         case AutoLogin
         case Logout
         case Shutdown
+        case AccountDeletion
     }
     
     public enum UserType: String {
@@ -530,6 +531,80 @@ public class NetworkManager {
     
     
     // MARK: - POST
+    public func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/msl/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    
+                    if responseString.contains("true"){
+                        
+                        completion(.success(true))
+                        
+                    } else if responseString.contains("false"){
+                        
+                        completion(.success(false))
+                        
+                    } else {
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+                
+            case .failure(let error):
+                print("signupToServer Send Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    public func accountDeletion(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/msl/api_getdata"
+        
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    
+                    if responseString.contains("true"){
+                        
+                        completion(.success(true))
+                        
+                    } else if responseString.contains("false"){
+                        
+                        completion(.success(false))
+                        
+                    } else {
+                        
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                        
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+                
+            case .failure(let error):
+                print("signupToServer Send Error : \(error.localizedDescription)")
+                completion(.failure(NetworkError.invalidResponse))
+            }
+        }
+    }
+    
     public func sendLog(id: String, userType: UserType, action: LogType) {
         
         let endpoint = "/app_log/api_getdata"
@@ -627,41 +702,6 @@ public class NetworkManager {
         }
     }
     
-    
-    public func signupToServer(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
-        
-        let endpoint = "/msl/api_getdata"
-        guard let url = URL(string: baseURL + endpoint) else {
-            print("Invalid URL")
-            return
-        }
-        
-        request(url: url, method: .post, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    
-                    if responseString.contains("true"){
-                        
-                        completion(.success(true))
-                        
-                    } else if responseString.contains("false"){
-                        
-                        completion(.success(false))
-                        
-                    } else {
-                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                    }
-                    
-                } else {
-                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
-                }
-                
-            case .failure(let error):
-                print("signupToServer Send Error : \(error.localizedDescription)")
-            }
-        }
-    }
     
 
     
