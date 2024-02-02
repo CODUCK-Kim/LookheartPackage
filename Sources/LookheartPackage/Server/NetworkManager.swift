@@ -324,10 +324,13 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: parameters) { [self] result in
             switch result {
             case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+                }
+                
                 do {
                     let version = try JSONDecoder().decode([Version].self, from: data)
                     
-                    print(version.first?.versioncode)
                     if userVersion == version.first?.versioncode {
                         completion(.success(true))
                     } else {
