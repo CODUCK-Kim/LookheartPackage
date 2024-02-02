@@ -3,8 +3,8 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let userVersion = "1.1.0"
-    private let guardianVersion = "1"
+    private let userVersion = 1
+    private let guardianVersion = 1
     
     private let baseURL = "http://121.152.22.85:40081" // TEST
 //    private let baseURL = "http://121.152.22.85:40080" // REAL
@@ -306,8 +306,8 @@ public class NetworkManager {
     public func getVersion(completion: @escaping (Result<Bool, Error>) -> Void) {
         
         struct Version: Codable {
-            let versioncode: String
-            let apkkey: String
+            var versioncode: Int
+            var apkkey: String?
         }
         
         let endpoint = "/appversion/getVersion"
@@ -324,14 +324,10 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: parameters) { [self] result in
             switch result {
             case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
-                }
-                
                 do {
-                    let version = try JSONDecoder().decode([Version].self, from: data)
-                    
-                    if userVersion == version.first?.versioncode {
+                    let version = try JSONDecoder().decode(Version.self, from: data)
+                    print(version.versioncode)
+                    if userVersion == version.versioncode {
                         completion(.success(true))
                     } else {
                         completion(.success(false))
