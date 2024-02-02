@@ -14,6 +14,7 @@ public class NetworkManager {
         case Logout
         case Shutdown
         case AccountDeletion
+        
         case BleConnect
         case BleDisconnect
     }
@@ -663,6 +664,33 @@ public class NetworkManager {
         }
     }
     
+    public func sendLog(id: String, phoneNumber: String, bleID: String, action: LogType) {
+        
+        let endpoint = "/app_log/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+
+        let params: [String: Any] = [
+            "eq": id,
+            "writetime": propCurrentDateTime,
+            "activity": action.rawValue,
+            "phone" : phoneNumber,
+            "bleID" : bleID
+        ]
+        
+        request(url: url, method: .post, parameters: params) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("sendLog(\(action.rawValue) : \(responseString)")
+                }
+            case .failure(let error):
+                print("sendLog: \(error.localizedDescription)")
+            }
+        }
+    }
     
     public func sendEmergencyData(_ address: String, _ currentDateTime: String) {
     
