@@ -1,6 +1,8 @@
 import UIKit
 
-public class Alert {
+public class MyAlert {
+    
+    public static let shared = MyAlert()
     
     public init() {}
     

@@ -16,12 +16,18 @@ public let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
 
 public let ArrState:[Int : String] = [ARR_TAG : ARR_STATE, FAST_ARR_TAG : FAST_ARR_STATE, SLOW_ARR_TAG : SLOW_ARR_STATE, HEAVY_ARR_TAG : HEAVY_ARR_STATE]
 
+
+public var propUserProfil: UserProfile {
+    get {
+        return UserProfileManager.shared.profile
+    }
+}
+
 public var propEmail : String {
     get {
         return UserProfileManager.shared.email
     }
 }
-
 
 public var propCurrentTime : String {
     get {
@@ -54,3 +60,12 @@ public var propTimeZone: String {
         return MyDateTime.shared.getTimeZone()
     }
 }
+
+
+public var propAlert: MyAlert {
+    get {
+        return MyAlert.shared
+    }
+}
+
+
