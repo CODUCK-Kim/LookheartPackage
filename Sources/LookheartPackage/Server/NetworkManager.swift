@@ -217,11 +217,11 @@ public class NetworkManager {
             return
         }
         
-        print("destroy : \(destroy)")
+        let sDestroy = destroy ? "true" : "false"
         let parameters: [String: Any] = [
             "empid": id,
             "pw": pw,
-            "destroy": "true"
+            "destroy": sDestroy
         ]
         
         request(url: url, method: .get, parameters: parameters) { result in
