@@ -216,7 +216,7 @@ public class NetworkManager {
             print("Invalid URL")
             return
         }
-        
+        print(destroy)
         let parameters: [String: Any] = [
             "empid": id,
             "pw": pw,
