@@ -209,7 +209,7 @@ public class NetworkManager {
     }
     
     
-    public func checkLoginToServer(id: String, pw: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkLoginToServer(id: String, pw: String, destroy: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/CheckLogin"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -219,7 +219,8 @@ public class NetworkManager {
         
         let parameters: [String: Any] = [
             "empid": id,
-            "pw": pw
+            "pw": pw,
+            "destroy": destroy
         ]
         
         request(url: url, method: .get, parameters: parameters) { result in
