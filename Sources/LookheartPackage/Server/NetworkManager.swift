@@ -568,6 +568,33 @@ public class NetworkManager {
         }
     }
     
+    public func updateLogoutFlag() {
+        
+        let endpoint = "/msl/api_getdata"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "kind": "updateDifferTime",
+            "eq": propEmail,
+            "differtime": "0"
+        ]
+        
+        request(url: url, method: .post, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print(responseString)
+                }
+            case .failure(let error):
+                print("updateLogoutFlag : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
     public func accountDeletion(parameters: [String: Any], completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/api_getdata"
