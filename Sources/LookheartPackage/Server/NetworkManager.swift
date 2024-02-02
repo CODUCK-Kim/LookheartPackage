@@ -719,10 +719,10 @@ public class NetworkManager {
 
         let params: [String: Any] = [
             "eq": propEmail,
+            "phone" : propProfil.phone,
             "writetime": propCurrentDateTime,
             "activity": action.rawValue,
-            "phone" : propProfil.phone,
-            "bleID" : propProfil.bleIdentifier
+            "serial" : propProfil.bleIdentifier
         ]
         
         request(url: url, method: .post, parameters: params) { result in
