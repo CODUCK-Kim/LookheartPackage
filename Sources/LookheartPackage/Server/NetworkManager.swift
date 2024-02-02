@@ -14,6 +14,8 @@ public class NetworkManager {
         case Logout
         case Shutdown
         case AccountDeletion
+        case BleConnect
+        case BleDisconnect
     }
     
     public enum UserType: String {
@@ -569,7 +571,6 @@ public class NetworkManager {
     }
     
     public func updateLogoutFlag() {
-        // TEst
         let endpoint = "/msl/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -586,7 +587,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
+                    print("updateLogoutFlag : \(responseString)")
                 }
             case .failure(let error):
                 print("updateLogoutFlag : \(error.localizedDescription)")
@@ -654,7 +655,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(responseString)
+                    print("sendLog(\(action.rawValue) : \(responseString)")
                 }
             case .failure(let error):
                 print("sendLog: \(error.localizedDescription)")
