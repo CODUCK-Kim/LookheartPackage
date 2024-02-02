@@ -21,7 +21,7 @@ public class MyAlert {
         viewController.present(alert, animated: true, completion: {})
     }
     
-    public func basicPasswordAlert(title: String, message: String, ok: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
+    public func basicPasswordAlert(viewController: UIViewController, completion: @escaping (String) -> Void) {
 
         let alertController = UIAlertController(title: "pw_Label".localized(), message: "password_Hint".localized(), preferredStyle: .alert)
 
