@@ -569,7 +569,7 @@ public class NetworkManager {
     }
     
     public func updateLogoutFlag() {
-        
+        //ㅅㄷㄴ
         let endpoint = "/msl/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
