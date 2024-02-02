@@ -217,6 +217,7 @@ public class NetworkManager {
             return
         }
         
+        print("destroy : \(destroy)")
         let parameters: [String: Any] = [
             "empid": id,
             "pw": pw,
