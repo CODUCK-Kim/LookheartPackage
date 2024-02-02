@@ -3,6 +3,9 @@ import Alamofire
 
 public class NetworkManager {
     
+    private let userVersion = "1"
+    private let guardianVersion = "1"
+    
     private let baseURL = "http://121.152.22.85:40081" // TEST
 //    private let baseURL = "http://121.152.22.85:40080" // REAL
     
@@ -298,6 +301,36 @@ public class NetworkManager {
             }
         }
     }
+    
+    
+    public func getVersion(completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/appversion/getVersion"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "app": "lookheart"
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let version = String(data: data, encoding: .utf8) {
+                    if self.userVersion == version {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(NetworkError.invalidResponse))
+            }
+        }
+    }
+    
     
     // MARK: -
     func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
@@ -656,7 +689,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print("sendLog(\(action.rawValue) : \(responseString)")
+                    print("sendLog(\(action.rawValue)) : \(responseString)")
                 }
             case .failure(let error):
                 print("sendLog: \(error.localizedDescription)")
