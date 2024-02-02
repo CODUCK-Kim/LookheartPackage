@@ -320,6 +320,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let version = String(data: data, encoding: .utf8) {
+                    print(version)
                     if self.userVersion == version {
                         completion(.success(true))
                     } else {
