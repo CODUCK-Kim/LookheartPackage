@@ -605,6 +605,7 @@ public class NetworkManager {
         }
     }
     
+    
     public func sendLog(id: String, userType: UserType, action: LogType) {
         
         let endpoint = "/app_log/api_getdata"
