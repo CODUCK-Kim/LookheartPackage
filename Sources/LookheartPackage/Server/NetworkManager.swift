@@ -3,7 +3,7 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let userVersion = "1"
+    private let userVersion = "1.1"
     private let guardianVersion = "1"
     
     private let baseURL = "http://121.152.22.85:40081" // TEST
@@ -324,9 +324,12 @@ public class NetworkManager {
                     } else {
                         completion(.success(false))
                     }
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
                 }
+                
             case .failure(let error):
-                completion(.failure(NetworkError.invalidResponse))
+                completion(.failure(error))
             }
         }
     }
