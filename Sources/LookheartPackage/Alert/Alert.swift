@@ -1,7 +1,7 @@
 import UIKit
 
 public class MyAlert {
-    
+    //Test
     public static let shared = MyAlert()
     
     public init() {}
