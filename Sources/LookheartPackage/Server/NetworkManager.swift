@@ -3,7 +3,7 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let userVersion = "1.1"
+    private let userVersion = "1.1.0"
     private let guardianVersion = "1"
     
     private let baseURL = "http://121.152.22.85:40081" // TEST
@@ -312,7 +312,8 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = [
-            "app": "lookheart"
+            "app": "lookheart",
+            "gubun": "IOS",
         ]
         
         request(url: url, method: .get, parameters: parameters) { result in
