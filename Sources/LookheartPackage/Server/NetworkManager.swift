@@ -305,6 +305,11 @@ public class NetworkManager {
     
     public func getVersion(completion: @escaping (Result<Bool, Error>) -> Void) {
         
+        struct Version: Codable {
+            let versioncode: String
+            let apkkey: String
+        }
+        
         let endpoint = "/appversion/getVersion"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
@@ -316,18 +321,21 @@ public class NetworkManager {
             "gubun": "IOS",
         ]
         
-        request(url: url, method: .get, parameters: parameters) { result in
+        request(url: url, method: .get, parameters: parameters) { [self] result in
             switch result {
             case .success(let data):
-                if let version = String(data: data, encoding: .utf8) {
-                    print(version)
-                    if self.userVersion == version {
+                do {
+                    let version = try JSONDecoder().decode([Version].self, from: data)
+                    
+                    print(version.first?.versioncode)
+                    if userVersion == version.first?.versioncode {
                         completion(.success(true))
                     } else {
                         completion(.success(false))
                     }
-                } else {
-                    completion(.failure(NetworkError.invalidResponse))
+                } catch {
+                    print("JSON 디코딩 실패: \(error)")
+                    completion(.failure(NetworkError.noData))
                 }
                 
             case .failure(let error):
