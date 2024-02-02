@@ -664,7 +664,7 @@ public class NetworkManager {
         }
     }
     
-    public func sendLog(id: String, phoneNumber: String, bleID: String, action: LogType) {
+    public func sendBleLog(action: LogType) {
         
         let endpoint = "/app_log/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -673,11 +673,11 @@ public class NetworkManager {
         }
 
         let params: [String: Any] = [
-            "eq": id,
+            "eq": propEmail,
             "writetime": propCurrentDateTime,
             "activity": action.rawValue,
-            "phone" : phoneNumber,
-            "bleID" : bleID
+            "phone" : propProfil.phone,
+            "bleID" : propProfil.bleIdentifier
         ]
         
         request(url: url, method: .post, parameters: params) { result in
