@@ -221,7 +221,7 @@ public class NetworkManager {
         let parameters: [String: Any] = [
             "empid": id,
             "pw": pw,
-            "destroy": destroy
+            "destroy": true
         ]
         
         request(url: url, method: .get, parameters: parameters) { result in
