@@ -17,6 +17,15 @@ public class CreateUI {
         return label
     }
     
+    public func backgroundLabel(borderColor: CGColor, borderWidth: CGFloat, cornerRadius: CGFloat) -> UILabel{
+        let label = UILabel().then {
+            $0.layer.borderColor = borderColor
+            $0.layer.borderWidth = borderWidth
+            $0.layer.cornerRadius = cornerRadius
+        }
+        return label
+    }
+    
     public func imageView(image: UIImage, color: UIColor, contentMode: UIView.ContentMode) -> UIImageView {
         let imageView = UIImageView().then {
             $0.image = image
