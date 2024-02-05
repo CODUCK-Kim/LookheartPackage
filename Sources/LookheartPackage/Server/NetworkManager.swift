@@ -717,6 +717,11 @@ public class NetworkManager {
             return
         }
 
+        print(propEmail)
+        print(propProfil.phone)
+        print(propCurrentDateTime)
+        print(action.rawValue)
+        print(propProfil.bleIdentifier)
         let params: [String: Any] = [
             "eq": propEmail,
             "phone" : propProfil.phone,
