@@ -69,3 +69,8 @@ public var propAlert: MyAlert {
 }
 
 
+public var propCreateUI: CreateUI {
+    get {
+        return CreateUI.shared
+    }
+}
