@@ -711,7 +711,7 @@ public class NetworkManager {
     
     public func sendBleLog(action: LogType) {
         
-        let endpoint = "/app_log/api_getdata"
+        let endpoint = "/app_ble"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
@@ -730,7 +730,7 @@ public class NetworkManager {
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print("sendLog(\(action.rawValue) : \(responseString)")
+                    print("sendLog(\(action.rawValue)) : \(responseString)")
                 }
             case .failure(let error):
                 print("sendLog: \(error.localizedDescription)")
