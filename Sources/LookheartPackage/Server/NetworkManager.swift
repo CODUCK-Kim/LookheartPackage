@@ -719,6 +719,7 @@ public class NetworkManager {
 
         let params: [String: Any] = [
             "eq": propEmail,
+            "gubun": "IOS",
             "phone" : propProfil.phone,
             "writetime": propCurrentDateTime,
             "activity": action.rawValue,
