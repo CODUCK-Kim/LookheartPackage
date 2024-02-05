@@ -260,6 +260,48 @@ public class NetworkManager {
     }
     
     
+    public func checkLoginToServer(id: String, pw: String, phone: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/msl/CheckLogin"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "empid": id,
+            "pw": pw,
+            "phone": phone
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("checkID Received response: \(responseString)")
+                    
+                    if responseString.contains("true"){
+                        
+                        completion(.success(true))
+                        
+                    } else if responseString.contains("false"){
+                        
+                        completion(.success(false))
+                        
+                    } else {
+                        
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                        
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
     
     public func checkIDToServer(id: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
