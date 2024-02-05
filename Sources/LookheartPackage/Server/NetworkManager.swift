@@ -999,69 +999,9 @@ public class NetworkManager {
             }
         }
     }
-    
-    
-    
-    // MARK: -
-
-    
-//    func selectArrDataToServer(id: String, startDate: String, completion: @escaping (Result<ArrData, Error>) -> Void) {
-//
-//        let endpoint = "/mslecgarr/arrWritetime?"
-//        guard let url = URL(string: baseURL + endpoint) else {
-//            print("Invalid URL")
-//            return
-//        }
-//
-//        let parameters: [String: Any] = [
-//            "eq": id,
-//            "startDate": startDate,
-//            "endDate": ""
-//        ]
-//
-//        request(url: url, method: .get, parameters: parameters) { result in
-//            switch result {
-//            case .success(let data):
-//                do {
-//                    let arrData = try JSONDecoder().decode([ArrEcgData].self, from: data)
-//                    let resultString = arrData[0].ecgpacket.split(separator: ",")
-//
-//                    if resultString.count > 500 {
-//                        let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-//
-//                        completion(.success(ArrData.init(
-//                            idx: "0",
-//                            writeTime: "0",
-//                            time: self.removeWsAndNl(resultString[0]),
-//                            timezone: "0",
-//                            bodyStatus: self.removeWsAndNl(resultString[2]),
-//                            type: self.removeWsAndNl(resultString[3]),
-//                            data: ecgData)))
-//                    } else {
-//                        completion(.success(ArrData.init(
-//                            idx: "",
-//                            writeTime: "",
-//                            time: "",
-//                            timezone: "",
-//                            bodyStatus: "응급 상황",
-//                            type: "응급 상황",
-//                            data: [])))
-//                    }
-//
-//                } catch {
-//                    completion(.failure(error))
-//                }
-//            case .failure(let error):
-//                completion(.failure(error))
-//                print("checkID Server Request Error : \(error.localizedDescription)")
-//            }
-//        }
-//    }
-    
-    
+        
     // MARK: - GUARDIAN
-    // MARK: - GET
-    func sendFireBaseToken(id: String, password: String, phone: String, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func sendFireBaseToken(id: String, password: String, phone: String, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         let endpoint = "/msl/CheckLogin"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -1097,7 +1037,7 @@ public class NetworkManager {
         }
     }
     
-    func getRealBpm(id: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func getRealBpm(id: String, completion: @escaping (Result<String, Error>) -> Void) {
         
         let endpoint = "/mslLast/Last"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -1124,7 +1064,6 @@ public class NetworkManager {
             }
         }
     }
-    // MARK: - POST
     
     // MARK: -
     private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
