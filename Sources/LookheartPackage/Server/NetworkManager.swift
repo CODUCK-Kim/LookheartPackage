@@ -1058,6 +1058,75 @@ public class NetworkManager {
 //        }
 //    }
     
+    
+    // MARK: - GUARDIAN
+    // MARK: - GET
+    func sendFireBaseToken(id: String, password: String, phone: String, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        let endpoint = "/msl/CheckLogin"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "empid": id,
+            "pw": password,
+            "phone": phone,
+            "token": token
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("send Token response: \(responseString)")
+                    if responseString.contains("true"){
+                        completion(.success(true))
+                    } else if responseString.contains("false"){
+                        completion(.success(false))
+                    } else {
+                        completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
+                    }
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("sendToken Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func getRealBpm(id: String, completion: @escaping (Result<String, Error>) -> Void) {
+        
+        let endpoint = "/mslLast/Last"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": id
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    
+                    print(responseString)
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                }
+            case .failure(let error):
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    // MARK: - POST
+    
+    // MARK: -
     private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
         
         // Alamofire
