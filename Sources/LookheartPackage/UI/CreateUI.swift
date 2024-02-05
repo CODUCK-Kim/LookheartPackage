@@ -35,11 +35,11 @@ public class CreateUI {
         return imageView
     }
     
-    public func button(title: String, titleColor: UIColor, font: UIFont, backgroundColor: UIColor, tag: Int) -> UIButton {
+    public func button(title: String, titleColor: UIColor, size: CGFloat, weight: UIFont.Weight, backgroundColor: UIColor, tag: Int) -> UIButton {
         let button =  UIButton().then {
             $0.setTitle(title, for: .normal)
             $0.setTitleColor(titleColor, for: .normal)
-            $0.titleLabel?.font = font
+            $0.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: weight)
             $0.backgroundColor = backgroundColor
             $0.tag = tag
         }
