@@ -8,10 +8,10 @@ public class CreateUI {
     
     public init() {}
         
-    public func label(text: String, color: UIColor, font: UIFont) -> UILabel{
+    public func label(text: String, color: UIColor, size: CGFloat, weight: UIFont.Weight) -> UILabel{
         let label = UILabel().then {
             $0.text = text
-            $0.font = font
+            $0.font = UIFont.systemFont(ofSize: size, weight: weight)
             $0.textColor = color
         }
         return label
