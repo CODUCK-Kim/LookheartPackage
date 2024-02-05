@@ -26,10 +26,10 @@ public class CreateUI {
         return label
     }
     
-    public func imageView(image: UIImage, color: UIColor, contentMode: UIView.ContentMode) -> UIImageView {
+    public func imageView(tintColor: UIColor, backgroundColor: UIColor, contentMode: UIView.ContentMode) -> UIImageView {
         let imageView = UIImageView().then {
-            $0.image = image
-            $0.tintColor = color
+            $0.tintColor = tintColor
+            $0.backgroundColor = backgroundColor
             $0.contentMode = contentMode
         }
         return imageView
