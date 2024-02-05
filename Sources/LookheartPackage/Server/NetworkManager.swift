@@ -724,12 +724,13 @@ public class NetworkManager {
         print(propProfil.bleIdentifier)
         let params: [String: Any] = [
             "eq": propEmail,
-            "phone" : propProfil.phone,
+            "phone": propProfil.phone,
+            "gubun": "IOS",
             "writetime": propCurrentDateTime,
             "activity": action.rawValue,
             "serial" : propProfil.bleIdentifier
         ]
-        
+    
         request(url: url, method: .post, parameters: params) { result in
             switch result {
             case .success(let data):
