@@ -711,7 +711,7 @@ public class NetworkManager {
     
     public func sendBleLog(action: LogType) {
         
-        let endpoint = "/app_ble"
+        let endpoint = "/app_ble/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
