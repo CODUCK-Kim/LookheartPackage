@@ -16,6 +16,7 @@ extension UIView {
 
 // 최상위 Scene 찾기
 extension UIApplication {
+    
     @available(iOS 13.0, *)
     public func topMostViewController() -> UIViewController? {
         // 현재 활성화된 scene 찾기 (일반적으로 foregroundActive 상태인 scene)
@@ -26,6 +27,18 @@ extension UIApplication {
         
         // 최상위 뷰 컨트롤러 반환
         return rootViewController.topMostViewController()
+    }
+    
+    // 중복 알림 체크
+    @available(iOS 13.0, *)
+    public func presentEmergencyAlertIfNeeded() {
+        guard let topViewController = self.topMostViewController(), !topViewController.isAlreadyPresentingEmergencyAlert() else {
+            // EmergencyAlert가 이미 표시되어 있거나, topViewController를 찾을 수 없는 경우
+            return
+        }
+        
+        let emergencyAlert = EmergencyAlert()
+        topViewController.present(emergencyAlert, animated: true, completion: nil)
     }
 }
 
@@ -41,5 +54,9 @@ extension UIViewController {
             return tab.selectedViewController?.topMostViewController() ?? tab
         }
         return self
+    }
+    
+    public func isAlreadyPresentingEmergencyAlert() -> Bool {
+        return self is EmergencyAlert || (self.presentedViewController?.isAlreadyPresentingEmergencyAlert() ?? false)
     }
 }
