@@ -16,8 +16,8 @@ public struct EcgData: Codable {
 }
 
 public struct ArrDateEntry: Decodable {
-    let writetime: String
-    let address: String?
+    public let writetime: String
+    public let address: String?
 }
 
 public struct ArrEcgData: Decodable {
