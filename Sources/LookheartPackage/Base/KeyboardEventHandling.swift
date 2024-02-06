@@ -1,18 +1,18 @@
 import UIKit
 
-class KeyboardEventHandling {
+public class KeyboardEventHandling {
     weak var scrollView: UIScrollView?
     
-    init(scrollView: UIScrollView) {
+    public init(scrollView: UIScrollView) {
         self.scrollView = scrollView
     }
     
-    func startObserving() {
+    public func startObserving() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func stopObserving() {
+    public func stopObserving() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
