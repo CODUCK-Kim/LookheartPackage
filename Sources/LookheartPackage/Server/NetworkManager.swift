@@ -1114,11 +1114,11 @@ public class NetworkManager {
     
     
     public struct TotalHealthData {
-        var step: Int = 0
-        var distance: Int = 0
-        var calorie: Int = 0
-        var activityCal: Int = 0
-        var arrCnt: Int = 0
+        public var step: Int = 0
+        public var distance: Int = 0
+        public var calorie: Int = 0
+        public var activityCal: Int = 0
+        public var arrCnt: Int = 0
         
         mutating func updateData(data: [Int]) {
             arrCnt += data[0]
