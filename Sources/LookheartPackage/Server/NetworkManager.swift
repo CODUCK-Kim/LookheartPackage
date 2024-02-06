@@ -447,7 +447,7 @@ public class NetworkManager {
     
     
     
-    public func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
+    func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
                 
         var hourlyData: [HourlyData] = []
         
@@ -1105,6 +1105,73 @@ public class NetworkManager {
                 } catch {
                     print("JSON 디코딩 실패: \(error)")
                     completion(.failure(NetworkError.invalidResponse))
+                }
+            case .failure(let error):
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
+    public struct TotalHealthData {
+        var step: Int = 0
+        var distance: Int = 0
+        var calorie: Int = 0
+        var activityCal: Int = 0
+        var arrCnt: Int = 0
+        
+        mutating func updateData(data: [Int]) {
+            arrCnt += data[0]
+            activityCal += data[1]
+            calorie += data[2]
+            step += data[3]
+            distance += data[4]
+        }
+    }
+    
+    public func getTotalHealthData(startDate: String, endDate: String, completion: @escaping (Result<TotalHealthData, Error>) -> Void) {
+                
+        var totalHealthData = TotalHealthData()
+        
+        let endpoint = "/mslecgday/day"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = [
+            "eq": propEmail,
+            "startDate": startDate,
+            "endDate": endDate
+        ]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    if !(responseString.contains("result = 0")) {
+
+                        let newlineData = responseString.split(separator: "\n")
+                        let splitData = newlineData[1].split(separator: "\r\n")
+
+                        for data in splitData {
+                            let fields = data.split(separator: "|")
+
+                            if fields.count == 12 {
+                                if let step = Int(fields[7]), let distance = Int(fields[8]), let cal = Int(fields[9]), let activityCal = Int(fields[10]), let arrCnt = Int(fields[11]) {
+                                    totalHealthData.updateData(data: [arrCnt, activityCal, cal, step, distance])
+                                }
+                            }
+                        }
+                        
+                        completion(.success(totalHealthData))
+                        
+                    } else {
+                        completion(.failure(NetworkError.noData))
+                    }
+                    
+                } else {
+                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
                 }
             case .failure(let error):
                 print("checkID Server Request Error : \(error.localizedDescription)")
