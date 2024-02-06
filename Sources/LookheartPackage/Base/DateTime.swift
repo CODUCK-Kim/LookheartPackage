@@ -71,7 +71,7 @@ public class MyDateTime {
 
         let dayValue = shouldAdd ? day : -day
         if let arrTargetDate = calendar.date(byAdding: .day, value: dayValue, to: inputDate) {
-            
+            print("check")
             let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
