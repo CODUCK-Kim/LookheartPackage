@@ -1079,8 +1079,8 @@ public class NetworkManager {
     
     public struct BpmTime: Codable {
         // {"bpm":58,"writetime":"2024-02-06 12:17:05"}
-        var bpm: Int
-        var writetime: String
+        public var bpm: Int
+        public var writetime: String
     }
     
     public func getBpmTime(id: String, completion: @escaping (Result<BpmTime, Error>) -> Void) {
