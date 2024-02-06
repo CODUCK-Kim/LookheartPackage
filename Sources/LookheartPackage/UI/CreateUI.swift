@@ -23,6 +23,7 @@ public class CreateUI {
             $0.layer.borderColor = borderColor
             $0.layer.borderWidth = borderWidth
             $0.layer.cornerRadius = cornerRadius
+            $0.layer.masksToBounds = true
         }
         return label
     }
