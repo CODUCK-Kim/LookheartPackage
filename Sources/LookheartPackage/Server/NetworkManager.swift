@@ -385,7 +385,7 @@ public class NetworkManager {
     
     
     // MARK: -
-    func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
+    public func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
 
         var bpmData: [BpmData] = []
         
