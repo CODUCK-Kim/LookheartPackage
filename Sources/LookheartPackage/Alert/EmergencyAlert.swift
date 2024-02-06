@@ -3,15 +3,22 @@ import AVFAudio
 import AudioToolbox
 
 public class EmergencyAlert: UIViewController {
-    
-    var audioPlayer: AVAudioPlayer?
         
+    var audioPlayer: AVAudioPlayer?
+    var titleLabel: UILabel?
+    var messageLabel: UILabel?
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         addViews()
         startAudioPlayer()
         
+    }
+    
+    public func updateText(title: String, message: String) {
+        titleLabel?.text = title
+        messageLabel?.text = message
     }
     
     @objc func didTapActionButton() {
@@ -48,7 +55,7 @@ public class EmergencyAlert: UIViewController {
             $0.layer.masksToBounds = true
         }
                 
-        let titleLabel = UILabel().then {
+        titleLabel = UILabel().then {
             $0.text = "profile3_emergency".localized()
             $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.textColor = .white
@@ -56,7 +63,7 @@ public class EmergencyAlert: UIViewController {
             $0.backgroundColor = UIColor.MY_RED
         }
 
-        let messageLabel = UILabel().then {
+        messageLabel = UILabel().then {
             $0.text = "emergencyTxt".localized()
             $0.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
             $0.textColor = UIColor.MY_RED
@@ -75,8 +82,8 @@ public class EmergencyAlert: UIViewController {
                 
         // addSubview
         view.addSubview(backgroundView)
-        backgroundView.addSubview(titleLabel)
-        backgroundView.addSubview(messageLabel)
+        backgroundView.addSubview(titleLabel!)
+        backgroundView.addSubview(messageLabel!)
         backgroundView.addSubview(actionButton)
         
         
@@ -87,13 +94,13 @@ public class EmergencyAlert: UIViewController {
             make.height.equalTo(200)
         }
         
-        titleLabel.snp.makeConstraints { make in
+        titleLabel!.snp.makeConstraints { make in
             make.top.left.right.equalTo(backgroundView)
             make.height.equalTo(40)
         }
         
-        messageLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+        messageLabel!.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.centerX.equalTo(backgroundView)
         }
         
