@@ -17,7 +17,7 @@ extension UIView {
 // 최상위 Scene 찾기
 extension UIApplication {
     @available(iOS 13.0, *)
-    func topMostViewController() -> UIViewController? {
+    public func topMostViewController() -> UIViewController? {
         // 현재 활성화된 scene 찾기 (일반적으로 foregroundActive 상태인 scene)
         guard let currentWindowScene = self.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else { return nil }
         
@@ -30,7 +30,7 @@ extension UIApplication {
 }
 
 extension UIViewController {
-    func topMostViewController() -> UIViewController {
+    public func topMostViewController() -> UIViewController {
         if let presented = self.presentedViewController {
             return presented.topMostViewController()
         }
