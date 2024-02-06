@@ -1079,9 +1079,9 @@ public class NetworkManager {
         }
     }
     
-    public func getRealBpm(id: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func getBpmTime(id: String, completion: @escaping (Result<String, Error>) -> Void) {
         
-        let endpoint = "/mslLast/Last"
+        let endpoint = "/mslLast/lastBpmTime"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
