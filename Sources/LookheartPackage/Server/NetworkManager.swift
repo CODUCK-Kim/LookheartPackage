@@ -1077,7 +1077,13 @@ public class NetworkManager {
         }
     }
     
-    public func getBpmTime(id: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public struct BpmTime: Codable {
+        // {"bpm":58,"writetime":"2024-02-06 12:17:05"}
+        var bpm: Int
+        var writetime: String
+    }
+    
+    public func getBpmTime(id: String, completion: @escaping (Result<BpmTime, Error>) -> Void) {
         
         let endpoint = "/mslLast/lastBpmTime"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -1092,12 +1098,12 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
-                if let responseString = String(data: data, encoding: .utf8) {
-                    
-                    print(responseString)
-                    
-                } else {
-                    completion(.failure(NetworkError.invalidResponse)) // 데이터 디코딩 실패
+                do {
+                    let bpmTime = try JSONDecoder().decode(BpmTime.self, from: data)
+                    completion(.success(bpmTime))
+                } catch {
+                    print("JSON 디코딩 실패: \(error)")
+                    completion(.failure(NetworkError.invalidResponse))
                 }
             case .failure(let error):
                 print("checkID Server Request Error : \(error.localizedDescription)")
