@@ -2,11 +2,11 @@ import UIKit
 import AVFAudio
 import AudioToolbox
 
-class EmergencyAlert: UIViewController {
+public class EmergencyAlert: UIViewController {
     
     var audioPlayer: AVAudioPlayer?
         
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         addViews()
