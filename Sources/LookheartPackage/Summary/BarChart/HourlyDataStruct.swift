@@ -1,6 +1,6 @@
 import Foundation
 
-struct HourlyData {
+public struct HourlyData {
     var eq: String
     var timezone: String
     var date: String

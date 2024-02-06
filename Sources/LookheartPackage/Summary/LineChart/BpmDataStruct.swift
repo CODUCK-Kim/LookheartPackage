@@ -1,6 +1,6 @@
 import Foundation
 
-public struct BpmData {
+struct BpmData {
     var idx: String
     var eq: String
     var writeDateTime: String

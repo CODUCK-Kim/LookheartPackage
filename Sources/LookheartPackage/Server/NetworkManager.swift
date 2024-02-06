@@ -385,7 +385,7 @@ public class NetworkManager {
     
     
     // MARK: -
-    public func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
+    func getBpmDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[BpmData], Error>) -> Void) {
 
         var bpmData: [BpmData] = []
         
@@ -447,7 +447,7 @@ public class NetworkManager {
     
     
     
-    func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
+    public func getHourlyDataToServer(startDate: String, endDate: String, completion: @escaping (Result<[HourlyData], Error>) -> Void) {
                 
         var hourlyData: [HourlyData] = []
         
@@ -1081,7 +1081,7 @@ public class NetworkManager {
         // {"bpm":58,"writetime":"2024-02-06 12:17:05"}
         public var bpm: Int
         public var temp: Double
-        public var writetime: String        
+        public var writetime: String
     }
     
     public func getBpmTime(id: String, completion: @escaping (Result<BpmTime, Error>) -> Void) {
