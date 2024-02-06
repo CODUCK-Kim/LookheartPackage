@@ -5,15 +5,19 @@ import AudioToolbox
 public class EmergencyAlert: UIViewController {
         
     private var audioPlayer: AVAudioPlayer?
+    
     private var titleLabel: UILabel?
-    private var messageLabel: UILabel?
+    private var timeLabel: UILabel?
+    private var locationLabel: UILabel?
     
-    private var alertTitle: String
-    private var alertMessage: String
+    private var emergencyTitle: String
+    private var emergencyTime: String
+    private var emergencyLocation: String
     
-    public init(title: String, message: String) {
-        self.alertTitle = title
-        self.alertMessage = message
+    public init(title: String, time: String, location: String) {
+        self.emergencyTitle = title
+        self.emergencyTime = time
+        self.emergencyLocation = location
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,9 +33,10 @@ public class EmergencyAlert: UIViewController {
         
     }
     
-    public func updateText(title: String, message: String) {
+    public func updateText(title: String, time: String, location: String) {
         titleLabel?.text = title
-        messageLabel?.text = message
+        timeLabel?.text = time
+        locationLabel?.text = location
     }
     
     @objc func didTapActionButton() {
@@ -64,19 +69,23 @@ public class EmergencyAlert: UIViewController {
         // create
         let backgroundView = UIView().then {
             $0.backgroundColor = .white
-            $0.layer.cornerRadius = 10
+            $0.layer.cornerRadius = 20
             $0.layer.masksToBounds = true
         }
-                
-        titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
+                     
+        titleLabel = propCreateUI.label(text: emergencyTitle, color: .white, size: 18, weight: .heavy).then {
             $0.backgroundColor = UIColor.MY_RED
             $0.textAlignment = .center
         }
         
-        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_RED, size: 16, weight: .heavy).then {
+        let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
+        let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
+        
+        timeLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold)
+        locationLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold).then {
             $0.numberOfLines = 5
         }
-
+        
         let actionButton = UIButton().then {
             $0.setTitle("\("ok".localized())", for: .normal)
             $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
@@ -89,7 +98,13 @@ public class EmergencyAlert: UIViewController {
         // addSubview
         view.addSubview(backgroundView)
         backgroundView.addSubview(titleLabel!)
-        backgroundView.addSubview(messageLabel!)
+        
+        backgroundView.addSubview(timeTitle)
+        backgroundView.addSubview(timeLabel!)
+        
+        backgroundView.addSubview(locationTitle)
+        backgroundView.addSubview(locationLabel!)
+        
         backgroundView.addSubview(actionButton)
         
         
@@ -105,9 +120,26 @@ public class EmergencyAlert: UIViewController {
             make.height.equalTo(40)
         }
         
-        messageLabel!.snp.makeConstraints { make in
+        timeTitle.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
-            make.left.right.centerX.equalTo(backgroundView)
+            make.left.equalTo(backgroundView).offset(5)
+        }
+        
+        timeLabel!.snp.makeConstraints { make in
+            make.top.equalTo(timeTitle)
+            make.left.equalTo(timeTitle.snp.right).offset(5)
+            make.right.equalTo(backgroundView)
+        }
+        
+        locationTitle.snp.makeConstraints { make in
+            make.top.equalTo(timeTitle.snp.bottom).offset(10)
+            make.left.equalTo(timeTitle)
+        }
+        
+        locationLabel!.snp.makeConstraints { make in
+            make.top.equalTo(locationTitle)
+            make.left.equalTo(locationTitle.snp.right).offset(5)
+            make.right.equalTo(backgroundView)
         }
         
         actionButton.snp.makeConstraints { make in
