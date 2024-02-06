@@ -11,7 +11,7 @@ public class EmergencyAlert: UIViewController {
     private var alertTitle: String
     private var alertMessage: String
     
-    init(title: String, message: String) {
+    public init(title: String, message: String) {
         self.alertTitle = title
         self.alertMessage = message
         super.init(nibName: nil, bundle: nil)
