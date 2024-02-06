@@ -67,11 +67,12 @@ public class MyDateTime {
     }
     
     public func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool) -> String {
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         guard let inputDate = dateFormatter.date(from: date) else { return date }
 
         let dayValue = shouldAdd ? day : -day
         if let arrTargetDate = calendar.date(byAdding: .day, value: dayValue, to: inputDate) {
-            print("check")
             let components = calendar.dateComponents([.year, .month, .day], from: arrTargetDate)
             
             if let year = components.year, let month = components.month, let day = components.day {
