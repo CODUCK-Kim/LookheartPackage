@@ -4,9 +4,22 @@ import AudioToolbox
 
 public class EmergencyAlert: UIViewController {
         
-    var audioPlayer: AVAudioPlayer?
-    var titleLabel: UILabel?
-    var messageLabel: UILabel?
+    private var audioPlayer: AVAudioPlayer?
+    private var titleLabel: UILabel?
+    private var messageLabel: UILabel?
+    
+    private var alertTitle: String
+    private var alertMessage: String
+    
+    init(title: String, message: String) {
+        self.alertTitle = title
+        self.alertMessage = message
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,28 +68,21 @@ public class EmergencyAlert: UIViewController {
             $0.layer.masksToBounds = true
         }
                 
-        titleLabel = UILabel().then {
-            $0.text = "profile3_emergency".localized()
-            $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
-            $0.textColor = .white
-            $0.textAlignment = .center
+        titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.backgroundColor = UIColor.MY_RED
+            $0.textAlignment = .center
+        }
+        
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_RED, size: 16, weight: .heavy).then {
+            $0.numberOfLines = 5
         }
 
-        messageLabel = UILabel().then {
-            $0.text = "emergencyTxt".localized()
-            $0.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
-            $0.textColor = UIColor.MY_RED
-            $0.textAlignment = .center
-            $0.numberOfLines = 3
-        }
-           
         let actionButton = UIButton().then {
             $0.setTitle("\("ok".localized())", for: .normal)
             $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             $0.backgroundColor = UIColor.MY_RED
             $0.tintColor = .white
-            $0.layer.cornerRadius = 20
+            $0.layer.cornerRadius = 10
             $0.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
         }
                 
@@ -101,13 +107,13 @@ public class EmergencyAlert: UIViewController {
         
         messageLabel!.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
-            make.centerX.equalTo(backgroundView)
+            make.left.right.centerX.equalTo(backgroundView)
         }
         
         actionButton.snp.makeConstraints { make in
             make.centerX.equalTo(backgroundView)
             make.bottom.equalTo(backgroundView).offset(-10)
-            make.width.equalTo(150)
+            make.width.equalTo(100)
             make.height.equalTo(40)
         }
 
