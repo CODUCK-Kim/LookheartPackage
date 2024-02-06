@@ -27,6 +27,12 @@ public class NetworkManager {
         case Guardian
     }
     
+    public enum LoginType: String {
+        case successLogin
+        case failureLogin
+        case duplicateLogin
+    }
+    
     // MARK: - Find
     public func findID(name: String, phoneNumber: String, birthday: String, completion: @escaping (Result<String, Error>) -> Void) {
         
@@ -215,7 +221,7 @@ public class NetworkManager {
     }
     
     
-    public func checkLoginToServer(id: String, pw: String, destroy: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkLoginToServer(id: String, pw: String, destroy: Bool, completion: @escaping (Result<LoginType, Error>) -> Void) {
         
         let endpoint = "/msl/CheckLogin"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -236,18 +242,14 @@ public class NetworkManager {
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("checkID Received response: \(responseString)")
                     
-                    if responseString.contains("true"){
-                        
-                        completion(.success(true))
-                        
-                    } else if responseString.contains("false"){
-                        
-                        completion(.success(false))
-                        
+                    if responseString.contains("true") {
+                        completion(.success(.successLogin))
+                    } else if responseString.contains("false") {
+                        completion(.success(.failureLogin))
+                    } else if responseString.contains("다른곳") {
+                        completion(.success(.duplicateLogin))
                     } else {
-                        
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                        
                     }
                     
                 } else {
@@ -260,7 +262,7 @@ public class NetworkManager {
     }
     
     
-    public func checkLoginToServer(id: String, pw: String, phone: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func checkLoginToServer(id: String, pw: String, phone: String, completion: @escaping (Result<LoginType, Error>) -> Void) {
         
         let endpoint = "/msl/CheckLogin"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -280,18 +282,14 @@ public class NetworkManager {
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("checkID Received response: \(responseString)")
                     
-                    if responseString.contains("true"){
-                        
-                        completion(.success(true))
-                        
-                    } else if responseString.contains("false"){
-                        
-                        completion(.success(false))
-                        
+                    if responseString.contains("true") {
+                        completion(.success(.successLogin))
+                    } else if responseString.contains("false") {
+                        completion(.success(.failureLogin))
+                    } else if responseString.contains("다른곳") {
+                        completion(.success(.duplicateLogin))
                     } else {
-                        
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                        
                     }
                     
                 } else {
