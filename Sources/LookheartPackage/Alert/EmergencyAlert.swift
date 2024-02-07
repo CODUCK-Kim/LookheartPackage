@@ -63,6 +63,15 @@ public class EmergencyAlert: UIViewController {
 
     private func addViews() {
         
+        func createImage() -> UIImageView {
+            let imageView = propCreateUI.imageView(tintColor: UIColor.MY_RED, backgroundColor: .clear, contentMode: .scaleAspectFit).then {
+                let image =  UIImage(named: "summary_bpm")!
+                let coloredImage = image.withRenderingMode(.alwaysTemplate)
+                $0.image = coloredImage
+            }
+            return imageView
+        }
+        
         let screenWidth = UIScreen.main.bounds.width // Screen width
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
@@ -77,6 +86,9 @@ public class EmergencyAlert: UIViewController {
             $0.backgroundColor = UIColor.MY_RED
             $0.textAlignment = .center
         }
+        
+        let timeImg = createImage()
+        let locationImg = createImage()
         
         let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
         let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
@@ -99,9 +111,11 @@ public class EmergencyAlert: UIViewController {
         view.addSubview(backgroundView)
         backgroundView.addSubview(titleLabel!)
         
+        backgroundView.addSubview(timeImg)
         backgroundView.addSubview(timeTitle)
         backgroundView.addSubview(timeLabel!)
         
+        backgroundView.addSubview(locationImg)
         backgroundView.addSubview(locationTitle)
         backgroundView.addSubview(locationLabel!)
         
@@ -120,10 +134,18 @@ public class EmergencyAlert: UIViewController {
             make.height.equalTo(40)
         }
         
-        timeTitle.snp.makeConstraints { make in
+        //
+        timeImg.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.equalTo(backgroundView).offset(5)
+            make.width.equalTo(20)
         }
+        
+        timeTitle.snp.makeConstraints { make in
+            make.top.equalTo(timeImg)
+            make.left.equalTo(timeImg.snp.right).offset(5)
+        }
+        
         
         timeLabel!.snp.makeConstraints { make in
             make.top.equalTo(timeTitle)
@@ -131,9 +153,15 @@ public class EmergencyAlert: UIViewController {
             make.right.equalTo(backgroundView)
         }
         
+        //
+        locationImg.snp.makeConstraints { make in
+            make.top.equalTo(timeTitle.snp.bottom).offset(10)
+            make.left.width.equalTo(timeImg)
+        }
+        
         locationTitle.snp.makeConstraints { make in
             make.top.equalTo(timeTitle.snp.bottom).offset(10)
-            make.left.equalTo(timeTitle)
+            make.left.equalTo(locationImg.snp.right).offset(5)
         }
         
         locationLabel!.snp.makeConstraints { make in
