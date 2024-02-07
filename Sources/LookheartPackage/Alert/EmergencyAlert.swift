@@ -138,12 +138,12 @@ public class EmergencyAlert: UIViewController {
         timeImg.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.equalTo(backgroundView).offset(5)
-            make.width.equalTo(14)
+            make.width.equalTo(10)
         }
         
         timeTitle.snp.makeConstraints { make in
             make.centerY.equalTo(timeImg)
-            make.left.equalTo(timeImg.snp.right).offset(2)
+            make.left.equalTo(timeImg.snp.right).offset(3)
         }
         
         
@@ -161,7 +161,7 @@ public class EmergencyAlert: UIViewController {
         
         locationTitle.snp.makeConstraints { make in
             make.centerY.equalTo(locationImg)
-            make.left.equalTo(locationImg.snp.right).offset(2)
+            make.left.equalTo(timeTitle)
         }
         
         locationLabel!.snp.makeConstraints { make in
