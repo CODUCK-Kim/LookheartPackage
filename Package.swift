@@ -35,6 +35,7 @@ let package = Package(
                 .process("AlertSound/heartAttackSound.mp3"),
                 .process("AlertSound/arrSound.mp3"),
                 .process("AlertSound/basicsound.mp3"),
+                .process("AlertSound/basicsound.wav")
             ]
         ),
         .testTarget(
