@@ -343,7 +343,7 @@ public class NetworkManager {
     }
     
     
-    public func getVersion(completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func getVersion(type: UserType, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         struct Version: Codable {
             var versioncode: Int
@@ -356,8 +356,10 @@ public class NetworkManager {
             return
         }
         
+        let userType = type == .User ? "lookheart" : "guardian"
+        
         let parameters: [String: Any] = [
-            "app": "lookheart",
+            "app": userType,
             "gubun": "IOS",
         ]
         
