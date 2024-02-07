@@ -790,6 +790,8 @@ public class NetworkManager {
             return
         }
         
+        print(address)
+        print(currentDateTime)
         let params: [String: Any] = [
             "kind": "arrEcgInsert",
             "eq": propEmail,
