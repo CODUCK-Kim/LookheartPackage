@@ -1,3 +1,4 @@
+import Foundation
 
 
 public let ECG_MAX_ARRAY = 500
@@ -72,5 +73,11 @@ public var propAlert: MyAlert {
 public var propCreateUI: CreateUI {
     get {
         return CreateUI.shared
+    }
+}
+
+public var getAppVersion: String? {
+    get {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
     }
 }
