@@ -49,8 +49,9 @@ public class EmergencyAlert: UIViewController {
         audioPlayer?.play()
     }
     
+    
     func setupEmergencyAudioPlayer(_ soundFile: String) {
-        guard let url = Bundle.main.url(forResource: soundFile, withExtension: "mp3") else { return }
+        guard let url = Bundle.module.url(forResource: soundFile, withExtension: "mp3") else { return }
         
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)

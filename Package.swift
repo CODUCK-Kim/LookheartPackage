@@ -30,6 +30,11 @@ let package = Package(
                 .product(name: "Toast", package: "Toast-Swift"),
                 "FSCalendar",
                 "PhoneNumberKit"
+            ],
+            resources: [
+                .process("AlertSound/heartAttackSound.mp3"),
+                .process("AlertSound/arrSound.mp3"),
+                .process("AlertSound/basicsound.mp3"),
             ]
         ),
         .testTarget(
