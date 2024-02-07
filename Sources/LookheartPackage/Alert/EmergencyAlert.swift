@@ -100,10 +100,10 @@ public class EmergencyAlert: UIViewController {
         
         let actionButton = UIButton().then {
             $0.setTitle("\("ok".localized())", for: .normal)
-            $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+            $0.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.backgroundColor = UIColor.MY_RED
             $0.tintColor = .white
-            $0.layer.cornerRadius = 10
+            $0.layer.cornerRadius = 20
             $0.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
         }
                 
@@ -173,8 +173,8 @@ public class EmergencyAlert: UIViewController {
         actionButton.snp.makeConstraints { make in
             make.centerX.equalTo(backgroundView)
             make.bottom.equalTo(backgroundView).offset(-10)
-            make.width.equalTo(100)
-            make.height.equalTo(40)
+            make.width.equalTo(80)
+            make.height.equalTo(30)
         }
 
     }
