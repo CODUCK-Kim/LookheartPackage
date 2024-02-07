@@ -3,9 +3,6 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let userVersion = 1
-    private let guardianVersion = 1
-    
     private let baseURL = "http://121.152.22.85:40081" // TEST
 //    private let baseURL = "http://121.152.22.85:40080" // REAL
     
@@ -370,8 +367,10 @@ public class NetworkManager {
                 do {
                     let version = try JSONDecoder().decode(Version.self, from: data)
 
-                    print(version)
-                    if userVersion == version.versioncode {
+                    let appVersion = Int((getAppVersion?.split(separator: ".")[2])!)
+                    print(appVersion)
+                    print(getAppVersion)
+                    if appVersion == version.versioncode {
                         completion(.success(true))
                     } else {
                         completion(.success(false))
