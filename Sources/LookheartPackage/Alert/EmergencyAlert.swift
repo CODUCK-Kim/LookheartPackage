@@ -90,8 +90,8 @@ public class EmergencyAlert: UIViewController {
         let timeImg = createImage()
         let locationImg = createImage()
         
-        let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
-        let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .medium)
+        let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, size: 14, weight: .bold)
+        let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .bold)
         
         timeLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold)
         locationLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold).then {
@@ -138,7 +138,7 @@ public class EmergencyAlert: UIViewController {
         timeImg.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.equalTo(backgroundView).offset(5)
-            make.width.equalTo(20)
+            make.width.equalTo(14)
         }
         
         timeTitle.snp.makeConstraints { make in
