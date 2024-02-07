@@ -363,12 +363,14 @@ public class NetworkManager {
             "gubun": "IOS",
         ]
         
+        print(parameters)
         request(url: url, method: .get, parameters: parameters) { [self] result in
             switch result {
             case .success(let data):
                 do {
                     let version = try JSONDecoder().decode(Version.self, from: data)
 
+                    print(version)
                     if userVersion == version.versioncode {
                         completion(.success(true))
                     } else {
