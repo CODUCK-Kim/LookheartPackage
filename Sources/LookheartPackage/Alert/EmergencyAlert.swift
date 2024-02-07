@@ -94,7 +94,7 @@ public class EmergencyAlert: UIViewController {
         let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .bold)
         
         timeLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold)
-        locationLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold).then {
+        locationLabel = propCreateUI.label(text: emergencyLocation, color: .black, size: 14, weight: .bold).then {
             $0.numberOfLines = 5
         }
         
