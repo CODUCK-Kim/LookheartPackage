@@ -762,16 +762,12 @@ public class NetworkManager {
             print("Invalid URL")
             return
         }
-
-        print(propEmail)
-        print(propProfil.phone)
-        print(propCurrentDateTime)
-        print(action.rawValue)
-        print(propProfil.bleIdentifier)
+        
         let params: [String: Any] = [
             "eq": propEmail,
             "phone": propProfil.phone,
             "writetime": propCurrentDateTime,
+            "timezone": MyDateTime.shared.getTimeZone(),
             "activity": action.rawValue,
             "serial" : propProfil.bleIdentifier
         ]
