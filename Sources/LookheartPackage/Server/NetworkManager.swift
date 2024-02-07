@@ -726,20 +726,23 @@ public class NetworkManager {
     }
     
     
-    public func sendLog(id: String, userType: UserType, action: LogType) {
-        
+    public func sendLog(id: String, userType: UserType, action: LogType, phone: String? = nil) {
         let endpoint = "/app_log/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
             print("Invalid URL")
             return
         }
         
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "eq": id,
             "writetime": propCurrentDateTime,
             "gubun": userType.rawValue,
             "activity": action.rawValue
         ]
+                
+        if let phone = phone {
+            params["phone"] = phone
+        }
         
         request(url: url, method: .post, parameters: params) { result in
             switch result {
