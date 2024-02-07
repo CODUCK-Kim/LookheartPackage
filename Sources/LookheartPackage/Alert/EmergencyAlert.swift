@@ -173,7 +173,7 @@ public class EmergencyAlert: UIViewController {
         actionButton.snp.makeConstraints { make in
             make.centerX.equalTo(backgroundView)
             make.bottom.equalTo(backgroundView).offset(-10)
-            make.width.equalTo(80)
+            make.width.equalTo(100)
             make.height.equalTo(35)
         }
 
