@@ -361,15 +361,14 @@ public class NetworkManager {
         ]
         
         print(parameters)
-        request(url: url, method: .get, parameters: parameters) { [self] result in
+        request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
                 do {
                     let version = try JSONDecoder().decode(Version.self, from: data)
 
                     let appVersion = Int((getAppVersion?.split(separator: ".")[2])!)
-                    print(appVersion)
-                    print(getAppVersion)
+                    
                     if appVersion == version.versioncode {
                         completion(.success(true))
                     } else {
@@ -784,7 +783,7 @@ public class NetworkManager {
         }
     }
     
-    public func sendEmergencyData(_ address: String, _ currentDateTime: String) {
+    public func sendEmergencyData(_ address: String, _ currentDateTime: String, completion: @escaping (Result<Bool, Error>) -> Void) {
     
         let endpoint = "/mslecgarr/api_getdata"
         guard let url = URL(string: baseURL + endpoint) else {
@@ -808,9 +807,15 @@ public class NetworkManager {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("Emergency Received response: \(responseString)")
+                    if responseString.contains("true") {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }
                 }
             case .failure(let error):
                 print("send EmergencyData Send Error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }

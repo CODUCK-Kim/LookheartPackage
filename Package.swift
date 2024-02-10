@@ -32,8 +32,7 @@ let package = Package(
                 "PhoneNumberKit"
             ],
             resources: [
-                .process("AlertSound/heartAttackSound.mp3"),
-                .process("AlertSound/arrSound.mp3"),
+                .process("Alert/AlertSound/heartAttackSound.mp3"),
             ]
         ),
         .testTarget(
