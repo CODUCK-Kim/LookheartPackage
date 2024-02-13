@@ -89,7 +89,6 @@ public class BasicAlert: UIViewController {
         // Title
         titleLabel!.snp.makeConstraints { make in
             make.top.left.right.equalTo(blueBackground)
-            make.height.equalTo(40)
         }
         
         // Background
@@ -97,7 +96,7 @@ public class BasicAlert: UIViewController {
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.equalTo(blueBackground).offset(5)
             make.right.equalTo(blueBackground).offset(-5)
-            make.bottom.right.equalTo(blueBackground).offset(-10)
+            make.bottom.equalTo(blueBackground).offset(-10)
         }
         
         // Message
