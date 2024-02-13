@@ -50,10 +50,10 @@ public class BasicAlert: UIViewController {
         
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.textAlignment = .center
-            $0.backgroundColor = UIColor.MY_RED
+            $0.backgroundColor = UIColor.MY_BLUE
         }
                     
-        messageLabel = propCreateUI.label(text: alertMessage, color: .black, size: 14, weight: .bold).then {
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
             $0.textAlignment = .center
             $0.numberOfLines = 5
         }
@@ -87,6 +87,7 @@ public class BasicAlert: UIViewController {
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.equalTo(backgroundView).offset(10)
             make.right.equalTo(backgroundView).offset(-10)
+            make.bottom.equalTo(backgroundView).offset(-10)
         }
         
         // Back Button
