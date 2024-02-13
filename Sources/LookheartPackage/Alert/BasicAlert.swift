@@ -44,7 +44,7 @@ public class BasicAlert: UIViewController {
         let screenWidth = UIScreen.main.bounds.width
         
         // create
-        let blueBackground = propCreateUI.backgroundLabel(backgroundColor: UIColor.MY_BLUE, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 10).then {
+        let blueBackground = propCreateUI.backgroundLabel(backgroundColor: UIColor.MY_BLUE, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 20).then {
             $0.isUserInteractionEnabled = true
         }
 
