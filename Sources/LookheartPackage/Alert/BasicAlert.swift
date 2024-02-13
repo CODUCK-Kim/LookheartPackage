@@ -48,7 +48,7 @@ public class BasicAlert: UIViewController {
             $0.isUserInteractionEnabled = true
         }
 
-        let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 10)
+        let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 20)
         
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.textAlignment = .center
