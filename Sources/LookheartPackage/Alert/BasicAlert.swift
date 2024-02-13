@@ -39,25 +39,22 @@ public class BasicAlert: UIViewController {
     
     private func addViews() {
         
-        let screenWidth = UIScreen.main.bounds.width // Screen width
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
+        let screenWidth = UIScreen.main.bounds.width
+        
         // create
-        let backgroundView = UIView().then {
-            $0.backgroundColor = .white
-            $0.layer.cornerRadius = 20
-            $0.layer.masksToBounds = true
+        let backgroundView = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 10).then {
+            $0.isUserInteractionEnabled = true
         }
-                     
+        
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
-            $0.backgroundColor = UIColor.MY_RED
             $0.textAlignment = .center
+            $0.backgroundColor = UIColor.MY_RED
         }
-        
-        
-        titleLabel = propCreateUI.label(text: alertTitle, color: .black, size: 14, weight: .bold)
-        
+                    
         messageLabel = propCreateUI.label(text: alertMessage, color: .black, size: 14, weight: .bold).then {
+            $0.textAlignment = .center
             $0.numberOfLines = 5
         }
         
