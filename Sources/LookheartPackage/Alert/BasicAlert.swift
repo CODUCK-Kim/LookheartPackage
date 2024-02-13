@@ -63,10 +63,7 @@ public class BasicAlert: UIViewController {
         
         let backButton = UIButton().then {
             $0.setTitle("X", for: .normal)
-            $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-            $0.backgroundColor = UIColor.MY_RED
-            $0.tintColor = .white
-            $0.layer.cornerRadius = 10
+            $0.backgroundColor = .clear
             $0.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
         }
                 
@@ -92,7 +89,7 @@ public class BasicAlert: UIViewController {
         
         // Message
         messageLabel!.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.bottom).offset(10)
+            make.top.equalTo(titleLabel!.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(backgroundView)
         }
         
