@@ -53,9 +53,9 @@ public class BasicAlert: UIViewController {
             $0.backgroundColor = UIColor.MY_BLUE
         }
                     
-        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 16, weight: .bold).then {
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
             let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = 10 // 문자 위아래 간격
+            paragraphStyle.lineSpacing = 15 // 문자 위아래 간격
             
             let attributedString = NSMutableAttributedString(string: alertMessage)
             attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
