@@ -48,9 +48,7 @@ public class BasicAlert: UIViewController {
             $0.isUserInteractionEnabled = true
         }
 
-        let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 20).then {
-            $0.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        }
+        let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 20)
         
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.textAlignment = .center
@@ -96,9 +94,9 @@ public class BasicAlert: UIViewController {
         // Background
         whitebackground.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom)
-            make.left.equalTo(blueBackground).offset(5)
-            make.right.equalTo(blueBackground).offset(-5)
-            make.bottom.equalTo(blueBackground).offset(-5)
+            make.left.equalTo(blueBackground).offset(7)
+            make.right.equalTo(blueBackground).offset(-7)
+            make.bottom.equalTo(blueBackground).offset(-7)
         }
         
         // Message
