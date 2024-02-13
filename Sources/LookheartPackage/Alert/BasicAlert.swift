@@ -58,9 +58,7 @@ public class BasicAlert: UIViewController {
             $0.numberOfLines = 5
         }
         
-        let backButton = UIButton().then {
-            $0.setTitle("X", for: .normal)
-            $0.backgroundColor = .clear
+        let backButton = propCreateUI.button(title: "X", titleColor: .white, size: 18, weight: .heavy, backgroundColor: .clear, tag: 0).then {
             $0.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
         }
                 
@@ -87,7 +85,8 @@ public class BasicAlert: UIViewController {
         // Message
         messageLabel!.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
-            make.left.right.bottom.equalTo(backgroundView)
+            make.left.equalTo(backgroundView).offset(10)
+            make.right.equalTo(backgroundView).offset(-10)
         }
         
         // Back Button
