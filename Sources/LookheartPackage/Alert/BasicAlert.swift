@@ -93,10 +93,10 @@ public class BasicAlert: UIViewController {
         
         // Background
         whitebackground.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel!.snp.bottom).offset(10)
+            make.top.equalTo(titleLabel!.snp.bottom)
             make.left.equalTo(blueBackground).offset(5)
             make.right.equalTo(blueBackground).offset(-5)
-            make.bottom.equalTo(blueBackground).offset(-10)
+            make.bottom.equalTo(blueBackground).offset(-5)
         }
         
         // Message
