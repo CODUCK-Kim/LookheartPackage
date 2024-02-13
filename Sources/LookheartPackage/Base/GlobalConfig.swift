@@ -15,8 +15,6 @@ public let FAST_ARR_TAG = 5, FAST_ARR_STATE = "fast"
 public let SLOW_ARR_TAG = 6, SLOW_ARR_STATE = "slow"
 public let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
 
-public let ArrState:[Int : String] = [ARR_TAG : ARR_STATE, FAST_ARR_TAG : FAST_ARR_STATE, SLOW_ARR_TAG : SLOW_ARR_STATE, HEAVY_ARR_TAG : HEAVY_ARR_STATE]
-
 
 public var propProfil: UserProfileManager {
     get {

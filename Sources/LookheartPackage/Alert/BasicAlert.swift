@@ -28,6 +28,8 @@ public class BasicAlert: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        addViews()
+        
     }
     
     public func updateText(title: String, message: String) {
