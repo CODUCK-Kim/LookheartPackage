@@ -44,9 +44,11 @@ public class BasicAlert: UIViewController {
         let screenWidth = UIScreen.main.bounds.width
         
         // create
-        let backgroundView = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.MY_BLUE.cgColor, borderWidth: 5, cornerRadius: 10).then {
+        let blueBackground = propCreateUI.backgroundLabel(backgroundColor: UIColor.MY_BLUE, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 10).then {
             $0.isUserInteractionEnabled = true
         }
+
+        let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 10)
         
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.textAlignment = .center
@@ -70,14 +72,16 @@ public class BasicAlert: UIViewController {
         }
                 
         // addSubview
-        view.addSubview(backgroundView)
-        backgroundView.addSubview(titleLabel!)
-        backgroundView.addSubview(messageLabel!)
-        backgroundView.addSubview(backButton)
+        view.addSubview(blueBackground)
+        blueBackground.addSubview(whitebackground)
+        blueBackground.addSubview(titleLabel!)
+        blueBackground.addSubview(messageLabel!)
+        blueBackground.addSubview(backButton)
         
         
         // makeConstraints
-        backgroundView.snp.makeConstraints { make in
+        // Background
+        blueBackground.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(view)
             make.width.equalTo(screenWidth / 1.2)
             make.height.equalTo(200)
@@ -85,16 +89,20 @@ public class BasicAlert: UIViewController {
         
         // Title
         titleLabel!.snp.makeConstraints { make in
-            make.top.left.right.equalTo(backgroundView)
+            make.top.left.right.equalTo(blueBackground)
             make.height.equalTo(40)
+        }
+        
+        // Background
+        whitebackground.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel!.snp.bottom).offset(10)
+            make.left.equalTo(blueBackground).offset(10)
+            make.bottom.right.equalTo(blueBackground).offset(-10)
         }
         
         // Message
         messageLabel!.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel!.snp.bottom).offset(10)
-            make.left.equalTo(backgroundView).offset(10)
-            make.right.equalTo(backgroundView).offset(-10)
-            make.bottom.equalTo(backgroundView).offset(-10)
+            make.top.bottom.left.right.equalTo(whitebackground)
         }
         
         // Back Button
