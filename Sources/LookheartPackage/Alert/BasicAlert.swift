@@ -54,6 +54,13 @@ public class BasicAlert: UIViewController {
         }
                     
         messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 10
+            
+            let attributedString = NSMutableAttributedString(string: alertMessage)
+            attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
+            
+            $0.attributedText = attributedString
             $0.textAlignment = .center
             $0.numberOfLines = 5
         }
