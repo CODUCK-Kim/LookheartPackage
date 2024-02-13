@@ -52,7 +52,6 @@ public class BasicAlert: UIViewController {
         
         titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
             $0.textAlignment = .center
-            $0.backgroundColor = UIColor.MY_BLUE
         }
                     
         messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
@@ -96,7 +95,8 @@ public class BasicAlert: UIViewController {
         // Background
         whitebackground.snp.makeConstraints { make in
             make.top.equalTo(titleLabel!.snp.bottom).offset(10)
-            make.left.equalTo(blueBackground).offset(10)
+            make.left.equalTo(blueBackground).offset(5)
+            make.right.equalTo(blueBackground).offset(-5)
             make.bottom.right.equalTo(blueBackground).offset(-10)
         }
         
