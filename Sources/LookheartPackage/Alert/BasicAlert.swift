@@ -53,16 +53,16 @@ public class BasicAlert: UIViewController {
             $0.backgroundColor = UIColor.MY_BLUE
         }
                     
-        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 16, weight: .bold).then {
             let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = 10
+            paragraphStyle.lineSpacing = 10 // 문자 위아래 간격
             
             let attributedString = NSMutableAttributedString(string: alertMessage)
             attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
             
             $0.attributedText = attributedString
             $0.textAlignment = .center
-            $0.numberOfLines = 5
+            $0.numberOfLines = 10
         }
         
         let backButton = propCreateUI.button(title: "X", titleColor: .white, size: 18, weight: .heavy, backgroundColor: .clear, tag: 0).then {
