@@ -54,7 +54,7 @@ public class BasicAlert: UIViewController {
             $0.textAlignment = .center
         }
                     
-        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .bold).then {
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .heavy).then {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 15 // 문자 위아래 간격
             
