@@ -188,10 +188,14 @@ public class NetworkManager {
                 print("checkDupPhoneNumber222 : \(data)")
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("checkDupPhoneNumber : \(responseString)")
-                    if responseString.contains("true") {
-                        completion(.success(true))
+                    if responseString.contains("result") {
+                        if responseString.contains("true") {
+                            completion(.success(true))
+                        } else {
+                            completion(.success(false))
+                        }
                     } else {
-                        completion(.success(false))
+                        completion(.failure(NetworkError.invalidResponse))
                     }
                 }
             case .failure(let error):
