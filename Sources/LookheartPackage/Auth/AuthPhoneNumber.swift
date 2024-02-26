@@ -103,8 +103,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.isHidden = true
     }
     
-    
-    
+    private var _sms:Bool = true
+   
+    public var sms:Bool {
+        set{_sms = newValue}
+        get{return _sms}
+    }
     
     
     
@@ -190,8 +194,11 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
-            updateUI()
-            sendSMS()
+            
+            if sms {
+                sendSMS()
+                updateUI()
+            }
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
             showAlert(title: "noti".localized(), message: "validPhoneNumber".localized())
