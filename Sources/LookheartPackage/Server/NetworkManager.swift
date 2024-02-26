@@ -3,8 +3,8 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let baseURL = "http://121.152.22.85:40081" // TEST
-//    private let baseURL = "http://121.152.22.85:40080" // REAL
+    private let baseURL = "http://db.medsyslab.co.kr:40081" // TEST
+//    private let baseURL = "http://db.medsyslab.co.kr:40080" // REAL
     
     public static let shared = NetworkManager()
 
@@ -170,6 +170,32 @@ public class NetworkManager {
     }
     
     // MARK: - GET
+    public func checkDupPhoneNumber(phoneNumber: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        let endpoint = "msl/checkPhone?"
+        guard let url = URL(string: baseURL + endpoint) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let parameters: [String: Any] = ["phone": phoneNumber]
+        
+        request(url: url, method: .get, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let responseString = String(data: data, encoding: .utf8) {
+                    if responseString.contains("true") {
+                        completion(.success(true))
+                    } else {
+                        completion(.success(false))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+                print("checkID Server Request Error : \(error.localizedDescription)")
+            }
+        }
+    }
+    
     public func getProfileToServer(id: String, completion: @escaping (Result<UserProfile, Error>) -> Void) {
         
         let endpoint = "/msl/Profile"
