@@ -193,7 +193,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func sendButtonEvent() {
         
         self.endEditing(true)
-        
+        print("sms \(sms)")
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
             if sms {
@@ -211,6 +211,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private func checkDupPhoneNumber() {
+        print("phoneNumber \(phoneNumber)")
         NetworkManager.shared.checkDupPhoneNumber(phoneNumber: phoneNumber) { [self] result in
             switch result {
             case .success(let check):
@@ -270,6 +271,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             print("View controller not found")
             return
         }
+        
         let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
         let action = UIAlertAction(title: "ok".localized(), style: .default) { _ in
             self.delegate?.complete(phoneNumber: "false")
