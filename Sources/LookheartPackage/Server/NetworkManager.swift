@@ -182,6 +182,7 @@ public class NetworkManager {
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
+                print("checkDupPhoneNumber222 : \(data)")
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("checkDupPhoneNumber : \(responseString)")
                     if responseString.contains("true") {
