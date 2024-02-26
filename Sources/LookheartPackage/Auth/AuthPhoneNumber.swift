@@ -6,6 +6,7 @@ import PhoneNumberKit
 
 public protocol AuthDelegate: AnyObject {
     func complete(phoneNumber: String)
+    func sendSmsAction()
     func cancle()
 }
 
@@ -120,13 +121,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         updateToggleButtonTitle()
     }
     
-    required init(frame:CGRect,sms:Bool){
-        super.init(frame: frame)
-        addViews()
-        updateToggleButtonTitle()
-        _sms = sms
-    }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -199,6 +193,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.endEditing(true)
         
+        delegate?.sendSmsAction()
+    }
+    
+    public func sendSMSAction() {
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
             
