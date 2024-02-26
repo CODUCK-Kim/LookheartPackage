@@ -120,6 +120,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         updateToggleButtonTitle()
     }
     
+    required init(frame:CGRect,sms:Bool){
+        super.init(frame: frame)
+        addViews()
+        updateToggleButtonTitle()
+        _sms = sms
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -196,8 +203,12 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             
             
             if sms {
+                print("check2")
                 sendSMS()
                 updateUI()
+            } else {
+                //
+                print("check")
             }
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
