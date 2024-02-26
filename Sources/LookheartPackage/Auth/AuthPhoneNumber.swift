@@ -193,7 +193,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     @objc private func sendButtonEvent() {
         
         self.endEditing(true)
-        print(sms)
+        
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
             if sms {
@@ -214,6 +214,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         NetworkManager.shared.checkDupPhoneNumber(phoneNumber: phoneNumber) { [self] result in
             switch result {
             case .success(let check):
+                print("checkDupPhoneNumber \(check)")
                 if check {
                     sendSMS()
                     updateUI()
