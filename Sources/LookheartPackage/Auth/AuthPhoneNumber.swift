@@ -6,7 +6,6 @@ import PhoneNumberKit
 
 public protocol AuthDelegate: AnyObject {
     func complete(phoneNumber: String)
-    func sendSmsAction()
     func cancle()
 }
 
@@ -107,11 +106,13 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private var _sms:Bool = true
    
     public var sms:Bool {
-        set{_sms = newValue}
-        get{return _sms}
+        set{
+            _sms = newValue
+        }
+        get{
+            return _sms
+        }
     }
-    
-    
     
     
     // MARK: - init
@@ -193,26 +194,36 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         self.endEditing(true)
         
-        delegate?.sendSmsAction()
-    }
-    
-    public func sendSMSAction() {
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
             
-            
             if sms {
-                print("check2")
                 sendSMS()
                 updateUI()
             } else {
-                //
-                print("check")
+                checkDupPhoneNumber()
             }
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
             showAlert(title: "noti".localized(), message: "validPhoneNumber".localized())
         } else {
             showAlert(title: "noti".localized(), message: "exceededNumber".localized())
+        }
+    }
+    
+    private func checkDupPhoneNumber() {
+        NetworkManager.shared.checkDupPhoneNumber(phoneNumber: phoneNumber) { [self] result in
+            switch result {
+            case .success(let check):
+                if check {
+                    sendSMS()
+                    updateUI()
+                } else {
+                    showAlertAction(body: "dupPhoneNumber".localized())
+                }
+                
+            case .failure(_):
+                showAlertAction(body: "serverErr".localized())
+            }
         }
     }
     
@@ -247,6 +258,22 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
+        alert.addAction(action)
+        viewController.present(alert, animated: true)
+    }
+    
+    func showAlertAction(body: String) {
+        let title = "noti".localized()
+        
+        guard let viewController = self.parentViewController else {
+            print("View controller not found")
+            return
+        }
+        let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
+        let action = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+            self.delegate?.complete(phoneNumber: "false")
+        }
+                                   
         alert.addAction(action)
         viewController.present(alert, animated: true)
     }
