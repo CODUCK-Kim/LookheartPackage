@@ -178,11 +178,12 @@ public class NetworkManager {
         }
         
         let parameters: [String: Any] = ["phone": phoneNumber]
-        
+        print("checkDupPhoneNumber : \(phoneNumber)")
         request(url: url, method: .get, parameters: parameters) { result in
             switch result {
             case .success(let data):
                 if let responseString = String(data: data, encoding: .utf8) {
+                    print("checkDupPhoneNumber : \(responseString)")
                     if responseString.contains("true") {
                         completion(.success(true))
                     } else {
