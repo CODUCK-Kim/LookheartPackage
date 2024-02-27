@@ -204,9 +204,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             }
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
-            showAlert(title: "noti".localized(), message: "validPhoneNumber".localized())
+            showAlert(title: "noti".localized(), message: "validPhoneNumber".localized(), actionButton: false)
         } else {
-            showAlert(title: "noti".localized(), message: "exceededNumber".localized())
+            showAlert(title: "noti".localized(), message: "exceededNumber".localized(), actionButton: false)
         }
     }
     
@@ -220,11 +220,11 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                     sendSMS()
                     updateUI()
                 } else {
-                    showAlertAction(body: "dupPhoneNumber".localized())
+                    showAlert(title: "noti".localized(), message: "dupPhoneNumber".localized(), actionButton: true)
                 }
                 
             case .failure(_):
-                showAlertAction(body: "serverErr".localized())
+                showAlert(title: "noti".localized(), message: "serverErr".localized(), actionButton: true)
             }
         }
     }
@@ -238,46 +238,35 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                     startCountdown()
                     smsCnt -= 1
                     
-                    showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"))
-                    
+                    showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"), actionButton: false)
+                        
                 } else if result.contains("false") {
-                    showAlert(title: "failVerification".localized(), message: "againMoment".localized())
+                    showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
                 } else {
                     // 횟수 초과
-                    showAlert(title: "failVerification".localized(), message: "exceededNumber".localized())
+                    showAlert(title: "failVerification".localized(), message: "exceededNumber".localized(), actionButton: false)
                 }
                 
             case .failure(_):
-                showAlert(title: "failVerification".localized(), message: "againMoment".localized())
+                showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
             }
         }
     }
     
-    func showAlert(title: String, message: String) {
+    func showAlert(title: String, message: String, actionButton: Bool) {
         guard let viewController = self.parentViewController else {
             print("View controller not found")
             return
         }
+        var action: UIAlertAction?
+        
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
-        alert.addAction(action)
-        viewController.present(alert, animated: true)
-    }
-    
-    func showAlertAction(body: String) {
-        let title = "noti".localized()
         
-        guard let viewController = self.parentViewController else {
-            print("View controller not found")
-            return
-        }
+        action = actionButton ?
+        UIAlertAction(title: "ok".localized(), style: .default) { _ in self.delegate?.complete(result: "false")} :
+        UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
         
-        let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
-        let action = UIAlertAction(title: "ok".localized(), style: .default) { _ in
-            self.delegate?.complete(result: "false")
-        }
-                                   
-        alert.addAction(action)
+        alert.addAction(action!)
         viewController.present(alert, animated: true)
     }
     
@@ -307,7 +296,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         if authNumber.count == 6 && authNumberRegx {
             checkSMS()
         } else {
-            showAlert(title: "noti".localized(), message: "correctVerification".localized())
+            showAlert(title: "noti".localized(), message: "correctVerification".localized(), actionButton: false)
         }
     }
     
@@ -320,10 +309,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                     delegate?.complete(result: phoneNumber)
                 } else {
                     // 시간 초과
-                    showAlert(title: "failVerification".localized(), message: "exceededTime".localized())
+                    showAlert(title: "failVerification".localized(), message: "exceededTime".localized(), actionButton: false)
                 }
             case .failure(_):
-                showAlert(title: "failVerification".localized(), message: "againMoment".localized())
+                showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
             }
         }
     }
