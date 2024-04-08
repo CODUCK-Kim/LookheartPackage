@@ -1,6 +1,16 @@
 import Alamofire
 import Foundation
 
+public enum NetworkResponse {
+    case success
+    case failer
+    case notConnected
+    case session
+    case invalidResponse
+    case noData
+}
+
+
 public class AlamofireController {
     private var baseURL = "http://db.medsyslab.co.kr:4500/"
     private var spareURL = "http://db.medsyslab.co.kr:40081/"
