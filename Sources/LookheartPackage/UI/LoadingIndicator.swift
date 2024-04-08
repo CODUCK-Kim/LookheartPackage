@@ -3,7 +3,7 @@ import UIKit
 
 @available(iOS 13.0, *)
 public class LoadingIndicator {
-    static let shared = LoadingIndicator()
+    public static let shared = LoadingIndicator()
     private var activityIndicator: UIActivityIndicatorView?
 
     private init() {}
