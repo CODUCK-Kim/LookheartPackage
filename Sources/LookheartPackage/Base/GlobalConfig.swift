@@ -3,7 +3,7 @@ import Foundation
 
 // KEY
 public let userEmailKey = "userEmail"
-public let authLoginKey = "isAutoLoginEnabled"
+public let authLoginKey = "autoLoginFlag"
 public let appKey = "appKey"
 public let PrevDateKey = "prevDate"
 public let PrevHourKey = "prevHour"
