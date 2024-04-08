@@ -2,8 +2,9 @@ import Alamofire
 import Foundation
 
 public class AlamofireController {
-//    private let baseURL = "http://db.medsyslab.co.kr:40081/" // TEST
-    private let baseURL = "http://db.medsyslab.co.kr:4500/"
+    private var baseURL = "http://db.medsyslab.co.kr:4500/"
+    private var spareURL = "http://db.medsyslab.co.kr:40081/"
+    //    private let baseURL = "http://db.medsyslab.co.kr:40081/" // TEST
 //    private let baseURL = "https://port-0-nestjs-2rrqq2blmpy5nvs.sel5.cloudtype.app/" // TEST
 //    private let baseURL = "http://db.medsyslab.co.kr:40080/" // REAL
     
@@ -80,5 +81,12 @@ public class AlamofireController {
         }
         
         return stringData
+    }
+    
+    
+    public func changeURL() {
+        if baseURL != spareURL {
+            swap(&baseURL, &spareURL)
+        }
     }
 }
