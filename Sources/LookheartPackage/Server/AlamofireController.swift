@@ -51,7 +51,7 @@ public class AlamofireController {
         completion: @escaping (Result<T, Error>) -> Void)
     {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
-            print("Invalid URL")
+            completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
             return
         }
         
@@ -62,7 +62,7 @@ public class AlamofireController {
                     let decodedData = try JSONDecoder().decode(T.self, from: data)
                     completion(.success(decodedData))
                 } catch {
-                    completion(.failure(error))
+                    completion(.failure(NSError(domain: "DataEncodingError", code: -2, userInfo: nil)))
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -70,6 +70,31 @@ public class AlamofireController {
         }
     }
     
+    
+    public func alamofireControllerForString(
+        parameters: [String: Any],
+        endPoint: EndPoist,
+        method: HTTPMethod,
+        completion: @escaping (Result<String, Error>) -> Void)
+    {
+        guard let url = URL(string: baseURL + endPoint.rawValue) else {
+            completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
+            return
+        }
+        
+        request(url: url, method: method, parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                if let stringData = String(data: data, encoding: .utf8) {
+                    completion(.success(stringData))
+                } else {
+                    completion(.failure(NSError(domain: "DataEncodingError", code: -2, userInfo: nil)))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
     
     // MARK: -
     private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
