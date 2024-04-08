@@ -169,7 +169,9 @@ public class NetworkManager {
         }
     }
     
+    
     // MARK: - GET
+    
     public func checkDupPhoneNumber(phoneNumber: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         let endpoint = "/msl/checkPhone?"
         guard let url = URL(string: baseURL + endpoint) else {
