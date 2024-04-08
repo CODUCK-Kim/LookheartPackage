@@ -43,71 +43,42 @@ public class AlamofireController {
         case postBleLog = "app_ble/api_getdata"
     }
     
-    // MARK: -
-    public func alamofireController<T: Decodable> (
-        parameters: [String: Any],
-        endPoint: EndPoist,
-        method: HTTPMethod,
-        completion: @escaping (Result<T, Error>) -> Void)
-    {
+    
+    @available(iOS 13.0.0, *)
+    public func alamofireControllerAsync<T: Decodable>(parameters: [String: Any], endPoint: EndPoist, method: HTTPMethod) async throws -> T {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
-            completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
-            return
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
-        
-        request(url: url, method: method, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decodedData = try JSONDecoder().decode(T.self, from: data)
-                    completion(.success(decodedData))
-                } catch {
-                    completion(.failure(NSError(domain: "DataEncodingError", code: -2, userInfo: nil)))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+
+        let response = try await AF.request(url, method: method, parameters: parameters, encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
+            .validate(statusCode: 200..<300)
+            .serializingData().value
+
+        return try JSONDecoder().decode(T.self, from: response)
     }
     
     
+    @available(iOS 13.0.0, *)
     public func alamofireControllerForString(
         parameters: [String: Any],
         endPoint: EndPoist,
-        method: HTTPMethod,
-        completion: @escaping (Result<String, Error>) -> Void)
-    {
+        method: HTTPMethod) async throws -> String {
+        
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
-            completion(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
-            return
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
         
-        request(url: url, method: method, parameters: parameters) { result in
-            switch result {
-            case .success(let data):
-                if let stringData = String(data: data, encoding: .utf8) {
-                    completion(.success(stringData))
-                } else {
-                    completion(.failure(NSError(domain: "DataEncodingError", code: -2, userInfo: nil)))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    // MARK: -
-    private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
-        AF.request(url, method: method, parameters: parameters,
-                   encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
+        // Alamofire의 async-await 지원을 사용
+        let response = try await AF.request(url, method: method, parameters: parameters,
+                                            encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
             .validate(statusCode: 200..<300)
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
+            .serializingData().value
+        
+        guard let stringData = String(data: response, encoding: .utf8) else {
+            throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
+        }
+        
+        return stringData
     }
+
 }
