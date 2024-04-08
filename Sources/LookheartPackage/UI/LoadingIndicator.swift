@@ -8,7 +8,7 @@ public class LoadingIndicator {
 
     private init() {}
 
-    func show(in view: UIView) {
+    public func show(in view: UIView) {
         DispatchQueue.main.async {
             if self.activityIndicator == nil {
                 let indicator = UIActivityIndicatorView(style: .large)
@@ -24,7 +24,7 @@ public class LoadingIndicator {
         }
     }
 
-    func hide() {
+    public func hide() {
         DispatchQueue.main.async {
             self.activityIndicator?.stopAnimating()
             self.activityIndicator?.removeFromSuperview()
