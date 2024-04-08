@@ -1,11 +1,17 @@
 import Foundation
 
 
-public let ECG_MAX_ARRAY = 500
-public let ECG_DATA_MAX = 140
-
+// KEY
+public let userEmailKey = "userEmail"
+public let authLoginKey = "isAutoLoginEnabled"
+public let appKey = "appKey"
 public let PrevDateKey = "prevDate"
 public let PrevHourKey = "prevHour"
+
+
+//
+public let ECG_MAX_ARRAY = 500
+public let ECG_DATA_MAX = 140
 
 public let ARR_TAG = 1, ARR_STATE = "arr"
 public let EMERGENCY_TAG = 2
@@ -14,6 +20,7 @@ public let MYO_TAG = 4
 public let FAST_ARR_TAG = 5, FAST_ARR_STATE = "fast"
 public let SLOW_ARR_TAG = 6, SLOW_ARR_STATE = "slow"
 public let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
+
 
 
 public var propProfil: UserProfileManager {
