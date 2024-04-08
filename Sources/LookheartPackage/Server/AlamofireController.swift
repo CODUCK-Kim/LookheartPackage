@@ -94,6 +94,23 @@ public class AlamofireController {
     }
     
     
+    public func handleError(_ error: Error) -> NetworkResponse {
+        if let error = error as? AFError {
+            switch error {
+            case .sessionTaskFailed(let underlyingError):
+                if let urlError = underlyingError as? URLError, urlError.code == .notConnectedToInternet {
+                    return .notConnected
+                } else {
+                    return .session
+                }
+            default:
+                return .invalidResponse
+            }
+        } else {
+            return .invalidResponse
+        }
+    }
+    
     public func changeURL() {
         if baseURL != spareURL {
             swap(&baseURL, &spareURL)
