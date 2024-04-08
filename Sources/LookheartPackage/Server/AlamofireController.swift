@@ -44,11 +44,11 @@ public class AlamofireController {
     }
     
     // MARK: -
-    public func alamofireController(
+    public func alamofireController<T: Decodable> (
         parameters: [String: Any],
         endPoint: EndPoist,
         method: HTTPMethod,
-        completion: @escaping (Result<Data, Error>) -> Void)
+        completion: @escaping (Result<T, Error>) -> Void)
     {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             print("Invalid URL")
@@ -57,12 +57,15 @@ public class AlamofireController {
         
         request(url: url, method: method, parameters: parameters) { result in
             switch result {
-            case .success(let result):
-                if let responseString = String(data: result, encoding: .utf8) {
-                    print(responseString)
-                }                                
+            case .success(let data):
+                do {
+                    let decodedData = try JSONDecoder().decode(T.self, from: data)
+                    completion(.success(decodedData))
+                } catch {
+                    completion(.failure(error))
+                }
             case .failure(let error):
-                print(error)
+                completion(.failure(error))
             }
         }
     }
