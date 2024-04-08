@@ -48,7 +48,7 @@ public class AlamofireController {
         parameters: [String: Any],
         endPoint: EndPoist,
         method: HTTPMethod,
-        completion: @escaping (Result<String, Error>) -> Void)
+        completion: @escaping (Result<Data, Error>) -> Void)
     {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             print("Invalid URL")
@@ -58,8 +58,9 @@ public class AlamofireController {
         request(url: url, method: method, parameters: parameters) { result in
             switch result {
             case .success(let result):
-            
-                print(result)
+                if let responseString = String(data: result, encoding: .utf8) {
+                    print(responseString)
+                }                                
             case .failure(let error):
                 print(error)
             }
@@ -69,8 +70,6 @@ public class AlamofireController {
     
     // MARK: -
     private func request(url: URL, method: HTTPMethod, parameters: [String: Any], completion: @escaping (Result<Data, Error>) -> Void) {
-        
-        // Alamofire
         AF.request(url, method: method, parameters: parameters,
                    encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
             .validate(statusCode: 200..<300)
