@@ -2,7 +2,9 @@ import Alamofire
 import Foundation
 
 public class AlamofireController {
-    private let baseURL = "http://db.medsyslab.co.kr:40081/" // TEST
+//    private let baseURL = "http://db.medsyslab.co.kr:40081/" // TEST
+    private let baseURL = "http://db.medsyslab.co.kr:4500/"
+//    private let baseURL = "https://port-0-nestjs-2rrqq2blmpy5nvs.sel5.cloudtype.app/" // TEST
 //    private let baseURL = "http://db.medsyslab.co.kr:40080/" // REAL
     
     public static let shared = AlamofireController()
@@ -67,8 +69,7 @@ public class AlamofireController {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
-        
-        // Alamofire의 async-await 지원을 사용
+            
         let response = try await AF.request(url, method: method, parameters: parameters,
                                             encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
             .validate(statusCode: 200..<300)
@@ -80,5 +81,4 @@ public class AlamofireController {
         
         return stringData
     }
-
 }
