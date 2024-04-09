@@ -11,7 +11,7 @@ import Combine
 
 extension UITextField {
     @available(iOS 13.0, *)
-    var textPublisher: AnyPublisher<String, Never> {
+    public var textPublisher: AnyPublisher<String, Never> {
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: self)
             .compactMap { $0.object as? UITextField }
             .map { $0.text ?? "" }
