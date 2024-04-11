@@ -263,9 +263,11 @@ public class ArrViewController : UIViewController {
                     }
                     self.setArrList()
                 case .failure(let error):
-                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-                    self.toastMessage(errorMessage)
                     self.activityIndicator.stopAnimating()
+                    
+                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as? NetworkError ?? NetworkError.invalidResponse)
+                    self.toastMessage(errorMessage)
+                    
                 }
             }
         }

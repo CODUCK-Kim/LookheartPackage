@@ -2,7 +2,7 @@
 //  File.swift
 //  
 //
-//  Created by 정연호 on 2024/04/11.
+//  Created by KHJ on 2024/04/11.
 //
 
 import Foundation
@@ -27,7 +27,7 @@ public class NetworkMonitor {
                     
                     print("isConnected")
                     
-                } else if (!self.isConnected && !self.isDuplicated) {
+                } else if !self.isConnected && !self.isDuplicated {
                     // 네트워크 연결 끊김
                     self.isDuplicated = true
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
@@ -44,6 +44,8 @@ public class NetworkMonitor {
                             cancel: "exit2".localized(),
                             viewController: viewController,
                             completion: {
+                                self.isDuplicated = false
+                                
                                 UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
                             },
                             cancelAction: {
