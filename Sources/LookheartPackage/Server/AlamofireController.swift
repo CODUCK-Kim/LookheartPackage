@@ -2,7 +2,8 @@ import Alamofire
 import Foundation
 
 public enum NetworkResponse {
-    case success(String)
+    case successWithData(String)
+    case success
     case failer
     case notConnected
     case session
