@@ -21,7 +21,9 @@ public class NetworkMonitor {
                 if self.isConnected {
                     // 네트워크 연결
                     UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
+                    print("isConnected")
                 } else {
+                    print("not Connected")
                     // 네트워크 연결 끊김
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
                     
