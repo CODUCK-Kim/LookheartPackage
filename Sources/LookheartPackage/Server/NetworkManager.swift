@@ -364,7 +364,7 @@ public class NetworkManager {
                     } else {
                         
                         completion(.failure(NetworkError.invalidResponse)) // 예상치 못한 응답
-                        
+                                                
                     }
                     
                 } else {

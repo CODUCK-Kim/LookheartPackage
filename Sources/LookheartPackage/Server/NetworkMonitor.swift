@@ -24,6 +24,23 @@ public class NetworkMonitor {
                 } else {
                     // 네트워크 연결 끊김
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        guard let viewController = UIApplication.shared.keyWindow?.rootViewController else { return }
+                        
+                        propAlert.basicCancelAlert(
+                            title: "noti".localized(),
+                            message: "nonNetworkHelpText".localized(),
+                            ok: "ok".localized(),
+                            cancel: "exit2".localized(),
+                            viewController: viewController,
+                            completion: {
+                                print("확인")
+                            },
+                            cancelAction: {
+                                exit(0)
+                            })
+                    }
                 }
             }
         }
@@ -35,6 +52,7 @@ public class NetworkMonitor {
             self?.isConnected = path.status == .satisfied
         }
         monitor?.start(queue: queue)
+        
     }
 }
 

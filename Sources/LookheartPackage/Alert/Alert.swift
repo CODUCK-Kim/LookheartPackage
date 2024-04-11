@@ -5,14 +5,29 @@ public class MyAlert {
     
     public init() {}
     
-    public func basicAlert(title: String, message: String, ok: String, viewController: UIViewController) {
+    
+    
+    public func basicAlert(
+        title: String,
+        message: String,
+        ok: String,
+        viewController: UIViewController
+    ) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let complite = UIAlertAction(title: ok, style: .default)
         alert.addAction(complite)
         viewController.present(alert, animated: true, completion: {})
     }
     
-    public func basicActionAlert(title: String, message: String, ok: String, viewController: UIViewController, completion: @escaping () -> Void) {
+    
+    
+    public func basicActionAlert(
+        title: String,
+        message: String,
+        ok: String,
+        viewController: UIViewController,
+        completion: @escaping () -> Void
+    ) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let complite = UIAlertAction(title: ok, style: .default) { _ in
             completion()
@@ -20,6 +35,32 @@ public class MyAlert {
         alert.addAction(complite)
         viewController.present(alert, animated: true, completion: {})
     }
+    
+    
+    
+    public func basicCancelAlert(
+        title: String,
+        message: String,
+        ok: String,
+        cancel: String,
+        viewController: UIViewController,
+        completion: @escaping () -> Void,
+        cancelAction: @escaping () -> Void
+    ) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let complite = UIAlertAction(title: ok, style: .default) { _ in
+            completion()
+        }
+        let cancel = UIAlertAction(title: cancel, style: .cancel) { _ in
+            cancelAction()
+        }
+        alert.addAction(complite)
+        alert.addAction(cancel)
+        viewController.present(alert, animated: true, completion: {})
+    }
+    
+    
+    
     
     public func basicPasswordAlert(viewController: UIViewController, completion: @escaping (String) -> Void) {
 
