@@ -35,7 +35,7 @@ public class NetworkMonitor {
                             cancel: "exit2".localized(),
                             viewController: viewController,
                             completion: {
-                                print("확인")
+                                print("확인 클릭")
                             },
                             cancelAction: {
                                 exit(0)
