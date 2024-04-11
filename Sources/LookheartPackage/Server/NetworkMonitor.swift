@@ -11,7 +11,7 @@ import UIKit
 
 @available(iOS 13.0, *)
 public class NetworkMonitor {
-    static let shared = NetworkMonitor()
+    public static let shared = NetworkMonitor()
     private var monitor: NWPathMonitor?
     private let queue = DispatchQueue.global(qos: .background)
 
