@@ -14,18 +14,25 @@ public class NetworkMonitor {
     public static let shared = NetworkMonitor()
     private var monitor: NWPathMonitor?
     private let queue = DispatchQueue.global(qos: .background)
-
+    
+    private var isDuplicated = false
+    
     public var isConnected: Bool = true {
         didSet {
             DispatchQueue.main.async {
                 if self.isConnected {
                     // 네트워크 연결
+                    self.isDuplicated = false
                     UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
+                    
                     print("isConnected")
-                } else {
-                    print("not Connected")
+                    
+                } else if (!self.isConnected && !self.isDuplicated) {
                     // 네트워크 연결 끊김
+                    self.isDuplicated = true
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
+                    
+                    print("not Connected")
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         guard let viewController = UIApplication.shared.keyWindow?.rootViewController else { return }
