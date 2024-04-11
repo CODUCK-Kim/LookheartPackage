@@ -15,7 +15,7 @@ public class NetworkMonitor {
     private var monitor: NWPathMonitor?
     private let queue = DispatchQueue.global(qos: .background)
 
-    var isConnected: Bool = true {
+    public var isConnected: Bool = true {
         didSet {
             DispatchQueue.main.async {
                 if self.isConnected {
@@ -35,7 +35,7 @@ public class NetworkMonitor {
                             cancel: "exit2".localized(),
                             viewController: viewController,
                             completion: {
-                                print("확인 클릭")
+                                UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
                             },
                             cancelAction: {
                                 exit(0)
