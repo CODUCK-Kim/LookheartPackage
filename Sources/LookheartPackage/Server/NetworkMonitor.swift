@@ -29,6 +29,7 @@ public class NetworkMonitor {
                     
                 } else if !self.isConnected && !self.isDuplicated {
                     // 네트워크 연결 끊김
+                    self.isDuplicated = true
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
                     
                     print("not Connected")
@@ -36,9 +37,7 @@ public class NetworkMonitor {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         guard let viewController = UIApplication.shared.keyWindow?.rootViewController else { return }
                         
-                        if !self.isDuplicated {
-                            self.isDuplicated = true
-                            
+                        if !self.isConnected {
                             propAlert.basicCancelAlert(
                                 title: "noti".localized(),
                                 message: "nonNetworkHelpText".localized(),
