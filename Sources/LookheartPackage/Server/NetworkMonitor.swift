@@ -37,20 +37,22 @@ public class NetworkMonitor {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         guard let viewController = UIApplication.shared.keyWindow?.rootViewController else { return }
                         
-                        propAlert.basicCancelAlert(
-                            title: "noti".localized(),
-                            message: "nonNetworkHelpText".localized(),
-                            ok: "ok".localized(),
-                            cancel: "exit2".localized(),
-                            viewController: viewController,
-                            completion: {
-                                self.isDuplicated = false
-                                
-                                UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
-                            },
-                            cancelAction: {
-                                exit(0)
-                            })
+                        if !self.isDuplicated {
+                            propAlert.basicCancelAlert(
+                                title: "noti".localized(),
+                                message: "nonNetworkHelpText".localized(),
+                                ok: "ok".localized(),
+                                cancel: "exit2".localized(),
+                                viewController: viewController,
+                                completion: {
+                                    self.isDuplicated = false
+                                    
+                                    UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
+                                },
+                                cancelAction: {
+                                    exit(0)
+                                })
+                        }
                     }
                 }
             }
