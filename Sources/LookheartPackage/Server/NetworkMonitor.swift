@@ -23,16 +23,11 @@ public class NetworkMonitor {
                 if self.isConnected {
                     // 네트워크 연결
                     self.isDuplicated = false
-                    UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()
-                    
-                    print("isConnected")
-                    
+                    UIApplication.shared.keyWindow?.rootViewController?.removeLoadingOverlay()                    
                 } else if !self.isConnected && !self.isDuplicated {
                     // 네트워크 연결 끊김
                     self.isDuplicated = true
                     UIApplication.shared.keyWindow?.rootViewController?.showLoadingOverlay()
-                    
-                    print("not Connected")
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         guard let viewController = UIApplication.shared.keyWindow?.rootViewController else { return }
