@@ -20,14 +20,34 @@ class ArrService {
         ]
         
         do {
-            let arrData: [ArrDateEntry] = try await AlamofireController.shared.alamofireControllerAsync(
+            let arrList: [ArrDateEntry] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
                 endPoint: .getArrListData,
                 method: .get)
             
-            return (arrData, .success)
+            return (arrList, .success)
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
+        }
+    }
+    
+//    func getArrData(startDate: String) async -> (ArrData?, NetworkResponse) {
+    func getArrData(startDate: String) async {
+        let parameters: [String: Any] = [
+            "eq": propEmail,
+            "startDate": startDate,
+            "endDate": ""
+        ]
+        
+        do {
+            let arrData: [ArrEcgData] = try await AlamofireController.shared.alamofireControllerAsync(
+                parameters: parameters,
+                endPoint: .getArrListData,
+                method: .get)
+            
+            let resultString = arrData[0].ecgpacket.split(separator: ",")
+        } catch {
+            
         }
     }
 }

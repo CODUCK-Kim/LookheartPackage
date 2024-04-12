@@ -278,19 +278,23 @@ public class ArrViewController : UIViewController {
     
     // MARK: - selectArrData
     func selectArrData(_ startDate: String) {
-        activityIndicator.startAnimating()
-        NetworkManager.shared.selectArrDataToServer(startDate: startDate ) { [self] result in
-            DispatchQueue.main.async {
-                switch(result) {
-                case .success(let arrData):
-                    self.arrChart(arrData)
-                case .failure(let error):
-                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-                    self.toastMessage(errorMessage)
-                    self.activityIndicator.stopAnimating()
-                }
-            }
+        
+        Task {
+            await arrService.getArrData(startDate: startDate)
         }
+//        activityIndicator.startAnimating()
+//        NetworkManager.shared.selectArrDataToServer(startDate: startDate ) { [self] result in
+//            DispatchQueue.main.async {
+//                switch(result) {
+//                case .success(let arrData):
+//                    self.arrChart(arrData)
+//                case .failure(let error):
+//                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
+//                    self.toastMessage(errorMessage)
+//                    self.activityIndicator.stopAnimating()
+//                }
+//            }
+//        }
     }
     
     func setArrList() {
