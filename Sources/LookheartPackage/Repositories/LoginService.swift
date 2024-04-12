@@ -10,7 +10,8 @@ import Foundation
 @available(iOS 13.0.0, *)
 public class LoginService {
     public init() {}
-    func loginTask(_ email: String, _ password: String) async -> NetworkResponse {
+    
+    public func loginTask(_ email: String, _ password: String) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "empid": email,
             "pw": password,
@@ -34,7 +35,7 @@ public class LoginService {
     }
     
     
-    func getAppKey(_ appKey: String, _ email: String) async -> NetworkResponse {
+    public func getAppKey(_ appKey: String, _ email: String) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "empid": email
         ]
@@ -56,7 +57,7 @@ public class LoginService {
     }
 
     
-    func postAppKey(_ appKey: String, _ email: String) async -> NetworkResponse {
+    public func postAppKey(_ appKey: String, _ email: String) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "kind": "updateAppKey",
             "eq": email,
