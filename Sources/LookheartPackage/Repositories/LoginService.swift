@@ -13,11 +13,15 @@ public class LoginService {
     
     public init() {}
     
-    public func loginTask(_ email: String, _ password: String) async -> NetworkResponse {
+    public func loginTask(
+        _ email: String,
+        _ password: String, 
+        _ destroy:Bool = false
+    ) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "empid": email,
             "pw": password,
-            "destroy": "false"
+            "destroy": destroy
         ]
         
         do {
