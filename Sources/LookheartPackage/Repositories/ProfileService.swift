@@ -9,6 +9,8 @@ import Foundation
 
 @available(iOS 13.0.0, *)
 public class ProfileService {
+    public static let shared = ProfileService()
+    
     public init() {}
     
     public func getProfile(id: String) async -> (UserProfile?, NetworkResponse) {
