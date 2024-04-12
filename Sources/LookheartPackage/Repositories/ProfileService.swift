@@ -95,6 +95,8 @@ public class ProfileService {
                 endPoint: .postSetProfile,
                 method: .post)
             
+            print(params)
+            
             print("postSignup \(response)")
             
             if response.contains("true") {

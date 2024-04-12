@@ -33,7 +33,7 @@ public class PostData {
                 parameters: params,
                 endPoint: .postEcgData,
                 method: .post)
-            print("EcgData: \(ecgData)")
+//            print("EcgData: \(ecgData)")
         } catch {
             print("EcgData Send Error: \(error)")
         }
@@ -62,7 +62,7 @@ public class PostData {
                 endPoint: .postTenSecondData,
                 method: .post)
             
-            print("TenSecondeData: \(tenSecondData)")
+//            print("TenSecondeData: \(tenSecondData)")
         } catch {
             print("TenSecondeData Send Error: \(error)")
         }
@@ -84,7 +84,7 @@ public class PostData {
                 endPoint: .postHourlyData,
                 method: .post)
             
-            print("sendHourlyData: \(hourlyData)")
+//            print("sendHourlyData: \(hourlyData)")
         } catch {
             print("sendHourlyData Send Error: \(error)")
         }
@@ -106,6 +106,8 @@ public class PostData {
                 parameters: params,
                 endPoint: .postArrData,
                 method: .post)
+            
+            print("send arrData: \(arrData)")
             
             if arrData.contains("true") {
                 return .success
