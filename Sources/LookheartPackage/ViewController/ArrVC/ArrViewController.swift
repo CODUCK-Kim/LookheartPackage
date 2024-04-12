@@ -278,23 +278,22 @@ public class ArrViewController : UIViewController {
     
     // MARK: - selectArrData
     func selectArrData(_ startDate: String) {
+        activityIndicator.startAnimating()
         
         Task {
-            await arrService.getArrData(startDate: startDate)
+            let getArrData = await arrService.getArrData(startDate: startDate)
+            let data = getArrData.0
+            let response = getArrData.1
+            
+            switch response {
+            case .success:
+                self.arrChart(data!)
+            default:
+                toastMessage("noData".localized())
+            }
+            
+            self.activityIndicator.stopAnimating()
         }
-//        activityIndicator.startAnimating()
-//        NetworkManager.shared.selectArrDataToServer(startDate: startDate ) { [self] result in
-//            DispatchQueue.main.async {
-//                switch(result) {
-//                case .success(let arrData):
-//                    self.arrChart(arrData)
-//                case .failure(let error):
-//                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-//                    self.toastMessage(errorMessage)
-//                    self.activityIndicator.stopAnimating()
-//                }
-//            }
-//        }
     }
     
     func setArrList() {
@@ -584,6 +583,7 @@ public class ArrViewController : UIViewController {
         
         return arrIdxButton
     }
+    
     func setEmergencyTitleButton(_ title: String) -> UIButton {
         let arrTitleButton = UIButton()
         
