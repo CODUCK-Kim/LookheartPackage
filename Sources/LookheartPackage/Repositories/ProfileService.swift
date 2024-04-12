@@ -13,6 +13,10 @@ public class ProfileService {
     
     public init() {}
     
+    private struct Email: Codable {
+        let eq: String
+    }
+    
     public func getProfile(id: String) async -> (UserProfile?, NetworkResponse) {
         var params: [String: Any] = [
             "empid": id
@@ -132,6 +136,104 @@ public class ProfileService {
         } catch {
             print("postGuardian: \(error)")
             return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    public func getCheckID(id: String) async -> NetworkResponse {
+        let params: [String: Any] = [
+            "empid": id
+        ]
+        
+        do {
+            let response = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .getCheckDupID,
+                method: .get)
+            
+            print("getCheckID \(response)")
+            
+            if response.contains("true") {
+                return .success
+            } else if response.contains("false") {
+                return .failer
+            } else {
+                return .invalidResponse
+            }
+            
+        } catch {
+            print("getCheckID: \(error)")
+            return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    
+    public func postUpdatePassword(
+        id: String,
+        password: String
+    ) async -> NetworkResponse {
+        let params: [String: Any] = [
+            "kind": "updatePWD",
+            "eq": id,
+            "password": password
+        ]
+        
+        do {
+            let response = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .postSetProfile,
+                method: .post)
+            
+            print("postUpdatePassword \(response)")
+            
+            if response.contains("true") {
+                return .success
+            } else if response.contains("false") {
+                return .failer
+            } else {
+                return .invalidResponse
+            }
+            
+        } catch {
+            print("postUpdatePassword: \(error)")
+            return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    public func getFindID(
+        name: String, 
+        phoneNumber: String,
+        birthday: String
+    ) async -> (String?, NetworkResponse) {
+        // Test
+//        let params: [String: Any] = [
+//            "성명": name,
+//            "핸드폰": phoneNumber,
+//            "생년월일": birthday
+//        ]
+        
+        // Real
+        let params: [String: Any] = [
+            "eqname": name,
+            "phone": phoneNumber,
+            "birth": birthday
+        ]
+        
+        do {
+            let response: [Email] = try await AlamofireController.shared.alamofireControllerAsync(
+                parameters: params,
+                endPoint: .getFindID,
+                method: .get)
+            
+            print("getFindID \(response)")
+            
+            if let id = response.first {
+                return (id.eq, .success)
+            } else {
+                return (nil, .failer)
+            }
+        } catch {
+            print("getFindID Error: \(error)")
+            return (nil, AlamofireController.shared.handleError(error))
         }
     }
 }
