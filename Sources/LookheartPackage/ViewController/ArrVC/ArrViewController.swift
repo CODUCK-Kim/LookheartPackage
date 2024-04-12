@@ -249,9 +249,9 @@ public class ArrViewController : UIViewController {
         activityIndicator.startAnimating()
         
         Task {
-            let getArrList = await arrService.getArrList(startDate: startDate, endDate: endDate)
-            let data = getArrList.0
-            let response = getArrList.1
+            let arrList = await arrService.getArrList(startDate: startDate, endDate: endDate)
+            let data = arrList.0
+            let response = arrList.1
             
             switch response {
             case .success:
@@ -757,12 +757,12 @@ public class ArrViewController : UIViewController {
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
             
-            let startDate = MyDateTime.shared.getDateFormat().string(from: date)
-            let endDate = MyDateTime.shared.dateCalculate(startDate, 1, true)
-
-            todayDisplay.text = changeTimeFormat(startDate, YEAR_FLAG)
+            targetDate = MyDateTime.shared.getDateFormat().string(from: date)
+            tomorrowDate = MyDateTime.shared.dateCalculate(targetDate, 1, true)
+            
+            todayDisplay.text = changeTimeFormat(targetDate, YEAR_FLAG)
             initArray()
-            getArrList(email, startDate, endDate)
+            getArrList(email, targetDate, tomorrowDate)
             
             fsCalendar.isHidden = true
             chartView.isHidden = false
