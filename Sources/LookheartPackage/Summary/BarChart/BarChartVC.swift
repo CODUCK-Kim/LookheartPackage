@@ -65,6 +65,10 @@ class BarChartVC : UIViewController {
     private var buttonList:[UIButton] = []
     // CHART END
     
+    private let graphService = GraphService()
+    
+    
+    
     // MARK: - UI VAR
     private let safeAreaView = UIView()
     
@@ -625,21 +629,24 @@ class BarChartVC : UIViewController {
         
         initUI()
 
-        NetworkManager.shared.getHourlyDataToServer(startDate: startDate, endDate: endDate) { [self] result in
-            switch(result){
-            case .success(let hourlyDataList):
-                
-                viewChart(hourlyDataList, startDate)
-                
-            case .failure(let error):
-                
-                let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-                toastMessage(errorMessage)
-                activityIndicator.stopAnimating()
-
+        Task {
+            let getHourlyData = await graphService.getHourlyData(startDate: startDate, endDate: endDate)
+            let data = getHourlyData.0
+            let response = getHourlyData.1
+            
+            switch response {
+            case .success:
+                DispatchQueue.main.async {
+                    self.viewChart(data!, startDate)
+                }
+            case .noData:
+                toastMessage("noData".localized())
+            default:
+                toastMessage("serverErr".localized())
             }
+            
+            activityIndicator.stopAnimating()
         }
-        
     }
     
     func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {

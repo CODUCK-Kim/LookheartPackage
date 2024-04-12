@@ -9,6 +9,7 @@ public protocol AuthDelegate: AnyObject {
     func cancle()
 }
 
+@available(iOS 13.0.0, *)
 public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate {
     public weak var delegate: AuthDelegate?
     
@@ -34,6 +35,10 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private var phoneNumberRegx = false
     private var authNumberRegx = false
+
+    private var authService = AuthService()
+    
+    
     
     private lazy var toggleButton = UIButton().then {
         $0.setTitle("-", for: .normal)
@@ -210,63 +215,84 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private func checkDupPhoneNumber() {
-        print("phoneNumber \(phoneNumber)")
-        NetworkManager.shared.checkDupPhoneNumber(phoneNumber: phoneNumber) { [self] result in
-            switch result {
-            case .success(let check):
-                print("checkDupPhoneNumber \(check)")
-                if check {
-                    sendSMS()
-                    updateUI()
-                } else {
-                    showAlert(title: "noti".localized(), message: "dupPhoneNumber".localized(), actionButton: true)
-                }
-                
-            case .failure(_):
-                showAlert(title: "noti".localized(), message: "serverErr".localized(), actionButton: true)
+        Task {
+            
+            let response = await authService.getDupPhoneNumber(phone: phoneNumber)
+            
+            switch response {
+            case .success:
+                sendSMS()
+                updateUI()
+            case .failer:
+                self.showAlert(
+                    title: "noti".localized(),
+                    message: "dupPhoneNumber".localized(),
+                    actionButton: true
+                )
+            default:
+                self.showAlert(
+                    title: "noti".localized(),
+                    message: "serverErr".localized(),
+                    actionButton: true
+                )
             }
         }
     }
+    
     
     private func sendSMS() {
-        NetworkManager.shared.sendSMS(phoneNumber: phoneNumber, nationalCode: nationalCode) { [self] result in
-            switch result {
-            case .success(let result):
-                if result.contains("true") {
-                    
-                    startCountdown()
-                    smsCnt -= 1
-                    
-                    showAlert(title: "requestVerification".localized(), message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"), actionButton: false)
-                        
-                } else if result.contains("false") {
-                    showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
-                } else {
-                    // 횟수 초과
-                    showAlert(title: "failVerification".localized(), message: "exceededNumber".localized(), actionButton: false)
-                }
-                
-            case .failure(_):
-                showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
+        Task {
+            let response = await authService.getSendSms(phone: phoneNumber, code: nationalCode)
+            
+            switch response {
+            case .success:
+                self.startCountdown()
+                self.showAlert(
+                    title: "requestVerification".localized(),
+                    message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"),
+                    actionButton: false
+                )
+            case .failer:
+                self.showAlert(
+                    title: "failVerification".localized(),
+                    message: "againMoment".localized(),
+                    actionButton: false
+                )
+            case .noData:   // 횟수 초과
+                self.showAlert(
+                    title: "failVerification".localized(),
+                    message: "exceededNumber".localized(),
+                    actionButton: false
+                )
+            default:
+                self.showAlert(
+                    title: "failVerification".localized(),
+                    message: "againMoment".localized(),
+                    actionButton: false
+                )
             }
         }
     }
+
     
     func showAlert(title: String, message: String, actionButton: Bool) {
-        guard let viewController = self.parentViewController else {
-            print("View controller not found")
-            return
+        DispatchQueue.main.async {
+            guard let viewController = self.parentViewController else {
+                print("View controller not found")
+                return
+            }
+            
+            var action: UIAlertAction?
+            
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            
+            action = actionButton ?
+            UIAlertAction(title: "ok".localized(), style: .default) { _ in self.delegate?.complete(result: "false")} :
+            UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
+            
+            alert.addAction(action!)
+            viewController.present(alert, animated: true)
         }
-        var action: UIAlertAction?
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        action = actionButton ?
-        UIAlertAction(title: "ok".localized(), style: .default) { _ in self.delegate?.complete(result: "false")} :
-        UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
-        
-        alert.addAction(action!)
-        viewController.present(alert, animated: true)
     }
     
     private func updateUI() {
@@ -300,21 +326,31 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private func checkSMS() {
-        NetworkManager.shared.checkSMS(phoneNumber: phoneNumber, code: authNumber) { [self] result in
-            switch result {
-            case .success(let result):
-                if result {
-                    UserProfileManager.shared.phone = phoneNumber
-                    delegate?.complete(result: phoneNumber)
-                } else {
-                    // 시간 초과
-                    showAlert(title: "failVerification".localized(), message: "exceededTime".localized(), actionButton: false)
-                }
-            case .failure(_):
-                showAlert(title: "failVerification".localized(), message: "againMoment".localized(), actionButton: false)
+        Task {
+            let response = await authService.getCheckSmsCode(phone: phoneNumber, code: authNumber)
+            
+            switch response {
+            case .success:
+                UserProfileManager.shared.phone = phoneNumber
+                delegate?.complete(result: phoneNumber)
+            case .failer:
+                // Time Over
+                showAlert(
+                    title: "failVerification".localized(),
+                    message: "exceededTime".localized(),
+                    actionButton: false
+                )
+            default:
+                showAlert(
+                    title: "failVerification".localized(),
+                    message: "againMoment".localized(),
+                    actionButton: false
+                )
             }
         }
     }
+    
+    
     
     // MARK: - cancleButton Event
     @objc private func cancleButtonEvent() {
@@ -376,13 +412,20 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             let secString = sec < 10 ? "0\(sec)" : "\(sec)"
             let minString = min < 10 ? "0\(min)" : "\(min)"
             
-            sendButton.setTitle("\(minString):\(secString)", for: .normal)
+            updateText("\(minString):\(secString)")
         } else {
             countdown = 180
             countdownTimer?.invalidate()
             countdownTimer = nil
             sendButton.isEnabled = true
-            sendButton.setTitle("resendText".localized(), for: .normal)
+            
+            updateText("resendText".localized())
+        }
+    }
+    
+    private func updateText(_ text: String) {
+        DispatchQueue.main.async {
+            self.sendButton.setTitle(text, for: .normal)
         }
     }
     

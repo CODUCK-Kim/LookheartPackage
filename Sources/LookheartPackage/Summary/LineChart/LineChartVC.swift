@@ -48,6 +48,10 @@ class LineChartVC : UIViewController {
     private var buttonList:[UIButton] = []
     // CHART END
 
+    
+    private let graphService = GraphService()
+    
+    
     // MARK: - UI VAR
     private let safeAreaView = UIView()
     
@@ -406,18 +410,23 @@ class LineChartVC : UIViewController {
         
         initUI()
 
-        NetworkManager.shared.getBpmDataToServer(startDate: startDate, endDate: endDate) { [self] result in
-            switch(result){
-            case .success(let bpmDataList):
-                
-                viewChart(bpmDataList, type)
-                
-            case .failure(let error):
-                
-                let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as! NetworkError)
-                toastMessage(errorMessage)
-                activityIndicator.stopAnimating()
+        Task {
+            let getHourlyData = await graphService.getBpmData(startDate: startDate, endDate: endDate)
+            let data = getHourlyData.0
+            let response = getHourlyData.1
+            
+            switch response {
+            case .success:
+                DispatchQueue.main.async {
+                    self.viewChart(data!, type)
+                }
+            case .noData:
+                toastMessage("noData".localized())
+            default:
+                toastMessage("serverErr".localized())
             }
+            
+            activityIndicator.stopAnimating()
         }
     }
     
