@@ -39,8 +39,8 @@ public class GraphService {
                 return (nil, .noData)
             }
             
-            let newlineData = hourlyData.split(separator: "\n")
-            guard newlineData.count > 1 else {
+            let newlineData = hourlyData.split(separator: "\n").dropFirst()
+            guard newlineData.count > 0 else {
                 return (nil, .invalidResponse)
             }
             
@@ -106,15 +106,11 @@ public class GraphService {
             guard !bpmData.contains("result = 0") else {
                 return (nil, .noData)
             }
-            
-            
+                        
             var newlineData = bpmData.split(separator: "\n").dropFirst()
             guard newlineData.count > 0 else {
                 return (nil, .invalidResponse)
             }
-            
-            print(newlineData)
-
             
             let splitData = newlineData.first?.split(separator: "\r\n")
             var parsedRecords = [BpmData]()
