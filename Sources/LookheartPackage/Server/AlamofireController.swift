@@ -16,9 +16,9 @@ public class AlamofireController {
 //    private var baseURL = "http://db.medsyslab.co.kr:40081/" // test
 //    private var spareURL = "https://port-0-nestjs-2rrqq2blmpy5nvs.sel5.cloudtype.app/"
     
-    private var baseURL = "https://port-0-webbackend-2rrqq2blmpy5nvs.sel5.cloudtype.app/" // real
+    private var baseURL = "https://port-0-webbackend-2rrqq2blmpy5nvs.sel5.cloudtype.app" // real
     private var spareURL = "http://db.medsyslab.co.kr:40080/"
-
+    
     public static let shared = AlamofireController()
     
     public enum EndPoist: String {
@@ -59,7 +59,11 @@ public class AlamofireController {
     
     
     @available(iOS 13.0.0, *)
-    public func alamofireControllerAsync<T: Decodable>(parameters: [String: Any], endPoint: EndPoist, method: HTTPMethod) async throws -> T {
+    public func alamofireControllerAsync <T: Decodable> (
+        parameters: [String: Any],
+        endPoint: EndPoist, 
+        method: HTTPMethod
+    ) async throws -> T {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
@@ -76,8 +80,8 @@ public class AlamofireController {
     public func alamofireControllerForString(
         parameters: [String: Any],
         endPoint: EndPoist,
-        method: HTTPMethod) async throws -> String {
-        
+        method: HTTPMethod
+    ) async throws -> String {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
