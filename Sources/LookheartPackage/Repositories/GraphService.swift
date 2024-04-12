@@ -107,11 +107,13 @@ public class GraphService {
                 return (nil, .noData)
             }
             
+            print(bpmData)
             let newlineData = bpmData.split(separator: "\n")
             guard newlineData.count > 1 else {
                 return (nil, .invalidResponse)
             }
             
+            print(newlineData)
             let splitData = newlineData.first?.split(separator: "\r\n")
             var parsedRecords = [BpmData]()
             
