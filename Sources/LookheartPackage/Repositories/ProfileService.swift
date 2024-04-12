@@ -82,4 +82,24 @@ public class ProfileService {
             print("postUpdateLogout: \(error)")
         }
     }
+    
+    
+    public func postSignup(params: [String: Any]) async -> NetworkResponse {
+        do {
+            let response = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .postSetProfile,
+                method: .post)
+            
+            if response.contains("true") {
+                return .success
+            } else if response.contains("false") {
+                return .failer
+            } else {
+                return .invalidResponse
+            }
+        } catch {
+            return AlamofireController.shared.handleError(error)
+        }
+    }
 }
