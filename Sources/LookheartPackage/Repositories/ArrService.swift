@@ -21,7 +21,7 @@ class ArrService {
         ]
         
         do {
-            let arrData: ArrDateEntry = try await AlamofireController.shared.alamofireControllerAsync(
+            let arrData: [ArrDateEntry] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
                 endPoint: .getArrListData,
                 method: .get)
