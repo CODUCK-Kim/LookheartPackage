@@ -9,6 +9,8 @@ import Foundation
 
 @available(iOS 13.0.0, *)
 public class LoginService {
+    public static let shared = LoginService()
+    
     public init() {}
     
     public func loginTask(_ email: String, _ password: String) async -> NetworkResponse {
