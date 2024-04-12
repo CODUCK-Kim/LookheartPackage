@@ -91,6 +91,8 @@ public class ProfileService {
                 endPoint: .postSetProfile,
                 method: .post)
             
+            print("postSignup \(response)")
+            
             if response.contains("true") {
                 return .success
             } else if response.contains("false") {
@@ -99,6 +101,36 @@ public class ProfileService {
                 return .invalidResponse
             }
         } catch {
+            print("postSignup: \(error)")
+            return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    public func postGuardian(phone:[String]) async -> NetworkResponse {
+        let params: [String: Any] = [
+            "eq": propEmail,
+            "timezone": propTimeZone,
+            "writetime": propCurrentDateTime,
+            "phones": phone
+        ]
+        
+        do {
+            let response = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .postSetGuardian,
+                method: .post)
+            
+            print("postGuardian \(response)")
+            
+            if response.contains("true") {
+                return .success
+            } else if response.contains("false") {
+                return .failer
+            } else {
+                return .invalidResponse
+            }
+        } catch {
+            print("postGuardian: \(error)")
             return AlamofireController.shared.handleError(error)
         }
     }
