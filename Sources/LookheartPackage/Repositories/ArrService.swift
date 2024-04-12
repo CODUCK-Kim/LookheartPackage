@@ -46,6 +46,8 @@ class ArrService {
                 method: .get)
             
             let resultString = arrData[0].ecgpacket.split(separator: ",")
+            
+            print(resultString)
         } catch {
             
         }
