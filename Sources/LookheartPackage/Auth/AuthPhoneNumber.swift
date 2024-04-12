@@ -191,7 +191,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     // MARK: - sendSMS Event
     @objc private func sendButtonEvent() {
-        
         self.endEditing(true)
         print("sms \(sms)")
         if smsCnt > 0 && phoneNumber.count > 4 && phoneNumberRegx {
@@ -333,8 +332,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         switch (textField.tag) {
         case PHONE_NUMBER_TAG:
-            
             phoneNumber = text
+            
             if isNumberValid(phoneNumber) {
                 phoneNumberRegx = true
                 phoneNumberTextField.setUnderLineColor(UIColor.MY_BLUE)
@@ -344,8 +343,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             }
             
         case AUTH_NUMBER_TAG:
-            
             authNumber = text
+            
             if isNumberValid(authNumber) {
                 authNumberRegx = true
                 authTextField.setUnderLineColor(UIColor.MY_BLUE)

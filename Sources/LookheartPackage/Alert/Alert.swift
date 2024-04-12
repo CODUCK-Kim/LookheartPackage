@@ -62,8 +62,10 @@ public class MyAlert {
     
     
     
-    public func basicPasswordAlert(viewController: UIViewController, completion: @escaping (String) -> Void) {
-
+    public func basicPasswordAlert(
+        viewController: UIViewController,
+        completion: @escaping (String) -> Void
+    ) {
         let alertController = UIAlertController(title: "pw_Label".localized(), message: "password_Hint".localized(), preferredStyle: .alert)
 
         // 텍스트 필드

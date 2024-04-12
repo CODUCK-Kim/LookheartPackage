@@ -3,8 +3,10 @@ import Alamofire
 
 public class NetworkManager {
     
-    private let baseURL = "http://db.medsyslab.co.kr:40081" // TEST
+//    private let baseURL = "http://db.medsyslab.co.kr:40081" // TEST
 //    private let baseURL = "http://db.medsyslab.co.kr:40080" // REAL
+    private var baseURL = "https://port-0-webbackend-2rrqq2blmpy5nvs.sel5.cloudtype.app/" // real
+    private var spareURL = "http://db.medsyslab.co.kr:40080/"
     
     public static let shared = NetworkManager()
 
