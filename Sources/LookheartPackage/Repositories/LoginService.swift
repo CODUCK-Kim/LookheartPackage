@@ -9,6 +9,7 @@ import Foundation
 
 @available(iOS 13.0.0, *)
 public class LoginService {
+    public init() {}
     func loginTask(_ email: String, _ password: String) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "empid": email,
