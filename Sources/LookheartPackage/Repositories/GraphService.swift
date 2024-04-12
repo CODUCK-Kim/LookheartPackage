@@ -107,7 +107,7 @@ public class GraphService {
                 return (nil, .noData)
             }
                         
-            var newlineData = bpmData.split(separator: "\n").dropFirst()
+            let newlineData = bpmData.split(separator: "\n").dropFirst()
             guard newlineData.count > 0 else {
                 return (nil, .invalidResponse)
             }

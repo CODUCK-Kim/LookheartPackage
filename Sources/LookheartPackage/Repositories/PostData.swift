@@ -19,7 +19,7 @@ public class PostData {
         ecgData: [Int],
         bpm: Int, writeDateTime: String
     ) async {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "kind": "ecgByteInsert",
             "eq": propEmail,
             "writetime": writeDateTime,
@@ -29,7 +29,7 @@ public class PostData {
         ]
         
         do {
-            let ecgData = try await AlamofireController.shared.alamofireControllerForString(
+            _ = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
                 endPoint: .postEcgData,
                 method: .post)
@@ -56,7 +56,7 @@ public class PostData {
         params.merge(tenSecondData) { (current, _) in current }
         
         do {
-            let tenSecondData = try await AlamofireController.shared.alamofireControllerForString(
+            _ = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
                 endPoint: .postTenSecondData,
                 method: .post)
@@ -78,7 +78,7 @@ public class PostData {
         params.merge(hourlyData) { (current, _) in current }
         
         do {
-            let hourlyData = try await AlamofireController.shared.alamofireControllerForString(
+            _ = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
                 endPoint: .postHourlyData,
                 method: .post)
@@ -114,6 +114,41 @@ public class PostData {
                 return .failer
             }
         } catch {
+            return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    
+    public func postEmergency(
+        _ address: String,
+        _ currentDateTime: String
+    ) async -> NetworkResponse {
+        let params: [String: Any] = [
+            "kind": "arrEcgInsert",
+            "eq": propEmail,
+            "timezone": propTimeZone,
+            "writetime": currentDateTime,
+            "ecgPacket": "",
+            "arrStatus": "",
+            "bodystate": "1",
+            "address": address
+        ]
+        
+        do {
+            let response = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .postArrData,
+                method: .post)
+            
+            print("post Emergency: \(response)")
+            
+            if response.contains("true") {
+                return .success
+            } else {
+                return .failer
+            }
+        } catch {
+            print("post Emergency Error: \(error)")
             return AlamofireController.shared.handleError(error)
         }
     }

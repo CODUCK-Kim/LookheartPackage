@@ -216,7 +216,6 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
     private func checkDupPhoneNumber() {
         Task {
-            
             let response = await authService.getDupPhoneNumber(phone: phoneNumber)
             
             switch response {

@@ -69,7 +69,7 @@ public class ProfileService {
     
     
     public func postUpdateLogout() async {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "kind": "updateDifferTime",
             "eq": propEmail,
             "differtime": "0"
@@ -94,9 +94,7 @@ public class ProfileService {
                 parameters: params,
                 endPoint: .postSetProfile,
                 method: .post)
-            
-            print(params)
-            
+                    
             print("postSignup \(response)")
             
             if response.contains("true") {

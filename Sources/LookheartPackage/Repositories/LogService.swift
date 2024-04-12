@@ -40,7 +40,7 @@ public class LogService {
         action: LogType,
         phone: String? = nil
     ) async {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "eq": propEmail,
             "writetime": propCurrentDateTime,
             "gubun": userType.rawValue,
@@ -60,7 +60,7 @@ public class LogService {
     }
     
     public func sendBleLog(action: LogType) async {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "eq": propEmail,
             "phone": propProfil.phone,
             "writetime": propCurrentDateTime,
