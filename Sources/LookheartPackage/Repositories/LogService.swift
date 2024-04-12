@@ -53,7 +53,7 @@ public class LogService {
                 endPoint: .postLog,
                 method: .post)
             
-            print("sendLog: \(sendLog)")
+            print("\(action.rawValue) Log: \(sendLog)")
         } catch {
             print("sendLog Error: \(error)")
         }
@@ -75,9 +75,9 @@ public class LogService {
                 endPoint: .postBleLog,
                 method: .post)
             
-            print("sendLog: \(sendBleLog)")
+            print("\(action.rawValue) Log: \(sendBleLog)")
         } catch {
-            print("sendLog Error: \(error)")
+            print("sendBleLog Error: \(error)")
         }
     }
 }

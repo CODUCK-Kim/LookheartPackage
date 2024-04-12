@@ -1081,7 +1081,6 @@ public class NetworkManager {
                     arrRetryCount.removeValue(forKey: arrWriteTime)
                     completion(.failure(error))
                 }
-                
             }
         }
     }
