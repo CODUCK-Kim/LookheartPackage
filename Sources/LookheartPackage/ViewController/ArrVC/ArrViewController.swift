@@ -249,9 +249,14 @@ public class ArrViewController : UIViewController {
 //        activityIndicator.startAnimating()
         
         Task {
-            await arrService.getArrList(startDate: startDate, endDate: endDate)
+            let getArrList = await arrService.getArrList(startDate: startDate, endDate: endDate)
+            let data = getArrList.0
+            let response = getArrList.1
+            
+            print(data)
+            print(response)
         }
-        
+
 //        NetworkManager.shared.getArrListToServer(startDate: startDate, endDate: endDate){ [weak self] result in
 //            DispatchQueue.main.async {
 //                self?.activityIndicator.stopAnimating()

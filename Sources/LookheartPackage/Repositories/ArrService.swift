@@ -12,8 +12,7 @@ class ArrService {
     func getArrList(
         startDate: String,
         endDate: String
-    ) async {
-//    ) async -> ([ArrDateEntry]?, NetworkResponse) {
+    ) async -> ([ArrDateEntry]?, NetworkResponse) {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
@@ -26,16 +25,10 @@ class ArrService {
                 endPoint: .getArrListData,
                 method: .get)
             
-            print(arrData)
-//            guard !arrData.contains("result = 0") else {
-//                return (nil, .noData)
-//            }
-//            
-//            return (try JSONDecoder().decode([ArrDateEntry].self, from: arrData), .success)
+            return (arrData, .success)
             
         } catch {
-//            return (nil, AlamofireController.shared.handleError(error))
-            print(error)
+            return (nil, AlamofireController.shared.handleError(error))
         }
     }
 }
