@@ -55,6 +55,7 @@ public class PostData {
         
         params.merge(tenSecondData) { (current, _) in current }
         
+        print(params)
         do {
             let tenSecondData = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
