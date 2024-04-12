@@ -26,7 +26,6 @@ class ArrService {
                 method: .get)
             
             return (arrData, .success)
-            
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }

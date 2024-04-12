@@ -246,42 +246,31 @@ public class ArrViewController : UIViewController {
     
     
     func getArrList(_ email: String, _ startDate: String, _ endDate: String) {
-//        activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
         
         Task {
             let getArrList = await arrService.getArrList(startDate: startDate, endDate: endDate)
             let data = getArrList.0
             let response = getArrList.1
             
-            print(data)
-            print(response)
+            switch response {
+            case .success:
+                for arrDate in data! {
+                    if arrDate.address == nil || arrDate.address == "" { // ARR
+                        self.arrDateArray.append(arrDate.writetime)
+                    } else {    // HEART ATTACK
+                        self.arrDateArray.append(arrDate.writetime)
+                        self.emergencyList[arrDate.writetime] = arrDate.address
+                    }
+                }
+            case .session, .notConnected:
+                toastMessage("serverErr".localized())
+            default:
+                toastMessage("noData".localized())
+            }
+            
+            self.activityIndicator.stopAnimating()
         }
-
-//        NetworkManager.shared.getArrListToServer(startDate: startDate, endDate: endDate){ [weak self] result in
-//            DispatchQueue.main.async {
-//                self?.activityIndicator.stopAnimating()
-//                guard let self = self else { return }
-//                
-//                switch(result){
-//                case .success(let arrDateList):
-//                    for arrDate in arrDateList {
-//                        if arrDate.address == nil || arrDate.address == "" { // ARR
-//                            self.arrDateArray.append(arrDate.writetime)
-//                        } else {    // HEART ATTACK
-//                            self.arrDateArray.append(arrDate.writetime)
-//                            self.emergencyList[arrDate.writetime] = arrDate.address
-//                        }
-//                    }
-//                    self.setArrList()
-//                case .failure(let error):
-//                    self.activityIndicator.stopAnimating()
-//                    
-//                    let errorMessage = NetworkErrorManager.shared.getErrorMessage(error as? NetworkError ?? NetworkError.invalidResponse)
-//                    self.toastMessage(errorMessage)
-//                    
-//                }
-//            }
-//        }
     }
     
     // MARK: - selectArrData
