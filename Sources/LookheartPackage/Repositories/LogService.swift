@@ -9,6 +9,8 @@ import Foundation
 
 @available(iOS 13.0.0, *)
 public class LogService {
+    public static let shared = LogService()
+    
     public init() {}
     
     public enum LogType: String {
