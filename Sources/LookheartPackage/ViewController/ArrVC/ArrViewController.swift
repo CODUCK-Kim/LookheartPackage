@@ -256,7 +256,6 @@ public class ArrViewController : UIViewController {
             switch response {
             case .success:
                 for arrDate in data! {
-                    print(arrDate)
                     if arrDate.address == nil || arrDate.address == "" { // ARR
                         self.arrDateArray.append(arrDate.writetime)
                     } else {    // HEART ATTACK
@@ -264,6 +263,9 @@ public class ArrViewController : UIViewController {
                         self.emergencyList[arrDate.writetime] = arrDate.address
                     }
                 }
+                
+                self.setArrList()
+                
             case .session, .notConnected:
                 toastMessage("serverErr".localized())
             default:
