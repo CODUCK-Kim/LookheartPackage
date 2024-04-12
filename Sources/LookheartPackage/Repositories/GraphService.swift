@@ -115,6 +115,7 @@ public class GraphService {
             let splitData = newlineData.first?.split(separator: "\r\n")
             var parsedRecords = [BpmData]()
             
+            print(splitData)
             if let datalist = splitData {
                 for data in datalist {
                     let fields = data.split(separator: "|")
