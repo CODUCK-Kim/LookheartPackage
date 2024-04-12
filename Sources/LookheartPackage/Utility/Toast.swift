@@ -3,10 +3,9 @@ import UIKit
 import Toast
 
 public class ToastHelper {
-    
-    
     // Singleton instance
     public static let shared = ToastHelper()
+    private var toastContainerTag = 9999
     
     public init() {
         var style = ToastStyle()
@@ -16,9 +15,14 @@ public class ToastHelper {
         ToastManager.shared.isQueueEnabled = true
     }
     
-    
+    private func removeExistingToast(from view: UIView) {
+        if let existingToast = view.viewWithTag(toastContainerTag) {
+            existingToast.removeFromSuperview()
+        }
+    }
     
     public func showChartToast(_ view: UIView, _ message: String, position: CGPoint) {
+        removeExistingToast(from: view)
         
         let toastContainer = UIView(frame: CGRect())
         toastContainer.backgroundColor = UIColor.black.withAlphaComponent(0.6)
@@ -61,6 +65,8 @@ public class ToastHelper {
     }
     
     public func showToast(_ view: UIView, _ message: String) {
+        removeExistingToast(from: view)
+        
             let toastContainer = UIView(frame: CGRect())
             toastContainer.backgroundColor = UIColor.black.withAlphaComponent(0.6)
             toastContainer.layer.cornerRadius = 10
@@ -105,6 +111,7 @@ public class ToastHelper {
         }
     
     public func showToast(_ view: UIView, _ message: String, withDuration: Double, delay: Double, bottomPosition: Bool) {
+        removeExistingToast(from: view)
             let toastContainer = UIView(frame: CGRect())
             toastContainer.backgroundColor = UIColor.black.withAlphaComponent(0.6)
             toastContainer.layer.cornerRadius = 10
