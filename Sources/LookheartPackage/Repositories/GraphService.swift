@@ -107,48 +107,42 @@ public class GraphService {
                 return (nil, .noData)
             }
             
-            print(bpmData)
-            let newlineData = bpmData.split(separator: "\n")
+            var newlineData = bpmData.split(separator: "\n")
             guard newlineData.count > 1 else {
                 return (nil, .invalidResponse)
             }
             
-            print(newlineData)
-            let splitData = newlineData.first?.split(separator: "\r\n")
+            let splitData = newlineData.removeFirst().split(separator: "\r\n")
             var parsedRecords = [BpmData]()
             
-            print(splitData)
-            if let datalist = splitData {
-                for data in datalist {
-                    let fields = data.split(separator: "|")
-                    
-                    if fields.count == 7 {
-                        guard let bpm = Int(fields[4]),
-                              let temp = Double(fields[5]),
-                              let hrv = Int(fields[6]) else {
-                            continue
-                        }
-                        
-                        let dateTime = fields[2].split(separator: " ")
-                        
-                        parsedRecords.append( BpmData(
-                            idx: String(fields[0]),
-                            eq: String(fields[1]),
-                            writeDateTime: String(fields[2]),
-                            writeDate: String(dateTime[0]),
-                            writeTime: String(dateTime[1]),
-                            timezone: String(fields[3]),
-                            bpm: String(bpm),
-                            temp: String(temp),
-                            hrv: String(hrv)
-                        ))
-                    }
-                }
+            for data in splitData {
+                let fields = data.split(separator: "|")
                 
-                return (parsedRecords, .success)
-            } else {
-                return (nil, .failer)
+                if fields.count == 7 {
+                    guard let bpm = Int(fields[4]),
+                          let temp = Double(fields[5]),
+                          let hrv = Int(fields[6]) else {
+                        continue
+                    }
+                    
+                    let dateTime = fields[2].split(separator: " ")
+                    
+                    parsedRecords.append( BpmData(
+                        idx: String(fields[0]),
+                        eq: String(fields[1]),
+                        writeDateTime: String(fields[2]),
+                        writeDate: String(dateTime[0]),
+                        writeTime: String(dateTime[1]),
+                        timezone: String(fields[3]),
+                        bpm: String(bpm),
+                        temp: String(temp),
+                        hrv: String(hrv)
+                    ))
+                }
             }
+            
+            return (parsedRecords, .success)
+
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }
