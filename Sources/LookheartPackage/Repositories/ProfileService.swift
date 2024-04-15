@@ -18,7 +18,7 @@ public class ProfileService {
     }
     
     public func getProfile(id: String) async -> (UserProfile?, NetworkResponse) {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "empid": id
         ]
         

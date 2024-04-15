@@ -31,7 +31,7 @@ public class AlamofireController {
         // GET: User Data
         case getProfile = "msl/Profile"
         case getFindID = "msl/findID?"
-        case getCheckLogin = "msl/CheckLogin"
+        case getCheckLogin = "msl/CheckLogin"   // CheckLogin, Send Firebase Token
         case getCheckDupID = "msl/CheckIDDupe"
         
         // GET: Auth
@@ -39,7 +39,6 @@ public class AlamofireController {
         case getCheckSMS = "mslSMS/checkSMS"
         case getCheckPhoneNumber = "msl/checkPhone?"
         case getAppKey = "msl/appKey?"
-        
         
         
         // POST: HealthData
