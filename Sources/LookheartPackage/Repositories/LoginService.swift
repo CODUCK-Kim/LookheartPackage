@@ -52,6 +52,7 @@ public class LoginService {
                 endPoint: .getAppKey,
                 method: .get)
             
+            print(getAppKey)
             if getAppKey.contains(appKey) {
                 return .success
             } else {
@@ -76,6 +77,7 @@ public class LoginService {
                 endPoint: .postSetProfile,
                 method: .post)
             
+            print(postAppKey)
             if postAppKey.contains("true") {
                 return .success
             } else {
