@@ -3,6 +3,7 @@ import Foundation
 
 // KEY
 public let userEmailKey = "userEmail"
+public let userPassword = "userPassword"
 public let guardianKey = "guardianPhoneNumber"
 public let authLoginKey = "autoLoginFlag"
 public let appKey = "appKey"
