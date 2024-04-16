@@ -76,13 +76,15 @@ public class AlamofireController {
     }
     
     public func test() {
-        ProcessInfo.processInfo.environment.forEach { (key, value) in
-            print("key : \(key), value: \(value)")
-            if key.contains("baseURL") {
-                print(value)
-            }
-            // test
-        }
+      let test = ProcessInfo.processInfo.environment["test"]
+        print(test)
+//        ProcessInfo.processInfo.environment.forEach { (key, value) in
+////            print("key : \(key), value: \(value)")
+//            if key.contains("test") {
+//                print(value)
+//            }
+//            // test
+//        }
     }
     
     @available(iOS 13.0.0, *)
