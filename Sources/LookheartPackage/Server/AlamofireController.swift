@@ -76,8 +76,8 @@ public class AlamofireController {
     }
     
     public func test() {
-//        let test = ProcessInfo.processInfo.environment["test"]
-//          print(test ?? "isEmpty")
+        let test = ProcessInfo.processInfo.environment["test"]
+        print(test ?? "isEmpty")
 //        ProcessInfo.processInfo.environment.forEach { (key, value) in
 ////            print("key : \(key), value: \(value)")
 //            if key.contains("test") {
