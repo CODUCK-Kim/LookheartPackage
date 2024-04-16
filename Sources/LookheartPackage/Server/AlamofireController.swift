@@ -71,9 +71,18 @@ public class AlamofireController {
             .validate(statusCode: 200..<300)
             .serializingData().value
 
+        
         return try JSONDecoder().decode(T.self, from: response)
     }
     
+    public func test() {
+        ProcessInfo.processInfo.environment.forEach { (key, value) in
+            print("key : \(key), value: \(value)")
+            if key.contains("baseURL") {
+                print(value)
+            }
+        }
+    }
     
     @available(iOS 13.0.0, *)
     public func alamofireControllerForString(
