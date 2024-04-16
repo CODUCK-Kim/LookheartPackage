@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 13.0.0, *)
 public class GuardianService {
-    public static let shared = LoginService()
+    public static let shared = GuardianService()
     
     public init() {}
     
