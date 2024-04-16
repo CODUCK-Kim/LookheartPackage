@@ -40,34 +40,6 @@ public class LoginService {
         }
     }
     
-    public func loginGuardian(
-        _ id: String,
-        _ password: String,
-        _ phone: String
-    ) async -> NetworkResponse {
-        let params: [String: Any] = [
-            "empid": id,
-            "pw": password,
-            "phone": phone,
-            "destroy": true
-        ]
-        
-        do {
-            let checkLogin = try await AlamofireController.shared.alamofireControllerForString(
-                parameters: params,
-                endPoint: .getCheckLogin,
-                method: .get)
-            
-            if checkLogin.contains("true") {
-                return .success
-            } else {
-                return .failer
-            }
-        } catch {
-            return AlamofireController.shared.handleError(error)
-        }
-    }
-    
     public func getAppKey(_ appKey: String, _ email: String) async -> NetworkResponse {
         let parameters: [String: Any] = [
             "empid": email
