@@ -47,8 +47,10 @@ public class AlamofireController {
         // GET: Health Data
         case getVersion = "appversion/getVersion"
         case getBpmData = "mslbpm/api_getdata"
+        case getBpmTime = "/mslLast/lastBpmTime"
         case getArrListData = "mslecgarr/arrWritetime?" // List, Data
         case getHourlyData = "mslecgday/day"
+        
         
         // GET: User Data
         case getProfile = "msl/Profile"
@@ -56,11 +58,13 @@ public class AlamofireController {
         case getCheckLogin = "msl/CheckLogin"   // CheckLogin, Send Firebase Token
         case getCheckDupID = "msl/CheckIDDupe"
         
+        
         // GET: Auth
         case getSendSms = "mslSMS/sendSMS"
         case getCheckSMS = "mslSMS/checkSMS"
         case getCheckPhoneNumber = "msl/checkPhone?"
         case getAppKey = "msl/appKey?"
+        
         
         
         // POST: HealthData
