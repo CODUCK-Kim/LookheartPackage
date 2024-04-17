@@ -9,4 +9,3 @@ DerivedData/
 
 # Ignore specific files
 Package.resolved
-/Sources/LookheartPackage/Server/AlamofireController.swift
