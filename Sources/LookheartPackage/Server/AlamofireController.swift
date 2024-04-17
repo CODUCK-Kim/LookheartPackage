@@ -13,12 +13,12 @@ public enum NetworkResponse {
 
 
 public class AlamofireController {
-//    private lazy var baseURL = ProcessInfo.processInfo.environment["TEST_URL"]! as String
-//    private lazy var spareURL = ProcessInfo.processInfo.environment["TEST_SPARE_URL"]! as String
+//    private lazy var baseURL = Bundle.main.object(forInfoDictionaryKey: "Test URL")
+//    private lazy var spareURL = Bundle.main.object(forInfoDictionaryKey: "Test Spare URL")
     
-    private lazy var baseURL = ProcessInfo.processInfo.environment["BASE_URL"]! as String
-    private lazy var spareURL = ProcessInfo.processInfo.environment["SPARE_URL"]! as String
-    //
+    private lazy var baseURL = Bundle.main.object(forInfoDictionaryKey: "Base URL") as! String
+    private lazy var spareURL = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as! String
+
     public static let shared = AlamofireController()
     
     public enum EndPoist: String {
