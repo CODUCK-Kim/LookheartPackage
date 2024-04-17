@@ -26,13 +26,14 @@ public class GuardianService {
         ]
         
         do {
-            let checkLogin = try await AlamofireController.shared.alamofireControllerForString(
+            let response = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
                 endPoint: .getCheckLogin,
                 method: .get)
             
-            print("loginGuardian: \(checkLogin)")
-            if checkLogin.contains("true") {
+            print("loginGuardian: \(response)")
+            
+            if response.contains("true") {
                 return .success
             } else {
                 return .failer
