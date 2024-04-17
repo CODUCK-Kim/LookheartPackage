@@ -20,7 +20,6 @@ public class AlamofireController {
         guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
             fatalError("Base URL not found in Info.plist")
         }
-//        return "http://" + url
         return url
     }()
 
@@ -28,7 +27,7 @@ public class AlamofireController {
         guard let url = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String else {
             fatalError("Spare URL not found in Info.plist")
         }
-        return "https://" + url
+        return url
     }()
 
     public static let shared = AlamofireController()
