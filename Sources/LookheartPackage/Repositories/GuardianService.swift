@@ -22,7 +22,6 @@ public class GuardianService {
             "empid": id,
             "pw": password,
             "phone": phone,
-            "destroy": false
         ]
         
         do {
