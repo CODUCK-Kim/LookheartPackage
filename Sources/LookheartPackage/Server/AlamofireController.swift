@@ -74,7 +74,7 @@ public class AlamofireController {
         endPoint: EndPoist, 
         method: HTTPMethod
     ) async throws -> T {
-        print(baseURL)
+
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
