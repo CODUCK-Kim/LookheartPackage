@@ -11,7 +11,7 @@ import Foundation
 public class ArrService {
     public init() {}
     
-    func getArrList(
+    public func getArrList(
         startDate: String,
         endDate: String
     ) async -> ([ArrDateEntry]?, NetworkResponse) {
@@ -33,7 +33,7 @@ public class ArrService {
         }
     }
     
-    func getArrData(startDate: String) async -> (ArrData?, NetworkResponse) {
+    public func getArrData(startDate: String) async -> (ArrData?, NetworkResponse) {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
