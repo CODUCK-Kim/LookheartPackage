@@ -47,7 +47,7 @@ public class AlamofireController {
         // GET: Health Data
         case getVersion = "appversion/getVersion"
         case getBpmData = "mslbpm/api_getdata"
-        case getBpmTime = "/mslLast/lastBpmTime"
+        case getBpmTime = "mslLast/lastBpmTime"
         case getArrListData = "mslecgarr/arrWritetime?" // List, Data
         case getHourlyData = "mslecgday/day"
         
