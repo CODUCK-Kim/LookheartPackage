@@ -13,6 +13,12 @@ public class GuardianService {
     
     public init() {}
     
+    public struct BpmTime: Codable {
+        public var bpm: Int
+        public var temp: Double
+        public var writetime: String
+    }
+    
     public func loginGuardian(
         _ id: String,
         _ password: String,
@@ -69,6 +75,26 @@ public class GuardianService {
             }
         } catch {
             return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    
+    public func getBpmTime(_ id: String) async -> (BpmTime?, NetworkResponse) {
+        let params: [String: Any] = [
+            "eq": id,
+        ]
+        // {"bpm":58,"writetime":"2024-02-06 12:17:05"}
+        do {
+            let response: BpmTime = try await AlamofireController.shared.alamofireControllerAsync(
+                parameters: params,
+                endPoint: .getBpmTime,
+                method: .get)
+            
+            print("getBpmTime: \(response)")
+            
+            return (response, .success)
+        } catch {
+            return (nil, AlamofireController.shared.handleError(error))
         }
     }
 }
