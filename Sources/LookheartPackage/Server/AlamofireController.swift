@@ -16,7 +16,7 @@ public class AlamofireController {
 //    private lazy var baseURL = Bundle.main.object(forInfoDictionaryKey: "Test URL")
 //    private lazy var spareURL = Bundle.main.object(forInfoDictionaryKey: "Test Spare URL")
     
-    private lazy var baseURL = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String ?? ""
+    private lazy var baseURL = "http://db.medsyslab.co.kr:40080/"
     private lazy var spareURL = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String ?? ""
 
     public static let shared = AlamofireController()
