@@ -8,7 +8,9 @@
 import Foundation
 
 @available(iOS 13.0.0, *)
-class ArrService {
+public class ArrService {
+    public init() {}
+    
     func getArrList(
         startDate: String,
         endDate: String
