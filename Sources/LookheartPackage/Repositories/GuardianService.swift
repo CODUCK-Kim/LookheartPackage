@@ -106,8 +106,6 @@ public class GuardianService {
                 endPoint: .getBpmTime,
                 method: .get)
             
-            print("getBpmTime: \(response)")
-            
             return (response, .success)
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
