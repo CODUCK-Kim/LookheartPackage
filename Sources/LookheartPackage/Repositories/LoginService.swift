@@ -30,6 +30,8 @@ public class LoginService {
                 endPoint: .getCheckLogin,
                 method: .get)
             
+            print("checkLogin: \(checkLogin)")
+            
             if checkLogin.contains("true") || checkLogin.contains("다른"){
                 return .success
             } else {
