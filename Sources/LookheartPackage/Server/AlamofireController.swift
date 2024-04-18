@@ -33,7 +33,8 @@ public class AlamofireController {
         }
         return url
     }()
-
+    
+    
     private lazy var spareURL: String = {
         guard let url = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String else {
             fatalError("Spare URL not found in Info.plist")
@@ -41,6 +42,7 @@ public class AlamofireController {
         return url
     }()
 
+    
     public static let shared = AlamofireController()
     
     public enum EndPoist: String {
