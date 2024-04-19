@@ -28,6 +28,7 @@ public class PostData {
             "ecgPacket": ecgData
         ]
         
+        print("ecgData: \(ecgData)")
         do {
             _ = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
