@@ -19,22 +19,6 @@ public class GuardianService {
         public var writetime: String
     }
     
-    public struct TotalHourlyData {
-        public var step: Int = 0
-        public var distance: Int = 0
-        public var calorie: Int = 0
-        public var activityCal: Int = 0
-        public var arrCnt: Int = 0
-        
-        mutating func updateData(data: TotalHourlyData) {
-            arrCnt += data.arrCnt
-            activityCal += data.activityCal
-            calorie += data.calorie
-            step += data.step
-            distance += data.distance
-        }
-    }
-    
     public func loginGuardian(
         _ id: String,
         _ password: String,
@@ -117,7 +101,7 @@ public class GuardianService {
     public func getHourlyData(
         startDate: String,
         endDate: String
-    ) async -> (TotalHourlyData?, NetworkResponse) {
+    ) async -> (String?, NetworkResponse) {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
@@ -139,35 +123,8 @@ public class GuardianService {
                 return (nil, .invalidResponse)
             }
             
-            let splitData = newlineData.first?.split(separator: "\r\n")
-            var totalHourlyData = TotalHourlyData()
+            return (hourlyData, .success)
             
-            if let splitData = splitData {
-                for data in splitData {
-                    let fields = data.split(separator: "|")
-                    if fields.count == 12 {
-                        guard let step = Int(fields[7]),
-                              let distance = Int(fields[8]),
-                              let cal = Int(fields[9]),
-                              let activityCal = Int(fields[10]),
-                              let arrCnt = Int(fields[11]) else {
-                            continue // Skip this record if any conversions fail
-                        }
-                        
-                        totalHourlyData.updateData(data: TotalHourlyData(
-                            step: step,
-                            distance: distance,
-                            calorie: cal,
-                            activityCal: activityCal,
-                            arrCnt: arrCnt
-                        ))
-                    }
-                }
-                
-                return (totalHourlyData, .success)
-            } else {
-                return (nil, .failer)
-            }
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }

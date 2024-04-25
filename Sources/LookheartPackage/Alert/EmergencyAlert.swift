@@ -63,7 +63,6 @@ public class EmergencyAlert: UIViewController {
     }
 
     private func addViews() {
-        
         func createImage() -> UIImageView {
             let imageView = propCreateUI.imageView(tintColor: UIColor.MY_RED, backgroundColor: .clear, contentMode: .scaleAspectFit).then {
                 let image =  UIImage(named: "summary_bpm")!
