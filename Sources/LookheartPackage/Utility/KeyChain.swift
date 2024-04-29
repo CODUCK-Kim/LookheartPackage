@@ -8,8 +8,8 @@
 import Foundation
 import KeychainSwift
 
-class Keychain {
-    static let shared = Keychain()
+public class Keychain {
+    public static let shared = Keychain()
     
     private let keychain = KeychainSwift()
      
