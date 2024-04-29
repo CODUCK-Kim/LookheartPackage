@@ -947,7 +947,7 @@ class BarChartVC : UIViewController {
         
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
-            make.top.bottom.left.right.equalToSuperview()
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         view.addSubview(barChartView)
