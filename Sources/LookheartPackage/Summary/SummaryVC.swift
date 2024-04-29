@@ -258,7 +258,8 @@ public class SummaryViewController : UIViewController {
         
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
-            make.top.bottom.left.right.equalToSuperview()
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.left.right.equalToSuperview()
         }
         
         // bpm
