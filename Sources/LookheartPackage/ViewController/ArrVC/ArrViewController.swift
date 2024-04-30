@@ -320,7 +320,7 @@ public class ArrViewController : UIViewController {
             idxButtonList.append(idxButton)
             titleButtonList.append(titleButton)
             
-            setButtonConstraint(background, idxButton, idxButton)
+            setButtonConstraint(background, idxButton, titleButton)
         }
         
         if arrDateList.count >= 10 {
