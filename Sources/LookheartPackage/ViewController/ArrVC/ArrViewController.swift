@@ -623,7 +623,9 @@ public class ArrViewController : UIViewController {
     
     @objc func buttonTapped(_ sender: UIButton) {
         
-        print("tag: \(sender.tag), date : \(arrDateArray[sender.tag])")
+        print("tag: \(sender.tag), date : \(arrDateTagArray[sender.tag])")
+        
+        
 //        for (idx, data) in arrDateArray.enumerated() {
 //            print("idx : \(idx), data: \(data)")
 //        }
