@@ -259,7 +259,7 @@ public class ArrViewController : UIViewController {
                     if arrDate.address == nil || arrDate.address == "" { // ARR
                         self.arrDateArray.append(arrDate.writetime)
                     } else {    // HEART ATTACK
-//                        self.arrDateArray.append(arrDate.writetime)
+                        self.arrDateArray.append(arrDate.writetime)
                         self.emergencyList[arrDate.writetime] = arrDate.address
                     }
                 }
@@ -280,13 +280,11 @@ public class ArrViewController : UIViewController {
     func selectArrData(_ startDate: String) {
         activityIndicator.startAnimating()
         
-        print(startDate)
         Task {
             let getArrData = await arrService.getArrData(startDate: startDate)
             let data = getArrData.0
             let response = getArrData.1
             
-            print(getArrData)
             switch response {
             case .success:
                 self.arrChart(data!)
@@ -302,8 +300,9 @@ public class ArrViewController : UIViewController {
         for arrDateArray in arrDateArray {
             var arrIdxButton = UIButton()
             var arrTitleButton = UIButton()
-            let background = UILabel()
-            background.isUserInteractionEnabled = true
+            let background = UILabel().then {
+                $0.isUserInteractionEnabled = true
+            }
             
             arrList.addArrangedSubview(background)
             
@@ -540,8 +539,13 @@ public class ArrViewController : UIViewController {
     }
     
     @objc func buttonTapped(_ sender: UIButton) {
-        selectArrData(arrDateArray[sender.tag - 1])
-        updateButtonColor(sender.tag - 1)
+        
+        for (idx, data) in arrDateArray.enumerated() {
+            print("idx : \(idx), data: \(data)")
+        }
+        print(arrDateArray[sender.tag - 1])
+//        selectArrData(arrDateArray[sender.tag - 1])
+//        updateButtonColor(sender.tag - 1)
     }
     
     func updateButtonColor(_ tag: Int) {
