@@ -52,8 +52,6 @@ public class ArrViewController : UIViewController {
     private var tomorrowMonth:String = ""
     private var tomorrowDay:String = ""
     
-    private var email = ""
-    
     private var arrDateTagArray: [Int : String] = [:]
     
     private var arrDateArray: [String] = []
@@ -242,12 +240,12 @@ public class ArrViewController : UIViewController {
     func arrTable() {
         todayDisplay.text = changeTimeFormat(targetDate, YEAR_FLAG)
         initArray()
-        getArrList(email, targetDate, tomorrowDate)
+        getArrList(targetDate, tomorrowDate)
     }
     
     
     
-    func getArrList(_ email: String, _ startDate: String, _ endDate: String) {
+    func getArrList(_ startDate: String, _ endDate: String) {
         activityIndicator.startAnimating()
         
         Task {
@@ -300,8 +298,8 @@ public class ArrViewController : UIViewController {
 
     func setArrList(arrDateList: [ArrDateEntry]) {
         for (idx, arrDate) in arrDateList.enumerated() {
-            var arrIdxButton = UIButton()
-            var arrTitleButton = UIButton()
+            var idxButton = UIButton()
+            var titleButton = UIButton()
             let background = UILabel().then {
                 $0.isUserInteractionEnabled = true
             }
@@ -311,22 +309,21 @@ public class ArrViewController : UIViewController {
             
             if let address = arrDate.address {
                 // Emergency
-                arrIdxButton = setEmergencyIdxButton("E")
-                arrTitleButton = setEmergencyTitleButton(arrDate.writetime)
-                emergencyIdxButtonList.append(arrIdxButton)
-                emergencyTitleButtonList.append(arrTitleButton)
+                idxButton = setEmergencyIdxButton("E")
+                titleButton = setEmergencyTitleButton(arrDate.writetime)
             } else {
                 // ARR
-                arrIdxButton = setIdxButton(idx)
-                arrTitleButton = setTitleButton(idx, arrDate.writetime)
-                idxButtonList.append(arrIdxButton)
-                titleButtonList.append(arrTitleButton)
+                idxButton = setIdxButton(idx)
+                titleButton = setTitleButton(idx, arrDate.writetime)
             }
             
-            setButtonConstraint(background, arrIdxButton, arrTitleButton)
+            idxButtonList.append(idxButton)
+            titleButtonList.append(titleButton)
+            
+            setButtonConstraint(background, idxButton, idxButton)
         }
         
-        if arrNumber >= 10 {
+        if arrDateList.count >= 10 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.scrollToBottom()
             }
@@ -855,7 +852,7 @@ public class ArrViewController : UIViewController {
             
             todayDisplay.text = changeTimeFormat(targetDate, YEAR_FLAG)
             initArray()
-            getArrList(email, targetDate, tomorrowDate)
+            getArrList(targetDate, tomorrowDate)
             
             fsCalendar.isHidden = true
             chartView.isHidden = false
