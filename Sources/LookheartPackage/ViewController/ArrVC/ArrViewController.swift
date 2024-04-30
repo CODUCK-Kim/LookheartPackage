@@ -17,6 +17,11 @@ public class ArrViewController : UIViewController {
         var arrNumber: Int
     }
     
+    struct ArrDateTagStruct {
+        var writeDateTime: String
+        var emergencyFlag: Bool
+    }
+    
     private let SELECTED_COLOR = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0)
     private let DESELECTED_COLOR = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0)
     private let BLACK_COLOR = UIColor.black
@@ -52,7 +57,7 @@ public class ArrViewController : UIViewController {
     private var tomorrowMonth:String = ""
     private var tomorrowDay:String = ""
     
-    private var arrDateTagArray: [Int : String] = [:]
+    private var arrDateTagDict: [Int : ArrDateTagStruct] = [:]
     
     private var arrDateArray: [String] = []
     private var arrFilePath: [String] = []
@@ -298,25 +303,18 @@ public class ArrViewController : UIViewController {
 
     func setArrList(arrDateList: [ArrDateEntry]) {
         for (idx, arrDate) in arrDateList.enumerated() {
-            var idxButton = UIButton()
-            var titleButton = UIButton()
+            let emergencyFlag = arrDate.address != nil
+            
+            var idxButton = emergencyFlag ? setEmergencyIdxButton("E") : setIdxButton(idx)
+            var titleButton = emergencyFlag ? setEmergencyTitleButton(arrDate.writetime) : setTitleButton(idx, arrDate.writetime)
+            
             let background = UILabel().then {
                 $0.isUserInteractionEnabled = true
             }
             
-            arrDateTagArray[idx] = arrDate.writetime
+            arrDateTagDict[idx] = ArrDateTagStruct(writeDateTime: arrDate.writetime, emergencyFlag: emergencyFlag)
+            
             arrList.addArrangedSubview(background)
-            
-            if let address = arrDate.address {
-                // Emergency
-                idxButton = setEmergencyIdxButton("E")
-                titleButton = setEmergencyTitleButton(arrDate.writetime)
-            } else {
-                // ARR
-                idxButton = setIdxButton(idx)
-                titleButton = setTitleButton(idx, arrDate.writetime)
-            }
-            
             idxButtonList.append(idxButton)
             titleButtonList.append(titleButton)
             
@@ -329,46 +327,6 @@ public class ArrViewController : UIViewController {
             }
         }
     }
-  
-    // 원본
-//    func setArrList() {
-//        for arrDateArray in arrDateArray {
-//            var arrIdxButton = UIButton()
-//            var arrTitleButton = UIButton()
-//            let background = UILabel().then {
-//                $0.isUserInteractionEnabled = true
-//            }
-//            
-//            arrList.addArrangedSubview(background)
-//            
-//            print(arrDateArray)
-//            
-//            if emergencyList[arrDateArray] != nil {
-//                // Emergency
-//                arrIdxButton = setEmergencyIdxButton("E")
-//                arrTitleButton = setEmergencyTitleButton(arrDateArray)
-//                emergencyIdxButtonList.append(arrIdxButton)
-//                emergencyTitleButtonList.append(arrTitleButton)
-//                emergencyNumber += 1
-//            } else {
-//                // ARR
-//                arrIdxButton = setIdxButton(arrNumber)
-//                arrTitleButton = setTitleButton(arrDateArray)
-//                idxButtonList.append(arrIdxButton)
-//                titleButtonList.append(arrTitleButton)
-//                arrNumber += 1
-//            }
-//            
-//            setButtonConstraint(background, arrIdxButton, arrTitleButton)
-//                    
-//        }
-//        
-//        if arrNumber >= 10 {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                self.scrollToBottom()
-//            }
-//        }
-//    }
     
     // MARK: - Chart
     private func arrChart(_ arrData: ArrData) {
@@ -386,8 +344,6 @@ public class ArrViewController : UIViewController {
         stateIsHidden(isHidden: false)
         setState(bodyType: arrData.bodyStatus,
                  arrType: arrData.type)
-        
-//        setPreEcgData(ecgDataConversion, arrData)   // 초기 ECG 데이터 설정
         
         for i in 0...arrData.data.count - 1{
             
@@ -414,31 +370,6 @@ public class ArrViewController : UIViewController {
         chartView.notifyDataSetChanged()
         chartView.moveViewToX(0)
     }
-    
-//    private func setPreEcgData(_ ecgDataConversion: EcgDataConversion, _ arrData: ArrData) {
-//        let preEcgData = findPreEcgData(arrData.preEcgData, arrData.data)
-//        for i in 0...preEcgData.count - 1 {
-//            _ = ecgDataConversion.setPeakData(Int(preEcgData[i]))
-//        }
-//    }
-//    private func findPreEcgData(_ ecgData: [Double], _ arrData: [Double]) -> [Double] {
-//        let checkArrData = arrData.prefix(14)
-//        
-//        var startIndex = 0
-//        var arrIndex = 0
-//        
-//        for index in 0...ecgData.count - 1 {
-//            if ecgData[index] == checkArrData[arrIndex] {    arrIndex += 1   }
-//            else {  arrIndex = 0    }
-//            
-//            if arrIndex == 14 {
-//                startIndex = index - (arrIndex - 1)
-//                break
-//            }
-//        }
-//
-//        return Array(ecgData.suffix(from: startIndex))
-//    }
     
     private func emergencyChart(_ arrDate: String) {
         arrDataEntries = []
@@ -531,6 +462,7 @@ public class ArrViewController : UIViewController {
         }
     }
     
+    
     // MARK: - Arr Button Event
     func setIdxButton(_ idx: Int) -> UIButton {
         let arrIdxButton = UIButton()
@@ -574,82 +506,39 @@ public class ArrViewController : UIViewController {
         return arrTitleButton
     }
     
-    
-    // 원본
-//    func setIdxButton(_ idx: Int) -> UIButton {
-//        let arrIdxButton = UIButton()
-//        
-//        arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-//        arrIdxButton.titleLabel?.textAlignment = .center
-//        
-//        arrIdxButton.setTitle("\(idx)", for: .normal)
-//        arrIdxButton.setTitleColor(.white, for: .normal)
-//        
-//        arrIdxButton.backgroundColor = .black
-//        
-//        arrIdxButton.layer.cornerRadius = 10
-//        arrIdxButton.layer.borderWidth = 3
-//        arrIdxButton.clipsToBounds = true
-//        arrIdxButton.tag = arrNumber
-//        
-//        arrIdxButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-//        
-//        return arrIdxButton
-//    }
-    
-//    func setTitleButton(_ title: String) -> UIButton {
-//        let arrTitleButton = UIButton()
-//        
-//        arrTitleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-//        arrTitleButton.titleLabel?.textAlignment = .center
-//        
-//        arrTitleButton.setTitle("\(changeTimeFormat(title, TIME_FLAG))", for: .normal)
-//        arrTitleButton.setTitleColor(.black, for: .normal)
-//        
-//        arrTitleButton.setBackgroundColor(.white, for: .normal)
-//        
-//        arrTitleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
-//        arrTitleButton.layer.cornerRadius = 10
-//        arrTitleButton.layer.borderWidth = 3
-//        arrTitleButton.tag = arrNumber
-//        
-//        arrTitleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-//        
-//        return arrTitleButton
-//    }
-    
     @objc func buttonTapped(_ sender: UIButton) {
-        if let writeDateTime = arrDateTagArray[sender.tag] {
-            selectArrData(writeDateTime)
-            updateButtonColor(sender.tag)
+        if let arrStruct = arrDateTagDict[sender.tag] {
+            selectArrData(arrStruct.writeDateTime)
+            updateButtonColor(sender.tag, arrStruct.emergencyFlag)
         }
     }
     
-    func updateButtonColor(_ tag: Int) {
+    
+    private func updateButtonColor(_ tag: Int, _ emergencyFlag: Bool) {
         // IDX
         for button in idxButtonList {
             if idxButtonList[tag] == button {
-                button.backgroundColor = SELECTED_COLOR
-                button.layer.borderColor = SELECTED_COLOR.cgColor
+                button.backgroundColor = emergencyFlag ? HEARTATTACK_COLOR : SELECTED_COLOR
+                button.layer.borderColor = emergencyFlag ? HEARTATTACK_COLOR.cgColor : SELECTED_COLOR.cgColor
             } else {
                 button.backgroundColor = BLACK_COLOR
                 button.layer.borderColor = BLACK_COLOR.cgColor
             }
         }
+        
         // TITLE
         for button in titleButtonList {
             if titleButtonList[tag] == button {
-                button.layer.borderColor = SELECTED_COLOR.cgColor
+                button.layer.borderColor = emergencyFlag ? HEARTATTACK_COLOR.cgColor : SELECTED_COLOR.cgColor
             } else {
                 button.layer.borderColor = DESELECTED_COLOR.cgColor
             }
         }
-        
-        allDeSelected(idxList: &emergencyIdxButtonList, titleList: &emergencyTitleButtonList)
     }
     
+    
     // MARK: - Emergency Button Event
-    func setEmergencyIdxButton(_ number: String) -> UIButton {
+    private func setEmergencyIdxButton(_ number: String) -> UIButton {
         let arrIdxButton = UIButton()
         
         arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
@@ -665,12 +554,12 @@ public class ArrViewController : UIViewController {
         arrIdxButton.clipsToBounds = true
         arrIdxButton.tag = emergencyNumber
         
-        arrIdxButton.addTarget(self, action: #selector(emergencyButtonTapped(_:)), for: .touchUpInside)
+        arrIdxButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         
         return arrIdxButton
     }
     
-    func setEmergencyTitleButton(_ title: String) -> UIButton {
+    private func setEmergencyTitleButton(_ title: String) -> UIButton {
         let arrTitleButton = UIButton()
         
         arrTitleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
@@ -686,19 +575,22 @@ public class ArrViewController : UIViewController {
         arrTitleButton.layer.borderWidth = 3
         arrTitleButton.tag = emergencyNumber
         
-        arrTitleButton.addTarget(self, action: #selector(emergencyButtonTapped(_:)), for: .touchUpInside)
+        arrTitleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        
         return arrTitleButton
     }
     
     @objc func emergencyButtonTapped(_ sender: UIButton) {
         emergencyChart(sender.titleLabel?.text ?? "")
-        updateEmergencyButtonColor(sender.tag - 1)
+        updateEmergencyButtonColor(sender.tag)
     }
     
-    func updateEmergencyButtonColor(_ tag: Int) {
+  
+    private func updateEmergencyButtonColor(_ tag: Int) {
         // IDX
-        for button in emergencyIdxButtonList {
-            if emergencyIdxButtonList[tag] == button {
+        
+        for button in idxButtonList {
+            if idxButtonList[tag] == button {
                 button.backgroundColor = HEARTATTACK_COLOR
                 button.layer.borderColor = HEARTATTACK_COLOR.cgColor
             } else {
@@ -717,6 +609,30 @@ public class ArrViewController : UIViewController {
         
         allDeSelected(idxList: &idxButtonList, titleList: &titleButtonList)
     }
+    
+//    func updateEmergencyButtonColor(_ tag: Int) {
+//        // IDX
+//        
+//        for button in emergencyIdxButtonList {
+//            if emergencyIdxButtonList[tag] == button {
+//                button.backgroundColor = HEARTATTACK_COLOR
+//                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
+//            } else {
+//                button.backgroundColor = BLACK_COLOR
+//                button.layer.borderColor = BLACK_COLOR.cgColor
+//            }
+//        }
+//        // TITLE
+//        for button in emergencyTitleButtonList {
+//            if emergencyTitleButtonList[tag] == button {
+//                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
+//            } else {
+//                button.layer.borderColor = DESELECTED_COLOR.cgColor
+//            }
+//        }
+//        
+//        allDeSelected(idxList: &idxButtonList, titleList: &titleButtonList)
+//    }
     
     func allDeSelected(idxList: inout [UIButton], titleList: inout [UIButton]) {
         for button in idxList {
