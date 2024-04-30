@@ -256,12 +256,9 @@ public class ArrViewController : UIViewController {
             switch response {
             case .success:
                 for arrDate in data! {
-                    
                     if arrDate.address == nil || arrDate.address == "" { // ARR
-                        print("arrDate : \(arrDate)")
                         self.arrDateArray.append(arrDate.writetime)
                     } else {    // HEART ATTACK
-                        print("emergency : \(arrDate)")
                         self.arrDateArray.append(arrDate.writetime)
                         self.emergencyList[arrDate.writetime] = arrDate.address
                     }
@@ -310,8 +307,11 @@ public class ArrViewController : UIViewController {
             
             arrList.addArrangedSubview(background)
             
+            print(arrDateArray)
+            
             if emergencyList[arrDateArray] != nil {
                 // Emergency
+                print("Emergency")
                 arrIdxButton = setEmergencyIdxButton("E")
                 arrTitleButton = setEmergencyTitleButton(arrDateArray)
                 emergencyIdxButtonList.append(arrIdxButton)
@@ -319,6 +319,7 @@ public class ArrViewController : UIViewController {
                 emergencyNumber += 1
             } else {
                 // ARR
+                print("ARR")
                 arrIdxButton = setIdxButton(arrNumber)
                 arrTitleButton = setTitleButton(arrDateArray)
                 idxButtonList.append(arrIdxButton)
@@ -541,6 +542,7 @@ public class ArrViewController : UIViewController {
     }
     
     @objc func buttonTapped(_ sender: UIButton) {
+        print(sender.tag)
         selectArrData(arrDateArray[sender.tag - 1])
         updateButtonColor(sender.tag - 1)
     }
