@@ -50,7 +50,7 @@ public class ArrService {
             
             if resultString.count > 500 {
                 let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-
+                print("ecgData: \(ecgData)")
                 let arrData = ArrData.init(
                     idx: "0",
                     writeTime: "0",
@@ -59,7 +59,8 @@ public class ArrService {
                     bodyStatus: self.removeWsAndNl(resultString[2]),
                     type: self.removeWsAndNl(resultString[3]),
                     data: ecgData)
-                
+
+                print("arrData: \(arrData)")
                 return (arrData, .success)
             } else {
                 // emergency
