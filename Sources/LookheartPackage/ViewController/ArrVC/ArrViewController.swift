@@ -256,10 +256,12 @@ public class ArrViewController : UIViewController {
             switch response {
             case .success:
                 for arrDate in data! {
-                    print(arrDate)
+                    
                     if arrDate.address == nil || arrDate.address == "" { // ARR
+                        print("arrDate : \(arrDate)")
                         self.arrDateArray.append(arrDate.writetime)
                     } else {    // HEART ATTACK
+                        print("emergency : \(arrDate)")
                         self.arrDateArray.append(arrDate.writetime)
                         self.emergencyList[arrDate.writetime] = arrDate.address
                     }
