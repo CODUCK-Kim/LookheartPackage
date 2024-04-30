@@ -543,7 +543,7 @@ public class ArrViewController : UIViewController {
         for (idx, data) in arrDateArray.enumerated() {
             print("idx : \(idx), data: \(data)")
         }
-        print(arrDateArray[sender.tag - 1])
+        print("tag: \(sender.tag), date : \(arrDateArray[sender.tag - 1])")
 //        selectArrData(arrDateArray[sender.tag - 1])
 //        updateButtonColor(sender.tag - 1)
     }
