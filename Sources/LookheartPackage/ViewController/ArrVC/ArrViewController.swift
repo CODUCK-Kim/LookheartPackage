@@ -54,9 +54,11 @@ public class ArrViewController : UIViewController {
     
     private var email = ""
     
-    private var arrDateArray:[String] = []
-    private var arrFilePath:[String] = []
-    private var arrDataEntries:[ChartDataEntry] = []
+    private var arrDateTagArray: [Int : String] = [:]
+    
+    private var arrDateArray: [String] = []
+    private var arrFilePath: [String] = []
+    private var arrDataEntries: [ChartDataEntry] = []
     
     private var idxButtonList: [UIButton] = []
     private var titleButtonList: [UIButton] = []
@@ -66,7 +68,7 @@ public class ArrViewController : UIViewController {
     private var emergencyTitleButtonList: [UIButton] = []
     private var emergencyList: [String: String] = [:]
     private var emergencyNumber = 1
-
+    
     private var isArrViewLoaded: Bool = false
     
     private var arrService = ArrService()
@@ -255,17 +257,17 @@ public class ArrViewController : UIViewController {
             
             switch response {
             case .success:
-                for arrDate in data! {
-                    if arrDate.address == nil || arrDate.address == "" { // ARR
-                        self.arrDateArray.append(arrDate.writetime)
-                    } else {    // HEART ATTACK
-                        self.arrDateArray.append(arrDate.writetime)
-                        self.emergencyList[arrDate.writetime] = arrDate.address
-                    }
+                if let arrList = data {
+//                    for arrDate in arrList {
+//                        if arrDate.address == nil || arrDate.address == "" { // ARR
+//                            self.arrDateArray.append(arrDate.writetime)
+//                        } else {    // HEART ATTACK
+//                            self.arrDateArray.append(arrDate.writetime)
+//                            self.emergencyList[arrDate.writetime] = arrDate.address
+//                        }
+//                    }
+                    self.setArrList(arrDateList: arrList)
                 }
-                
-                self.setArrList()
-                
             case .session, .notConnected:
                 toastMessage("serverErr".localized())
             default:
@@ -295,37 +297,33 @@ public class ArrViewController : UIViewController {
             self.activityIndicator.stopAnimating()
         }
     }
-    
-    func setArrList() {
-        for arrDateArray in arrDateArray {
+
+    func setArrList(arrDateList: [ArrDateEntry]) {
+        for (idx, arrDate) in arrDateList.enumerated() {
             var arrIdxButton = UIButton()
             var arrTitleButton = UIButton()
             let background = UILabel().then {
                 $0.isUserInteractionEnabled = true
             }
             
+            arrDateTagArray[idx] = arrDate.writetime
             arrList.addArrangedSubview(background)
             
-            print(arrDateArray)
-            
-            if emergencyList[arrDateArray] != nil {
+            if let address = arrDate.address {
                 // Emergency
                 arrIdxButton = setEmergencyIdxButton("E")
-                arrTitleButton = setEmergencyTitleButton(arrDateArray)
+                arrTitleButton = setEmergencyTitleButton(arrDate.writetime)
                 emergencyIdxButtonList.append(arrIdxButton)
                 emergencyTitleButtonList.append(arrTitleButton)
-                emergencyNumber += 1
             } else {
                 // ARR
-                arrIdxButton = setIdxButton(arrNumber)
-                arrTitleButton = setTitleButton(arrDateArray)
+                arrIdxButton = setIdxButton(idx)
+                arrTitleButton = setTitleButton(idx, arrDate.writetime)
                 idxButtonList.append(arrIdxButton)
                 titleButtonList.append(arrTitleButton)
-                arrNumber += 1
             }
             
             setButtonConstraint(background, arrIdxButton, arrTitleButton)
-                    
         }
         
         if arrNumber >= 10 {
@@ -334,6 +332,46 @@ public class ArrViewController : UIViewController {
             }
         }
     }
+  
+    // 원본
+//    func setArrList() {
+//        for arrDateArray in arrDateArray {
+//            var arrIdxButton = UIButton()
+//            var arrTitleButton = UIButton()
+//            let background = UILabel().then {
+//                $0.isUserInteractionEnabled = true
+//            }
+//            
+//            arrList.addArrangedSubview(background)
+//            
+//            print(arrDateArray)
+//            
+//            if emergencyList[arrDateArray] != nil {
+//                // Emergency
+//                arrIdxButton = setEmergencyIdxButton("E")
+//                arrTitleButton = setEmergencyTitleButton(arrDateArray)
+//                emergencyIdxButtonList.append(arrIdxButton)
+//                emergencyTitleButtonList.append(arrTitleButton)
+//                emergencyNumber += 1
+//            } else {
+//                // ARR
+//                arrIdxButton = setIdxButton(arrNumber)
+//                arrTitleButton = setTitleButton(arrDateArray)
+//                idxButtonList.append(arrIdxButton)
+//                titleButtonList.append(arrTitleButton)
+//                arrNumber += 1
+//            }
+//            
+//            setButtonConstraint(background, arrIdxButton, arrTitleButton)
+//                    
+//        }
+//        
+//        if arrNumber >= 10 {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                self.scrollToBottom()
+//            }
+//        }
+//    }
     
     // MARK: - Chart
     private func arrChart(_ arrData: ArrData) {
@@ -503,7 +541,7 @@ public class ArrViewController : UIViewController {
         arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         arrIdxButton.titleLabel?.textAlignment = .center
         
-        arrIdxButton.setTitle("\(idx)", for: .normal)
+        arrIdxButton.setTitle("\(idx + 1)", for: .normal)
         arrIdxButton.setTitleColor(.white, for: .normal)
         
         arrIdxButton.backgroundColor = .black
@@ -511,14 +549,14 @@ public class ArrViewController : UIViewController {
         arrIdxButton.layer.cornerRadius = 10
         arrIdxButton.layer.borderWidth = 3
         arrIdxButton.clipsToBounds = true
-        arrIdxButton.tag = arrNumber
+        arrIdxButton.tag = idx
         
         arrIdxButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         
         return arrIdxButton
     }
     
-    func setTitleButton(_ title: String) -> UIButton {
+    func setTitleButton(_ idx: Int,_ title: String) -> UIButton {
         let arrTitleButton = UIButton()
         
         arrTitleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
@@ -532,18 +570,63 @@ public class ArrViewController : UIViewController {
         arrTitleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
         arrTitleButton.layer.cornerRadius = 10
         arrTitleButton.layer.borderWidth = 3
-        arrTitleButton.tag = arrNumber
+        arrTitleButton.tag = idx
         
         arrTitleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        
         return arrTitleButton
     }
     
+    
+    // 원본
+//    func setIdxButton(_ idx: Int) -> UIButton {
+//        let arrIdxButton = UIButton()
+//        
+//        arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+//        arrIdxButton.titleLabel?.textAlignment = .center
+//        
+//        arrIdxButton.setTitle("\(idx)", for: .normal)
+//        arrIdxButton.setTitleColor(.white, for: .normal)
+//        
+//        arrIdxButton.backgroundColor = .black
+//        
+//        arrIdxButton.layer.cornerRadius = 10
+//        arrIdxButton.layer.borderWidth = 3
+//        arrIdxButton.clipsToBounds = true
+//        arrIdxButton.tag = arrNumber
+//        
+//        arrIdxButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+//        
+//        return arrIdxButton
+//    }
+    
+//    func setTitleButton(_ title: String) -> UIButton {
+//        let arrTitleButton = UIButton()
+//        
+//        arrTitleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+//        arrTitleButton.titleLabel?.textAlignment = .center
+//        
+//        arrTitleButton.setTitle("\(changeTimeFormat(title, TIME_FLAG))", for: .normal)
+//        arrTitleButton.setTitleColor(.black, for: .normal)
+//        
+//        arrTitleButton.setBackgroundColor(.white, for: .normal)
+//        
+//        arrTitleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
+//        arrTitleButton.layer.cornerRadius = 10
+//        arrTitleButton.layer.borderWidth = 3
+//        arrTitleButton.tag = arrNumber
+//        
+//        arrTitleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+//        
+//        return arrTitleButton
+//    }
+    
     @objc func buttonTapped(_ sender: UIButton) {
         
-        for (idx, data) in arrDateArray.enumerated() {
-            print("idx : \(idx), data: \(data)")
-        }
-        print("tag: \(sender.tag), date : \(arrDateArray[sender.tag - 1])")
+        print("tag: \(sender.tag), date : \(arrDateArray[sender.tag])")
+//        for (idx, data) in arrDateArray.enumerated() {
+//            print("idx : \(idx), data: \(data)")
+//        }
 //        selectArrData(arrDateArray[sender.tag - 1])
 //        updateButtonColor(sender.tag - 1)
     }
@@ -567,6 +650,7 @@ public class ArrViewController : UIViewController {
                 button.layer.borderColor = DESELECTED_COLOR.cgColor
             }
         }
+        
         allDeSelected(idxList: &emergencyIdxButtonList, titleList: &emergencyTitleButtonList)
     }
     
