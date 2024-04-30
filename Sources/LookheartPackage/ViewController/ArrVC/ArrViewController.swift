@@ -622,15 +622,10 @@ public class ArrViewController : UIViewController {
 //    }
     
     @objc func buttonTapped(_ sender: UIButton) {
-        
-        print("tag: \(sender.tag), date : \(arrDateTagArray[sender.tag])")
-        
-        
-//        for (idx, data) in arrDateArray.enumerated() {
-//            print("idx : \(idx), data: \(data)")
-//        }
-//        selectArrData(arrDateArray[sender.tag - 1])
-//        updateButtonColor(sender.tag - 1)
+        if let writeDateTime = arrDateTagArray[sender.tag] {
+            selectArrData(writeDateTime)
+            updateButtonColor(sender.tag)
+        }
     }
     
     func updateButtonColor(_ tag: Int) {
