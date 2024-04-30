@@ -543,6 +543,8 @@ public class ArrViewController : UIViewController {
     
     @objc func buttonTapped(_ sender: UIButton) {
         print(sender.tag)
+        print(arrDateArray[sender.tag - 1])
+        print(arrDateArray)
         selectArrData(arrDateArray[sender.tag - 1])
         updateButtonColor(sender.tag - 1)
     }
