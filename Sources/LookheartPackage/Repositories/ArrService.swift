@@ -81,7 +81,7 @@ public class ArrService {
             "startDate": startDate,
             "endDate": ""
         ]
-        
+        print("startDate: \(startDate)")
         do {
             let emergencyData = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
