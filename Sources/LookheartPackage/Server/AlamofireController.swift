@@ -99,7 +99,6 @@ public class AlamofireController {
         let response = try await AF.request(url, method: method, parameters: parameters, encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
             .validate(statusCode: 200..<300)
             .serializingData().value
-        print(response)
         
         return try JSONDecoder().decode(T.self, from: response)
     }

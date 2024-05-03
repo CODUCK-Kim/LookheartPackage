@@ -270,19 +270,22 @@ public class ArrViewController : UIViewController {
     // MARK: - selectArrData
     func selectArrData(_ startDate: String) {
         activityIndicator.startAnimating()
-        
+  
         Task {
-            let getArrData = await arrService.getArrData(startDate: startDate)
-            let data = getArrData.0
-            let response = getArrData.1
-            
-            switch response {
-            case .success:
-                self.arrChart(data)
-            default:
-                toastMessage("noData".localized())
-            }
+            await arrService.getEmergencyData(startDate: startDate)
         }
+//        Task {
+//            let getArrData = await arrService.getArrData(startDate: startDate)
+//            let data = getArrData.0
+//            let response = getArrData.1
+//            
+//            switch response {
+//            case .success:
+//                self.arrChart(data)
+//            default:
+//                toastMessage("noData".localized())
+//            }
+//        }
     }
 
     private func setArrList(arrDateList: [ArrDateEntry]) {

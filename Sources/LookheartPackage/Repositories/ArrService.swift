@@ -73,4 +73,25 @@ public class ArrService {
     private func removeWsAndNl(_ string: Substring) -> String {
         return string.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+    
+    
+    public func getEmergencyData(startDate: String) async {
+        let parameters: [String: Any] = [
+            "eq": propEmail,
+            "startDate": startDate,
+            "endDate": ""
+        ]
+        
+        do {
+            let emergencyData = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: parameters,
+                endPoint: .getArrListData,
+                method: .get)
+            
+            print("emergencyData: \(emergencyData)")
+
+        } catch {
+            
+        }
+    }
 }
