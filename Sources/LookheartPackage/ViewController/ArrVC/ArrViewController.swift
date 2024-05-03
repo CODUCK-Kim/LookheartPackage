@@ -494,10 +494,11 @@ public class ArrViewController : UIViewController {
     }
     
     @objc func buttonTapped(_ sender: UIButton) {
-        if let arrStruct = arrDateTagDict[sender.tag] {
-            selectArrData(arrStruct.writeDateTime)
-            updateButtonColor(sender.tag, arrStruct.emergencyFlag)
-        }
+        print(arrDateTagDict[sender.tag])
+//        if let arrStruct = arrDateTagDict[sender.tag] {
+//            selectArrData(arrStruct.writeDateTime)
+//            updateButtonColor(sender.tag, arrStruct.emergencyFlag)
+//        }
     }
     
     
