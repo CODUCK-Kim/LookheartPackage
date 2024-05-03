@@ -267,26 +267,22 @@ public class ArrViewController : UIViewController {
         }
     }
     
-    // MARK: - selectArrData
-    func selectArrData(_ startDate: String) {
+    // MARK: - Select Arr Data
+    private func selectArrData(_ dict: ArrDateTagStruct) {
         activityIndicator.startAnimating()
-  
+        
         Task {
-//            await arrService.getEmergencyData(startDate: startDate)
-            let getArrData = await arrService.getArrData(startDate: startDate)
+            let getArrData = await arrService.getArrData(startDate: dict.writeDateTime)
+            let data = getArrData.0
+            let response = getArrData.1
+            
+            switch response {
+            case .success:
+                self.arrChart(data, dict)
+            default:
+                toastMessage("noData".localized())
+            }
         }
-//        Task {
-//            let getArrData = await arrService.getArrData(startDate: startDate)
-//            let data = getArrData.0
-//            let response = getArrData.1
-//            
-//            switch response {
-//            case .success:
-//                self.arrChart(data)
-//            default:
-//                toastMessage("noData".localized())
-//            }
-//        }
     }
 
     private func setArrList(arrDateList: [ArrDateEntry]) {
@@ -317,11 +313,11 @@ public class ArrViewController : UIViewController {
     }
     
     // MARK: - Chart
-    private func arrChart(_ arrData: ArrData?) {
-        activityIndicator.stopAnimating()
-        
+    private func arrChart(_ arrData: ArrData?, _ dict: ArrDateTagStruct) {
         if let arrData = arrData {
             if arrData.data.count < 400 {   return  }
+            
+            activityIndicator.stopAnimating()
             
             let ecgDataConversion = EcgDataConversion()
             let conversionFlag = UserProfileManager.shared.conversionFlag
@@ -330,8 +326,15 @@ public class ArrViewController : UIViewController {
             arrDataEntries = []
             
             stateIsHidden(isHidden: false)
-            setState(bodyType: arrData.bodyStatus,
-                     arrType: arrData.type)
+            
+            if dict.emergencyFlag {
+                if let address = dict.address {
+                    setEmergencyText(location: address)
+                }
+            } else {
+                setState(bodyType: arrData.bodyStatus,
+                         arrType: arrData.type)
+            }
             
             for i in 0...arrData.data.count - 1{
                 if conversionFlag {
@@ -361,28 +364,28 @@ public class ArrViewController : UIViewController {
         }
     }
     
-    private func emergencyChart(_ arrDate: String) {
-        arrDataEntries = []
-        
-        stateIsHidden(isHidden: false)
-        setEmergencyText(state: "profile3_emergency".localized(), location: String(emergencyList[arrDate] ?? "empty"))
-        
-        for i in 0...499 {
-            let arrDataEntry = ChartDataEntry(x: Double(i), y: 0.0)
-            arrDataEntries.append(arrDataEntry)
-        }
-        
-        let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
-        arrChartDataSet.drawCirclesEnabled = false
-        arrChartDataSet.setColor(NSUIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0))
-        arrChartDataSet.mode = .linear
-        arrChartDataSet.drawValuesEnabled = false
-        
-        chartView.data = LineChartData(dataSet: arrChartDataSet)
-        chartView.data?.notifyDataChanged()
-        chartView.notifyDataSetChanged()
-        chartView.moveViewToX(0)
-    }
+//    private func emergencyChart(_ arrDate: String) {
+//        arrDataEntries = []
+//        
+//        stateIsHidden(isHidden: false)
+//        setEmergencyText(state: "profile3_emergency".localized(), location: String(emergencyList[arrDate] ?? "empty"))
+//        
+//        for i in 0...499 {
+//            let arrDataEntry = ChartDataEntry(x: Double(i), y: 0.0)
+//            arrDataEntries.append(arrDataEntry)
+//        }
+//        
+//        let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
+//        arrChartDataSet.drawCirclesEnabled = false
+//        arrChartDataSet.setColor(NSUIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0))
+//        arrChartDataSet.mode = .linear
+//        arrChartDataSet.drawValuesEnabled = false
+//        
+//        chartView.data = LineChartData(dataSet: arrChartDataSet)
+//        chartView.data?.notifyDataChanged()
+//        chartView.notifyDataSetChanged()
+//        chartView.moveViewToX(0)
+//    }
     
     private func setState(bodyType: String, arrType: String){
         arrStateLabel.text = "arrType".localized()
@@ -499,7 +502,7 @@ public class ArrViewController : UIViewController {
     
     @objc func buttonTapped(_ sender: UIButton) {
         if let arrStruct = arrDateTagDict[sender.tag] {
-            selectArrData(arrStruct.writeDateTime)
+            selectArrData(arrStruct)
             updateButtonColor(sender.tag, arrStruct.emergencyFlag)
         }
     }
@@ -581,8 +584,7 @@ public class ArrViewController : UIViewController {
     }
     
     func resetArrList() {
-        for  subview in self.arrList.subviews
-        {
+        for subview in self.arrList.subviews {
             subview.removeFromSuperview()
         }
     }
@@ -594,7 +596,7 @@ public class ArrViewController : UIViewController {
         arrStateLabel.isHidden = isHidden
     }
     
-    func setEmergencyText(state: String, location: String) {
+    private func setEmergencyText(location: String) {
         arrState.text = "\(location)"
         arrStateLabel.text = "emergencyLocation".localized()
         bodyState.isHidden = true

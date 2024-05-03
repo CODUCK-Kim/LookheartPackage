@@ -48,23 +48,24 @@ public class ArrService {
             
             let resultString = arrData[0].ecgpacket.split(separator: ",")
             
+            let emergencyFlag = resultString.count == 500
+            
+            // Arr(504), Emergency(500)
             if resultString.count > 500 {
-                // Arr (count: 504)
-                let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+                let startIdx = emergencyFlag ? 0 : 4
+                let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
                 
                 let arrData = ArrData.init(
                     idx: "0",
                     writeTime: "0",
-                    time: self.removeWsAndNl(resultString[0]),
+                    time: emergencyFlag ? "" : self.removeWsAndNl(resultString[0]),
                     timezone: "0",
-                    bodyStatus: self.removeWsAndNl(resultString[2]),
-                    type: self.removeWsAndNl(resultString[3]),
+                    bodyStatus: emergencyFlag ? "" : self.removeWsAndNl(resultString[2]),
+                    type: emergencyFlag ? "" : self.removeWsAndNl(resultString[3]),
                     data: ecgData)
 
                 return (arrData, .success)
             } else {
-                // Emergency (count: 500)
-                print("emergency: 500")
                 return (nil, .success)
             }
         } catch {
