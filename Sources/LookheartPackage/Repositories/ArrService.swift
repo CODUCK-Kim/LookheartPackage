@@ -51,7 +51,7 @@ public class ArrService {
             let emergencyFlag = resultString.count == 500
             
             // Arr(504), Emergency(500)
-            if resultString.count > 500 {
+            if resultString.count >= 500 {
                 let startIdx = emergencyFlag ? 0 : 4
                 let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
                 
