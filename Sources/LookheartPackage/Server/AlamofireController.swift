@@ -13,34 +13,34 @@ public enum NetworkResponse {
 
 
 public class AlamofireController {
-    private lazy var baseURL: String = {
-        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test URL") as? String else {
-            fatalError("Base URL not found in Info.plist")
-        }
-        return url
-    }()
-
-    private lazy var spareURL: String = {
-        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test Spare URL") as? String else {
-            fatalError("Spare URL not found in Info.plist")
-        }
-        return url
-    }()
-//    
 //    private lazy var baseURL: String = {
-//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
+//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test URL") as? String else {
 //            fatalError("Base URL not found in Info.plist")
 //        }
 //        return url
 //    }()
-//    
-//    
+//
 //    private lazy var spareURL: String = {
-//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String else {
+//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test Spare URL") as? String else {
 //            fatalError("Spare URL not found in Info.plist")
 //        }
 //        return url
 //    }()
+    
+    private lazy var baseURL: String = {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
+            fatalError("Base URL not found in Info.plist")
+        }
+        return url
+    }()
+    
+    
+    private lazy var spareURL: String = {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String else {
+            fatalError("Spare URL not found in Info.plist")
+        }
+        return url
+    }()
 
     
     public static let shared = AlamofireController()
