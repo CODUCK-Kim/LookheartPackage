@@ -134,6 +134,7 @@ public class PostData {
             "address": address
         ]
         
+        print(params)
         do {
             let response = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,

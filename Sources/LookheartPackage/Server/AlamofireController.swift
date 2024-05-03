@@ -121,7 +121,7 @@ public class AlamofireController {
         guard let stringData = String(data: response, encoding: .utf8) else {
             throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
         }
-        print(stringData)
+
         return stringData
     }
     
