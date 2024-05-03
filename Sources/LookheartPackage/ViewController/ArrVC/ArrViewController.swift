@@ -278,12 +278,10 @@ public class ArrViewController : UIViewController {
             
             switch response {
             case .success:
-                self.arrChart(data!)
+                self.arrChart(data)
             default:
                 toastMessage("noData".localized())
             }
-            
-            self.activityIndicator.stopAnimating()
         }
     }
 
@@ -315,46 +313,48 @@ public class ArrViewController : UIViewController {
     }
     
     // MARK: - Chart
-    private func arrChart(_ arrData: ArrData) {
-        
+    private func arrChart(_ arrData: ArrData?) {
         activityIndicator.stopAnimating()
         
-        if arrData.data.count < 400 {   return  }
-        
-        let ecgDataConversion = EcgDataConversion()
-        let conversionFlag = UserProfileManager.shared.conversionFlag
-        
-        var arrDataEntry: ChartDataEntry
-        arrDataEntries = []
-        
-        stateIsHidden(isHidden: false)
-        setState(bodyType: arrData.bodyStatus,
-                 arrType: arrData.type)
-        
-        for i in 0...arrData.data.count - 1{
+        if let arrData = arrData {
+            if arrData.data.count < 400 {   return  }
             
-            if conversionFlag {
-                // Conversion Ecg Data
-                let conversionData = ecgDataConversion.conversionEcgData(arrData.data[i])
-                arrDataEntry = ChartDataEntry(x: Double(i), y: Double(conversionData))
-            } else {
-                // Real Ecg Data
-                arrDataEntry = ChartDataEntry(x: Double(i), y: Double(arrData.data[i]))
+            let ecgDataConversion = EcgDataConversion()
+            let conversionFlag = UserProfileManager.shared.conversionFlag
+            
+            var arrDataEntry: ChartDataEntry
+            arrDataEntries = []
+            
+            stateIsHidden(isHidden: false)
+            setState(bodyType: arrData.bodyStatus,
+                     arrType: arrData.type)
+            
+            for i in 0...arrData.data.count - 1{
+                if conversionFlag {
+                    // Conversion Ecg Data
+                    let conversionData = ecgDataConversion.conversionEcgData(arrData.data[i])
+                    arrDataEntry = ChartDataEntry(x: Double(i), y: Double(conversionData))
+                } else {
+                    // Real Ecg Data
+                    arrDataEntry = ChartDataEntry(x: Double(i), y: Double(arrData.data[i]))
+                }
+            
+                arrDataEntries.append(arrDataEntry)
             }
-        
-            arrDataEntries.append(arrDataEntry)
+            
+            let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
+            arrChartDataSet.drawCirclesEnabled = false
+            arrChartDataSet.setColor(NSUIColor.blue)
+            arrChartDataSet.mode = .linear
+            arrChartDataSet.drawValuesEnabled = false
+            
+            chartView.data = LineChartData(dataSet: arrChartDataSet)
+            chartView.data?.notifyDataChanged()
+            chartView.notifyDataSetChanged()
+            chartView.moveViewToX(0)
+        } else {
+            print("Error arrChart : nil")
         }
-        
-        let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
-        arrChartDataSet.drawCirclesEnabled = false
-        arrChartDataSet.setColor(NSUIColor.blue)
-        arrChartDataSet.mode = .linear
-        arrChartDataSet.drawValuesEnabled = false
-        
-        chartView.data = LineChartData(dataSet: arrChartDataSet)
-        chartView.data?.notifyDataChanged()
-        chartView.notifyDataSetChanged()
-        chartView.moveViewToX(0)
     }
     
     private func emergencyChart(_ arrDate: String) {
@@ -494,11 +494,10 @@ public class ArrViewController : UIViewController {
     }
     
     @objc func buttonTapped(_ sender: UIButton) {
-        print(arrDateTagDict[sender.tag])
-//        if let arrStruct = arrDateTagDict[sender.tag] {
-//            selectArrData(arrStruct.writeDateTime)
-//            updateButtonColor(sender.tag, arrStruct.emergencyFlag)
-//        }
+        if let arrStruct = arrDateTagDict[sender.tag] {
+            selectArrData(arrStruct.writeDateTime)
+            updateButtonColor(sender.tag, arrStruct.emergencyFlag)
+        }
     }
     
     
