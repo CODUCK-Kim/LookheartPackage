@@ -46,7 +46,6 @@ public class ArrService {
                 endPoint: .getArrListData,
                 method: .get)
             
-            print(arrData)
             let resultString = arrData[0].ecgpacket.split(separator: ",")
 
             if resultString.count > 500 {
