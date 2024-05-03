@@ -121,14 +121,18 @@ public class PostData {
     
     public func postEmergency(
         _ address: String,
-        _ currentDateTime: String
+        _ currentDateTime: String,
+        _ ecgData: [Double]
     ) async -> NetworkResponse {
+        let arrArray = ecgData.map { String($0) }
+        let emergencyEcgData = arrArray.joined(separator: ",")
+        
         let params: [String: Any] = [
             "kind": "arrEcgInsert",
             "eq": propEmail,
             "timezone": propTimeZone,
             "writetime": currentDateTime,
-            "ecgPacket": "",
+            "ecgPacket": emergencyEcgData,
             "arrStatus": "",
             "bodystate": "1",
             "address": address
@@ -139,8 +143,6 @@ public class PostData {
                 parameters: params,
                 endPoint: .postArrData,
                 method: .post)
-            
-            print("post Emergency: \(response)")
             
             if response.contains("true") {
                 return .success
