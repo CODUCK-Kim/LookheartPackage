@@ -47,7 +47,8 @@ public class ArrService {
                 method: .get)
             
             let resultString = arrData[0].ecgpacket.split(separator: ",")
-
+            print(resultString)
+            print(resultString.count)
             if resultString.count > 500 {
                 let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
                 

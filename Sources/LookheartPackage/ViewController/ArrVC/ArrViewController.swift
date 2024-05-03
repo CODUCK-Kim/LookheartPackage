@@ -272,7 +272,8 @@ public class ArrViewController : UIViewController {
         activityIndicator.startAnimating()
   
         Task {
-            await arrService.getEmergencyData(startDate: startDate)
+//            await arrService.getEmergencyData(startDate: startDate)
+            let getArrData = await arrService.getArrData(startDate: startDate)
         }
 //        Task {
 //            let getArrData = await arrService.getArrData(startDate: startDate)
