@@ -134,7 +134,7 @@ public class AlamofireController {
                 if let urlError = underlyingError as? URLError, urlError.code == .notConnectedToInternet {
                     return .notConnected
                 } else {
-                    changeURL()
+//                    changeURL()
                     return .session
                 }
             default:

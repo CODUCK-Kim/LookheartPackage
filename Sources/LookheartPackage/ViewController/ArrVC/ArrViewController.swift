@@ -10,16 +10,10 @@ public class ArrViewController : UIViewController {
     private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
     // Image End
     
-    struct FileDataStruct {
-        var hour: Int
-        var minutes: Int
-        var second: Int
-        var arrNumber: Int
-    }
-    
-    struct ArrDateTagStruct {
+    private struct ArrDateTagStruct {
         var writeDateTime: String
         var emergencyFlag: Bool
+        var address: String?
     }
     
     private let SELECTED_COLOR = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0)
@@ -261,14 +255,6 @@ public class ArrViewController : UIViewController {
             switch response {
             case .success:
                 if let arrList = data {
-//                    for arrDate in arrList {
-//                        if arrDate.address == nil || arrDate.address == "" { // ARR
-//                            self.arrDateArray.append(arrDate.writetime)
-//                        } else {    // HEART ATTACK
-//                            self.arrDateArray.append(arrDate.writetime)
-//                            self.emergencyList[arrDate.writetime] = arrDate.address
-//                        }
-//                    }
                     self.setArrList(arrDateList: arrList)
                 }
             case .session, .notConnected:
@@ -301,18 +287,18 @@ public class ArrViewController : UIViewController {
         }
     }
 
-    func setArrList(arrDateList: [ArrDateEntry]) {
+    private func setArrList(arrDateList: [ArrDateEntry]) {
         for (idx, arrDate) in arrDateList.enumerated() {
             let emergencyFlag = arrDate.address != nil
             
-            var idxButton = emergencyFlag ? setEmergencyIdxButton("E") : setIdxButton(idx)
-            var titleButton = emergencyFlag ? setEmergencyTitleButton(arrDate.writetime) : setTitleButton(idx, arrDate.writetime)
+            var idxButton = setIdxButton(idx, emergencyFlag)
+            var titleButton = setTitleButton(idx, arrDate.writetime)
             
             let background = UILabel().then {
                 $0.isUserInteractionEnabled = true
             }
             
-            arrDateTagDict[idx] = ArrDateTagStruct(writeDateTime: arrDate.writetime, emergencyFlag: emergencyFlag)
+            arrDateTagDict[idx] = ArrDateTagStruct(writeDateTime: arrDate.writetime, emergencyFlag: emergencyFlag, address: arrDate.address)
             
             arrList.addArrangedSubview(background)
             idxButtonList.append(idxButton)
@@ -463,14 +449,15 @@ public class ArrViewController : UIViewController {
     }
     
     
-    // MARK: - Arr Button Event
-    func setIdxButton(_ idx: Int) -> UIButton {
+    // MARK: - Button Event
+    func setIdxButton(_ idx: Int, _ flag: Bool) -> UIButton {
         let arrIdxButton = UIButton()
+        let title = flag ? "E" : String(idx + 1)
         
         arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         arrIdxButton.titleLabel?.textAlignment = .center
         
-        arrIdxButton.setTitle("\(idx + 1)", for: .normal)
+        arrIdxButton.setTitle(title, for: .normal)
         arrIdxButton.setTitleColor(.white, for: .normal)
         
         arrIdxButton.backgroundColor = .black
@@ -536,113 +523,6 @@ public class ArrViewController : UIViewController {
         }
     }
     
-    
-    // MARK: - Emergency Button Event
-    private func setEmergencyIdxButton(_ number: String) -> UIButton {
-        let arrIdxButton = UIButton()
-        
-        arrIdxButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        arrIdxButton.titleLabel?.textAlignment = .center
-        
-        arrIdxButton.setTitle("\(number)", for: .normal)
-        arrIdxButton.setTitleColor(.white, for: .normal)
-        
-        arrIdxButton.backgroundColor = .black
-        
-        arrIdxButton.layer.cornerRadius = 10
-        arrIdxButton.layer.borderWidth = 3
-        arrIdxButton.clipsToBounds = true
-        arrIdxButton.tag = emergencyNumber
-        
-        arrIdxButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        
-        return arrIdxButton
-    }
-    
-    private func setEmergencyTitleButton(_ title: String) -> UIButton {
-        let arrTitleButton = UIButton()
-        
-        arrTitleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        arrTitleButton.titleLabel?.textAlignment = .center
-        
-        arrTitleButton.setTitle("\(changeTimeFormat(title, TIME_FLAG))", for: .normal)
-        arrTitleButton.setTitleColor(.black, for: .normal)
-        
-        arrTitleButton.setBackgroundColor(.white, for: .normal)
-        
-        arrTitleButton.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
-        arrTitleButton.layer.cornerRadius = 10
-        arrTitleButton.layer.borderWidth = 3
-        arrTitleButton.tag = emergencyNumber
-        
-        arrTitleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        
-        return arrTitleButton
-    }
-    
-    @objc func emergencyButtonTapped(_ sender: UIButton) {
-        emergencyChart(sender.titleLabel?.text ?? "")
-        updateEmergencyButtonColor(sender.tag)
-    }
-    
-  
-    private func updateEmergencyButtonColor(_ tag: Int) {
-        // IDX
-        
-        for button in idxButtonList {
-            if idxButtonList[tag] == button {
-                button.backgroundColor = HEARTATTACK_COLOR
-                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
-            } else {
-                button.backgroundColor = BLACK_COLOR
-                button.layer.borderColor = BLACK_COLOR.cgColor
-            }
-        }
-        // TITLE
-        for button in emergencyTitleButtonList {
-            if emergencyTitleButtonList[tag] == button {
-                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
-            } else {
-                button.layer.borderColor = DESELECTED_COLOR.cgColor
-            }
-        }
-        
-        allDeSelected(idxList: &idxButtonList, titleList: &titleButtonList)
-    }
-    
-//    func updateEmergencyButtonColor(_ tag: Int) {
-//        // IDX
-//        
-//        for button in emergencyIdxButtonList {
-//            if emergencyIdxButtonList[tag] == button {
-//                button.backgroundColor = HEARTATTACK_COLOR
-//                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
-//            } else {
-//                button.backgroundColor = BLACK_COLOR
-//                button.layer.borderColor = BLACK_COLOR.cgColor
-//            }
-//        }
-//        // TITLE
-//        for button in emergencyTitleButtonList {
-//            if emergencyTitleButtonList[tag] == button {
-//                button.layer.borderColor = HEARTATTACK_COLOR.cgColor
-//            } else {
-//                button.layer.borderColor = DESELECTED_COLOR.cgColor
-//            }
-//        }
-//        
-//        allDeSelected(idxList: &idxButtonList, titleList: &titleButtonList)
-//    }
-    
-    func allDeSelected(idxList: inout [UIButton], titleList: inout [UIButton]) {
-        for button in idxList {
-            button.backgroundColor = BLACK_COLOR
-            button.layer.borderColor = BLACK_COLOR.cgColor
-        }
-        for button in titleList {
-            button.layer.borderColor = DESELECTED_COLOR.cgColor
-        }
-    }
     
     // MARK: -
     func setButtonConstraint(_ background: UILabel, _ arrIdxButton: UIButton, _ arrTitleButton: UIButton) {
