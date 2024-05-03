@@ -47,9 +47,9 @@ public class ArrService {
                 method: .get)
             
             let resultString = arrData[0].ecgpacket.split(separator: ",")
-            print(resultString)
-            print(resultString.count)
+            
             if resultString.count > 500 {
+                // Arr (count: 504)
                 let ecgData = resultString[4...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
                 
                 let arrData = ArrData.init(
@@ -63,7 +63,8 @@ public class ArrService {
 
                 return (arrData, .success)
             } else {
-                // emergency
+                // Emergency (count: 500)
+                print("emergency: 500")
                 return (nil, .success)
             }
         } catch {
