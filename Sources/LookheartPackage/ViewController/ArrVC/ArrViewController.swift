@@ -351,7 +351,7 @@ public class ArrViewController : UIViewController {
             
             let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
             arrChartDataSet.drawCirclesEnabled = false
-            arrChartDataSet.setColor(NSUIColor.blue)
+            arrChartDataSet.setColor(dict.emergencyFlag ? NSUIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0) : NSUIColor.blue)
             arrChartDataSet.mode = .linear
             arrChartDataSet.drawValuesEnabled = false
             
@@ -363,30 +363,7 @@ public class ArrViewController : UIViewController {
             print("Error arrChart : nil")
         }
     }
-    
-//    private func emergencyChart(_ arrDate: String) {
-//        arrDataEntries = []
-//        
-//        stateIsHidden(isHidden: false)
-//        setEmergencyText(state: "profile3_emergency".localized(), location: String(emergencyList[arrDate] ?? "empty"))
-//        
-//        for i in 0...499 {
-//            let arrDataEntry = ChartDataEntry(x: Double(i), y: 0.0)
-//            arrDataEntries.append(arrDataEntry)
-//        }
-//        
-//        let arrChartDataSet = LineChartDataSet(entries: arrDataEntries, label: "Peak")
-//        arrChartDataSet.drawCirclesEnabled = false
-//        arrChartDataSet.setColor(NSUIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0))
-//        arrChartDataSet.mode = .linear
-//        arrChartDataSet.drawValuesEnabled = false
-//        
-//        chartView.data = LineChartData(dataSet: arrChartDataSet)
-//        chartView.data?.notifyDataChanged()
-//        chartView.notifyDataSetChanged()
-//        chartView.moveViewToX(0)
-//    }
-    
+
     private func setState(bodyType: String, arrType: String){
         arrStateLabel.text = "arrType".localized()
         bodyState.text = getBodyType(bodyType)

@@ -26,7 +26,7 @@ public class AlamofireController {
         }
         return url
     }()
-    
+//    
 //    private lazy var baseURL: String = {
 //        guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
 //            fatalError("Base URL not found in Info.plist")
