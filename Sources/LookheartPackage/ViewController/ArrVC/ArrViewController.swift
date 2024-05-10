@@ -339,7 +339,7 @@ public class ArrViewController : UIViewController {
             for i in 0...arrData.data.count - 1{
                 if conversionFlag {
                     // Conversion Ecg Data
-                    let conversionData = ecgDataConversion.conversionEcgData(arrData.data[i])
+                    let conversionData = ecgDataConversion.conversion(arrData.data[i])
                     arrDataEntry = ChartDataEntry(x: Double(i), y: Double(conversionData))
                 } else {
                     // Real Ecg Data
