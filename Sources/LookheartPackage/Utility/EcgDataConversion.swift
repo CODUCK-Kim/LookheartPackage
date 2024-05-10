@@ -3,6 +3,8 @@ import Foundation
 public class EcgDataConversion {
     private var changeEcgData:[Double] = Array(repeating: 512.0, count: 2)
     
+    public init() {}
+    
     public func conversionEcgData(_ ecg: Double) -> Double {
         if propProfil.conversionFlag { return ecg }
         
