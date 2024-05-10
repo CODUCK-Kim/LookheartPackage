@@ -22,6 +22,7 @@ public class EcgDataConversion {
     private var changeEcgData:[Double] = Array(repeating: 512.0, count: 2)
     
     public func conversionEcgData(_ ecg: Double) -> Double {
+        if propProfil.conversionFlag { return ecg }
         
         changeEcgData[1] = changeEcgData[0]
         changeEcgData[0] = ecg
