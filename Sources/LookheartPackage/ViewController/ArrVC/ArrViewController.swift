@@ -289,8 +289,8 @@ public class ArrViewController : UIViewController {
         for (idx, arrDate) in arrDateList.enumerated() {
             let emergencyFlag = arrDate.address != nil
             
-            var idxButton = setIdxButton(idx, emergencyFlag)
-            var titleButton = setTitleButton(idx, arrDate.writetime)
+            let idxButton = setIdxButton(idx, emergencyFlag)
+            let titleButton = setTitleButton(idx, arrDate.writetime)
             
             let background = UILabel().then {
                 $0.isUserInteractionEnabled = true
