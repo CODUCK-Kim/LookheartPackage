@@ -350,7 +350,7 @@ class LineChartVC : UIViewController {
         let chartDataSets = setChartDataSets(entries: entries, type: type)
         setChart(chartData: LineChartData(dataSets: chartDataSets),
                  maximum: 1000,
-                 axisMaximum: chartType == .BPM ? 200 : 900,
+                 axisMaximum: chartType == .BPM ? 200 : 900,    // default: 200, stress: 900
                  axisMinimum: chartType == .BPM ? 40 : 0,
                  timeTable: timeTable)
         
@@ -374,48 +374,8 @@ class LineChartVC : UIViewController {
     }
   
     // Real
-    func setEntries(entries: [String : [ChartDataEntry]], timeTable: [String], dictionary: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
-        let type = chartType == .BPM
-        var resultEntries = entries
-        
-        for i in 0..<timeTable.count {
-            let time = timeTable[i]
-
-            for (date, timeDict) in dictionary {
-                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
-                    // 데이터 존재
-                    let value = type ? Double(bpmDataArray[0].bpm) ?? 0 : Double(bpmDataArray[0].hrv) ?? 0
-                    
-                    calcMinMax(value)
-                    
-                    let entry = ChartDataEntry(x: Double(i), y: value)
-                    resultEntries[date]?.append(entry)
-                }
-            }
-        }
-        return resultEntries
-    }
-    
-    // MARK: - TEST
-//    func setEntries(
-//        entries: [String : [ChartDataEntry]],
-//        timeTable: [String],
-//        dictionary: [String: [String: [BpmData]]]
-//    ) -> [String : [ChartDataEntry]] {
-//        if chartType == .BPM {
-//            return setBpmEntries(entries: entries, timeTable: timeTable, dictionary: dictionary)
-//        } else {
-//            return setStressEntries(entries: entries, timeTable: timeTable, dictionary: dictionary)
-//        }
-//        
-//    }
-    
-    // MARK: - TEST
-//    private func setBpmEntries(
-//        entries: [String : [ChartDataEntry]],
-//        timeTable: [String],
-//        dictionary: [String: [String: [BpmData]]]
-//    ) -> [String : [ChartDataEntry]] {
+//    func setEntries(entries: [String : [ChartDataEntry]], timeTable: [String], dictionary: [String: [String: [BpmData]]]) -> [String : [ChartDataEntry]] {
+//        let type = chartType == .BPM
 //        var resultEntries = entries
 //        
 //        for i in 0..<timeTable.count {
@@ -424,7 +384,7 @@ class LineChartVC : UIViewController {
 //            for (date, timeDict) in dictionary {
 //                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
 //                    // 데이터 존재
-//                    let value = Double(bpmDataArray[0].bpm) ?? 0
+//                    let value = type ? Double(bpmDataArray[0].bpm) ?? 0 : Double(bpmDataArray[0].hrv) ?? 0
 //                    
 //                    calcMinMax(value)
 //                    
@@ -437,35 +397,73 @@ class LineChartVC : UIViewController {
 //    }
     
     // MARK: - TEST
-//    func setStressEntries(
-//        entries: [String : [ChartDataEntry]],
-//        timeTable: [String],
-//        dictionary: [String: [String: [BpmData]]]
-//    ) -> [String : [ChartDataEntry]] {
-//        var resultEntries = entries
-//        var xValue = 0
-//        
-//        for i in 0..<timeTable.count {
-//            let time = timeTable[i]
-//
-//            for (date, timeDict) in dictionary {
-//                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
-//                    // 데이터 존재
-//                    let value = Double(bpmDataArray[0].hrv) ?? 0
-//                    
-//                    if value != 0.0 {
-//                        calcMinMax(value)
-//                        
-//                        let entry = ChartDataEntry(x: Double(xValue), y: value)
-//                        resultEntries[date]?.append(entry)
-//                        
-//                        xValue += 1
-//                    }
-//                }
-//            }
-//        }
-//        return resultEntries
-//    }
+    func setEntries(
+        entries: [String : [ChartDataEntry]],
+        timeTable: [String],
+        dictionary: [String: [String: [BpmData]]]
+    ) -> [String : [ChartDataEntry]] {
+        if chartType == .BPM {
+            return setBpmEntries(entries: entries, timeTable: timeTable, dictionary: dictionary)
+        } else {
+            return setStressEntries(entries: entries, timeTable: timeTable, dictionary: dictionary)
+        }
+        
+    }
+    
+    private func setBpmEntries(
+        entries: [String : [ChartDataEntry]],
+        timeTable: [String],
+        dictionary: [String: [String: [BpmData]]]
+    ) -> [String : [ChartDataEntry]] {
+        var resultEntries = entries
+        
+        for i in 0..<timeTable.count {
+            let time = timeTable[i]
+
+            for (date, timeDict) in dictionary {
+                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
+                    // 데이터 존재
+                    let value = Double(bpmDataArray[0].bpm) ?? 0
+                    
+                    calcMinMax(value)
+                    
+                    let entry = ChartDataEntry(x: Double(i), y: value)
+                    resultEntries[date]?.append(entry)
+                }
+            }
+        }
+        return resultEntries
+    }
+    
+    func setStressEntries(
+        entries: [String : [ChartDataEntry]],
+        timeTable: [String],
+        dictionary: [String: [String: [BpmData]]]
+    ) -> [String : [ChartDataEntry]] {
+        var resultEntries = entries
+        var xValue = 0
+        
+        for i in 0..<timeTable.count {
+            let time = timeTable[i]
+
+            for (date, timeDict) in dictionary {
+                if let bpmDataArray = timeDict[time], !bpmDataArray.isEmpty {
+                    // 데이터 존재
+                    let value = Double(bpmDataArray[0].hrv) ?? 0
+                    
+                    if value != 0.0 {
+                        calcMinMax(value)
+                        
+                        let entry = ChartDataEntry(x: Double(xValue), y: value)
+                        resultEntries[date]?.append(entry)
+                        
+                        xValue += 1
+                    }
+                }
+            }
+        }
+        return resultEntries
+    }
     
     private func groupDataByDate(_ bpmDataArray: [BpmData]) -> [String: [BpmData]] {
         // 날짜별("YYYY-MM-DD")로 데이터 그룹화
