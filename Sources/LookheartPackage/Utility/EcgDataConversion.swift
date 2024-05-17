@@ -6,7 +6,7 @@ public class EcgDataConversion {
     public init() {}
     
     public func conversion(_ ecg: Double) -> Double {
-        if propProfil.conversionFlag { return ecg }
+        if propProfile.conversionFlag { return ecg }
         
         changeEcgData[1] = changeEcgData[0]
         changeEcgData[0] = ecg

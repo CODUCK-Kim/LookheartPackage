@@ -11,27 +11,27 @@ public class UserProfileManager {
     private var bluetoothIdentifier: String = ""
     
     public lazy var genderCalcAge: Double  = {
-        let gender = propProfil.gender == "남자"
+        let gender = propProfile.gender == "남자"
         return gender ? 0.2017 : 0.074
     }()
     
     public lazy var genderCalcWeight: Double  = {
-        let gender = propProfil.gender == "남자"
+        let gender = propProfile.gender == "남자"
         return gender ? 0.1988 : 0.1263
     }()
 
     public lazy var genderCalcBpm: Double  = {
-        let gender = propProfil.gender == "남자"
+        let gender = propProfile.gender == "남자"
         return gender ? 0.6309 : 0.4472
     }()
     
     public lazy var genderCal: Double  = {
-        let gender = propProfil.gender == "남자"
+        let gender = propProfile.gender == "남자"
         return gender ? 55.0969 : 20.4022
     }()
     
     public lazy var avgSize: Double  = {
-        let height = Double(propProfil.height) ?? 170.0
+        let height = Double(propProfile.height) ?? 170.0
         let calcHeight = ((height * 0.37) + (height - 100)) / 2.0
         return calcHeight < 0 ? 10 : calcHeight
     }()

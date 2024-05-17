@@ -26,7 +26,7 @@ public let HEAVY_ARR_TAG = 7, HEAVY_ARR_STATE = "irregular"
 
 
 
-public var propProfil: UserProfileManager {
+public var propProfile: UserProfileManager {
     get {
         return UserProfileManager.shared
     }

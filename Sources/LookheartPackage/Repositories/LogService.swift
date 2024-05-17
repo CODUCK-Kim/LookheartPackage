@@ -62,11 +62,11 @@ public class LogService {
     public func sendBleLog(action: LogType) async {
         let params: [String: Any] = [
             "eq": propEmail,
-            "phone": propProfil.phone,
+            "phone": propProfile.phone,
             "writetime": propCurrentDateTime,
             "timezone": MyDateTime.shared.getTimeZone(),
             "activity": action.rawValue,
-            "serial" : propProfil.bleIdentifier
+            "serial" : propProfile.bleIdentifier
         ]
         
         do {
