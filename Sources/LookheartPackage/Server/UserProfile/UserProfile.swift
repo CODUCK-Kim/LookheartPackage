@@ -18,7 +18,7 @@ public struct UserProfile: Codable {
     var distanceKM: Int
     var calexe: Int
     var cal: Int
-    var alarm_sms: Int  // ecg Flag
+    var alarm_sms: Int  // peak : 0, ecg : 1
     var differtime: Int // 사용 제한 Flag ( 0 : 사용, 1 : 사용 중지 )
     var phone: String?
 }

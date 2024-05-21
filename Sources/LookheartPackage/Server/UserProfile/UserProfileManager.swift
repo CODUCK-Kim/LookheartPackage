@@ -254,13 +254,14 @@ public class UserProfileManager {
     
     
     
-    // Conversion FLAG ( peak(0) : ecg(1) )
+    /// Conversion FLAG
+    /// peak : 0, ecg : 1
     public var conversionFlag: Bool {
         get {
-            return userProfile?.alarm_sms == 0 ? true : false
+            return userProfile?.alarm_sms == 1 ? true : false
         }
         set {
-            userProfile?.alarm_sms = newValue == true ? 0 : 1
+            userProfile?.alarm_sms = newValue ? 1 : 0
         }
     }
 
