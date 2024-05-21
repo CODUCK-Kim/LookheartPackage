@@ -69,6 +69,7 @@ public class ArrViewController : UIViewController {
     private var isArrViewLoaded: Bool = false
     
     private var arrService = ArrService()
+    private let ecgDataConversion = EcgDataConversion()
     
     // MARK: - UI VAR
     private let safeAreaView = UIView()
@@ -318,11 +319,7 @@ public class ArrViewController : UIViewController {
             if arrData.data.count < 400 {   return  }
             
             activityIndicator.stopAnimating()
-            
-            let ecgDataConversion = EcgDataConversion()
-            let conversionFlag = UserProfileManager.shared.conversionFlag
-            
-            var arrDataEntry: ChartDataEntry
+                        
             arrDataEntries = []
             
             stateIsHidden(isHidden: false)
@@ -337,15 +334,8 @@ public class ArrViewController : UIViewController {
             }
             
             for i in 0...arrData.data.count - 1{
-                if conversionFlag {
-                    // Conversion Ecg Data
-                    let conversionData = ecgDataConversion.conversion(arrData.data[i])
-                    arrDataEntry = ChartDataEntry(x: Double(i), y: Double(conversionData))
-                } else {
-                    // Real Ecg Data
-                    arrDataEntry = ChartDataEntry(x: Double(i), y: Double(arrData.data[i]))
-                }
-            
+                let ecgData = ecgDataConversion.conversion(arrData.data[i])
+                let arrDataEntry = ChartDataEntry(x: Double(i), y: Double(ecgData))
                 arrDataEntries.append(arrDataEntry)
             }
             
