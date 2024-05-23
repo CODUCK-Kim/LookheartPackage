@@ -236,4 +236,36 @@ public class ProfileService {
             return (nil, AlamofireController.shared.handleError(error))
         }
     }
+    
+    public func getHourlyData(
+        startDate: String,
+        endDate: String
+    ) async -> (String?, NetworkResponse) {
+        let parameters: [String: Any] = [
+            "eq": propEmail,
+            "startDate": startDate,
+            "endDate": endDate
+        ]
+        
+        do {
+            let hourlyData = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: parameters,
+                endPoint: .getHourlyData,
+                method: .get)
+            
+            guard !hourlyData.contains("result = 0") else {
+                return (nil, .noData)
+            }
+            
+            let newlineData = hourlyData.split(separator: "\n").dropFirst()
+            guard newlineData.count > 0 else {
+                return (nil, .invalidResponse)
+            }
+            
+            return (hourlyData, .success)
+            
+        } catch {
+            return (nil, AlamofireController.shared.handleError(error))
+        }
+    }
 }
