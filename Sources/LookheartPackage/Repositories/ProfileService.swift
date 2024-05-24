@@ -306,11 +306,14 @@ public class ProfileService {
             "startDate": startDate,
             "endDate": endDate
         ]
+        
+        print(parameters)
         do {
             let arrCnt = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .getArrCnt,
-                method: .get)
+                method: .get
+            )
             
             print(arrCnt)
         } catch {
