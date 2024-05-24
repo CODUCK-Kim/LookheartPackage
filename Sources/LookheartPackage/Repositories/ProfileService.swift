@@ -23,7 +23,7 @@ public class ProfileService {
     }
     
     private struct ArrCnt: Codable {
-        let arrCnt: Int
+        let arrCnt: String
     }
     
     private struct Email: Codable {
@@ -322,7 +322,7 @@ public class ProfileService {
                 endPoint: .getArrCnt,
                 method: .get)
             print("arrCnt: \(response)")
-            return response.arrCnt
+            return Int(response.arrCnt) ?? 0
         } catch {
             print(AlamofireController.shared.handleError(error))
             return 0
