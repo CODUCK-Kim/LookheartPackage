@@ -22,6 +22,10 @@ public class ProfileService {
         var arrCnt: Int = 0
     }
     
+    private struct ArrCnt: Codable {
+        let arrCnt: Int
+    }
+    
     private struct Email: Codable {
         let eq: String
     }
@@ -262,7 +266,8 @@ public class ProfileService {
         ]
         
         do {
-            await getArrCnt(startDate: startDate, endDate: endDate)
+            let arrCnt = await getArrCnt(startDate: startDate, endDate: endDate)
+            
             let hourlyData = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .getHourlyData,
@@ -280,9 +285,14 @@ public class ProfileService {
             }
             
             if let parsingData = getParsingHourlyData(hourlyData) {
+                let lastUserHealthData = parsingData.lastUserHealthData
+                var userHealthData = parsingData.userHealthData
+                
+                userHealthData.arrCnt = arrCnt // update arrCnt
+                
                 return (
-                    userHealthData: parsingData.userHealthData, 
-                    lastUserHealthData: parsingData.lastUserHealthData,
+                    userHealthData: userHealthData,
+                    lastUserHealthData: lastUserHealthData,
                     response: .success
                 )
             } else {
@@ -299,32 +309,31 @@ public class ProfileService {
     private func getArrCnt(
         startDate: String,
         endDate: String
-    ) async {
-//    ) async -> Int? {
+    ) async -> Int {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
             "endDate": endDate
         ]
         
-        print(parameters)
         do {
-            let arrCnt = try await AlamofireController.shared.alamofireControllerForString(
+            let response: ArrCnt = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
                 endPoint: .getArrCnt,
-                method: .get
-            )
-            
-            print(arrCnt)
+                method: .get)
+            print("arrCnt: \(response)")
+            return response.arrCnt
         } catch {
             print(AlamofireController.shared.handleError(error))
-//            return nil
+            return 0
         }
     }
     
-    private func getParsingHourlyData(
-        _ data: String?
-    ) -> (userHealthData: UserHealthData, lastUserHealthData: UserHealthData)? {
+    private func getParsingHourlyData(_ data: String?
+    ) -> (
+        userHealthData: UserHealthData,
+        lastUserHealthData: UserHealthData
+    )? {
         if let hourlyData = data {
             var userHealthData = UserHealthData()
             var lastUserHealthData = UserHealthData()
