@@ -13,6 +13,15 @@ public class ProfileService {
     
     public init() {}
     
+    public struct UserHealthData {
+        var hour: Int? = nil
+        var calorie: Int = 0
+        var activityCalorie: Int = 0
+        var step: Int = 0
+        var distance: Int = 0
+        var arrCnt: Int = 0
+    }
+    
     private struct Email: Codable {
         let eq: String
     }
@@ -237,10 +246,15 @@ public class ProfileService {
         }
     }
     
-    public func getHourlyData(
+    
+    public func getUserHealthData(
         startDate: String,
         endDate: String
-    ) async -> (String?, NetworkResponse) {
+    ) async -> (
+        userHealthData: UserHealthData,
+        lastUserHealthData: UserHealthData,
+        response: NetworkResponse
+    )? {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
@@ -254,18 +268,80 @@ public class ProfileService {
                 method: .get)
             
             guard !hourlyData.contains("result = 0") else {
-                return (nil, .noData)
+                print("getUserHealthData noData")
+                return nil
             }
             
             let newlineData = hourlyData.split(separator: "\n").dropFirst()
             guard newlineData.count > 0 else {
-                return (nil, .invalidResponse)
+                print("getUserHealthData invalidResponse")
+                return nil
             }
             
-            return (hourlyData, .success)
+            if let parsingData = getParsingHourlyData(hourlyData) {
+                return (
+                    userHealthData: parsingData.userHealthData, 
+                    lastUserHealthData: parsingData.lastUserHealthData,
+                    response: .success
+                )
+            } else {
+                print("getUserHealthData parsingData Err")
+                return nil
+            }
             
         } catch {
-            return (nil, AlamofireController.shared.handleError(error))
+            print(AlamofireController.shared.handleError(error))
+            return nil
         }
+    }
+    
+    private func getParsingHourlyData(
+        _ data: String?
+    ) -> (userHealthData: UserHealthData, lastUserHealthData: UserHealthData)? {
+        if let hourlyData = data {
+            var userHealthData = UserHealthData()
+            var lastUserHealthData = UserHealthData()
+            
+            let newlineData = hourlyData.split(separator: "\n").dropFirst()
+            guard newlineData.count > 0 else {
+                return nil
+            }
+            
+            let splitData = newlineData.first?.split(separator: "\r\n")
+            
+            if let splitData = splitData {
+                for data in splitData {
+                    let fields = data.split(separator: "|")
+                    if fields.count == 12 {
+                        guard let hour = Int(fields[6]),
+                              let step = Int(fields[7]),
+                              let distance = Int(fields[8]),
+                              let calorie = Int(fields[9]),
+                              let activityCalorie = Int(fields[10]),
+                              let arrCnt = Int(fields[11]) else {
+                            continue // Skip this record if any conversions fail
+                        }
+                        
+                        userHealthData.calorie += calorie
+                        userHealthData.activityCalorie += activityCalorie
+                        userHealthData.step += step
+                        userHealthData.distance += distance
+                        userHealthData.arrCnt += arrCnt
+                        
+                        lastUserHealthData = UserHealthData(
+                            hour: hour,
+                            calorie: calorie,
+                            activityCalorie: activityCalorie,
+                            step: step,
+                            distance: distance,
+                            arrCnt:  arrCnt
+                        )
+                    }
+                }
+                return (userHealthData: userHealthData, lastUserHealthData: lastUserHealthData)
+            }
+        }
+        
+        return nil
     }
 }
