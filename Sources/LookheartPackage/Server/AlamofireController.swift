@@ -51,6 +51,7 @@ public class AlamofireController {
         case getBpmData = "mslbpm/api_getdata"
         case getBpmTime = "mslLast/lastBpmTime"
         case getArrListData = "mslecgarr/arrWritetime?" // List, Data
+        case getArrCnt = "mslecgarr/arrCount?" // Cnt
         case getHourlyData = "mslecgday/day"
         
         

@@ -262,6 +262,7 @@ public class ProfileService {
         ]
         
         do {
+            await getArrCnt(startDate: startDate, endDate: endDate)
             let hourlyData = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .getHourlyData,
@@ -292,6 +293,29 @@ public class ProfileService {
         } catch {
             print(AlamofireController.shared.handleError(error))
             return nil
+        }
+    }
+    
+    private func getArrCnt(
+        startDate: String,
+        endDate: String
+    ) async {
+//    ) async -> Int? {
+        let parameters: [String: Any] = [
+            "eq": propEmail,
+            "startDate": startDate,
+            "endDate": endDate
+        ]
+        do {
+            let arrCnt = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: parameters,
+                endPoint: .getArrCnt,
+                method: .get)
+            
+            print(arrCnt)
+        } catch {
+            print(AlamofireController.shared.handleError(error))
+//            return nil
         }
     }
     
