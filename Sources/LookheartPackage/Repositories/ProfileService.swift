@@ -256,8 +256,7 @@ public class ProfileService {
         endDate: String
     ) async -> (
         userHealthData: UserHealthData,
-        lastUserHealthData: UserHealthData,
-        response: NetworkResponse
+        lastUserHealthData: UserHealthData
     )? {
         let parameters: [String: Any] = [
             "eq": propEmail,
@@ -292,8 +291,7 @@ public class ProfileService {
                 
                 return (
                     userHealthData: userHealthData,
-                    lastUserHealthData: lastUserHealthData,
-                    response: .success
+                    lastUserHealthData: lastUserHealthData
                 )
             } else {
                 print("getUserHealthData parsingData Err")
