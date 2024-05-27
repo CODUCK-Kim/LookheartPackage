@@ -14,12 +14,12 @@ public class ProfileService {
     public init() {}
     
     public struct UserHealthData {
-        var hour: Int? = nil
-        var calorie: Int = 0
-        var activityCalorie: Int = 0
-        var step: Int = 0
-        var distance: Int = 0
-        var arrCnt: Int = 0
+        public var hour: Int? = nil
+        public var calorie: Int = 0
+        public var activityCalorie: Int = 0
+        public var step: Int = 0
+        public var distance: Int = 0
+        public var arrCnt: Int = 0
     }
     
     private struct ArrCnt: Codable {
