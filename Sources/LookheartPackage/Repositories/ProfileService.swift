@@ -14,7 +14,7 @@ public class ProfileService {
     public init() {}
     
     public struct UserHealthData {
-        public var hour: String? = nil
+        public var hour: Int? = nil
         public var calorie: Int = 0
         public var activityCalorie: Int = 0
         public var step: Int = 0
@@ -347,15 +347,14 @@ public class ProfileService {
                 for data in splitData {
                     let fields = data.split(separator: "|")
                     if fields.count == 12 {
-                        guard let step = Int(fields[7]),
+                        guard let prevHour = Int(fields[6]),
+                              let step = Int(fields[7]),
                               let distance = Int(fields[8]),
                               let calorie = Int(fields[9]),
                               let activityCalorie = Int(fields[10]),
                               let arrCnt = Int(fields[11]) else {
                             continue // Skip this record if any conversions fail
                         }
-                        let prevHour = String(fields[6])
-                        
                         userHealthData.calorie += calorie
                         userHealthData.activityCalorie += activityCalorie
                         userHealthData.step += step
