@@ -4,9 +4,11 @@ import UIKit
 public extension UIColor {
     static let MY_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
     static let MY_PINK = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.5)
+    static let MY_LIGHT_PINK = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.3)
     static let MY_RED_BORDER = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
     
     static let MY_BLUE = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0)
+    static let MY_LIGHT_BLUE = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.5)
     static let MY_SKY = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.3)
     static let MY_BLUE_BORDER = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.6)
 
