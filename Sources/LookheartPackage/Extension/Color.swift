@@ -3,6 +3,7 @@ import UIKit
 
 public extension UIColor {
     static let MY_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
+    static let MY_LIGHT_RED = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.7)
     static let MY_PINK = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.5)
     static let MY_LIGHT_PINK = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 0.3)
     static let MY_RED_BORDER = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
