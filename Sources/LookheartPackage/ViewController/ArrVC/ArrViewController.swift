@@ -637,7 +637,6 @@ public class ArrViewController : UIViewController {
     
     // MARK: - addViews
     private func addViews() {
-        
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
