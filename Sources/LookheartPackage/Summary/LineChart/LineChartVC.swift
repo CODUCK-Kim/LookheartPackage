@@ -350,7 +350,7 @@ class LineChartVC : UIViewController {
         let chartDataSets = setChartDataSets(entries: entries, type: type)
         setChart(chartData: LineChartData(dataSets: chartDataSets),
                  maximum: 1000,
-                 axisMaximum: chartType == .BPM ? 200 : 900,    // default: 200, stress: 900
+                 axisMaximum: 200,    // default: 200, stress: 900, chartType == .BPM ? 200 : 900
                  axisMinimum: chartType == .BPM ? 40 : 0,
                  timeTable: timeTable)
         
