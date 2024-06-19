@@ -14,6 +14,7 @@ public extension UIColor {
     static let MY_BLUE_BORDER = UIColor(red: 11/255, green: 86/255, blue: 242/255, alpha: 0.6)
 
     static let MY_GREEN = UIColor(red: 226/255, green: 251/255, blue: 196/255, alpha: 1.0)
+    static let MY_LIGHT_GREEN = UIColor(red: 91/255, green: 198/255, blue: 112/255, alpha: 1.0)
     static let MY_GREEN_BORDER = UIColor(red: 181/255, green: 244/255, blue: 100/255, alpha: 1.0)
     static let MY_GREEN_TEXT = UIColor(red: 118/255, green: 203/255, blue: 14/255, alpha: 1.0)
     
