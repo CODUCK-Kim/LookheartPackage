@@ -59,7 +59,35 @@ public class MyAlert {
         viewController.present(alert, animated: true, completion: {})
     }
     
-    
+    public func basicTextFieldAlert(
+        title: String, body: String, ok: String, cancel: String, holder: String,
+        viewController: UIViewController,
+        okCompletion: @escaping (String) -> Void,
+        cancelCompletion: @escaping () -> Void
+    ) {
+        let alertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
+
+        // 텍스트 필드
+        alertController.addTextField { textField in
+            textField.placeholder = holder
+        }
+
+        // 확인 버튼
+        let confirmAction = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+            if let text = alertController.textFields?.first?.text {
+                okCompletion(text)
+            }
+        }
+
+        // 취소 버튼
+        let cancelAction = UIAlertAction(title: "reject".localized(), style: .cancel) { _ in
+            cancelCompletion()
+        }
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        viewController.present(alertController, animated: true)
+    }
     
     
     public func basicPasswordAlert(
@@ -89,4 +117,6 @@ public class MyAlert {
         alertController.addAction(cancelAction)
         viewController.present(alertController, animated: true)
     }
+
+    
 }
