@@ -73,14 +73,14 @@ public class MyAlert {
         }
 
         // 확인 버튼
-        let confirmAction = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+        let confirmAction = UIAlertAction(title: ok, style: .default) { _ in
             if let text = alertController.textFields?.first?.text {
                 okCompletion(text)
             }
         }
 
         // 취소 버튼
-        let cancelAction = UIAlertAction(title: "reject".localized(), style: .cancel) { _ in
+        let cancelAction = UIAlertAction(title: cancel, style: .cancel) { _ in
             cancelCompletion()
         }
         
