@@ -70,6 +70,8 @@ public class MyAlert {
         // 텍스트 필드
         alertController.addTextField { textField in
             textField.placeholder = holder
+            textField.autocorrectionType = .no
+            textField.spellCheckingType = .no
         }
 
         // 확인 버튼
