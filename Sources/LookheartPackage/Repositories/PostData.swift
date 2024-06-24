@@ -154,30 +154,4 @@ public class PostData {
             return AlamofireController.shared.handleError(error)
         }
     }
-    
-    
-    public func postExercise(exerciseData: [String: Any]) async -> NetworkResponse {
-        var params: [String: Any] = [
-            "eq": propEmail
-        ]
-        
-        params.merge(exerciseData) { (current, _) in current }
-        
-        do {
-            let data = try await AlamofireController.shared.alamofireControllerForMongo(
-                parameters: params,
-                endPoint: .mongo,
-                method: .post)
-            
-            print("send mongo data: \(data)")
-            
-            if data.contains("true") {
-                return .success
-            } else {
-                return .failer
-            }
-        } catch {
-            return AlamofireController.shared.handleError(error)
-        }
-    }
 }
