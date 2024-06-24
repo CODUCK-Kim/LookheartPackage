@@ -20,7 +20,7 @@ public struct ExerciseList: Decodable {
 }
 
 @available(iOS 13.0.0, *)
-class ExerciseService {
+public class ExerciseService {
     
     public init() {}
     
