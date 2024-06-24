@@ -27,6 +27,13 @@ public class AlamofireController {
         return url
     }()
     
+    private lazy var mongoURL: String = {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "Mongo URL") as? String else {
+            fatalError("Mongo URL not found in Info.plist")
+        }
+        return url
+    }()
+    
 //    private lazy var baseURL: String = {
 //        guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
 //            fatalError("Base URL not found in Info.plist")
@@ -83,6 +90,8 @@ public class AlamofireController {
         // POST: Log
         case postLog = "app_log/api_getdata"
         case postBleLog = "app_ble/api_getdata"
+        
+        case mongo = "exercise/create"
     }
     
     
@@ -104,6 +113,7 @@ public class AlamofireController {
         return try JSONDecoder().decode(T.self, from: response)
     }
     
+    
     @available(iOS 13.0.0, *)
     public func alamofireControllerForString(
         parameters: [String: Any],
@@ -111,6 +121,29 @@ public class AlamofireController {
         method: HTTPMethod
     ) async throws -> String {
         guard let url = URL(string: baseURL + endPoint.rawValue) else {
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
+        }
+            
+        let response = try await AF.request(url, method: method, parameters: parameters,
+                                            encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
+            .validate(statusCode: 200..<300)
+            .serializingData().value
+        
+        guard let stringData = String(data: response, encoding: .utf8) else {
+            throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
+        }
+
+        return stringData
+    }
+    
+    
+    @available(iOS 13.0.0, *)
+    public func alamofireControllerForMongo(
+        parameters: [String: Any],
+        endPoint: EndPoist,
+        method: HTTPMethod
+    ) async throws -> String {
+        guard let url = URL(string: mongoURL + endPoint.rawValue) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
             
