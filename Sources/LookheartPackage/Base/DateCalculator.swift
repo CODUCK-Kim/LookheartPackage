@@ -8,7 +8,7 @@
 import Foundation
 
 
-class DateCalculator {
+public class DateCalculator {
     public enum DateTimeType {
         case date; case time; case dateTime
     }
@@ -17,7 +17,7 @@ class DateCalculator {
     private let calendar: Calendar
     
     
-    init() {
+    public init() {
         self.dateFormatter = DateFormatter()
         self.dateFormatter.dateFormat = "yyyy-MM-dd"
         self.calendar = Calendar.current
