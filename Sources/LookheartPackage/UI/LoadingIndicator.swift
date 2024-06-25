@@ -5,7 +5,7 @@ import UIKit
 public class LoadingIndicator {
     private var activityIndicator: UIActivityIndicatorView?
 
-    private init() {
+    public init() {
         
     }
 
