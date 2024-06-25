@@ -70,7 +70,7 @@ public class ExerciseService {
                 mongo: true
             )
             
-            print("exerciseList: \(exerciseList)")
+//            print("exerciseList: \(exerciseList)")
             
             return (exerciseList, .success)
         } catch {

@@ -46,9 +46,9 @@ public class DateCalculator {
     
     public func dateCalculate(
         _ date: String,
-        _ day: Int = 1,
-        _ shouldAdd: Bool = true,
-        _ type: Calendar.Component = .day
+        _ day: Int,
+        _ shouldAdd: Bool,
+        _ type: Calendar.Component
     ) -> String {
         dateFormatter.dateFormat = getFormatter(.date)
         
