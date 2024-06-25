@@ -2,13 +2,13 @@
 //  File.swift
 //  
 //
-//  Created by 정연호 on 2024/01/09.
+//  Created by KHJ on 2024/01/09.
 //
 
 import Foundation
 
 public class MyDateTime {
-    
+
     public enum DateType {
         case DATE
         case TIME
@@ -86,7 +86,14 @@ public class MyDateTime {
         return date
     }
     
-    public func dateCalculate(_ date: String, _ day: Int, _ shouldAdd: Bool, _ type: Calendar.Component) -> String {
+    public func dateCalculate(
+        _ date: String,
+        _ day: Int,
+        _ shouldAdd: Bool,
+        _ type: Calendar.Component
+    ) -> String {
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         guard let inputDate = dateFormatter.date(from: date) else { return date }
         
         let dayValue = shouldAdd ? day : -day
