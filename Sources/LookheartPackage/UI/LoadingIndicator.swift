@@ -3,10 +3,11 @@ import UIKit
 
 @available(iOS 13.0, *)
 public class LoadingIndicator {
-    public static let shared = LoadingIndicator()
     private var activityIndicator: UIActivityIndicatorView?
 
-    private init() {}
+    private init() {
+        
+    }
 
     public func show(in view: UIView) {
         DispatchQueue.main.async {
