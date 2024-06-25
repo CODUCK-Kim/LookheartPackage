@@ -1,0 +1,65 @@
+//
+//  DateCalculator.swift
+//
+//
+//  Created by KHJ on 6/25/24.
+//
+
+import Foundation
+
+
+class DateCalculator {
+    public enum DateTimeType {
+        case date; case time; case dateTime
+    }
+    
+    private let dateFormatter: DateFormatter
+    private let calendar: Calendar
+    
+    
+    init() {
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.dateFormat = "yyyy-MM-dd"
+        self.calendar = Calendar.current
+    }
+    
+    
+    public func getCurrentDateTime(_ dateType : DateTimeType ) -> String {
+        let now = Date()
+        
+        dateFormatter.dateFormat = getFormatter(dateType)
+        
+        return dateFormatter.string(from: now)
+    }
+    
+    
+    public func getFormatter(_ dateTimeType : DateTimeType) -> String {
+        switch (dateTimeType) {
+        case .dateTime:
+            return "yyyy-MM-dd HH:mm:ss"
+        case .date:
+            return "yyyy-MM-dd"
+        case .time:
+            return "HH:mm:ss"
+        }
+    }
+    
+    public func dateCalculate(
+        _ date: String,
+        _ day: Int = 1,
+        _ shouldAdd: Bool = true,
+        _ type: Calendar.Component = .day
+    ) -> String {
+        dateFormatter.dateFormat = getFormatter(.date)
+        
+        guard let inputDate = dateFormatter.date(from: date) else { return date }
+        
+        let dayValue = shouldAdd ? day : -day
+        
+        if let calcDate = calendar.date(byAdding: type, value: dayValue, to: inputDate) {
+            return dateFormatter.string(from: calcDate)
+        }
+        
+        return date
+    }
+}
