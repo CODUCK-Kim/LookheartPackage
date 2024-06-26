@@ -82,7 +82,7 @@ public class ExerciseService {
         kind: String,
         startDate: String,
         endDate: String
-    ) async -> ([String]?, NetworkResponse) {
+    ) async -> (data: [String]?, response: NetworkResponse) {
         let params: [String: Any] = [
             "id": propEmail,
             "startDate": startDate,
