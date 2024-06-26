@@ -63,22 +63,16 @@ public class ExerciseService {
         ]
         
         do {
-//            let exerciseList: [ExerciseList] = try await AlamofireController.shared.alamofireControllerAsync(
-//                parameters: params,
-//                endPoint: .getExerciseList,
-//                method: .get,
-//                mongo: true
-//            )
-            let exerciseList  = try await AlamofireController.shared.alamofireControllerForString (
+            let exerciseList: [ExerciseList] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: params,
                 endPoint: .getExerciseList,
                 method: .get,
                 mongo: true
             )
             
-            print("exerciseList: \(exerciseList)")
-                return (nil, .success)
-//            return (exerciseList, .success)
+//            print("exerciseList: \(exerciseList)")
+            
+            return (exerciseList, .success)
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }
