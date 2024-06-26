@@ -52,6 +52,34 @@ public class ExerciseService {
     }
     
     
+    public func deleteExercise(exerciseData: [String: Any]) async -> NetworkResponse {
+        var params: [String: Any] = [
+            "eq": propEmail
+        ]
+        
+        params.merge(exerciseData) { (current, _) in current }
+        
+        do {
+            let data = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .deleteExerciseData,
+                method: .post,
+                mongo: true
+            )
+            
+            print("delete Exercise data: \(data)")
+            
+            if data.contains("true") {
+                return .success
+            } else {
+                return .failer
+            }
+        } catch {
+            return AlamofireController.shared.handleError(error)
+        }
+    }
+    
+    
     public func getExerciseList(
         startDate: String,
         endDate: String

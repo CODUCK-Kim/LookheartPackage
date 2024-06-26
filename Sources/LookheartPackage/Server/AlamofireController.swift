@@ -99,6 +99,7 @@ public class AlamofireController {
         
         // POST: Exercise
         case postExerciseData = "exercise/create"
+        case deleteExerciseData = "exercise/delete"
     }
     
     
