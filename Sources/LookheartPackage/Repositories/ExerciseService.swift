@@ -76,7 +76,7 @@ public class ExerciseService {
                 mongo: true
             )
             
-//            print("exerciseList: \(exerciseList)")
+            print("exerciseList: \(exerciseList)")
                 return (nil, .success)
 //            return (exerciseList, .success)
         } catch {
