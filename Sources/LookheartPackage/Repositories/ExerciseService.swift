@@ -91,7 +91,7 @@ public class ExerciseService {
         ]
         
         do {
-            let exerciseData: [Int] = try await AlamofireController.shared.alamofireControllerAsync(
+            let exerciseData: [String] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: params,
                 endPoint: .getExerciseData,
                 method: .get,
