@@ -82,7 +82,7 @@ public class ExerciseService {
         kind: String,
         startDate: String,
         endDate: String
-    ) async {
+    ) async -> ([String]?, NetworkResponse) {
         let params: [String: Any] = [
             "id": propEmail,
             "startDate": startDate,
@@ -98,14 +98,9 @@ public class ExerciseService {
                 mongo: true
             )
             
-            print(exerciseData)
-            
-//            print("exerciseList: \(exerciseList)")
-            
-//            return (exerciseList, .success)
+            return (exerciseData, .success)
         } catch {
-//            return (nil, AlamofireController.shared.handleError(error))
+            return (nil, AlamofireController.shared.handleError(error))
         }
     }
-    
 }
