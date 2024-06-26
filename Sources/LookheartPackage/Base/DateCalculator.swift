@@ -23,6 +23,12 @@ public class DateCalculator {
         self.calendar = Calendar.current
     }
     
+    public func getDateFormatter(_ dateType : DateTimeType) -> DateFormatter {
+        dateFormatter.dateFormat = getFormatter(dateType)
+        
+        return dateFormatter
+    }
+    
     
     public func getCurrentDateTime(_ dateType : DateTimeType ) -> String {
         let now = Date()

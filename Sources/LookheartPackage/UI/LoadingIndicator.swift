@@ -5,9 +5,7 @@ import UIKit
 public class LoadingIndicator {
     private var activityIndicator: UIActivityIndicatorView?
 
-    public init() {
-        
-    }
+    public init() {}
 
     public func show(in view: UIView) {
         DispatchQueue.main.async {
