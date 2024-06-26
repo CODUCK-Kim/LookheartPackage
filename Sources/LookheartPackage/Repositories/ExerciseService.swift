@@ -77,4 +77,35 @@ public class ExerciseService {
             return (nil, AlamofireController.shared.handleError(error))
         }
     }
+    
+    public func getExerciseData(
+        kind: String,
+        startDate: String,
+        endDate: String
+    ) async {
+        let params: [String: Any] = [
+            "id": propEmail,
+            "startDate": startDate,
+            "endDate": endDate,
+            "kind": kind
+        ]
+        
+        do {
+            let exerciseData = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .getExerciseData,
+                method: .get,
+                mongo: true
+            )
+            
+            print(exerciseData)
+            
+//            print("exerciseList: \(exerciseList)")
+            
+//            return (exerciseList, .success)
+        } catch {
+//            return (nil, AlamofireController.shared.handleError(error))
+        }
+    }
+    
 }
