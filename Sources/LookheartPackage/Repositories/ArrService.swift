@@ -46,10 +46,10 @@ public class ArrService {
                 endPoint: .getArrListData,
                 method: .get)
             
-//            print("arrData: \(arrData)")
+            print("arrData: \(arrData)")
             let resultString = arrData[0].ecgpacket.split(separator: ",")
             
-//            print("resultString: \(resultString)")
+            print("resultString: \(resultString)")
             let emergencyFlag = resultString.count == 600
             
             // Arr(504), Emergency(500)
