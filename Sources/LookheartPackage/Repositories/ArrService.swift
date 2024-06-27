@@ -48,7 +48,9 @@ public class ArrService {
             )
             
             if let splitArrData = arrData.first?.ecgpacket.split(separator: ",") {
+                print("splitArrData : \(splitArrData)")
                 if let checkEmergency = splitArrData.first?.split(separator: ":") {
+                    print("splitArrData : \(checkEmergency)")
                     print("arr")
                 } else {
                     print("emergency")
