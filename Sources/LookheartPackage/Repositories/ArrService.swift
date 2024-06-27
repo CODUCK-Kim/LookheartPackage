@@ -33,7 +33,10 @@ public class ArrService {
         }
     }
     
-    public func getArrData(startDate: String) async -> (ArrData?, NetworkResponse) {
+    public func getArrData(
+        startDate: String,
+        emergency: Bool
+    ) async -> (ArrData?, NetworkResponse) {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
@@ -47,42 +50,30 @@ public class ArrService {
                 method: .get
             )
             
+            // Arr[0..3] : ["13:45:38", "+09:00/Asia/Seoul/KR", "rest", "arr", ...ECG]
+            let startEcgDataIdx = emergency ? 0 : 4
+            
             if let splitArrData = arrData.first?.ecgpacket.split(separator: ",") {
-                print("splitArrData : \(splitArrData)")
-                if let checkEmergency = splitArrData.first?.split(separator: ":") {
-                    print("splitArrData : \(checkEmergency)")
-                    print("arr")
-                } else {
-                    print("emergency")
-                }
+                let ecgData = splitArrData[startEcgDataIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+                
+                let writeTime = emergency ? "" : self.removeWsAndNl(splitArrData[0])
+                let bodyStatus = emergency ? "" : self.removeWsAndNl(splitArrData[2])
+                let arrType = emergency ? "" : self.removeWsAndNl(splitArrData[3])
+                
+                let arrData = ArrData.init(
+                    idx: "0",
+                    writeTime: "0",
+                    time: writeTime,
+                    timezone: "0",
+                    bodyStatus: bodyStatus,
+                    type: arrType,
+                    data: ecgData
+                )
+
+                return (arrData, .success)
             }
             
-            return (nil, .success)
-            
-//            let resultString = arrData[0].ecgpacket.split(separator: ",")
-            
-//            let emergencyFlag = resultString.count == ECG_MAX_ARRAY
-            
-//             Arr(504), Emergency(500)
-//            if resultString.count >= ECG_MAX_ARRAY {
-//                let startIdx = emergencyFlag ? 0 : 4
-//                let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-//                
-//                let arrData = ArrData.init(
-//                    idx: "0",
-//                    writeTime: "0",
-//                    time: emergencyFlag ? "" : self.removeWsAndNl(resultString[0]),
-//                    timezone: "0",
-//                    bodyStatus: emergencyFlag ? "" : self.removeWsAndNl(resultString[2]),
-//                    type: emergencyFlag ? "" : self.removeWsAndNl(resultString[3]),
-//                    data: ecgData)
-//
-//                return (arrData, .success)
-//            } else {
-//                return (nil, .success)
-//            }
-            
-            
+            return (nil, .failer)
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }

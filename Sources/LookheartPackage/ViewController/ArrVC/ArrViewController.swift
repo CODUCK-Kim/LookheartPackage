@@ -272,10 +272,12 @@ public class ArrViewController : UIViewController {
     private func selectArrData(_ dict: ArrDateTagStruct) {
         activityIndicator.startAnimating()
         
-        print("emergencyFlag: \(dict.emergencyFlag)")
-        
         Task {
-            let getArrData = await arrService.getArrData(startDate: dict.writeDateTime)
+            let getArrData = await arrService.getArrData(
+                startDate: dict.writeDateTime,
+                emergency: dict.emergencyFlag
+            )
+            
             let data = getArrData.0
             let response = getArrData.1
             
