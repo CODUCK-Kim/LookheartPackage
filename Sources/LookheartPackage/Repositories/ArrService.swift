@@ -61,10 +61,10 @@ public class ArrService {
             
             let resultString = arrData[0].ecgpacket.split(separator: ",")
             
-            let emergencyFlag = resultString.count == 600
+            let emergencyFlag = resultString.count == ECG_MAX_ARRAY
             
 //             Arr(504), Emergency(500)
-            if resultString.count >= 600 {
+            if resultString.count >= ECG_MAX_ARRAY {
                 let startIdx = emergencyFlag ? 0 : 4
                 let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
                 
