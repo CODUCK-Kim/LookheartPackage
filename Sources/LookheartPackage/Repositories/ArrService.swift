@@ -44,32 +44,43 @@ public class ArrService {
             let arrData: [ArrEcgData] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
                 endPoint: .getArrListData,
-                method: .get)
+                method: .get
+            )
             
-            print("arrData: \(arrData)")
-            let resultString = arrData[0].ecgpacket.split(separator: ",")
+            if let splitArrData = arrData.first?.ecgpacket.split(separator: ",") {
+                if let checkEmergency = splitArrData.first?.split(separator: ":") {
+                    print("arr")
+                } else {
+                    print("emergency")
+                }
+            }
             
-            print("resultString: \(resultString)")
-            let emergencyFlag = resultString.count == 600
+            return (nil, .success)
+            
+//            let resultString = arrData[0].ecgpacket.split(separator: ",")
+            
+//            let emergencyFlag = resultString.count == 600
             
             // Arr(504), Emergency(500)
-            if resultString.count >= 600 {
-                let startIdx = emergencyFlag ? 0 : 4
-                let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-                
-                let arrData = ArrData.init(
-                    idx: "0",
-                    writeTime: "0",
-                    time: emergencyFlag ? "" : self.removeWsAndNl(resultString[0]),
-                    timezone: "0",
-                    bodyStatus: emergencyFlag ? "" : self.removeWsAndNl(resultString[2]),
-                    type: emergencyFlag ? "" : self.removeWsAndNl(resultString[3]),
-                    data: ecgData)
-
-                return (arrData, .success)
-            } else {
-                return (nil, .success)
-            }
+//            if resultString.count >= 600 {
+//                let startIdx = emergencyFlag ? 0 : 4
+//                let ecgData = resultString[startIdx...].compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+//                
+//                let arrData = ArrData.init(
+//                    idx: "0",
+//                    writeTime: "0",
+//                    time: emergencyFlag ? "" : self.removeWsAndNl(resultString[0]),
+//                    timezone: "0",
+//                    bodyStatus: emergencyFlag ? "" : self.removeWsAndNl(resultString[2]),
+//                    type: emergencyFlag ? "" : self.removeWsAndNl(resultString[3]),
+//                    data: ecgData)
+//
+//                return (arrData, .success)
+//            } else {
+//                return (nil, .success)
+//            }
+            
+            
         } catch {
             return (nil, AlamofireController.shared.handleError(error))
         }
