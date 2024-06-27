@@ -13,7 +13,7 @@ public let PrevHourKey = "prevHour"
 
 
 //
-public let ECG_MAX_ARRAY = 500
+public let ECG_MAX_ARRAY = 600
 public let ECG_DATA_MAX = 140
 
 public let ARR_TAG = 1, ARR_STATE = "arr"
