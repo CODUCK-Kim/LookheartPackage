@@ -50,7 +50,8 @@ public class ArrService {
                 method: .get
             )
             
-            // Arr[0..3] : ["13:45:38", "+09:00/Asia/Seoul/KR", "rest", "arr", ...ECG]
+            // Arr[0..3..ECG_MAX_ARRAY] : ["13:45:38", "+09:00/Asia/Seoul/KR", "rest", "arr", ...ECG]
+            // Emergency[0..ECG_MAX_ARRAY] : [ECG]
             let startEcgDataIdx = emergency ? 0 : 4
             
             if let splitArrData = arrData.first?.ecgpacket.split(separator: ",") {
