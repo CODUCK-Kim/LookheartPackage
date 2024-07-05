@@ -21,9 +21,6 @@ public class ArrViewController : UIViewController {
     private let BLACK_COLOR = UIColor.black
     private let HEARTATTACK_COLOR = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
     
-    private let ARRDATA_FILENAME = "/arrEcgData_"
-    private let CSV_EXTENSION = ".csv"
-    
     private let YESTERDAY_BUTTON_FLAG = 1
     private let TOMORROW_BUTTON_FLAG = 2
     
@@ -365,7 +362,7 @@ public class ArrViewController : UIViewController {
     }
     
     private func getArrType(_ arrType: String ) -> String {
-        switch (arrType){
+        switch (arrType) {
         case "fast":
             return "typeFastArr".localized()
         case "slow":
