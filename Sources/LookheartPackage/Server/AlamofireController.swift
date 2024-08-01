@@ -80,7 +80,7 @@ public class AlamofireController {
         case getExerciseList = "exercise/list?"
         case getExerciseData = "exercise/data?"
         
-        
+        case googleAuth = "google/google"
         
         
         // POST: HealthData
@@ -100,6 +100,8 @@ public class AlamofireController {
         // POST: Exercise
         case postExerciseData = "exercise/create"
         case deleteExerciseData = "exercise/delete"
+        
+        
     }
     
     
