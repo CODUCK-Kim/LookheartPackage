@@ -9,6 +9,8 @@ import Foundation
 
 public class GoogleService {
     
+    public init() {}
+    
     public func oAuth() async {
     
         let parameters: [String: Any] = [:]
