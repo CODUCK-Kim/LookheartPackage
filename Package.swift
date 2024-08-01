@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "LookheartPackage",
+    platforms: [
+        .iOS(.v13)
+    ],
     products: [
         .library(
             name: "LookheartPackage",
@@ -19,8 +22,10 @@ let package = Package(
         .package(url: "https://github.com/WenchaoD/FSCalendar.git", from: "2.8.4"),
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "3.7.0"),
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
-        .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0")
+        .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
+        .package(url: "https://github.com/google/GoogleSignIn-iOS", .upToNextMajor(from: "7.1.0"))
     ],
+    
     targets: [
         .target(
             name: "LookheartPackage",
@@ -33,7 +38,8 @@ let package = Package(
                 "FSCalendar",
                 "PhoneNumberKit",
                 .product(name: "KeychainSwift", package: "keychain-swift"),
-                .product(name: "Collections", package: "swift-collections")
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS")
             ],
             resources: [
                 .process("Alert/AlertSound/heartAttackSound.mp3"),
