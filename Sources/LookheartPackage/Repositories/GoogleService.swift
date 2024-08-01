@@ -11,7 +11,7 @@ public class GoogleService {
     
     public init() {}
     
-    public func oAuth() async {
+    public func oAuth() async -> String? {
     
         let parameters: [String: Any] = [:]
         
@@ -21,10 +21,12 @@ public class GoogleService {
                 endPoint: .googleAuth,
                 method: .get)
             
-            print(auth)
+            return auth
             
         } catch {
             print(error)
         }
+        
+        return nil
     }
 }
