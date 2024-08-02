@@ -38,7 +38,7 @@ public class GoogleService {
             let htmlURL = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .googleHtml,
-                method: .get
+                method: .post
             )
             
             return htmlURL
