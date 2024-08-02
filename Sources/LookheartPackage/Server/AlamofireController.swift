@@ -155,29 +155,29 @@ public class AlamofireController {
         return stringData
     }
     
-    @available(iOS 13.0.0, *)
-    public func sendGoogleLoginHtml(
-        parameters: [String: Any],
-        endPoint: EndPoist,
-        method: HTTPMethod,
-        html: String
-    ) async throws -> String {
-        
-        guard let url = URL(string: baseURL + endPoint.rawValue + "?html=" + html) else {
-            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
-        }
-        print(url)
-        let response = try await AF.request(url, method: method, parameters: parameters,
-                                            encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
-            .validate(statusCode: 200..<300)
-            .serializingData().value
-        
-        guard let stringData = String(data: response, encoding: .utf8) else {
-            throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
-        }
-
-        return stringData
-    }
+//    @available(iOS 13.0.0, *)
+//    public func sendGoogleLoginHtml(
+//        parameters: [String: Any],
+//        endPoint: EndPoist,
+//        method: HTTPMethod,
+//        html: String
+//    ) async throws -> String {
+//        
+//        guard let url = URL(string: baseURL + endPoint.rawValue + "?html=" + html) else {
+//            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
+//        }
+//        
+//        let response = try await AF.request(url, method: method, parameters: parameters,
+//                                            encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
+//            .validate(statusCode: 200..<300)
+//            .serializingData().value
+//        
+//        guard let stringData = String(data: response, encoding: .utf8) else {
+//            throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
+//        }
+//
+//        return stringData
+//    }
     
     public func handleError(_ error: Error) -> NetworkResponse {
         if let error = error as? AFError {

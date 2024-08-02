@@ -32,14 +32,13 @@ public class GoogleService {
     
     public func sendGoogleLoginHtmlGetURL(html loginHtml: String) async -> String? {
         
-        let parameters: [String: Any] = [:]
+        let parameters: [String: Any] = ["html" : loginHtml]
         
         do {
-            let htmlURL = try await AlamofireController.shared.sendGoogleLoginHtml(
+            let htmlURL = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .googleHtml,
-                method: .get,
-                html: loginHtml
+                method: .get
             )
             
             return htmlURL
