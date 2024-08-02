@@ -8,48 +8,27 @@
 import Foundation
 
 public class GoogleService {
-    public struct GoogleLoginURL: Decodable {
-        public let url: String
+    public struct GoogleUser: Codable {
+        let email: String
+        let firstName: String
+        let lastName: String
+        let socialProvider: String
+        let externalId: String
+        let accessToken: String
     }
     
     public init() {}
     
-    public func getGoogleLoginHtml() async -> String? {
-    
-        let parameters: [String: Any] = [:]
-        
-        do {
-            let getGoogleLoginHtml = try await AlamofireController.shared.alamofireControllerForString(
-                parameters: parameters,
-                endPoint: .googleAuth,
-                method: .get)
-            
-            return getGoogleLoginHtml
-        
-        } catch {
-            print(error)
+    public func getGoogleLoginData(_ stringData: String?) -> GoogleUser? {
+        if let data = stringData?.data(using:  .utf8) {
+            do {
+                let user = try JSONDecoder().decode(GoogleUser.self, from: data)
+                return user
+            } catch {
+                print("GoogleLoginData JSON 디코딩 오류: \(error.localizedDescription)")
+            }
         }
         
         return nil
     }
-    
-    public func sendGoogleLoginHtmlGetURL(html loginHtml: String) async -> GoogleLoginURL? {
-        
-        let parameters: [String: Any] = ["html" : loginHtml]
-        
-        do {
-            let htmlURL: GoogleLoginURL = try await AlamofireController.shared.alamofireControllerAsync(
-                parameters: parameters,
-                endPoint: .googleHtml,
-                method: .post
-            )
-            
-            return htmlURL
-        } catch {
-            print(error)
-        }
-        
-        return nil
-    }
-
 }
