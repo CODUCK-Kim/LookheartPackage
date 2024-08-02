@@ -11,22 +11,39 @@ public class GoogleService {
     
     public init() {}
     
-    public func oAuth() async -> String? {
+    public func getGoogleLoginHtml() async -> String? {
     
         let parameters: [String: Any] = [:]
         
         do {
-            let auth = try await AlamofireController.shared.alamofireControllerForString(
+            let getGoogleLoginHtml = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .googleAuth,
                 method: .get)
             
-            return auth
-            
+            return getGoogleLoginHtml
+        
         } catch {
             print(error)
         }
         
         return nil
+    }
+    
+    public func sendGoogleLoginHtml(html loginHtml: String) async {
+    
+        let parameters: [String: Any] = ["html" : loginHtml]
+        
+        do {
+            let sendHtml = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: parameters,
+                endPoint: .googleHtml,
+                method: .get)
+            
+            print(sendHtml)
+            
+        } catch {
+            print(error)
+        }
     }
 }

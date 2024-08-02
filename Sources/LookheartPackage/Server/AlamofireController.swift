@@ -80,8 +80,9 @@ public class AlamofireController {
         case getExerciseList = "exercise/list?"
         case getExerciseData = "exercise/data?"
         
+        // Google Auth
         case googleAuth = "google/google"
-        
+        case googleHtml = "google/html"
         
         // POST: HealthData
         case postTenSecondData = "mslbpm/api_data"
