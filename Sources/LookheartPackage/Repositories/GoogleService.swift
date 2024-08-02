@@ -30,23 +30,24 @@ public class GoogleService {
         return nil
     }
     
-    public func sendGoogleLoginHtml(html loginHtml: String) async {
+    public func sendGoogleLoginHtmlGetURL(html loginHtml: String) async -> String? {
         
         let parameters: [String: Any] = [:]
         
         do {
-            let sendHtml = try await AlamofireController.shared.sendGoogleLoginHtml(
+            let htmlURL = try await AlamofireController.shared.sendGoogleLoginHtml(
                 parameters: parameters,
                 endPoint: .googleHtml,
                 method: .get,
                 html: loginHtml
             )
             
-            print(sendHtml)
-            
+            return htmlURL
         } catch {
             print(error)
         }
+        
+        return nil
     }
 
 }

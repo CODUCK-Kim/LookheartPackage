@@ -166,7 +166,7 @@ public class AlamofireController {
         guard let url = URL(string: baseURL + endPoint.rawValue + "?html=" + html) else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
-            
+        print(url)
         let response = try await AF.request(url, method: method, parameters: parameters,
                                             encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
             .validate(statusCode: 200..<300)
