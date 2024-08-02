@@ -8,6 +8,9 @@
 import Foundation
 
 public class GoogleService {
+    public struct GoogleLoginURL: Decodable {
+        public let url: String
+    }
     
     public init() {}
     
@@ -30,12 +33,12 @@ public class GoogleService {
         return nil
     }
     
-    public func sendGoogleLoginHtmlGetURL(html loginHtml: String) async -> String? {
+    public func sendGoogleLoginHtmlGetURL(html loginHtml: String) async -> GoogleLoginURL? {
         
         let parameters: [String: Any] = ["html" : loginHtml]
         
         do {
-            let htmlURL = try await AlamofireController.shared.alamofireControllerForString(
+            let htmlURL: GoogleLoginURL = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
                 endPoint: .googleHtml,
                 method: .post
