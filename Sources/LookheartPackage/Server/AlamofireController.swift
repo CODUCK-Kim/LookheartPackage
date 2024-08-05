@@ -179,4 +179,8 @@ public class AlamofireController {
             swap(&baseURL, &spareURL)
         }
     }
+    
+    public func getBaseURL() -> String {
+        return baseURL
+    }
 }
