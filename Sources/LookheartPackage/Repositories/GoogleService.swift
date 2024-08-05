@@ -10,11 +10,11 @@ import AuthenticationServices
 
 public class GoogleService {
     public struct GoogleUser: Codable {
-        let email: String
-        let firstName: String
-        let lastName: String
+        public let email: String
+        public let firstName: String
+        public let lastName: String
         let socialProvider: String
-        let externalId: String
+        public let externalId: String
         let accessToken: String
     }
     
@@ -36,7 +36,7 @@ public class GoogleService {
                 callback(nil, error)
                 return
             }
-
+            
             
             // CallBack
             guard let callbackURL = callbackURL else {
