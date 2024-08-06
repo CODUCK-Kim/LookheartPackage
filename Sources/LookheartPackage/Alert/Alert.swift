@@ -92,6 +92,39 @@ public class MyAlert {
     }
     
     
+    public func basicTextFieldAlert(
+        title: String,
+        body: String,
+        hint: String,
+        viewController: UIViewController,
+        completion: @escaping (String) -> Void
+    ) {
+        let alertController = UIAlertController(
+            title: title,
+            message: body,
+            preferredStyle: .alert
+        )
+
+        // 텍스트 필드
+        alertController.addTextField { textField in
+            textField.placeholder = hint
+        }
+
+        // 확인 버튼
+        let confirmAction = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+            if let text = alertController.textFields?.first?.text {
+                completion(text)
+            }
+        }
+
+        // 취소 버튼
+        let cancelAction = UIAlertAction(title: "reject".localized(), style: .cancel, handler: nil)
+
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        viewController.present(alertController, animated: true)
+    }
+    
     public func basicPasswordAlert(
         viewController: UIViewController,
         completion: @escaping (String) -> Void
@@ -119,6 +152,5 @@ public class MyAlert {
         alertController.addAction(cancelAction)
         viewController.present(alertController, animated: true)
     }
-
     
 }
