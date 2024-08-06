@@ -30,6 +30,7 @@ public class KeyboardEventHandling {
         
         scrollView.contentInset = contentInset
         scrollView.scrollIndicatorInsets = contentInset
+
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
