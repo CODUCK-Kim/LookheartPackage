@@ -96,6 +96,7 @@ public class MyAlert {
         title: String,
         body: String,
         hint: String,
+        type: UIKeyboardType,
         viewController: UIViewController,
         completion: @escaping (String) -> Void
     ) {
@@ -108,6 +109,7 @@ public class MyAlert {
         // 텍스트 필드
         alertController.addTextField { textField in
             textField.placeholder = hint
+            textField.keyboardType = type
         }
 
         // 확인 버튼
