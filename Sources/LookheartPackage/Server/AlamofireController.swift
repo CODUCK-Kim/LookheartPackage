@@ -13,6 +13,8 @@ public enum NetworkResponse {
 
 
 public class AlamofireController {
+    public static let shared = AlamofireController()
+    
     private lazy var baseURL: String = {
         guard let url = Bundle.main.object(forInfoDictionaryKey: "Test URL") as? String else {
             fatalError("Base URL not found in Info.plist")
@@ -50,66 +52,39 @@ public class AlamofireController {
 //    }()
 
     
-    public static let shared = AlamofireController()
-    
-    public enum EndPoist: String {
-        // GET: Health Data
-        case getVersion = "appversion/getVersion"
-        case getBpmData = "mslbpm/api_getdata"
-        case getBpmTime = "mslLast/lastBpmTime"
-        case getArrListData = "mslecgarr/arrWritetime?" // List, Data
-        case getArrCnt = "mslecgarr/arrCount?" // Cnt
-        case getHourlyData = "mslecgday/day"
+    public func alamofireControllerTask <T: Decodable> (
+        parameters: [String: Any],
+        endPoint: EndPoint,
+        method: HTTPMethod,
+        mongo: Bool = false
+    ) async throws -> T {
         
+        let baseUrl = mongo ? mongoURL : baseURL
         
-        // GET: User Data
-        case getProfile = "msl/Profile"
-        case getFindID = "msl/findID?"
-        case getCheckLogin = "msl/CheckLogin"   // CheckLogin, Send Firebase Token
-        case getCheckDupID = "msl/CheckIDDupe"
+        guard let url = URL(string: baseUrl + endPoint.rawValue) else {
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
+        }
+
+        let response = try await AF.request(url, method: method, parameters: parameters, encoding: (method == .get) ? URLEncoding.default : URLEncoding.httpBody)
+            .validate(statusCode: 200..<300)
+            .serializingData().value
         
-        
-        // GET: Auth
-        case getSendSms = "mslSMS/sendSMS"
-        case getCheckSMS = "mslSMS/checkSMS"
-        case getCheckPhoneNumber = "msl/checkPhone?"
-        case getAppKey = "msl/appKey?"
-        
-        
-        // GET: Exercise
-        case getExerciseList = "exercise/list?"
-        case getExerciseData = "exercise/data?"
-        
-        // Google Auth
-        case googleAuth = "google/callback"
-        case googleHtml = "google/html"
-        
-        // POST: HealthData
-        case postTenSecondData = "mslbpm/api_data"
-        case postHourlyData = "mslecgday/api_getdata"
-        case postEcgData = "mslecgbyte/api_getdata"
-        case postArrData = "mslecgarr/api_getdata"
-        
-        // POST: User
-        case postSetProfile = "msl/api_getdata" // profile, appKey
-        case postSetGuardian = "mslparents/api_getdata"
-        
-        // POST: Log
-        case postLog = "app_log/api_getdata"
-        case postBleLog = "app_ble/api_getdata"
-        
-        // POST: Exercise
-        case postExerciseData = "exercise/create"
-        case deleteExerciseData = "exercise/delete"
-        
-        
+        if T.self == String.self {
+            /* String */
+            guard let stringData = String(data: response, encoding: .utf8) as? T else {
+                throw NSError(domain: "DataEncodingError", code: -2, userInfo: nil)
+            }
+            return stringData
+        } else {
+            /* Decoding */
+            return try JSONDecoder().decode(T.self, from: response)
+        }
     }
-    
     
     @available(iOS 13.0.0, *)
     public func alamofireControllerAsync <T: Decodable> (
         parameters: [String: Any],
-        endPoint: EndPoist, 
+        endPoint: EndPoint,
         method: HTTPMethod,
         mongo: Bool = false
     ) async throws -> T {
@@ -132,7 +107,7 @@ public class AlamofireController {
     @available(iOS 13.0.0, *)
     public func alamofireControllerForString(
         parameters: [String: Any],
-        endPoint: EndPoist,
+        endPoint: EndPoint,
         method: HTTPMethod,
         mongo: Bool = false
     ) async throws -> String {
@@ -163,7 +138,6 @@ public class AlamofireController {
                 if let urlError = underlyingError as? URLError, urlError.code == .notConnectedToInternet {
                     return .notConnected
                 } else {
-                    changeURL()
                     return .session
                 }
             default:
@@ -173,13 +147,7 @@ public class AlamofireController {
             return .invalidResponse
         }
     }
-    
-    public func changeURL() {
-        if baseURL != spareURL {
-            swap(&baseURL, &spareURL)
-        }
-    }
-    
+
     public func getBaseURL() -> String {
         return baseURL
     }
