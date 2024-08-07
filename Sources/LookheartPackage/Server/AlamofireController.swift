@@ -12,7 +12,7 @@ public enum NetworkResponse {
 }
 
 
-public class AlamofireController {
+public class AlamofireController: NetworkProtocol {
     public static let shared = AlamofireController()
     
     private lazy var baseURL: String = {
@@ -51,8 +51,26 @@ public class AlamofireController {
 //        return url
 //    }()
 
+    func task<T: Decodable>(
+        parameters: [String : Any],
+        endPoit: EndPoint,
+        method: HTTPMethod,
+        type: T.Type
+    ) async -> (result: Any?, response: NetworkResponse) {
+        do {
+            let result: T = try await AlamofireController.shared.alamofireControllerTask(
+                parameters: parameters,
+                endPoint: endPoit,
+                method: method
+            )
+            return (result: result, response: .success)
+        } catch {
+            let error = AlamofireController.shared.handleError(error)
+            return (result: nil, response: error)
+        }
+    }
     
-    public func alamofireControllerTask <T: Decodable> (
+    private func alamofireControllerTask <T: Decodable> (
         parameters: [String: Any],
         endPoint: EndPoint,
         method: HTTPMethod,
@@ -80,6 +98,33 @@ public class AlamofireController {
             return try JSONDecoder().decode(T.self, from: response)
         }
     }
+    
+    public func handleError(_ error: Error) -> NetworkResponse {
+        if let error = error as? AFError {
+            switch error {
+            case .sessionTaskFailed(let underlyingError):
+                if let urlError = underlyingError as? URLError, urlError.code == .notConnectedToInternet {
+                    return .notConnected
+                } else {
+                    return .session
+                }
+            default:
+                return .invalidResponse
+            }
+        } else {
+            return .invalidResponse
+        }
+    }
+
+    public func getBaseURL() -> String {
+        return baseURL
+    }
+    
+    
+    
+    
+    
+    
     
     @available(iOS 13.0.0, *)
     public func alamofireControllerAsync <T: Decodable> (
@@ -129,26 +174,5 @@ public class AlamofireController {
 
         return stringData
     }
-    
-    
-    public func handleError(_ error: Error) -> NetworkResponse {
-        if let error = error as? AFError {
-            switch error {
-            case .sessionTaskFailed(let underlyingError):
-                if let urlError = underlyingError as? URLError, urlError.code == .notConnectedToInternet {
-                    return .notConnected
-                } else {
-                    return .session
-                }
-            default:
-                return .invalidResponse
-            }
-        } else {
-            return .invalidResponse
-        }
-    }
 
-    public func getBaseURL() -> String {
-        return baseURL
-    }
 }
