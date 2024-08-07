@@ -4,7 +4,7 @@ import Foundation
 // KEY
 public let userEmailKey = "userEmail"
 public let userPasswordKey = "userPassword"
-public let userPhoneNumber = "userPhoneNumber"
+public let userPhoneNumberKey = "userPhoneNumber"
 public let guardianKey = "guardianPhoneNumber"
 public let autoLoginEnableKey = "autoLogin"
 public let fcmTokenKey = "fcmToken"
