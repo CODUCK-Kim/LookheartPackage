@@ -23,7 +23,8 @@ let package = Package(
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "3.7.0"),
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
-        .package(url: "https://github.com/google/GoogleSignIn-iOS", .upToNextMajor(from: "7.1.0"))
+        .package(url: "https://github.com/google/GoogleSignIn-iOS", .upToNextMajor(from: "7.1.0")),
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0")
     ],
     
     targets: [
@@ -39,7 +40,8 @@ let package = Package(
                 "PhoneNumberKit",
                 .product(name: "KeychainSwift", package: "keychain-swift"),
                 .product(name: "Collections", package: "swift-collections"),
-                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS")
+                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
+                "Swinject"
             ],
             resources: [
                 .process("Alert/AlertSound/heartAttackSound.mp3"),
