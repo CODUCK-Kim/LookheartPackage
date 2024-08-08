@@ -14,5 +14,5 @@ protocol NetworkProtocol {
         endPoit: EndPoint,
         method: HTTPMethod,
         type: T.Type
-    ) async -> (result: Any?, response: NetworkResponse)
+    ) async -> (result: T?, response: NetworkResponse)
 }
