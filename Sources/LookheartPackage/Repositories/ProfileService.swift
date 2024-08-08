@@ -40,7 +40,6 @@ public class ProfileService {
                 method: .get
             )
             
-            print(profiles)
             var phoneNumbers: [String] = []
             
             for profile in profiles { // guardian Phone Numbers
