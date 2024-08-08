@@ -21,5 +21,5 @@ public struct UserProfile: Codable {
     var alarm_sms: Int  // peak : 0, ecg : 1
     var differtime: Int // 사용 제한 Flag ( 0 : 사용, 1 : 사용 중지 )
     var phone: String?
-    var way: String // social
+    var way: String? // social
 }

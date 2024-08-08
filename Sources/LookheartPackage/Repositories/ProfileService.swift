@@ -37,8 +37,10 @@ public class ProfileService {
             let profiles: [UserProfile] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: params,
                 endPoint: .getProfile,
-                method: .get)
+                method: .get
+            )
             
+            print(profiles)
             var phoneNumbers: [String] = []
             
             for profile in profiles { // guardian Phone Numbers
