@@ -51,7 +51,7 @@ public class AlamofireController: NetworkProtocol {
 //        return url
 //    }()
 
-    func task<T: Decodable>(
+    public func task<T: Decodable>(
         parameters: [String : Any],
         endPoit: EndPoint,
         method: HTTPMethod,
@@ -98,6 +98,7 @@ public class AlamofireController: NetworkProtocol {
             return try JSONDecoder().decode(T.self, from: response)
         }
     }
+    
     
     public func handleError(_ error: Error) -> NetworkResponse {
         if let error = error as? AFError {
