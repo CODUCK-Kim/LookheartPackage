@@ -265,4 +265,9 @@ public class UserProfileManager {
         }
     }
 
+    public var social: Int? {
+        get {
+            return userProfile?.way
+        }
+    }
 }
