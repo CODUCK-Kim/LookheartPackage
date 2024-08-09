@@ -12,7 +12,7 @@ public class Keychain {
     public static let shared = Keychain()
     
     private let keychain = KeychainSwift()
-     
+
     public func setString(_ value: String, forKey key: String) {
         keychain.set(value, forKey: key)
     }
