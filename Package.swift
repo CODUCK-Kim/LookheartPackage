@@ -25,7 +25,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
         .package(url: "https://github.com/google/GoogleSignIn-iOS", .upToNextMajor(from: "7.1.0")),
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0"),
-        .package(url: "https://github.com/socketio/socket.io-client-swift", .upToNextMinor(from: "16.0.0"))
+        .package(url: "https://github.com/socketio/socket.io-client-swift", .upToNextMinor(from: "16.0.0")),
+        .package(url: "https://github.com/daltoniam/Starscream.git", .exact("4.0.4"))
     ],
     
     targets: [
@@ -43,7 +44,8 @@ let package = Package(
                 .product(name: "Collections", package: "swift-collections"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
                 "Swinject",
-                .product(name: "SocketIO", package: "socket.io-client-swift")
+                .product(name: "SocketIO", package: "socket.io-client-swift"),
+                .product(name: "Starscream", package: "Starscream")
             ],
             resources: [
                 .process("Alert/AlertSound/heartAttackSound.mp3"),
