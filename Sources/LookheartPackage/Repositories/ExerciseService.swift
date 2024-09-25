@@ -26,7 +26,8 @@ public class ExerciseService {
     
     public func postExercise(exerciseData: [String: Any]) async -> NetworkResponse {
         var params: [String: Any] = [
-            "eq": propEmail
+//            "eq": propEmail
+            "eq": "jhaseung@medsyslab.co.kr"
         ]
         
         params.merge(exerciseData) { (current, _) in current }
@@ -54,7 +55,8 @@ public class ExerciseService {
     
     public func deleteExercise(exerciseData: [String: Any]) async -> NetworkResponse {
         var params: [String: Any] = [
-            "eq": propEmail
+//            "eq": propEmail
+            "eq": "jhaseung@medsyslab.co.kr"
         ]
         
         params.merge(exerciseData) { (current, _) in current }
@@ -85,7 +87,8 @@ public class ExerciseService {
         endDate: String
     ) async -> ([ExerciseList]?, NetworkResponse) {
         let params: [String: Any] = [
-            "id": propEmail,
+//            "id": propEmail,
+            "id": "jhaseung@medsyslab.co.kr",
             "startDate": startDate,
             "endDate": endDate
         ]
@@ -112,7 +115,8 @@ public class ExerciseService {
         endDate: String
     ) async -> (data: [String]?, response: NetworkResponse) {
         let params: [String: Any] = [
-            "id": propEmail,
+//            "id": propEmail,
+            "id": "jhaseung@medsyslab.co.kr",
             "startDate": startDate,
             "endDate": endDate,
             "kind": kind
