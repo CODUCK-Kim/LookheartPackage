@@ -37,7 +37,15 @@ class BarChartVC : UIViewController {
     // Image End
     
     // ----------------------------- 상수 ------------------- //
-    private let weekDays = ["Monday".localized(), "Tuesday".localized(), "Wednesday".localized(), "Thursday".localized(), "Friday".localized(), "Saturday".localized(), "Sunday".localized()]
+    private let weekDays = [
+        "unit_monday".localized(),
+        "unit_tuesday".localized(),
+        "unit_wednesday".localized(),
+        "unit_thursday".localized(),
+        "unit_friday".localized(),
+        "unit_saturday".localized(),
+        "unit_sunday".localized()
+    ]
     
     private let YESTERDAY_BUTTON_FLAG = 1, TOMORROW_BUTTON_FLAG = 2
     private let DAY_FLAG = 1, WEEK_FLAG = 2, MONTH_FLAG = 3, YEAR_FLAG = 4
@@ -126,7 +134,7 @@ class BarChartVC : UIViewController {
     
     // MARK: - top Contents
     private lazy var dayButton = UIButton().then {
-        $0.setTitle ("fragment_day".localized(), for: .normal )
+        $0.setTitle ("unit_day".localized(), for: .normal )
         
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -146,7 +154,7 @@ class BarChartVC : UIViewController {
     }
     
     private lazy var weekButton = UIButton().then {
-        $0.setTitle ("fragment_week".localized(), for: .normal )
+        $0.setTitle ("unit_week".localized(), for: .normal )
         
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -165,7 +173,7 @@ class BarChartVC : UIViewController {
     }
     
     private lazy var monthButton = UIButton().then {
-        $0.setTitle ("fragment_month".localized(), for: .normal )
+        $0.setTitle ("unit_month".localized(), for: .normal )
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -183,7 +191,7 @@ class BarChartVC : UIViewController {
     }
     
     lazy var yearButton = UIButton().then {
-        $0.setTitle ("fragment_year".localized(), for: .normal )
+        $0.setTitle ("unit_year".localized(), for: .normal )
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.setTitleColor(.lightGray, for: .disabled)
@@ -229,7 +237,7 @@ class BarChartVC : UIViewController {
     // MARK: - bottom Contents
     //    ----------------------------- ARR -------------------    //
     private let singleContentsLabel = UILabel().then {
-        $0.text = "arrTimes".localized()
+        $0.text = "unit_arr_times".localized()
         $0.numberOfLines = 2
         $0.textColor = .darkGray
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -277,14 +285,14 @@ class BarChartVC : UIViewController {
     }
     
     private let topTitleLabel = UILabel().then {
-        $0.text = "summaryStep".localized()
+        $0.text = "unit_step_cap".localized()
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
     }
     
     private let bottomTitleLabel = UILabel().then {
-        $0.text = "distance".localized()
+        $0.text = "unit_travel_distance".localized()
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         $0.textColor = .black
@@ -433,8 +441,8 @@ class BarChartVC : UIViewController {
             // double graph
             let entries = createDoubleGraphEntries(sortedDate, dataDict, startDate)
             
-            let label1 = chartType == .CALORIE ? "summaryTCal".localized() : "step".localized()
-            let label2 = chartType == .CALORIE ? "summaryECal".localized() : "distanceM".localized()
+            let label1 = chartType == .CALORIE ? "unit_tCal".localized() : "unit_step".localized()
+            let label2 = chartType == .CALORIE ? "unit_eCal".localized() : "unit_distance".localized()
             
             let dataSet1 =  chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: label1))
             let dataSet2 =  chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: BarChartDataSet(entries: entries.2, label: label2))
@@ -446,7 +454,7 @@ class BarChartVC : UIViewController {
         default:
             // single graph
             let entries = createSingleGraphEntries(sortedDate, dataDict, startDate)
-            let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "arr".localized()))
+            let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "unit_arr_abb".localized()))
             return (entries.0, [dataSet])
         }
     }
@@ -640,9 +648,9 @@ class BarChartVC : UIViewController {
                     self.viewChart(data!, startDate)
                 }
             case .noData:
-                toastMessage("noData".localized())
+                toastMessage("dialog_error_noData".localized())
             default:
-                toastMessage("serverErr".localized())
+                toastMessage("dialog_error_server_noData".localized())
             }
             
             activityIndicator.stopAnimating()
@@ -872,8 +880,8 @@ class BarChartVC : UIViewController {
             singleGraphBottomContents.isHidden = true
             
             let type = chartType == .CALORIE
-            topTitleLabel.text = (type ? "tCalTitle".localized() : "summaryStep".localized())
-            bottomTitleLabel.text = (type ? "eCalTitle".localized() : "distance".localized())
+            topTitleLabel.text = (type ? "unit_tCal".localized() : "unit_step_cap".localized())
+            bottomTitleLabel.text = (type ? "unit_eCal".localized() : "unit_travel_distance".localized())
             
             
             firstGoal = type ? UserProfileManager.shared.targetCalorie :
@@ -894,8 +902,8 @@ class BarChartVC : UIViewController {
     
     private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
         
-        let label1 = chartType == .CALORIE ? "eCalValue2".localized() : "stepValue2".localized()
-        let label2 = chartType == .CALORIE ? "eCalValue2".localized() : "distanceValue2".localized()
+        let label1 = chartType == .CALORIE ? "unit_kcal".localized() : "unit_step_cap".localized()
+        let label2 = chartType == .CALORIE ? "unit_kcal".localized() : "unit_distance_km".localized()
         let dayCount = getDayCount(for: currentButtonFlag)
         
         // Progress

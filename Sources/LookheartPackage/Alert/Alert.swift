@@ -113,14 +113,14 @@ public class MyAlert {
         }
 
         // 확인 버튼
-        let confirmAction = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+        let confirmAction = UIAlertAction(title: "msg_ok".localized(), style: .default) { _ in
             if let text = alertController.textFields?.first?.text {
                 completion(text)
             }
         }
 
         // 취소 버튼
-        let cancelAction = UIAlertAction(title: "reject".localized(), style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "msg_cancel_upper".localized(), style: .cancel, handler: nil)
 
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
@@ -131,16 +131,16 @@ public class MyAlert {
         viewController: UIViewController,
         completion: @escaping (String) -> Void
     ) {
-        let alertController = UIAlertController(title: "pw_Label".localized(), message: "password_Hint".localized(), preferredStyle: .alert)
+        let alertController = UIAlertController(title: "msg_input_password".localized(), message: "password_Hint".localized(), preferredStyle: .alert)
 
         // 텍스트 필드
         alertController.addTextField { textField in
-            textField.placeholder = "password_Label".localized()
+            textField.placeholder = "msg_password".localized()
             textField.isSecureTextEntry = true // 비밀번호 입력 필드로 설정
         }
 
         // 확인 버튼
-        let confirmAction = UIAlertAction(title: "ok".localized(), style: .default) { _ in
+        let confirmAction = UIAlertAction(title: "msg_ok".localized(), style: .default) { _ in
             if let password = alertController.textFields?.first?.text {
                 // 비밀번호
                 completion(password)
@@ -148,7 +148,7 @@ public class MyAlert {
         }
 
         // 취소 버튼
-        let cancelAction = UIAlertAction(title: "reject".localized(), style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "msg_cancel_upper".localized(), style: .cancel, handler: nil)
 
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)

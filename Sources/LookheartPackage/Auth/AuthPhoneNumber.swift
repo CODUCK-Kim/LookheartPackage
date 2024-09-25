@@ -49,7 +49,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var sendButton = UIButton().then {
-        $0.setTitle("requestVerification".localized(), for: .normal)
+        $0.setTitle("dialog_verify".localized(), for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         $0.titleLabel?.textAlignment = .center
         $0.setTitleColor(UIColor.white, for: .normal)
@@ -57,7 +57,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     private lazy var okButton = UIButton().then {
-        $0.setTitle("ok".localized(), for: .normal)
+        $0.setTitle("msg_ok".localized(), for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.white, for: .normal)
@@ -65,7 +65,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private lazy var calcleButton = UIButton().then {
-        $0.setTitle("reject".localized(), for: .normal)
+        $0.setTitle("msg_cancel_upper".localized(), for: .normal)
         $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.setTitleColor(.lightGray, for: .normal)
@@ -83,7 +83,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.keyboardType = .numberPad
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "enterMobilePhone".localized()
+        $0.placeholderString = "msg_phone_number".localized()
         $0.placeholderColor = UIColor.lightGray
         $0.tag = PHONE_NUMBER_TAG
     }
@@ -94,14 +94,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         $0.textContentType = .oneTimeCode
         $0.tintColor = UIColor.MY_BLUE
         $0.font = UIFont.systemFont(ofSize: 16)
-        $0.placeholderString = "enterVerificationCode".localized()
+        $0.placeholderString = "desc_enter_verification_code".localized()
         $0.placeholderColor = UIColor.lightGray
         $0.tag = AUTH_NUMBER_TAG
         $0.isHidden = true
     }
 
     private let verifyNumberLabel = UILabel().then {
-        $0.text = "verifyNumber".localized()
+        $0.text = "msg_verify_number".localized()
         $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         $0.textColor = UIColor.darkGray
         $0.textAlignment = .center
@@ -208,9 +208,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             }
             
         } else if phoneNumber.count < 4 || !phoneNumberRegx {
-            showAlert(title: "noti".localized(), message: "validPhoneNumber".localized(), actionButton: false)
+            showAlert(title: "dialog_notification".localized(), message: "dialog_setupGuardian_help".localized(), actionButton: false)
         } else {
-            showAlert(title: "noti".localized(), message: "exceededNumber".localized(), actionButton: false)
+            showAlert(title: "dialog_notification".localized(), message: "dialog_exceeded_verification_help".localized(), actionButton: false)
         }
     }
     
@@ -224,14 +224,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
                 updateUI()
             case .failer:
                 self.showAlert(
-                    title: "noti".localized(),
-                    message: "dupPhoneNumber".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_dup_phoneNumber_help".localized(),
                     actionButton: true
                 )
             default:
                 self.showAlert(
-                    title: "noti".localized(),
-                    message: "serverErr".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_error_server_noData".localized(),
                     actionButton: true
                 )
             }
@@ -247,26 +247,26 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             case .success:
                 self.startCountdown()
                 self.showAlert(
-                    title: "requestVerification".localized(),
-                    message: "requestsRemaining".localized(with: smsCnt, comment: "cnt"),
+                    title: "dialog_verify".localized(),
+                    message: "dialog_sendVerification_help".localized(),
                     actionButton: false
                 )
             case .failer:
                 self.showAlert(
-                    title: "failVerification".localized(),
-                    message: "againMoment".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_error_connect".localized(),
                     actionButton: false
                 )
             case .noData:   // 횟수 초과
                 self.showAlert(
-                    title: "failVerification".localized(),
-                    message: "exceededNumber".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_exceeded_verification_help".localized(),
                     actionButton: false
                 )
             default:
                 self.showAlert(
-                    title: "failVerification".localized(),
-                    message: "againMoment".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_error_connect".localized(),
                     actionButton: false
                 )
             }
@@ -286,8 +286,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             
             action = actionButton ?
-            UIAlertAction(title: "ok".localized(), style: .default) { _ in self.delegate?.complete(result: "false")} :
-            UIAlertAction(title: "ok".localized(), style: .default, handler: nil)
+            UIAlertAction(title: "msg_ok".localized(), style: .default) { _ in self.delegate?.complete(result: "false")} :
+            UIAlertAction(title: "msg_ok".localized(), style: .default, handler: nil)
             
             alert.addAction(action!)
             viewController.present(alert, animated: true)
@@ -320,7 +320,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         if authNumber.count == 6 && authNumberRegx {
             checkSMS()
         } else {
-            showAlert(title: "noti".localized(), message: "correctVerification".localized(), actionButton: false)
+            showAlert(title: "dialog_notification".localized(), message: "dialog_confirmVerification_help".localized(), actionButton: false)
         }
     }
     
@@ -335,14 +335,14 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             case .failer:
                 // Time Over
                 showAlert(
-                    title: "failVerification".localized(),
-                    message: "exceededTime".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_auth_exceeded_time".localized(),
                     actionButton: false
                 )
             default:
                 showAlert(
-                    title: "failVerification".localized(),
-                    message: "againMoment".localized(),
+                    title: "dialog_notification".localized(),
+                    message: "dialog_error_connect".localized(),
                     actionButton: false
                 )
             }
@@ -418,7 +418,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             countdownTimer = nil
             sendButton.isEnabled = true
             
-            updateText("resendText".localized())
+            updateText("msg_reSend".localized())
         }
     }
     
@@ -491,7 +491,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         }
         
         let authLabel = UILabel().then {
-            $0.text = "identityVerification".localized()
+            $0.text = "msg_verification".localized()
             $0.textColor = .white
             $0.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
             $0.backgroundColor = UIColor.MY_BLUE
@@ -508,7 +508,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         //
         let helpText = UILabel().then {
-            $0.text = "helpAuthText".localized()
+            $0.text = "desc_auth".localized()
             $0.numberOfLines = 2
             $0.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
             $0.textColor = UIColor.MY_BLUE
@@ -555,7 +555,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     
         //
         let authHelpText = UILabel().then {
-            $0.text = "threeMinutesHelpText".localized()
+            $0.text = "dialog_time_help".localized()
             $0.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
             $0.textColor = UIColor.lightGray
         }
@@ -567,7 +567,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         
         //
         let authHelpText2 = UILabel().then {
-            $0.text = "resendAuthNumber".localized()
+            $0.text = "dialog_resend_number".localized()
             $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             $0.textColor = UIColor.lightGray
         }

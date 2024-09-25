@@ -114,7 +114,7 @@ public class ArrViewController : UIViewController {
     }
     
     private let arrStateLabel = UILabel().then {
-        $0.text = "arrType".localized()
+        $0.text = "msg_arr_type".localized()
         $0.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         $0.textColor = .darkGray
         $0.numberOfLines = 2
@@ -129,7 +129,7 @@ public class ArrViewController : UIViewController {
     }
     
     private let bodyStateLabel = UILabel().then {
-        $0.text = "arrState".localized()
+        $0.text = "msg_arr_status".localized()
         $0.font = UIFont.systemFont(ofSize: 14, weight: .medium) // 크기, 굵음 정도 설정
         $0.textColor = .darkGray
         $0.isHidden = false
@@ -256,9 +256,9 @@ public class ArrViewController : UIViewController {
                     self.setArrList(arrDateList: arrList)
                 }
             case .session, .notConnected:
-                toastMessage("serverErr".localized())
+                toastMessage("dialog_error_server_noData".localized())
             default:
-                toastMessage("noData".localized())
+                toastMessage("dialog_error_noData".localized())
             }
             
             self.activityIndicator.stopAnimating()
@@ -282,7 +282,7 @@ public class ArrViewController : UIViewController {
             case .success:
                 self.arrChart(data, dict)
             default:
-                toastMessage("noData".localized())
+                toastMessage("dialog_error_noData".localized())
             }
         }
     }
@@ -356,7 +356,7 @@ public class ArrViewController : UIViewController {
     }
 
     private func setState(bodyType: String, arrType: String){
-        arrStateLabel.text = "arrType".localized()
+        arrStateLabel.text = "msg_arr_type".localized()
         bodyState.text = getBodyType(bodyType)
         arrState.text = getArrType(arrType)
     }
@@ -364,24 +364,24 @@ public class ArrViewController : UIViewController {
     private func getArrType(_ arrType: String ) -> String {
         switch (arrType) {
         case "fast":
-            return "typeFastArr".localized()
+            return "msg_type_fast_arr".localized()
         case "slow":
-            return "typeSlowArr".localized()
+            return "msg_type_slow_arr".localized()
         case "irregular":
-            return "typeHeavyArr".localized()
+            return "msg_type_heavy_arr".localized()
         default:    // "arr"
-            return "typeArr".localized()
+            return "msg_type_arr".localized()
         }
     }
     
     private func getBodyType(_ bodyType: String ) -> String {
         switch (bodyType){
         case "E":
-            return "type_Exercise".localized()
+            return "msg_status_exercise".localized()
         case "S":
-            return "type_Sleep".localized()
+            return "msg_status_sleep".localized()
         default:    // "R"
-            return "type_Rest".localized()
+            return "msg_status_rest".localized()
         }
     }
     
@@ -566,7 +566,7 @@ public class ArrViewController : UIViewController {
     
     private func setEmergencyText(location: String) {
         arrState.text = "\(location)"
-        arrStateLabel.text = "emergencyLocation".localized()
+        arrStateLabel.text = "msg_arr_emergency".localized()
         bodyState.isHidden = true
         bodyStateLabel.isHidden = true
     }

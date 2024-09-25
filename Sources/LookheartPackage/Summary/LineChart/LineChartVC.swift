@@ -93,7 +93,7 @@ class LineChartVC : UIViewController {
 
     // MARK: - Top
     private lazy var todayButton = UIButton().then {
-        $0.setTitle ("today".localized(), for: .normal )
+        $0.setTitle ("unit_today".localized(), for: .normal )
         
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -113,7 +113,7 @@ class LineChartVC : UIViewController {
     }
     
     private lazy var twoDaysButton = UIButton().then {
-        $0.setTitle ("twoDays".localized(), for: .normal )
+        $0.setTitle ("unit_twoDays".localized(), for: .normal )
         
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -132,7 +132,7 @@ class LineChartVC : UIViewController {
     }
     
     private lazy var threeDaysButton = UIButton().then {
-        $0.setTitle ("threeDays".localized(), for: .normal )
+        $0.setTitle ("unit_threeDays".localized(), for: .normal )
         
         $0.setTitleColor(.lightGray, for: .normal)
         $0.setTitleColor(.white, for: .selected)
@@ -186,7 +186,7 @@ class LineChartVC : UIViewController {
     private let centerContents = UILabel()
     
     private let maxLabel = UILabel().then {
-        $0.text = "home_maxBpm".localized()
+        $0.text = "unit_max".localized()
         $0.textColor = .lightGray
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
     }
@@ -204,7 +204,7 @@ class LineChartVC : UIViewController {
     }
     
     private let minLabel = UILabel().then {
-        $0.text = "home_minBpm".localized()
+        $0.text = "unit_min".localized()
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         $0.textColor = .lightGray
     }
@@ -222,7 +222,7 @@ class LineChartVC : UIViewController {
     }
     
     private let avgLabel = UILabel().then {
-        $0.text = "avgBPM".localized()
+        $0.text = "unit_bpm_avg".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
@@ -232,7 +232,7 @@ class LineChartVC : UIViewController {
     }
     
     private let valueLabel = UILabel().then {
-        $0.text = "fragment_bpm".localized()
+        $0.text = "unit_bpm_upper".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
@@ -252,7 +252,6 @@ class LineChartVC : UIViewController {
         getDataToServer(startDate, endDate, currentButtonFlag)
         setButtonColor(sender)
         setDisplayDateText()
-
     }
     
     @objc func shiftDate(_ sender: UIButton) {
@@ -491,9 +490,9 @@ class LineChartVC : UIViewController {
                     self.viewChart(data!, type)
                 }
             case .noData:
-                toastMessage("noData".localized())
+                toastMessage("dialog_error_noData".localized())
             default:
-                toastMessage("serverErr".localized())
+                toastMessage("dialog_error_server_noData".localized())
             }
             
             activityIndicator.stopAnimating()
@@ -638,11 +637,11 @@ class LineChartVC : UIViewController {
         
         switch (chartType) {
         case .BPM:
-            avgLabel.text = "avgBPM".localized()
-            valueLabel.text = "fragment_bpm".localized()
+            avgLabel.text = "unit_bpm_avg".localized()
+            valueLabel.text = "unit_bpm_upper".localized()
         case .HRV:
-            avgLabel.text = "avgHRV".localized()
-            valueLabel.text = "home_hrv_unit".localized()
+            avgLabel.text = "unit_hrv_avg".localized()
+            valueLabel.text = "unit_hrv".localized()
         default:
             break
         }

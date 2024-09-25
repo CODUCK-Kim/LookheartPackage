@@ -74,7 +74,7 @@ public class SummaryViewController : UIViewController {
     
     // ------------------------ BUTTON ------------------------
     private lazy var bpmButton = UIButton().then {
-        $0.setTitle("summaryBpm".localized(), for: .normal)
+        $0.setTitle("unit_bpm_cap".localized(), for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
@@ -90,7 +90,7 @@ public class SummaryViewController : UIViewController {
     }
     
     private lazy var arrButton = UIButton().then {
-        $0.setTitle("summaryArr".localized(), for: .normal)
+        $0.setTitle("unit_arr_abb".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
@@ -106,7 +106,7 @@ public class SummaryViewController : UIViewController {
     }
 
     private lazy var hrvButton = UIButton().then {
-        $0.setTitle("summaryHRV".localized(), for: .normal)
+        $0.setTitle("unit_hrv_upper".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
@@ -122,7 +122,7 @@ public class SummaryViewController : UIViewController {
     }
     
     private lazy var calorieButton = UIButton().then {
-        $0.setTitle("summaryCal".localized(), for: .normal)
+        $0.setTitle("unit_tCal_cap".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
@@ -139,7 +139,7 @@ public class SummaryViewController : UIViewController {
     
     
     private lazy var stepButton = UIButton().then {
-        $0.setTitle("summaryStep".localized(), for: .normal)
+        $0.setTitle("unit_step_cap".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
         $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         $0.titleLabel?.contentMode = .center
