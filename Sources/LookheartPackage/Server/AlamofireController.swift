@@ -14,28 +14,7 @@ public enum NetworkResponse {
 
 public class AlamofireController: NetworkProtocol {
     public static let shared = AlamofireController()
-    
-//    private lazy var baseURL: String = {
-//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test URL") as? String else {
-//            fatalError("Base URL not found in Info.plist")
-//        }
-//        return url
-//    }()
-//
-//    private lazy var spareURL: String = {
-//        guard let url = Bundle.main.object(forInfoDictionaryKey: "Test Spare URL") as? String else {
-//            fatalError("Spare URL not found in Info.plist")
-//        }
-//        return url
-//    }()
-    
-    private lazy var mongoURL: String = {
-        guard let url = Bundle.main.object(forInfoDictionaryKey: "Mongo URL") as? String else {
-            fatalError("Mongo URL not found in Info.plist")
-        }
-        return url
-    }()
-    
+
     private lazy var baseURL: String = {
         guard let url = Bundle.main.object(forInfoDictionaryKey: "Base URL") as? String else {
             fatalError("Base URL not found in Info.plist")
@@ -43,13 +22,13 @@ public class AlamofireController: NetworkProtocol {
         return url
     }()
     
-    
-    private lazy var spareURL: String = {
-        guard let url = Bundle.main.object(forInfoDictionaryKey: "Spare URL") as? String else {
-            fatalError("Spare URL not found in Info.plist")
+    private lazy var mongoURL: String = {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "Mongo URL") as? String else {
+            fatalError("Mongo URL not found in Info.plist")
         }
         return url
     }()
+
 
     public func task<T: Decodable>(
         parameters: [String : Any],
