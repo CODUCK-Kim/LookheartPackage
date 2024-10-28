@@ -8,28 +8,29 @@
 import Foundation
 import SocketIO
 
-public class SocketIOManager: NSObject {
+public class SocketIOManager {
     
     private var manager: SocketManager?
     private var socket: SocketIOClient?
     
     public typealias EventListener = NormalCallback
     
+    public init() { }
+    
     public func connect(
         url: String,
-        endPoint: String,
+        endPoint: EndPoint,
         options: SocketIOClientConfiguration,
         eventListeners: [(String, EventListener)]
     ) {
         let manager = SocketManager(socketURL: URL(string: url)!, config: options)
-        socket = manager.socket(forNamespace: endPoint)
+        socket = manager.socket(forNamespace: endPoint.rawValue)
         
         guard let socket = socket else {
             print("Socket init Error")
             return
         }
         
-        // 이벤트 리스너 설정
         for (event, listener) in eventListeners {
             socket.on(event, callback: listener)
         }
