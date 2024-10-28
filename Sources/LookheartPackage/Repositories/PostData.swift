@@ -16,7 +16,8 @@ public class PostData {
     
     public func sendEcgData(
         ecgData: [Int],
-        bpm: Int, writeDateTime: String
+        bpm: Int, 
+        writeDateTime: String
     ) async {
         let params: [String: Any] = [
             "kind": "ecgByteInsert",

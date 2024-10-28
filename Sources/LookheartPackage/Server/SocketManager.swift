@@ -8,12 +8,14 @@
 import Foundation
 import SocketIO
 
-class SocketIOManager: NSObject {
+public class SocketIOManager: NSObject {
     
     private var manager: SocketManager?
     private var socket: SocketIOClient?
     
     typealias EventListener = NormalCallback
+    
+    public override init() {}
     
     func connect(
         url: String,
