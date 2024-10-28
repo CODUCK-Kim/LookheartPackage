@@ -13,11 +13,9 @@ public class SocketIOManager: NSObject {
     private var manager: SocketManager?
     private var socket: SocketIOClient?
     
-    typealias EventListener = NormalCallback
+    public typealias EventListener = NormalCallback
     
-    public override init() {}
-    
-    func connect(
+    public func connect(
         url: String,
         endPoint: String,
         options: SocketIOClientConfiguration,
@@ -39,7 +37,7 @@ public class SocketIOManager: NSObject {
         socket.connect()
     }
     
-    func disconnect() {
+    public func disconnect() {
         if checkSocketInitialization() {
             print("Socket Disconnected")
             socket?.disconnect()
@@ -49,14 +47,14 @@ public class SocketIOManager: NSObject {
     
     
     /// JSON 객체
-    func sendData(event: String, data: [String: Any]) {
+    public func sendData(event: String, data: [String: Any]) {
         if checkSocketInitialization() {
             socket?.emit(event, data)
         }
     }
     
     
-    func sendData(event: String, data: String) {
+    public func sendData(event: String, data: String) {
         if checkSocketInitialization() {
             socket?.emit(event, data)
         }
