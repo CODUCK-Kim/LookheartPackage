@@ -7,6 +7,7 @@ import SnapKit
 enum ChartType {
     case BPM
     case HRV
+    case STRESS
     case ARR
     case CALORIE
     case STEP
@@ -20,6 +21,7 @@ public class SummaryViewController : UIViewController {
     private let HRV_BUTTON_TAG = 3
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
+    private let STRESS_BUTTON_TAG = 5
     
     private let lineChartView = LineChartVC()
     private let barChartView = BarChartVC()
@@ -50,6 +52,12 @@ public class SummaryViewController : UIViewController {
     
     private lazy var arrImage = UIImageView().then {
         let image = UIImage(named: "summary_arr")?.withRenderingMode(.alwaysTemplate)
+        $0.image = image
+        $0.tintColor = UIColor.lightGray
+    }
+    
+    private lazy var stressImage = UIImageView().then {
+        let image = UIImage(named: "ic_relax")?.withRenderingMode(.alwaysTemplate)
         $0.image = image
         $0.tintColor = UIColor.lightGray
     }
@@ -105,6 +113,22 @@ public class SummaryViewController : UIViewController {
         $0.addTarget(self, action: #selector(ButtonEvent(_:)), for: .touchUpInside)
     }
 
+    private lazy var stressButton = UIButton().then {
+        $0.setTitle("unit_stress".localized(), for: .normal)
+        $0.setTitleColor(.lightGray, for: .normal)
+        $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        $0.titleLabel?.contentMode = .center
+        $0.backgroundColor = .white
+        $0.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
+        $0.layer.borderWidth = 3
+        $0.layer.cornerRadius = 15
+        $0.titleEdgeInsets = UIEdgeInsets(top: 25, left: 0, bottom: 0, right: 0)
+        $0.isEnabled = true
+        $0.isUserInteractionEnabled = true
+        $0.tag = STRESS_BUTTON_TAG
+        $0.addTarget(self, action: #selector(ButtonEvent(_:)), for: .touchUpInside)
+    }
+    
     private lazy var hrvButton = UIButton().then {
         $0.setTitle("unit_hrv_upper".localized(), for: .normal)
         $0.setTitleColor(.lightGray, for: .normal)
@@ -166,6 +190,9 @@ public class SummaryViewController : UIViewController {
         case ARR_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
             barChartView.refreshView(.ARR)
+        case STRESS_BUTTON_TAG:
+            setChild(selectChild: lineChartView, in: self.view)
+            lineChartView.refreshView(.STRESS)
         case HRV_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
             lineChartView.refreshView(.HRV)
@@ -255,6 +282,15 @@ public class SummaryViewController : UIViewController {
     func addViews() {
         
         let buttonWidth = (self.view.frame.size.width - 60) / 5
+        let scrollView = UIScrollView()
+        let contentView = UIView()
+    
+        scrollView.do {
+            $0.showsHorizontalScrollIndicator = true
+            $0.showsVerticalScrollIndicator = false
+            $0.alwaysBounceHorizontal = true
+            $0.alwaysBounceVertical = false
+        }
         
         view.addSubview(safeAreaView)
         safeAreaView.snp.makeConstraints { make in
@@ -262,13 +298,35 @@ public class SummaryViewController : UIViewController {
             make.left.right.equalToSuperview()
         }
         
-        // bpm
-        view.addSubview(bpmButton)
+        // scrollView
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.left.equalTo(safeAreaView).offset(10)
+            make.right.equalTo(safeAreaView).offset(-10)
+            make.height.equalTo(50)
+        }
+        
+        // buttonView
+        scrollView.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.top.left.right.bottom.height.width.equalTo(scrollView)
+        }
+        
+        
+        contentView.addSubview(bpmButton)
         bpmButton.snp.makeConstraints { make in
             make.top.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(buttonWidth)
             make.height.equalTo(50)
         }
+        
+        // bpm
+//        view.addSubview(bpmButton)
+//        bpmButton.snp.makeConstraints { make in
+//            make.top.left.equalTo(safeAreaView).offset(10)
+//            make.width.equalTo(buttonWidth)
+//            make.height.equalTo(50)
+//        }
         
         view.addSubview(bpmImage)
         bpmImage.snp.makeConstraints { make in
@@ -277,12 +335,18 @@ public class SummaryViewController : UIViewController {
         }
 
         // arr
-        view.addSubview(arrButton)
+        contentView.addSubview(arrButton)
         arrButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
             make.left.equalTo(bpmButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
         }
+//        view.addSubview(arrButton)
+//        arrButton.snp.makeConstraints { make in
+//            make.top.equalTo(bpmButton)
+//            make.left.equalTo(bpmButton.snp.right).offset(10)
+//            make.width.height.equalTo(bpmButton)
+//        }
         
         view.addSubview(arrImage)
         arrImage.snp.makeConstraints { make in
@@ -290,27 +354,36 @@ public class SummaryViewController : UIViewController {
             make.centerX.equalTo(arrButton)
         }
         
-        // hrv
-        view.addSubview(hrvButton)
-        hrvButton.snp.makeConstraints { make in
+        // stress
+        contentView.addSubview(stressButton)
+        stressButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
             make.left.equalTo(arrButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
         }
         
-        view.addSubview(hrvImage)
-        hrvImage.snp.makeConstraints { make in
-            make.top.equalTo(hrvButton).offset(5)
-            make.centerX.equalTo(hrvButton)
+        view.addSubview(stressImage)
+        stressImage.snp.makeConstraints { make in
+            make.top.equalTo(stressButton).offset(5)
+            make.centerX.equalTo(stressButton)
         }
         
+        
+        
         // cal
-        view.addSubview(calorieButton)
+        contentView.addSubview(calorieButton)
         calorieButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
-            make.left.equalTo(hrvButton.snp.right).offset(10)
+            make.left.equalTo(stressButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
         }
+        
+//        view.addSubview(calorieButton)
+//        calorieButton.snp.makeConstraints { make in
+//            make.top.equalTo(bpmButton)
+//            make.left.equalTo(hrvButton.snp.right).offset(10)
+//            make.width.height.equalTo(bpmButton)
+//        }
         
         view.addSubview(calorieImage)
         calorieImage.snp.makeConstraints { make in
@@ -319,18 +392,47 @@ public class SummaryViewController : UIViewController {
         }
         
         // step
-        view.addSubview(stepButton)
+        contentView.addSubview(stepButton)
         stepButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
             make.left.equalTo(calorieButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
         }
         
+//        view.addSubview(stepButton)
+//        stepButton.snp.makeConstraints { make in
+//            make.top.equalTo(bpmButton)
+//            make.left.equalTo(calorieButton.snp.right).offset(10)
+//            make.width.height.equalTo(bpmButton)
+//        }
+        
         view.addSubview(stepImage)
         stepImage.snp.makeConstraints { make in
             make.top.equalTo(stepButton).offset(5)
             make.centerX.equalTo(stepButton)
         }
+        
+        // hrv
+        contentView.addSubview(hrvButton)
+        hrvButton.snp.makeConstraints { make in
+            make.top.equalTo(bpmButton)
+            make.left.equalTo(stepButton.snp.right).offset(10)
+            make.width.height.equalTo(bpmButton)
+        }
+        
+//        view.addSubview(hrvButton)
+//        hrvButton.snp.makeConstraints { make in
+//            make.top.equalTo(bpmButton)
+//            make.left.equalTo(arrButton.snp.right).offset(10)
+//            make.width.height.equalTo(bpmButton)
+//        }
+        
+        view.addSubview(hrvImage)
+        hrvImage.snp.makeConstraints { make in
+            make.top.equalTo(hrvButton).offset(5)
+            make.centerX.equalTo(hrvButton)
+        }
+    
         
         addChild(lineChartView)
         view.addSubview(lineChartView.view)
