@@ -60,7 +60,6 @@ public enum EndPoint: String {
     
     
     /* WSS */
-    case wssEcg = "Ecg"
-    case wssSendEmail = "Email"
-    
+    case wssEcg = "/Ecg"
+    case wssSendEmail = "/Email"
 }
