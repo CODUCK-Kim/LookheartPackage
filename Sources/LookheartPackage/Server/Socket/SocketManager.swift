@@ -8,17 +8,11 @@
 import Foundation
 import SocketIO
 
+
 public class SocketIOManager {
     
     private var manager: SocketManager?
     private var socket: SocketIOClient?
-    
-    public typealias EventListener = NormalCallback
-
-    public enum EventName {
-        case custom(String)
-        case client(SocketClientEvent)
-    }
 
     public init() { }
     
@@ -26,7 +20,7 @@ public class SocketIOManager {
         url: String,
         endPoint: EndPoint,
         options: SocketIOClientConfiguration,
-        eventListeners: [(EventName, EventListener)]
+        eventListeners: [(SocketEvent, EventListener)]
     ) {
         let manager = SocketManager(socketURL: URL(string: url)!, config: options)
         socket = manager.socket(forNamespace: endPoint.rawValue)
