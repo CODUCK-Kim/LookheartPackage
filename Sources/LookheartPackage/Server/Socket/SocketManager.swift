@@ -14,14 +14,19 @@ public class SocketIOManager {
     private var socket: SocketIOClient?
     
     public typealias EventListener = NormalCallback
-    
+
+    public enum EventName {
+        case custom(String)
+        case client(SocketClientEvent)
+    }
+
     public init() { }
     
     public func connect(
         url: String,
         endPoint: EndPoint,
         options: SocketIOClientConfiguration,
-        eventListeners: [(String, EventListener)]
+        eventListeners: [(EventName, EventListener)]
     ) {
         let manager = SocketManager(socketURL: URL(string: url)!, config: options)
         socket = manager.socket(forNamespace: endPoint.rawValue)
@@ -31,8 +36,13 @@ public class SocketIOManager {
             return
         }
         
-        for (event, listener) in eventListeners {
-            socket.on(event, callback: listener)
+        for (eventName, listener) in eventListeners {
+            switch eventName {
+            case .custom(let event):
+                socket.on(event, callback: listener)
+            case .client(let clientEvent):
+                socket.on(clientEvent: clientEvent, callback: listener)
+            }
         }
         
         socket.connect()
