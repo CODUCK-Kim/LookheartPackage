@@ -309,7 +309,9 @@ public class SummaryViewController : UIViewController {
         // buttonView
         scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.top.left.bottom.height.equalTo(scrollView)
+            make.top.bottom.equalTo(scrollView)
+            make.left.right.equalTo(scrollView)
+            make.height.equalTo(scrollView)
         }
         
         
@@ -393,7 +395,7 @@ public class SummaryViewController : UIViewController {
             make.top.equalTo(bpmButton)
             make.left.equalTo(stepButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
-            make.right.equalTo(contentView).offset(-10)
+            make.right.equalTo(contentView)
         }
   
         contentView.addSubview(hrvImage)
