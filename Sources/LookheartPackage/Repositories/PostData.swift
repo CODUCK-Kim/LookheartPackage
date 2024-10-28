@@ -14,7 +14,6 @@ public class PostData {
     public init() {}
     
     
-    
     public func sendEcgData(
         ecgData: [Int],
         bpm: Int, writeDateTime: String
@@ -27,6 +26,7 @@ public class PostData {
             "bpm": bpm,
             "ecgPacket": ecgData
         ]
+        
         
         do {
             _ = try await AlamofireController.shared.alamofireControllerForString(
