@@ -57,4 +57,10 @@ public enum EndPoint: String {
     // POST: Exercise
     case postExerciseData = "exercise/create"
     case deleteExerciseData = "exercise/delete"
+    
+    
+    /* WSS */
+    case wssEcg = "Ecg"
+    case wssSendEmail = "Email"
+    
 }
