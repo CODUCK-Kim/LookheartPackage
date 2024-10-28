@@ -18,12 +18,12 @@ public class SocketIOManager {
     
     public func connect(
         url: String,
-        endPoint: EndPoint,
         options: SocketIOClientConfiguration,
         eventListeners: [(SocketEvent, EventListener)]
     ) {
         let manager = SocketManager(socketURL: URL(string: url)!, config: options)
-        socket = manager.socket(forNamespace: endPoint.rawValue)
+//        socket = manager.socket(forNamespace: endPoint.rawValue)
+        socket = manager.defaultSocket
         
         guard let socket = socket else {
             print("Socket init Error")
