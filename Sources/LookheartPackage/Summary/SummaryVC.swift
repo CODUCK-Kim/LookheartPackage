@@ -393,7 +393,7 @@ public class SummaryViewController : UIViewController {
             make.top.equalTo(bpmButton)
             make.left.equalTo(stepButton.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
-            make.right.equalTo(contentView)
+            make.right.equalTo(contentView).offset(-10)
         }
   
         contentView.addSubview(hrvImage)
