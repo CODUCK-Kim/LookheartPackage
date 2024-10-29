@@ -11,7 +11,7 @@ public class SummaryViewController : UIViewController {
     private let HRV_BUTTON_TAG = 3
     private let CAL_BUTTON_TAG = 4
     private let STEP_BUTTON_TAG = 5
-    private let STRESS_BUTTON_TAG = 5
+    private let STRESS_BUTTON_TAG = 6
     
     private let lineChartView = LineChartVC()
     private let barChartView = BarChartVC()
@@ -29,6 +29,7 @@ public class SummaryViewController : UIViewController {
     private lazy var childs: [UIViewController] = {
         return [lineChartView, barChartView]
     }()
+    
     
     // MARK: -
     private let safeAreaView = UIView()

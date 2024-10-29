@@ -39,7 +39,7 @@ class LineChartService {
             type: String.self
         )
                       
-        print("GET_LINE_CHART_DATA: \(data)")
+//        print("GET_LINE_CHART_DATA: \(data)")
         
         return data
     }

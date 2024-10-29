@@ -8,11 +8,11 @@
 import Foundation
 import Swinject
 
-class DependencyInjection {
-    static let shared = DependencyInjection()
-    let container: Container
+public class DependencyInjection {
+    public static let shared = DependencyInjection()
+    private let container: Container
     
-    private init() {
+    public init() {
         container = Container()
         
         let assemblies: [Assembly] = [
@@ -24,11 +24,11 @@ class DependencyInjection {
         assemblies.forEach { $0.assemble(container: container) }
     }
     
-    func registerAssemblies(_ assemblies: [Assembly]) {
+    public func registerAssemblies(_ assemblies: [Assembly]) {
         assemblies.forEach { $0.assemble(container: container) }
     }
     
-    func resolve<T>(_ type: T.Type) -> T? {
+    public func resolve<T>(_ type: T.Type) -> T? {
         return container.resolve(type)
     }
 }

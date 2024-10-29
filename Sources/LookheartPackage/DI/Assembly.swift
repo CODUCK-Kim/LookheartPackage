@@ -8,6 +8,6 @@
 import Foundation
 import Swinject
 
-protocol Assembly {
+public protocol Assembly {
     func assemble(container: Container)
 }
