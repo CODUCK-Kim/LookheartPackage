@@ -29,11 +29,11 @@ public class SummaryViewController : UIViewController {
     private var arrChild: [UIViewController] = []
     
     private lazy var buttons: [UIButton] = {
-        return [bpmButton, arrButton, hrvButton, calorieButton, stepButton]
+        return [bpmButton, arrButton, stressButton, hrvButton, calorieButton, stepButton]
     }()
     
     private lazy var images: [UIImageView] = {
-        return [bpmImage, arrImage, hrvImage, calorieImage, stepImage]
+        return [bpmImage, arrImage, stressImage, hrvImage, calorieImage, stepImage]
     }()
     
     private lazy var childs: [UIViewController] = {
@@ -207,7 +207,10 @@ public class SummaryViewController : UIViewController {
         }
     }
     
-    private func setChild(selectChild: UIViewController, in containerView: UIView) {
+    private func setChild(
+        selectChild: UIViewController,
+        in containerView: UIView
+    ) {
         for child in childs {
             if child == selectChild {
                 addChild(child, in: containerView)
