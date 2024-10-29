@@ -12,7 +12,8 @@ import DGCharts
 class LineChartViewModel {
     // Combine
     @Published var networkResponse: NetworkResponse?
-    @Published var entries: [String : [ChartDataEntry]]?
+    @Published var chartModel: LineChartModel?
+    @Published var displayDate: String?
     
     // DI
     private let repository: LineChartRepository
@@ -22,27 +23,30 @@ class LineChartViewModel {
     }
     
     func updateChartData() {
+        displayDate = repository.getDisplayDate()
+        
         Task {
-            let (groupData, response) = await repository.getLineChartGropData()
+            let (chartModel, response) = await repository.getLineChartGropData()
 
             switch response {
             case .success: 
-                updateEntries(lineChartGroupedData: groupData!)
+                updateChartModel(lineChartModel: chartModel!)
             default:
                 networkResponse = response
             }
         }
     }
     
-    private func updateEntries(lineChartGroupedData: LineChartGroupedData) {
+    private func updateChartModel(lineChartModel: LineChartModel) {
         var entries: [String : [ChartDataEntry]] = [:]
         
-        let size = lineChartGroupedData.timeTable.count
-        let timeTable = lineChartGroupedData.timeTable
-        let dictionary = lineChartGroupedData.dictData
+        var copyModel = lineChartModel
+        let size = lineChartModel.timeTable.count
+        let timeTable = lineChartModel.timeTable
+        let dictionary = lineChartModel.dictData
         
         // init entries
-        lineChartGroupedData.dictData.keys.forEach { key in
+        lineChartModel.dictData.keys.forEach { key in
             entries[key] = [ChartDataEntry]()
         }
         
@@ -54,7 +58,7 @@ class LineChartViewModel {
                 if let data = timeDict[time] {
                     let value: Double?
                     
-                    switch lineChartGroupedData.type {
+                    switch lineChartModel.type {
                     case .BPM:
                         value = data.bpm
                     case .HRV:
@@ -75,7 +79,9 @@ class LineChartViewModel {
             }
         }
         
-        self.entries = entries
+        copyModel.entries = entries
+        
+        self.chartModel = copyModel
     }
     
     

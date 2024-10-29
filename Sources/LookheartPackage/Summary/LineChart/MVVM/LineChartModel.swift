@@ -1,6 +1,8 @@
 import Foundation
+import DGCharts
 
-struct LineChartGroupedData {
+struct LineChartModel {
+    var entries: [String : [ChartDataEntry]]?
     var dictData: [String: [String: LineChartDataModel]]
     var timeTable: [String]
     var type: LineChartType

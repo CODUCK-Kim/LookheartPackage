@@ -37,7 +37,7 @@ class LineChartRepository {
     
     // MARK: -
     func getLineChartGropData() async -> (
-        data: LineChartGroupedData?,
+        data: LineChartModel?,
         networkResponse: NetworkResponse
     ) {
         let startDate = getStartDate()
@@ -144,7 +144,7 @@ class LineChartRepository {
     
     
     // dictionary Data, time table
-    func getLineChartGroupedData(_ groupData: [String : [LineChartDataModel]]) -> LineChartGroupedData {
+    func getLineChartGroupedData(_ groupData: [String : [LineChartDataModel]]) -> LineChartModel {
         var dictData: [String : [String : LineChartDataModel]] = [:]
         
         for (date, dataForDate) in groupData {
@@ -160,7 +160,7 @@ class LineChartRepository {
         // time Table
         let timeTable = Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
         
-        return LineChartGroupedData(dictData: dictData, timeTable: timeTable, type: lineChartType)
+        return LineChartModel(dictData: dictData, timeTable: timeTable, type: lineChartType)
     }
     
     
@@ -168,6 +168,22 @@ class LineChartRepository {
     // MARK: -
     func updateTargetDate(_ nextDate: Bool) {
         targetDate = dateTime.dateCalculate(targetDate, 1, nextDate)
+    }
+    
+    func getDisplayDate() -> String {
+        let startDate = getStartDate()
+        
+        switch (lineChartDateType) {
+        case .TODAY:
+            return startDate
+        case .TWO_DAYS, .THREE_DAYS:
+            let endDate = dateTime.dateCalculate(getEndDate(), 1, false)
+            
+            let startString = dateTime.changeDateFormat(startDate, false)
+            let endString = dateTime.changeDateFormat(endDate, false)
+            
+            return "\(startString) ~ \(endString)"
+        }
     }
     
     private func getStartDate() -> String {
@@ -188,9 +204,6 @@ class LineChartRepository {
     private func getEndDate() -> String {
         return dateTime.dateCalculate(targetDate, 1, true)
     }
-    
-    
-    
     
     // MARK: -
     func refreshData(_ type: LineChartType) {

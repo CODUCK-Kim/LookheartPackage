@@ -270,23 +270,47 @@ class LineChartVC : UIViewController {
     }
     
     private func setupBindings() {
-        // entries
-        viewModel?.$entries
+        // chart entries
+        viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] entries in
-                print(entries)
+            .sink { [weak self] chartModel in
+                print(chartModel)
             }
             .store(in: &cancellables)
+        
+        
+        // display date
+        viewModel?.$displayDate
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] displyDate in
+                self?.todayDisplay.text = displyDate
+            }
+            .store(in: &cancellables)
+        
         
         // network response
         viewModel?.$networkResponse
             .receive(on: DispatchQueue.main)
             .sink { [weak self] response in
-                print(response)
+                self?.showErrorMessage(response)
             }
             .store(in: &cancellables)
     }
-    
+
+    private func showErrorMessage(_ response: NetworkResponse?) {
+        guard let response else { return }
+        
+        switch response {
+        case .failer, .invalidResponse:
+            showToastMessage("dialog_error_server_noData".localized())
+        case .notConnected, .session:
+            showToastMessage("dialog_error_internet".localized())
+        case .noData:
+            showToastMessage("dialog_error_noData".localized())
+        default:
+            print("other response: \(response)")
+        }
+    }
     
     // MARK: - UI
     private func setButtonColor(_ sender: UIButton) {
