@@ -15,7 +15,7 @@ public enum EndPoint: String {
     case getArrListData = "mslecgarr/arrWritetime?" // List, Data
     case getArrCnt = "mslecgarr/arrCount?" // Cnt
     case getHourlyData = "mslecgday/day"
-    
+    case getStressData = "mslecgstress/ecgStressData?"
     
     // GET: User Data
     case getProfile = "msl/Profile"
@@ -34,6 +34,7 @@ public enum EndPoint: String {
     // GET: Exercise
     case getExerciseList = "exercise/list?"
     case getExerciseData = "exercise/data?"
+    
     
     // Google Auth
     case googleAuth = "google/callback"

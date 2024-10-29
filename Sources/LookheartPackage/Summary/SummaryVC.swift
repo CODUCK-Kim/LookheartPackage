@@ -3,16 +3,6 @@ import UIKit
 import Then
 import SnapKit
 
-
-enum ChartType {
-    case BPM
-    case HRV
-    case STRESS
-    case ARR
-    case CALORIE
-    case STEP
-}
-
 @available(iOS 13.0, *)
 public class SummaryViewController : UIViewController {
     
@@ -29,11 +19,11 @@ public class SummaryViewController : UIViewController {
     private var arrChild: [UIViewController] = []
     
     private lazy var buttons: [UIButton] = {
-        return [bpmButton, arrButton, stressButton, hrvButton, calorieButton, stepButton]
+        return [bpmButton, arrButton, hrvButton, calorieButton, stepButton, stressButton]
     }()
     
     private lazy var images: [UIImageView] = {
-        return [bpmImage, arrImage, stressImage, hrvImage, calorieImage, stepImage]
+        return [bpmImage, arrImage, hrvImage, calorieImage, stepImage, stressImage]
     }()
     
     private lazy var childs: [UIViewController] = {
@@ -186,16 +176,16 @@ public class SummaryViewController : UIViewController {
         switch(sender.tag) {
         case BPM_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
-            lineChartView.refreshView(.BPM)
+            lineChartView.refreshView(lineChart: .BPM)
         case ARR_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
             barChartView.refreshView(.ARR)
         case STRESS_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
-            lineChartView.refreshView(.STRESS)
+            lineChartView.refreshView(lineChart: .STRESS)
         case HRV_BUTTON_TAG:
             setChild(selectChild: lineChartView, in: self.view)
-            lineChartView.refreshView(.HRV)
+            lineChartView.refreshView(lineChart: .HRV)
         case CAL_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
             barChartView.refreshView(.CALORIE)
@@ -232,7 +222,7 @@ public class SummaryViewController : UIViewController {
         super.viewWillAppear(animated)
         
         setChild(selectChild: lineChartView, in: self.view)
-        lineChartView.refreshView(.BPM)
+        lineChartView.refreshView(lineChart: .BPM)
         setButtonColor(buttons[BPM_BUTTON_TAG - 1])
         
     }

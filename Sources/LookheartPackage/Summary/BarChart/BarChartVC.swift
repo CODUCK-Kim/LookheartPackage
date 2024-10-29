@@ -6,7 +6,7 @@ import DGCharts
 class BarChartVC : UIViewController {
     
     private var email = String()
-    private var chartType: ChartType = .ARR
+    private var chartType: BarChartType = .ARR
     
     enum DateType: Int {
         case DAY = 1
@@ -398,7 +398,7 @@ class BarChartVC : UIViewController {
         dissmissCalendar()
     }
     
-    public func refreshView(_ type: ChartType) {
+    public func refreshView(_ type: BarChartType) {
         
         chartType = type
         currentButtonFlag = .DAY

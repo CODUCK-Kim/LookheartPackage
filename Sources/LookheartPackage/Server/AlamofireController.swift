@@ -37,14 +37,14 @@ public class AlamofireController: NetworkProtocol {
         type: T.Type
     ) async -> (result: T?, response: NetworkResponse) {
         do {
-            let result: T = try await AlamofireController.shared.alamofireControllerTask(
+            let result: T = try await alamofireControllerTask(
                 parameters: parameters,
                 endPoint: endPoit,
                 method: method
             )
             return (result: result, response: .success)
         } catch {
-            let error = AlamofireController.shared.handleError(error)
+            let error = handleError(error)
             return (result: nil, response: error)
         }
     }
@@ -99,6 +99,10 @@ public class AlamofireController: NetworkProtocol {
     public func getBaseURL() -> String {
         return baseURL
     }
+    
+    
+    
+    
     
     
     

@@ -86,69 +86,80 @@ public class GraphService {
     }
     
     
-    /// 추후에 파싱 부분과 데이터 모델링 하는 부분 분리해야함!!
-    func getBpmData(
-        startDate: String,
-        endDate: String
-    ) async -> ([BpmData]?, NetworkResponse) {
-        let parameters: [String: Any] = [
-            "eq": propEmail,
-            "startDate": startDate,
-            "endDate": endDate
-        ]
-        
-        do {
-            let bpmData = try await AlamofireController.shared.alamofireControllerForString(
-                parameters: parameters,
-                endPoint: .getBpmData,
-                method: .get)
-            
-            guard !bpmData.contains("result = 0") else {
-                return (nil, .noData)
-            }
-                        
-            let newlineData = bpmData.split(separator: "\n").dropFirst()
-            guard newlineData.count > 0 else {
-                return (nil, .invalidResponse)
-            }
-            
-            let splitData = newlineData.first?.split(separator: "\r\n")
-            var parsedRecords = [BpmData]()
-            
-            
-            if let datalist = splitData {
-                for data in datalist {
-                    let fields = data.split(separator: "|")
-                    
-                    if fields.count == 7 {
-                        guard let bpm = Int(fields[4]),
-                              let temp = Double(fields[5]),
-                              let hrv = Int(fields[6]) else {
-                            continue
-                        }
-                        
-                        let dateTime = fields[2].split(separator: " ")
-                        
-                        parsedRecords.append( BpmData(
-                            idx: String(fields[0]),
-                            eq: String(fields[1]),
-                            writeDateTime: String(fields[2]),
-                            writeDate: String(dateTime[0]),
-                            writeTime: String(dateTime[1]),
-                            timezone: String(fields[3]),
-                            bpm: String(bpm),
-                            temp: String(temp),
-                            hrv: String(hrv)
-                        ))
-                    }
-                }
-                
-                return (parsedRecords, .success)
-            } else {
-                return (nil, .failer)
-            }
-        } catch {
-            return (nil, AlamofireController.shared.handleError(error))
-        }
-    }
+//    func getBpmData(
+//        startDate: String,
+//        endDate: String,
+//        type: LineChartType
+//    ) async -> ([LineChartDataModel]?, NetworkResponse) {
+//        let parameters: [String: Any] = [
+//            "eq": propEmail,
+//            "startDate": startDate,
+//            "endDate": endDate
+//        ]
+//        
+//        do {
+//            let endPoint = getLineDataEndPoint(type)
+//            
+//            let bpmData = try await AlamofireController.shared.alamofireControllerForString(
+//                parameters: parameters,
+//                endPoint: endPoint,
+//                method: .get)
+//            
+//            guard !bpmData.contains("result = 0") else {
+//                return (nil, .noData)
+//            }
+//                        
+//            let newlineData = bpmData.split(separator: "\n").dropFirst()
+//            guard newlineData.count > 0 else {
+//                return (nil, .invalidResponse)
+//            }
+//            
+//            let splitData = newlineData.first?.split(separator: "\r\n")
+//            var parsedRecords = [LineChartModel]()
+//            
+//            
+//            if let datalist = splitData {
+//                for data in datalist {
+//                    let fields = data.split(separator: "|")
+//                    
+//                    if fields.count == 7 {
+//                        guard let bpm = Int(fields[4]),
+//                              let temp = Double(fields[5]),
+//                              let hrv = Int(fields[6]) else {
+//                            continue
+//                        }
+//                        
+//                        let dateTime = fields[2].split(separator: " ")
+//                        
+//                        parsedRecords.append( LineChartModel(
+//                            idx: String(fields[0]),
+//                            eq: String(fields[1]),
+//                            writeDateTime: String(fields[2]),
+//                            writeDate: String(dateTime[0]),
+//                            writeTime: String(dateTime[1]),
+//                            timezone: String(fields[3]),
+//                            bpm: String(bpm),
+//                            temp: String(temp),
+//                            hrv: String(hrv)
+//                        ))
+//                    }
+//                }
+//                
+//                return (parsedRecords, .success)
+//            } else {
+//                return (nil, .failer)
+//            }
+//        } catch {
+//            return (nil, AlamofireController.shared.handleError(error))
+//        }
+//    }
+//    
+//    private func getLineDataEndPoint(_ type: LineChartType) -> EndPoint {
+//        return switch type {
+//        case .BPM, .HRV:
+//            EndPoint.getBpmData
+//        case .STRESS:
+//            EndPoint.getStressData
+//        }
+//    }
 }
