@@ -8,7 +8,7 @@
 import Foundation
 import Swinject
 
-class LineChartAssembly: Assembly {
+class LineChartAssembly: LookHeartAssembly {
     func assemble(container: Container) {
         // Service
         container.register(LineChartService.self) { r in

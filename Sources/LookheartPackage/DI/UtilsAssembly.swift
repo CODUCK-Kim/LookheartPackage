@@ -8,7 +8,7 @@
 import Foundation
 import Swinject
 
-class UtilsAssembly: Assembly {
+class UtilsAssembly: LookHeartAssembly {
     func assemble(container: Container) {
         // DateTime
         container.register(MyDateTime.self) { _ in

@@ -8,7 +8,7 @@
 import Foundation
 import Swinject
 
-class NetworkAssembly: Assembly {
+class NetworkAssembly: LookHeartAssembly {
     func assemble(container: Container) {
         // AlamofireController
         container.register(NetworkProtocol.self) { _ in

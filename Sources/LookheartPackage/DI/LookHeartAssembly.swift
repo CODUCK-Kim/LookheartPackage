@@ -8,6 +8,6 @@
 import Foundation
 import Swinject
 
-public protocol Assembly {
+public protocol LookHeartAssembly {
     func assemble(container: Container)
 }

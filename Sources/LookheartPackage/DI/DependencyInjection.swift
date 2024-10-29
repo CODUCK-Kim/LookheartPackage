@@ -15,7 +15,7 @@ public class DependencyInjection {
     public init() {
         container = Container()
         
-        let assemblies: [Assembly] = [
+        let assemblies: [LookHeartAssembly] = [
             UtilsAssembly(),
             NetworkAssembly(),
             LineChartAssembly()
@@ -24,7 +24,7 @@ public class DependencyInjection {
         assemblies.forEach { $0.assemble(container: container) }
     }
     
-    public func registerAssemblies(_ assemblies: [Assembly]) {
+    public func registerAssemblies(_ assemblies: [LookHeartAssembly]) {
         assemblies.forEach { $0.assemble(container: container) }
     }
     
