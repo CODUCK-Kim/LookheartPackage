@@ -680,7 +680,7 @@ class LineChartVC : UIViewController {
             make.width.equalTo(oneThirdWidth)
         }
         
-        avgStackView.snp.makeConstraints { make in
+        maxStackView.snp.makeConstraints { make in
             make.top.bottom.right.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
