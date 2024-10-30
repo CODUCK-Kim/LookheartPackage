@@ -472,15 +472,15 @@ class LineChartVC : UIViewController {
             bottomHeightConstraint?.deactivate()
             
             topContents.snp.remakeConstraints { make in
-                topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+                topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
             }
             
             middleContents.snp.remakeConstraints { make in
-                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
             }
             
             bottomContents.snp.remakeConstraints { make in
-                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
             }
         } else {
             hideTopView()
@@ -500,11 +500,11 @@ class LineChartVC : UIViewController {
         }
         
         middleContents.snp.remakeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
         }
         
         bottomContents.snp.remakeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.8).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
         }
     }
     
@@ -550,20 +550,20 @@ class LineChartVC : UIViewController {
         stackView.addArrangedSubview(bottomContents)
         
         stackView.snp.makeConstraints { make in
-            make.top.equalTo(lineChartView.snp.bottom)
+            make.top.equalTo(lineChartView.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(safeAreaView)
         }
         
         topContents.snp.makeConstraints { make in
-            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
         }
         
         middleContents.snp.makeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
         }
         
         bottomContents.snp.makeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
         }
     }
     
@@ -576,7 +576,8 @@ class LineChartVC : UIViewController {
 //        topContents.addSubview(threeDaysButton)
         
         todayButton.snp.makeConstraints { make in
-            make.top.bottom.equalTo(topContents)
+            make.top.equalTo(topContents)
+            make.bottom.equalTo(topContents)
             make.left.equalTo(safeAreaView).offset(10)
             make.width.equalTo(oneThirdWidth - 30)
         }
