@@ -608,17 +608,20 @@ class LineChartVC : UIViewController {
         middleContents.addSubview(calendarButton)
         
         todayDisplay.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
+            make.top.equalTo(middleContents).offset(10)
+            make.bottom.equalTo(middleContents)
             make.centerX.equalTo(middleContents).offset(5)
         }
 
         yesterdayButton.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
+            make.top.equalTo(middleContents).offset(10)
+            make.bottom.equalTo(middleContents)
             make.left.equalTo(middleContents).offset(10)
         }
 
         tomorrowButton.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
+            make.top.equalTo(middleContents).offset(10)
+            make.bottom.equalTo(middleContents)
             make.right.equalTo(middleContents).offset(-10)
         }
 
@@ -631,10 +634,10 @@ class LineChartVC : UIViewController {
     
     private func test() {
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
-        let singlePortion = 1.0 / totalMultiplier
+//        let singlePortion = 1.0 / totalMultiplier
         
         let screenWidth = UIScreen.main.bounds.width // Screen width
-        let oneThirdWidth = screenWidth / 3.0
+//        let oneThirdWidth = screenWidth / 3.0
 
 //        // --------------------- middleContents --------------------- //
 //        middleContents.addSubview(todayDisplay)
