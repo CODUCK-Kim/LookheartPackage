@@ -518,7 +518,10 @@ class LineChartVC : UIViewController {
         addStackView()
         
         addDateViews()
+        
+        addCalendarViews()
     }
+    
     
     private func addChartViews() {
         view.addSubview(safeAreaView)
@@ -538,6 +541,7 @@ class LineChartVC : UIViewController {
             make.centerX.centerY.equalTo(lineChartView)
         }
     }
+    
     
     private func addStackView() {
         stackView.axis = .vertical
@@ -566,6 +570,7 @@ class LineChartVC : UIViewController {
             bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
         }
     }
+    
     
     private func addDateViews() {
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
@@ -596,64 +601,41 @@ class LineChartVC : UIViewController {
         }
     }
     
+    private func addCalendarViews() {
+        middleContents.addSubview(todayDisplay)
+        middleContents.addSubview(yesterdayButton)
+        middleContents.addSubview(tomorrowButton)
+        middleContents.addSubview(calendarButton)
+        
+        todayDisplay.snp.makeConstraints { make in
+            make.top.bottom.equalTo(middleContents)
+            make.centerX.equalTo(middleContents).offset(5)
+        }
+
+        yesterdayButton.snp.makeConstraints { make in
+            make.top.bottom.equalTo(middleContents)
+            make.left.equalTo(middleContents).offset(10)
+        }
+
+        tomorrowButton.snp.makeConstraints { make in
+            make.top.bottom.equalTo(middleContents)
+            make.right.equalTo(middleContents).offset(-10)
+        }
+
+        calendarButton.snp.makeConstraints { make in
+            make.centerY.equalTo(todayDisplay)
+            make.left.equalTo(todayDisplay.snp.left).offset(-30)
+        }
+    }
+    
+    
     private func test() {
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier
         
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneThirdWidth = screenWidth / 3.0
-        
-//        view.addSubview(bottomLabel)
-//        bottomLabel.snp.makeConstraints { make in
-//            make.top.equalTo(lineChartView.snp.bottom)
-//            make.left.right.bottom.equalTo(safeAreaView)
-//        }
-        
-//        bottomLabel.addSubview(topContents)
-//        topContents.snp.makeConstraints { make in
-//            make.top.equalTo(bottomLabel).offset(10)
-//            make.left.equalTo(bottomLabel).offset(10)
-//            make.right.equalTo(bottomLabel).offset(-10)
-//            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
-//        }
-        
-//        bottomLabel.addSubview(middleContents)
-//        middleContents.snp.makeConstraints { make in
-//            make.top.equalTo(topContents.snp.bottom)
-//            make.left.right.equalTo(bottomLabel)
-//            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
-//        }
-//        
-//        bottomLabel.addSubview(bottomContents)
-//        bottomContents.snp.makeConstraints { make in
-//            make.top.equalTo(middleContents.snp.bottom)
-//            make.left.right.bottom.equalTo(bottomLabel)
-//        }
-        
-//        // --------------------- Top Contents --------------------- //
-//        topContents.addSubview(twoDaysButton)
-//        twoDaysButton.snp.makeConstraints { make in
-//            make.top.centerX.equalTo(topContents)
-//            make.bottom.equalTo(topContents).offset(-20)
-//            make.width.equalTo(oneThirdWidth - 30)
-//        }
-//        
-//        topContents.addSubview(todayButton)
-//        todayButton.snp.makeConstraints { make in
-//            make.top.equalTo(topContents)
-//            make.left.equalTo(safeAreaView).offset(10)
-//            make.bottom.equalTo(topContents).offset(-20)
-//            make.width.equalTo(oneThirdWidth - 30)
-//        }
-//        
-//        topContents.addSubview(threeDaysButton)
-//        threeDaysButton.snp.makeConstraints { make in
-//            make.top.equalTo(topContents)
-//            make.right.equalTo(safeAreaView).offset(-10)
-//            make.bottom.equalTo(topContents).offset(-20)
-//            make.width.equalTo(oneThirdWidth - 30)
-//        }
-//        
+
 //        // --------------------- middleContents --------------------- //
 //        middleContents.addSubview(todayDisplay)
 //        todayDisplay.snp.makeConstraints { make in
