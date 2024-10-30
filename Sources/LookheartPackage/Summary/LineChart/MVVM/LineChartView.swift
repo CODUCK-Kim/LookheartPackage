@@ -594,6 +594,8 @@ class LineChartVC : UIViewController {
         addCalendarViews()
         
         addBpmHrvViews()
+        
+        addStressViews()
     }
     
     
