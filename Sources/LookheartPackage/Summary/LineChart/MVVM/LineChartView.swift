@@ -501,17 +501,17 @@ class LineChartVC : UIViewController {
         bottomContents.backgroundColor = .MY_LIGHT_PINK
         
         topContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView).multipliedBy(0.3)
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.3)
         }
         
         
         middleContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView).multipliedBy(0.3)
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.3)
         }
         
         
         bottomContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView).multipliedBy(0.4)
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.4)
         }
         
 //        view.addSubview(bottomLabel)
