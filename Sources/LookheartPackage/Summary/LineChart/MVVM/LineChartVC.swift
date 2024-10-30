@@ -264,8 +264,8 @@ class LineChartVC : UIViewController {
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
+                self?.updateValueUI(chartModel)
                 self?.showChart(chartModel)
-                
             }
             .store(in: &cancellables)
         
