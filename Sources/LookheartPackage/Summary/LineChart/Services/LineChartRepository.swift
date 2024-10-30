@@ -134,18 +134,12 @@ class LineChartRepository {
             
             let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray)
             
-            print(changedFormatData)
-//            // 디코딩된 데이터 출력
-//            for data in lineChartDataArray {
-//                print("Write Time: \(data.writeTime), PNS Percent: \(data.pnsPercent), SNS Percent: \(data.snsPercent)")
-//            }
-            
+            return (changedFormatData, .success)
         } catch {
             print("Error decoding JSON: \(error)")
+            
+            return (nil, .invalidResponse)
         }
-        
-        return (nil, .noData)
-
     }
     
     

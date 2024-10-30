@@ -22,12 +22,12 @@ struct StressDataModel: Codable {
 }
 
 struct LineChartDataModel {
-    var idx: String
-    var eq: String
+    var idx: String?
+    var eq: String?
     var writeDateTime: String
     var writeDate: String
     var writeTime: String
-    var timezone: String
+    var timezone: String?
     
     // bpm, hrv
     var bpm: Double?
@@ -39,6 +39,7 @@ struct LineChartDataModel {
     var sns: Double?
     var stress: Double?
     
+    // bpm, hrv
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
@@ -71,7 +72,22 @@ struct LineChartDataModel {
         return parsedRecords
     }
     
-    static func changeFormat(stressData: [StressDataModel]) -> [LineChartModel]? {
-        return nil
+    // Stress
+    static func changeFormat(stressData: [StressDataModel]) -> [LineChartDataModel] {
+        var parsedRecords = [LineChartDataModel]()
+        
+        for data in stressData {
+            let splitDateTime = data.writeTime.split(separator: " ")
+            
+            parsedRecords.append( LineChartDataModel(
+                writeDateTime: data.writeTime,
+                writeDate: String(splitDateTime.first ?? ""),
+                writeTime: String(splitDateTime.last ?? ""),
+                pns: data.pnsPercent,
+                sns: data.snsPercent
+            ))
+        }
+        
+        return parsedRecords
     }
 }
