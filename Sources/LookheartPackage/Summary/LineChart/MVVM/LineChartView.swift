@@ -490,10 +490,11 @@ class LineChartVC : UIViewController {
             hideTopView()
         }
         
-        // Animate layout changes
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
+        self.view.layoutIfNeeded()
+//        // Animate layout changes
+//        UIView.animate(withDuration: 0.3) {
+//            self.view.layoutIfNeeded()
+//        }
     }
     
     // 특정 이벤트 시 topContents 숨기기 및 비율 조정
@@ -511,11 +512,11 @@ class LineChartVC : UIViewController {
         // 4. 남은 두 뷰의 높이를 stackView의 높이에 대한 새로운 비율로 설정
         // 비율 합계는 0.3 + 0.7 = 1.0
         middleContents.snp.makeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.3).constraint
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         bottomContents.snp.makeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.8).constraint
         }
     }
     
