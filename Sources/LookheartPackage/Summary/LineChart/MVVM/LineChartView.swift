@@ -559,15 +559,15 @@ class LineChartVC : UIViewController {
         }
         
         topContents.snp.makeConstraints { make in
-            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
         }
         
         middleContents.snp.makeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
         }
         
         bottomContents.snp.makeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.6)
         }
         
         
