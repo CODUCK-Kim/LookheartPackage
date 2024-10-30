@@ -514,6 +514,7 @@ class LineChartVC : UIViewController {
             make.height.equalTo(stackView.snp.height).multipliedBy(0.4)
         }
         
+        topContents.isHidden = true
 //        view.addSubview(bottomLabel)
 //        bottomLabel.snp.makeConstraints { make in
 //            make.top.equalTo(lineChartView.snp.bottom)
