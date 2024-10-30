@@ -547,7 +547,6 @@ class LineChartVC : UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.spacing = 10
         
         view.addSubview(stackView)
         stackView.addArrangedSubview(topContents)
