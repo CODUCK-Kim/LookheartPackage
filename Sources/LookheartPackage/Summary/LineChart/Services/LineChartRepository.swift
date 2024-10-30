@@ -128,7 +128,7 @@ class LineChartRepository {
             return (nil, .noData)
         }
 
-        guard let jsonData = resultData.data(using: .utf8), resultData.count < 3 else {
+        guard let jsonData = resultData.data(using: .utf8) else {
             print("Error: Parsing Stress Data")
             return (nil, .invalidResponse)
         }
