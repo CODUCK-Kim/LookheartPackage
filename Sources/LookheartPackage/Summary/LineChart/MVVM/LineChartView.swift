@@ -521,8 +521,6 @@ class LineChartVC : UIViewController {
     }
     
     private func addChartViews() {
-        let screenWidth = UIScreen.main.bounds.width
-        
         view.addSubview(safeAreaView)
         view.addSubview(lineChartView)
         view.addSubview(activityIndicator)
@@ -572,29 +570,29 @@ class LineChartVC : UIViewController {
     private func addDateViews() {
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
-        topContents.addSubview(twoDaysButton)
         topContents.addSubview(todayButton)
-        topContents.addSubview(threeDaysButton)
         
-        twoDaysButton.snp.makeConstraints { make in
-            make.top.centerX.equalTo(topContents)
-            make.bottom.equalTo(topContents).offset(-20)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
+//        topContents.addSubview(twoDaysButton)
+//        topContents.addSubview(threeDaysButton)
         
         todayButton.snp.makeConstraints { make in
-            make.top.equalTo(topContents)
+            make.top.bottom.equalTo(topContents)
             make.left.equalTo(safeAreaView).offset(10)
-            make.bottom.equalTo(topContents).offset(-20)
             make.width.equalTo(oneThirdWidth - 30)
         }
         
-        threeDaysButton.snp.makeConstraints { make in
-            make.top.equalTo(topContents)
-            make.right.equalTo(safeAreaView).offset(-10)
-            make.bottom.equalTo(topContents).offset(-20)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
+//        twoDaysButton.snp.makeConstraints { make in
+//            make.top.equalTo(topContents)
+//            make.bottom.equalTo(topContents).offset(-20)
+//            make.width.equalTo(oneThirdWidth - 30)
+//        }
+//        
+//        threeDaysButton.snp.makeConstraints { make in
+//            make.top.equalTo(topContents)
+//            make.right.equalTo(safeAreaView).offset(-10)
+//            make.bottom.equalTo(topContents).offset(-20)
+//            make.width.equalTo(oneThirdWidth - 30)
+//        }
     }
     
     private func test() {
