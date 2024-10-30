@@ -578,21 +578,22 @@ class LineChartVC : UIViewController {
             make.top.equalTo(topContents)
             make.bottom.equalTo(topContents)
             make.left.equalTo(topContents).offset(10)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
-        
-        twoDaysButton.snp.makeConstraints { make in
-            make.top.equalTo(topContents)
-            make.bottom.equalTo(topContents)
-            make.left.equalTo(todayButton.snp.right).offset(10)
-            make.width.equalTo(oneThirdWidth - 30)
+            make.width.equalTo(oneThirdWidth - 20)
         }
         
         threeDaysButton.snp.makeConstraints { make in
             make.top.equalTo(topContents)
             make.bottom.equalTo(topContents)
             make.right.equalTo(topContents).offset(-10)
-            make.width.equalTo(oneThirdWidth - 30)
+            make.width.equalTo(oneThirdWidth - 20)
+        }
+        
+        twoDaysButton.snp.makeConstraints { make in
+            make.top.equalTo(topContents)
+            make.bottom.equalTo(topContents)
+            make.left.equalTo(todayButton.snp.right)
+            make.right.equalTo(threeDaysButton.snp.left)
+            make.width.equalTo(oneThirdWidth - 20)
         }
     }
     
