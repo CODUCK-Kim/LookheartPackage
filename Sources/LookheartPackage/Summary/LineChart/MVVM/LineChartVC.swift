@@ -249,7 +249,10 @@ class LineChartVC : UIViewController {
     }
     
     public func refreshView(lineChart: LineChartType) {
+        updateChartUI(lineChart)
+        
         setButtonColor(todayButton)
+        
         viewModel?.refresh(type: lineChart)
     }
     
@@ -260,6 +263,14 @@ class LineChartVC : UIViewController {
     }
     
     private func setupBindings() {
+        // init
+        viewModel?.$initValue
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.initUI()
+            }
+            .store(in: &cancellables)
+        
         // chart
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
@@ -332,6 +343,19 @@ class LineChartVC : UIViewController {
     }
     
     // MARK: - UI
+    private func updateChartUI(_ chartType: LineChartType) {
+        switch chartType {
+        case .BPM:
+            avgLabel.text = "unit_bpm_avg".localized()
+            valueLabel.text = "unit_bpm_upper".localized()
+        case .HRV:
+            avgLabel.text = "unit_hrv_avg".localized()
+            valueLabel.text = "unit_hrv".localized()
+        case .STRESS:
+            break
+        }
+    }
+    
     private func updateValueUI(_ lineChartModel: LineChartModel?) {
         guard let lineChartModel else { return }
         
@@ -347,6 +371,17 @@ class LineChartVC : UIViewController {
             break
         }
     }
+    
+    private func initUI() {
+        lineChartView.clear()
+        
+        maxValue.text = "0"
+        minValue.text = "0"
+        avgValue.text = "0"
+        diffMin.text = "-0"
+        diffMax.text = "+0"
+    }
+    
     
     private func setButtonColor(_ sender: UIButton) {
         for button in buttonList {

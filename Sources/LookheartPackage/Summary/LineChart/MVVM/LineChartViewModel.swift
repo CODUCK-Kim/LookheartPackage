@@ -14,6 +14,7 @@ class LineChartViewModel {
     @Published var networkResponse: NetworkResponse?
     @Published var chartModel: LineChartModel?
     @Published var displayDate: String?
+    @Published var initValue: Void?
     
     // DI
     private let repository: LineChartRepository
@@ -25,9 +26,11 @@ class LineChartViewModel {
     func updateChartData() {
         displayDate = repository.getDisplayDate()
         
+        initValue = ()
+        
         Task {
             let (chartModel, response) = await repository.getLineChartGropData()
-
+            
             switch response {
             case .success: 
                 updateChartModel(lineChartModel: chartModel!)
