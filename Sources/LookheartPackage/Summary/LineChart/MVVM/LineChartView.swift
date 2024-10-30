@@ -539,8 +539,8 @@ class LineChartVC : UIViewController {
         // chart
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
-//            make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
-            make.height.equalTo(safeAreaView).multipliedBy(5.0 / (5.0 + 5.0))
+            make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
+//            make.height.equalTo(safeAreaView).multipliedBy(5.0 / (5.0 + 5.0))
         }
         
         // indicator
@@ -644,6 +644,7 @@ class LineChartVC : UIViewController {
             make.left.equalTo(todayDisplay.snp.left).offset(-30)
         }
     }
+    
     
     private func addBpmHrvViews() {
         func setStackView(_ stackView: UIStackView) {
