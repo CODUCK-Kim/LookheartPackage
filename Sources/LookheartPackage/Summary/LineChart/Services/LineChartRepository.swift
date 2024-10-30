@@ -17,6 +17,7 @@ class LineChartRepository {
     private var targetDate: String
     private var lineChartType: LineChartType
     private var lineChartDateType: LineChartDateType
+    private let decoder = JSONDecoder()
     
     init (
         service: LineChartService,
@@ -74,7 +75,10 @@ class LineChartRepository {
     
     
     // MARK: -
-    private func getParsingData(_ data: String?) -> (result: [LineChartDataModel]?, response: NetworkResponse) {
+    private func getParsingData(_ data: String?) -> (
+        result: [LineChartDataModel]?,
+        response: NetworkResponse
+    ) {
         switch (lineChartType) {
         case .BPM, .HRV:
             return parsingBpmHrvData(data)
@@ -116,7 +120,32 @@ class LineChartRepository {
     
     // stress
     private func parsingStressData(_ data: String?) -> (result: [LineChartDataModel]?, response: NetworkResponse) {
+        guard let resultData = data else {
+            return (nil, .noData)
+        }
+        
+        guard let jsonData = resultData.data(using: .utf8) else {
+            print("Error: Parsing Stress Data")
+            return (nil, .invalidResponse)
+        }
+        
+        do {
+            let stressDataArray = try decoder.decode([StressDataModel].self, from: jsonData)
+            
+            let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray)
+            
+            print(changedFormatData)
+//            // 디코딩된 데이터 출력
+//            for data in lineChartDataArray {
+//                print("Write Time: \(data.writeTime), PNS Percent: \(data.pnsPercent), SNS Percent: \(data.snsPercent)")
+//            }
+            
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+        
         return (nil, .noData)
+
     }
     
     

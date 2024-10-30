@@ -9,6 +9,12 @@ struct LineChartModel {
     var dateType: LineChartDateType
 }
 
+struct StressDataModel: Codable {
+    let writeTime: String
+    let pnsPercent: Double
+    let snsPercent: Double
+}
+
 struct LineChartDataModel {
     var idx: String
     var eq: String
@@ -57,5 +63,9 @@ struct LineChartDataModel {
         }
         
         return parsedRecords
+    }
+    
+    static func changeFormat(stressData: [StressDataModel]) -> [LineChartModel] {
+        
     }
 }

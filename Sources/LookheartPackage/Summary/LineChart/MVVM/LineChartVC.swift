@@ -49,20 +49,7 @@ class LineChartVC : UIViewController {
         $0.isHidden = true
     }
     
-    private lazy var lineChartView = LineChartView().then {
-        $0.noDataText = ""
-        $0.xAxis.enabled = true
-        $0.legend.font = .systemFont(ofSize: 15, weight: .bold)
-        $0.xAxis.granularity = 1
-        $0.xAxis.labelPosition = .bottom
-        $0.xAxis.drawGridLinesEnabled = false
-        $0.rightAxis.enabled = false
-        $0.drawMarkers = false
-        $0.dragEnabled = true
-        $0.pinchZoomEnabled = false
-        $0.doubleTapToZoomEnabled = false
-        $0.highlightPerTapEnabled = false
-    }
+    private lazy var lineChartView = LineChartView()
     
     //    ----------------------------- UILabel -------------------    //
     private let bottomLabel = UILabel().then {  $0.isUserInteractionEnabled = true  }
@@ -267,11 +254,13 @@ class LineChartVC : UIViewController {
     }
     
     private func initVar() {
+        lineChartController?.setLineChart(lineChart: lineChartView)
+        
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
     }
     
     private func setupBindings() {
-        // chart entries
+        // chart
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
@@ -353,15 +342,15 @@ class LineChartVC : UIViewController {
     }
 
     private func showToastMessage(_ message: String) {
-        // chartView의 중앙 좌표 계산
+        // chart location
         let chartViewCenterX = lineChartView.frame.size.width / 2
         let chartViewCenterY = lineChartView.frame.size.height / 2
 
-        // 토스트 컨테이너의 크기
+        // size
         let containerWidth: CGFloat = lineChartView.frame.width - 60
         let containerHeight: CGFloat = 35
 
-        // 토스트 컨테이너가 chartView 중앙에 오도록 위치 조정
+        // toast message location
         let toastPositionX = chartViewCenterX - containerWidth / 2
         let toastPositionY = chartViewCenterY - containerHeight / 2
         
