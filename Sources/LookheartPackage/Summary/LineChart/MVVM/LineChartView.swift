@@ -16,7 +16,10 @@ class LineChartVC : UIViewController {
     /* Loading Bar */
     private var loadingIndicator = LoadingIndicator()
     
-    
+    private let stackView = UIStackView()
+    private var topHeightConstraint: Constraint?
+    private var middleHeightConstraint: Constraint?
+    private var bottomHeightConstraint: Constraint?
     
     
     // ----------------------------- Image ------------------- //
@@ -383,17 +386,16 @@ class LineChartVC : UIViewController {
     
     // MARK: - UI
     private func updateChartUI(_ chartType: LineChartType) {
+        toggleTopView(isHidden: chartType != .STRESS)
+        
         switch chartType {
         case .BPM:
-            toggleTopView(check: false)
             avgLabel.text = "unit_bpm_avg".localized()
             valueLabel.text = "unit_bpm_upper".localized()
         case .HRV:
-            toggleTopView(check: false)
             avgLabel.text = "unit_hrv_avg".localized()
             valueLabel.text = "unit_hrv".localized()
         case .STRESS:
-            toggleTopView(check: true)
             break
         }
     }
@@ -452,6 +454,7 @@ class LineChartVC : UIViewController {
         ToastHelper.shared.showChartToast(self.view, message, position: CGPoint(x: toastPositionX, y: toastPositionY))
     }
     
+    
     private func dissmissCalendar() {
         if (!fsCalendar.isHidden) {
             fsCalendar.isHidden = true
@@ -459,87 +462,71 @@ class LineChartVC : UIViewController {
         }
     }
     
-    let stackView = UIStackView()
-    var topHeightConstraint: Constraint?
-    var middleHeightConstraint: Constraint?
-    var bottomHeightConstraint: Constraint?
     
-    func toggleTopView(check: Bool) {
-        if !check {
-            // Remove existing height constraints for middle and bottom
+    
+    
+    // MARK: -
+    private func toggleTopView(isHidden: Bool) {
+        if isHidden {
             middleHeightConstraint?.deactivate()
             bottomHeightConstraint?.deactivate()
             
-            // Re-add height constraints with original proportions
             topContents.snp.remakeConstraints { make in
-                make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
+                topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
             }
             
             middleContents.snp.remakeConstraints { make in
-                make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
+                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
             }
             
             bottomContents.snp.remakeConstraints { make in
-                make.height.equalTo(stackView.snp.height).multipliedBy(0.6)
+                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
             }
         } else {
-            // Hide topContents and adjust proportions
             hideTopView()
         }
         
         self.view.layoutIfNeeded()
     }
     
-    // 특정 이벤트 시 topContents 숨기기 및 비율 조정
-    func hideTopView() {
-        //  높이 제약 비활성화
+    
+    private func hideTopView() {
         topHeightConstraint?.deactivate()
         middleHeightConstraint?.deactivate()
         bottomHeightConstraint?.deactivate()
         
-        // 4. 남은 두 뷰의 높이를 stackView의 높이에 대한 새로운 비율로 설정
-        // 비율 합계는 0.2 + 0.8 = 1.0
         middleContents.snp.remakeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.0)
+            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.0).constraint
         }
         
         middleContents.snp.remakeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         bottomContents.snp.remakeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.8)
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.8).constraint
         }
     }
     
     
     
+    
     // MARK: -
     private func addViews() {
-        let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
-        let singlePortion = 1.0 / totalMultiplier
+        addChartViews()
         
-        let screenWidth = UIScreen.main.bounds.width // Screen width
-        let oneThirdWidth = screenWidth / 3.0
+        addStackView()
         
+        addDateViews()
+    }
+    
+    private func addChartViews() {
+        let screenWidth = UIScreen.main.bounds.width
         
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-
-        
-        // addSubview
         view.addSubview(safeAreaView)
         view.addSubview(lineChartView)
         view.addSubview(activityIndicator)
-        view.addSubview(stackView)
         
-        stackView.addArrangedSubview(topContents)
-        stackView.addArrangedSubview(middleContents)
-        stackView.addArrangedSubview(bottomContents)
-        
-        
-        // makeConstraints
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
         }
@@ -552,6 +539,17 @@ class LineChartVC : UIViewController {
         activityIndicator.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(lineChartView)
         }
+    }
+    
+    private func addStackView() {
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        
+        view.addSubview(stackView)
+        stackView.addArrangedSubview(topContents)
+        stackView.addArrangedSubview(middleContents)
+        stackView.addArrangedSubview(bottomContents)
         
         stackView.snp.makeConstraints { make in
             make.top.equalTo(lineChartView.snp.bottom)
@@ -559,17 +557,52 @@ class LineChartVC : UIViewController {
         }
         
         topContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
+            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         middleContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         bottomContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.6)
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+        }
+    }
+    
+    private func addDateViews() {
+        let oneThirdWidth = UIScreen.main.bounds.width / 3.0
+        
+        topContents.addSubview(twoDaysButton)
+        topContents.addSubview(todayButton)
+        topContents.addSubview(threeDaysButton)
+        
+        twoDaysButton.snp.makeConstraints { make in
+            make.top.centerX.equalTo(topContents)
+            make.bottom.equalTo(topContents).offset(-20)
+            make.width.equalTo(oneThirdWidth - 30)
         }
         
+        todayButton.snp.makeConstraints { make in
+            make.top.equalTo(topContents)
+            make.left.equalTo(safeAreaView).offset(10)
+            make.bottom.equalTo(topContents).offset(-20)
+            make.width.equalTo(oneThirdWidth - 30)
+        }
+        
+        threeDaysButton.snp.makeConstraints { make in
+            make.top.equalTo(topContents)
+            make.right.equalTo(safeAreaView).offset(-10)
+            make.bottom.equalTo(topContents).offset(-20)
+            make.width.equalTo(oneThirdWidth - 30)
+        }
+    }
+    
+    private func test() {
+        let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
+        let singlePortion = 1.0 / totalMultiplier
+        
+        let screenWidth = UIScreen.main.bounds.width // Screen width
+        let oneThirdWidth = screenWidth / 3.0
         
 //        view.addSubview(bottomLabel)
 //        bottomLabel.snp.makeConstraints { make in
