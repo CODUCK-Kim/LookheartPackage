@@ -65,7 +65,7 @@ struct LineChartDataModel {
         return parsedRecords
     }
     
-    static func changeFormat(stressData: [StressDataModel]) -> [LineChartModel] {
-        
+    static func changeFormat(stressData: [StressDataModel]) -> [LineChartModel]? {
+        return nil
     }
 }
