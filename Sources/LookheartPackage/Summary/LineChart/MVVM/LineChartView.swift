@@ -16,6 +16,7 @@ class LineChartVC : UIViewController {
     /* Loading Bar */
     private var loadingIndicator = LoadingIndicator()
     
+    /* Stack View*/
     private let stackView = UIStackView()
     private var topHeightConstraint: Constraint?
     private var middleHeightConstraint: Constraint?
@@ -645,87 +646,96 @@ class LineChartVC : UIViewController {
     }
     
     private func addBpmHrvViews() {
+        func setStackView(_ stackView: UIStackView) {
+            stackView.axis = .vertical
+            stackView.distribution = .fillEqually
+            stackView.alignment = .fill
+        }
+        
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
-        bottomContents.addSubview(centerContents)
-        bottomContents.addSubview(leftContents)
-        bottomContents.addSubview(rightContents)
+        let minStackView = UIStackView(arrangedSubviews: [minValue, minLabel, diffMin]).then {
+            setStackView($0)
+        }
+        let maxStackView = UIStackView(arrangedSubviews: [maxValue, maxLabel, diffMax]).then {
+            setStackView($0)
+        }
+        let avgStackView = UIStackView(arrangedSubviews: [avgValue, avgLabel, valueLabel]).then {
+            setStackView($0)
+        }
+
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
         
-        centerContents.addSubview(avgValue)
-        centerContents.addSubview(avgLabel)
-        centerContents.addSubview(valueLabel)
+        bottomContents.addSubview(minStackView)
+        bottomContents.addSubview(maxStackView)
+        bottomContents.addSubview(avgStackView)
         
-        leftContents.addSubview(minValue)
-        leftContents.addSubview(minLabel)
-        leftContents.addSubview(diffMin)
-                
-        rightContents.addSubview(maxValue)
-        rightContents.addSubview(maxLabel)
-        rightContents.addSubview(diffMax)
         
         // background
-        centerContents.snp.makeConstraints { make in
+        avgStackView.snp.makeConstraints { make in
             make.top.bottom.centerX.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
-        leftContents.snp.makeConstraints { make in
+        minStackView.snp.makeConstraints { make in
             make.top.bottom.left.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
-        rightContents.snp.makeConstraints { make in
+        avgStackView.snp.makeConstraints { make in
             make.top.bottom.right.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
         
         
-        // avg
-        avgValue.snp.makeConstraints { make in
-            make.centerX.centerY.equalTo(centerContents)
-        }
-    
-        avgLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(avgValue.snp.top).offset(-10)
-            make.centerX.equalTo(centerContents)
-        }
-        
-        valueLabel.snp.makeConstraints { make in
-            make.top.equalTo(avgValue.snp.bottom).offset(10)
-            make.centerX.equalTo(centerContents)
-        }
-        
-        
-        // min
-        minValue.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(avgValue)
-        }
-        
-        minLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(avgLabel)
-        }
-        
-        diffMin.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(valueLabel)
-        }
-        
-        // max
-        maxValue.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(avgValue)
-        }
-        
-        maxLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(avgLabel)
-        }
-    
-        diffMax.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(valueLabel)
-        }
+//        // avg
+//        avgValue.snp.makeConstraints { make in
+//            make.centerX.centerY.equalTo(centerContents)
+//        }
+//    
+//        avgLabel.snp.makeConstraints { make in
+//            make.bottom.equalTo(avgValue.snp.top).offset(-10)
+//            make.centerX.equalTo(centerContents)
+//        }
+//        
+//        valueLabel.snp.makeConstraints { make in
+//            make.top.equalTo(avgValue.snp.bottom).offset(10)
+//            make.centerX.equalTo(centerContents)
+//        }
+//        
+//        
+//        // min
+//        minValue.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(avgValue)
+//        }
+//        
+//        minLabel.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(avgLabel)
+//        }
+//        
+//        diffMin.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(valueLabel)
+//        }
+//        
+//        // max
+//        maxValue.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(avgValue)
+//        }
+//        
+//        maxLabel.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(avgLabel)
+//        }
+//    
+//        diffMax.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(valueLabel)
+//        }
     }
 }
