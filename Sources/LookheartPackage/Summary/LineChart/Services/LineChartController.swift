@@ -111,7 +111,7 @@ class LineChartController {
         _ color: NSUIColor,
         _ type: LineChartType
     ) {
-        let lineWidth = type != .STRESS ? 1.0 : 0.7
+        let lineWidth = type != .STRESS ? 0.7 : 1.0
         
         chartDataSet.drawCirclesEnabled = false
         chartDataSet.setColor(color)
@@ -180,7 +180,7 @@ class LineChartController {
         label: String,
         color: UIColor,
         width: CGFloat = 2.0,
-        dashLengths: [CGFloat] = [5.0, 5.0, 0.0]    // length, space, offset
+        dashLengths: [CGFloat] = [3.0, 3.0, 0.0]    // length, space, offset
     ) {
         let limitLine = ChartLimitLine(limit: limit, label: label)
         
