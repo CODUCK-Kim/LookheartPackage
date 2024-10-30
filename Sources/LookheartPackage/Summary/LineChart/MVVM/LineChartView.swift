@@ -663,10 +663,6 @@ class LineChartVC : UIViewController {
         let avgStackView = UIStackView(arrangedSubviews: [avgValue, avgLabel, valueLabel]).then {
             setStackView($0)
         }
-
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fill
         
         bottomContents.addSubview(minStackView)
         bottomContents.addSubview(maxStackView)
