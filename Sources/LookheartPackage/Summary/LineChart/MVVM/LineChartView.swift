@@ -476,11 +476,11 @@ class LineChartVC : UIViewController {
             }
             
             middleContents.snp.remakeConstraints { make in
-                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
+                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
             }
             
             bottomContents.snp.remakeConstraints { make in
-                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
+                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.65).constraint
             }
         } else {
             hideTopView()
@@ -500,11 +500,11 @@ class LineChartVC : UIViewController {
         }
         
         middleContents.snp.remakeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         bottomContents.snp.remakeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.85).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.8).constraint
         }
     }
     
@@ -547,6 +547,7 @@ class LineChartVC : UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
+        stackView.spacing = 10
         
         view.addSubview(stackView)
         stackView.addArrangedSubview(topContents)
@@ -563,11 +564,11 @@ class LineChartVC : UIViewController {
         }
         
         middleContents.snp.makeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.15).constraint
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
         
         bottomContents.snp.makeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.65).constraint
         }
     }
     
