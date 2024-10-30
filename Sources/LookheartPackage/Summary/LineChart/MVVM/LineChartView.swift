@@ -63,14 +63,14 @@ class LineChartVC : UIViewController {
     private lazy var lineChartView = LineChartView()
     
     //    ----------------------------- UILabel -------------------    //
-    private let topContents = UILabel()
+    private let topContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
-    private let middleContents = UILabel()
+    private let middleContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
-    private let bottomContents = UILabel()
+    private let bottomContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
-    private let bpmHrvContents = UILabel()
-    private let stressContents = UILabel()
+    private let bpmHrvContents = UILabel().then { $0.isUserInteractionEnabled = true }
+    private let stressContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
     // MARK: - Top
     private lazy var todayButton = UIButton().then {
@@ -231,7 +231,7 @@ class LineChartVC : UIViewController {
     private let stressMaxLabel = UILabel().then {
         $0.text = "unit_max".localized()
         $0.textColor = .MY_RED
-        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     }
     
     private let stressAvgLabel = UILabel().then {
@@ -243,39 +243,39 @@ class LineChartVC : UIViewController {
     private let stressMinLabel = UILabel().then {
         $0.text = "unit_min".localized()
         $0.textColor = .MY_BLUE
-        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     }
     
     
     private let snsMaxValue = UILabel().then {
         $0.textColor = .MY_PINK
-        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
     private let snsAvgValue = UILabel().then {
         $0.textColor = .black
-        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     }
     
     private let snsMinValue = UILabel().then {
         $0.textColor = .MY_LIGHT_BLUE
-        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
     
     private let pnsMaxValue = UILabel().then {
         $0.textColor = .MY_PINK
-        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
     private let pnsAvgValue = UILabel().then {
         $0.textColor = .black
-        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     }
     
     private let pnsMinValue = UILabel().then {
         $0.textColor = .MY_LIGHT_BLUE
-        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         
     }
     
