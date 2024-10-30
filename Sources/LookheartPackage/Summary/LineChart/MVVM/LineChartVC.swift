@@ -12,6 +12,9 @@ class LineChartVC : UIViewController {
     // Combine
     private var cancellables = Set<AnyCancellable>()
     
+    /* Loading Bar */
+    private var loadingIndicator = LoadingIndicator()
+    
     // ----------------------------- Image ------------------- //
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
     private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
@@ -257,9 +260,20 @@ class LineChartVC : UIViewController {
     }
     
     private func initVar() {
+        setCalendarEvent()
+        
         lineChartController?.setLineChart(lineChart: lineChartView)
         
         buttonList = [todayButton, twoDaysButton, threeDaysButton]
+    }
+    
+    private func setCalendarEvent() {
+        fsCalendar.didSelectDate = { [self] date in
+            fsCalendar.isHidden = true
+            lineChartView.isHidden = false
+            
+            viewModel?.moveDate(moveDate: date)
+        }
     }
     
     private func setupBindings() {
@@ -295,6 +309,21 @@ class LineChartVC : UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] response in
                 self?.showErrorMessage(response)
+            }
+            .store(in: &cancellables)
+        
+        
+        // loading
+        viewModel?.$loading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] show in
+                guard let view = self?.view else { return }
+                
+                if show {
+                    self?.loadingIndicator.show(in: view)
+                } else {
+                    self?.loadingIndicator.hide()
+                }
             }
             .store(in: &cancellables)
     }
@@ -341,6 +370,9 @@ class LineChartVC : UIViewController {
             print("other response: \(response)")
         }
     }
+    
+    
+    
     
     // MARK: - UI
     private func updateChartUI(_ chartType: LineChartType) {
@@ -393,6 +425,7 @@ class LineChartVC : UIViewController {
         }
     }
 
+    
     private func showToastMessage(_ message: String) {
         // chart location
         let chartViewCenterX = lineChartView.frame.size.width / 2

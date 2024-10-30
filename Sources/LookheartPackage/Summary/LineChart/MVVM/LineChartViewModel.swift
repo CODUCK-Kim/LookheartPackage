@@ -15,6 +15,7 @@ class LineChartViewModel {
     @Published var chartModel: LineChartModel?
     @Published var displayDate: String?
     @Published var initValue: Void?
+    @Published var loading: Bool = false
     
     // DI
     private let repository: LineChartRepository
@@ -29,6 +30,8 @@ class LineChartViewModel {
         initValue = ()
         
         Task {
+            loading = true
+            
             let (chartModel, response) = await repository.getLineChartGropData()
             
             switch response {
@@ -37,6 +40,8 @@ class LineChartViewModel {
             default:
                 networkResponse = response
             }
+            
+            loading = false
         }
     }
     
@@ -138,6 +143,12 @@ class LineChartViewModel {
         updateChartData()
     }
     
+    func moveDate(moveDate: Date) {
+        repository.updateTargetDate(moveDate)
+        
+        updateChartData()
+    }
+    
     func updateChartType(_ updateType: LineChartType) {
         repository.updateChartType(type: updateType)
         
@@ -149,4 +160,5 @@ class LineChartViewModel {
         
         updateChartData()
     }
+    
 }

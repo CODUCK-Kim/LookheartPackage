@@ -203,6 +203,10 @@ class LineChartRepository {
         targetDate = dateTime.dateCalculate(targetDate, 1, nextDate)
     }
     
+    func updateTargetDate(_ date: Date) {
+        targetDate = dateTime.getDateFormat().string(from: date)
+    }
+    
     func getDisplayDate() -> String {
         let startDate = getStartDate()
         

@@ -56,8 +56,6 @@ class LineChartController {
         var chartDataSets: [LineChartDataSet] = []
         
         let graphColor = getGraphColor(chartType, dateType)
-        var graphIdx = 0
-        
         let sortedKeys = getSortedKeys(entries, chartType)
         
         for (graphIdx, key) in sortedKeys.enumerated() {
@@ -179,8 +177,8 @@ class LineChartController {
         limit: Double,
         label: String,
         color: UIColor,
-        width: CGFloat = 2.0,
-        dashLengths: [CGFloat] = [3.0, 3.0, 0.0]    // length, space, offset
+        width: CGFloat = 1.0,
+        dashLengths: [CGFloat] = [3.0, 2.0, 0.0]    // length, space, offset
     ) {
         let limitLine = ChartLimitLine(limit: limit, label: label)
         
