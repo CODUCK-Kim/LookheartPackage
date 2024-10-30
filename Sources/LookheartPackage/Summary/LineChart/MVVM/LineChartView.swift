@@ -491,7 +491,6 @@ class LineChartVC : UIViewController {
     
     
     private func hideTopView() {
-        
         topHeightConstraint?.deactivate()
         middleHeightConstraint?.deactivate()
         bottomHeightConstraint?.deactivate()
@@ -572,29 +571,29 @@ class LineChartVC : UIViewController {
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
         topContents.addSubview(todayButton)
-        
-//        topContents.addSubview(twoDaysButton)
-//        topContents.addSubview(threeDaysButton)
+        topContents.addSubview(twoDaysButton)
+        topContents.addSubview(threeDaysButton)
         
         todayButton.snp.makeConstraints { make in
             make.top.equalTo(topContents)
             make.bottom.equalTo(topContents)
-            make.left.equalTo(safeAreaView).offset(10)
+            make.left.equalTo(topContents).offset(10)
             make.width.equalTo(oneThirdWidth - 30)
         }
         
-//        twoDaysButton.snp.makeConstraints { make in
-//            make.top.equalTo(topContents)
-//            make.bottom.equalTo(topContents).offset(-20)
-//            make.width.equalTo(oneThirdWidth - 30)
-//        }
-//        
-//        threeDaysButton.snp.makeConstraints { make in
-//            make.top.equalTo(topContents)
-//            make.right.equalTo(safeAreaView).offset(-10)
-//            make.bottom.equalTo(topContents).offset(-20)
-//            make.width.equalTo(oneThirdWidth - 30)
-//        }
+        twoDaysButton.snp.makeConstraints { make in
+            make.top.equalTo(topContents)
+            make.bottom.equalTo(topContents)
+            make.left.equalTo(todayButton.snp.right).offset(10)
+            make.width.equalTo(oneThirdWidth - 30)
+        }
+        
+        threeDaysButton.snp.makeConstraints { make in
+            make.top.equalTo(topContents)
+            make.bottom.equalTo(topContents)
+            make.right.equalTo(topContents).offset(-10)
+            make.width.equalTo(oneThirdWidth - 30)
+        }
     }
     
     private func test() {
