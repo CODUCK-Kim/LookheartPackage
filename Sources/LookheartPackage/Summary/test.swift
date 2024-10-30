@@ -488,7 +488,13 @@
 //        return chartDataSets
 //    }
 //    
-//    func setChart(chartData: LineChartData, maximum: Double, axisMaximum: Double, axisMinimum: Double, timeTable: [String]) {
+//    func setChart(
+//        chartData: LineChartData,
+//        maximum: Double,
+//        axisMaximum: Double,
+//        axisMinimum: Double,
+//        timeTable: [String]
+//    ) {
 //        lineChartView.data = chartData
 //        lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
 //        lineChartView.setVisibleXRangeMaximum(maximum)

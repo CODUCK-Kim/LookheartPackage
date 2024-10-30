@@ -121,7 +121,10 @@ public class MyDateTime {
         }
     }
     
-    public func changeDateFormat(_ dateString: String, _ yearFlag: Bool) -> String {
+    public func changeDateFormat(
+        _ dateString: String,
+        _ yearFlag: Bool
+    ) -> String {
         var dateComponents = dateString.components(separatedBy: "-")
         
         if yearFlag {

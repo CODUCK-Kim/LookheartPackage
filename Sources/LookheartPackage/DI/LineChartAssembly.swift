@@ -10,6 +10,13 @@ import Swinject
 
 class LineChartAssembly: LookHeartAssembly {
     func assemble(container: Container) {
+        // Controller
+        container.register(LineChartController.self) { r in
+            LineChartController(
+                dateTime: r.resolve(MyDateTime.self)!
+            )
+        }
+        
         // Service
         container.register(LineChartService.self) { r in
             LineChartService(

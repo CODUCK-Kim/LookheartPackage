@@ -58,7 +58,7 @@ class LineChartViewModel {
                 if let data = timeDict[time] {
                     let value: Double?
                     
-                    switch lineChartModel.type {
+                    switch lineChartModel.chartType {
                     case .BPM:
                         value = data.bpm
                     case .HRV:

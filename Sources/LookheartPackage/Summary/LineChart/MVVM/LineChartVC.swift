@@ -7,6 +7,7 @@ import Combine
 class LineChartVC : UIViewController {
     // ViewModel
     private let viewModel = DependencyInjection.shared.resolve(LineChartViewModel.self)
+    private let lineChartController = DependencyInjection.shared.resolve(LineChartController.self)
     
     // Combine
     private var cancellables = Set<AnyCancellable>()
@@ -274,7 +275,7 @@ class LineChartVC : UIViewController {
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
-                print(chartModel)
+                self?.showChart(chartModel)
             }
             .store(in: &cancellables)
         
@@ -297,6 +298,34 @@ class LineChartVC : UIViewController {
             .store(in: &cancellables)
     }
 
+    
+    private func showChart(_ lineChartModel: LineChartModel?) {
+        guard let lineChartModel else { return }
+        guard let entries = lineChartModel.entries else {
+            showErrorMessage(.noData)
+            return
+        }
+                
+        guard let chartDataSets = lineChartController?.getLineChartDataSet(
+            entries: entries,
+            chartType: lineChartModel.chartType,
+            dateType: lineChartModel.dateType
+        ) else {
+            showErrorMessage(.noData)
+            return
+        }
+        
+        let lineChartData = LineChartData(dataSets: chartDataSets)
+        
+        lineChartController?.showChart(
+            lineChart: lineChartView,
+            chartData: lineChartData,
+            timeTable: lineChartModel.timeTable,
+            chartType: lineChartModel.chartType
+        )
+    }
+    
+    
     private func showErrorMessage(_ response: NetworkResponse?) {
         guard let response else { return }
         
@@ -348,7 +377,6 @@ class LineChartVC : UIViewController {
     
     // MARK: -
     private func addViews() {
-        
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
         let singlePortion = 1.0 / totalMultiplier
         
