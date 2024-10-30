@@ -111,7 +111,7 @@ class LineChartController {
         _ color: NSUIColor,
         _ type: LineChartType
     ) {
-        let lineWidth = type != .STRESS ? 0.7 : 1.0
+        let lineWidth = type != .STRESS ? 0.7 : 1.2
         
         chartDataSet.drawCirclesEnabled = false
         chartDataSet.setColor(color)
