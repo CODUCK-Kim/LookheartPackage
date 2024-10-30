@@ -123,27 +123,26 @@ class LineChartRepository {
         guard let resultData = data else {
             return (nil, .noData)
         }
+
+        print("resultDate: \(resultData), size: \(resultData.count)")
         
-        guard resultData.count < 3 else {
-            return (nil, .noData)
-        }
-        
-        guard let jsonData = resultData.data(using: .utf8) else {
-            print("Error: Parsing Stress Data")
-            return (nil, .invalidResponse)
-        }
-        
-        do {
-            let stressDataArray = try decoder.decode([StressDataModel].self, from: jsonData)
-            
-            let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray)
-            
-            return (changedFormatData, .success)
-        } catch {
-            print("Error decoding JSON: \(error)")
-            
-            return (nil, .invalidResponse)
-        }
+//        guard let jsonData = resultData.data(using: .utf8) else {
+//            print("Error: Parsing Stress Data")
+//            return (nil, .invalidResponse)
+//        }
+//        
+//        do {
+//            let stressDataArray = try decoder.decode([StressDataModel].self, from: jsonData)
+//            
+//            let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray)
+//            
+//            return (changedFormatData, .success)
+//        } catch {
+//            print("Error decoding JSON: \(error)")
+//            
+//            return (nil, .invalidResponse)
+//        }
+        return (nil, .invalidResponse)
     }
     
     
