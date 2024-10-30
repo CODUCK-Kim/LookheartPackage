@@ -48,16 +48,31 @@ class LineChartController {
         }
     }
     
-//    func getLineChartDataSet(
-//        entries: [String : [ChartDataEntry]],
-//        chartType: LineChartType,
-//        dateType: LineChartDateType
-//    ) -> [LineChartDataSet] {
-//        let graphColor = getGraphColor(chartType, dateType)
-//        var graphIdx = 0
-//            
+    func getLineChartDataSet(
+        entries: [String : [ChartDataEntry]],
+        chartType: LineChartType,
+        dateType: LineChartDateType
+    ) -> [LineChartDataSet] {
 //        var dateChartDict: [String : LineChartDataSet] = [:]
-//        
+        var chartDataSets: [LineChartDataSet] = []
+        
+        let graphColor = getGraphColor(chartType, dateType)
+        var graphIdx = 0
+        
+        let sortedKeys = entries.keys.sorted()
+        
+        for (graphIdx, key) in sortedKeys.enumerated() {
+            guard let entry = entries[key] else { continue }
+            
+            let label = getLabel(key, chartType)
+            let chartDataSet = LineChartDataSet(entries: entry, label: label)
+            
+            setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
+            
+//            dateChartDict[key] = chartDataSet
+            chartDataSets.append(chartDataSet)
+        }
+        
 //        for (date, entry) in entries {
 //            let label = getLabel(date, chartType)
 //            let chartDataSet = LineChartDataSet(entries: entry, label: label)
@@ -67,38 +82,19 @@ class LineChartController {
 //            dateChartDict[date] = chartDataSet
 //            graphIdx += 1
 //        }
+        
+//        var chartDataSets: [LineChartDataSet] = []
 //        
+//        for date in sortedDates {
+//            if let chartDataSet = dateChartDict[date] {
+//                chartDataSets.append(chartDataSet)
+//            }
+//        }
+        
+        return chartDataSets
 //        return sortedDictionary(dateChartDict)
-//    }
-    
-    func getLineChartDataSet(
-        entries: [String : [ChartDataEntry]],
-        chartType: LineChartType,
-        dateType: LineChartDateType
-    ) -> [LineChartDataSet] {
-        let graphColor = getGraphColor(chartType, dateType)
-        
-        var dateChartDict: [String : LineChartDataSet] = [:]
-        
-        for (date, entry) in entries {
-            let label = getLabel(date, chartType)
-            let chartDataSet = LineChartDataSet(entries: entry, label: label)
-            
-            // 날짜 기반으로 색상 매핑
-            if let color = getColor(for: date, from: graphColor) {
-                setLineChartDataSet(chartDataSet, color, chartType)
-            } else {
-                // 기본 색상 설정 (필요시)
-                setLineChartDataSet(chartDataSet, NSUIColor.gray, chartType)
-            }
-            
-            dateChartDict[date] = chartDataSet
-        }
-        
-        let sortedDict = sortedDictionary(dateChartDict)
-        
-        return Array(sortedDict)
     }
+
     
     private func getLabel(
         _ key: String,
