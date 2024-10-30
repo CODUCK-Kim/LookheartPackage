@@ -63,15 +63,15 @@ class LineChartVC : UIViewController {
     private lazy var lineChartView = LineChartView()
     
     //    ----------------------------- UILabel -------------------    //
-    private let bottomLabel = UILabel().then {  $0.isUserInteractionEnabled = true  }
+    private let topContents = UILabel()
     
-    private let topContents = UILabel().then {  $0.isUserInteractionEnabled = true  }
+    private let middleContents = UILabel()
     
-    private let middleContents = UILabel().then {   $0.isUserInteractionEnabled = true  }
+    private let bottomContents = UILabel()
     
-    private let bottomContents = UILabel().then {   $0.isUserInteractionEnabled = true  }
+    private let bpmHrvContents = UILabel()
+    private let stressContents = UILabel()
     
-
     // MARK: - Top
     private lazy var todayButton = UIButton().then {
         $0.setTitle ("unit_today".localized(), for: .normal )
@@ -161,12 +161,6 @@ class LineChartVC : UIViewController {
     
     
     // MARK: - Bottom
-    private let leftContents = UILabel()
-    
-    private let rightContents = UILabel()
-    
-    private let centerContents = UILabel()
-    
     private let maxLabel = UILabel().then {
         $0.text = "unit_max".localized()
         $0.textColor = .lightGray
@@ -647,13 +641,6 @@ class LineChartVC : UIViewController {
     
     
     private func addBpmHrvViews() {
-        func setStackView(_ stackView: UIStackView) {
-            stackView.axis = .vertical
-            stackView.distribution = .fillEqually
-            stackView.alignment = .fill
-            stackView.alignment = .center
-        }
-        
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
         let minStackView = UIStackView(arrangedSubviews: [minLabel, minValue, diffMin]).then {
@@ -666,12 +653,17 @@ class LineChartVC : UIViewController {
             setStackView($0)
         }
         
-        bottomContents.addSubview(minStackView)
-        bottomContents.addSubview(maxStackView)
-        bottomContents.addSubview(avgStackView)
+        bottomContents.addSubview(bpmHrvContents)
+        bpmHrvContents.addSubview(minStackView)
+        bpmHrvContents.addSubview(maxStackView)
+        bpmHrvContents.addSubview(avgStackView)
         
         
         // background
+        bpmHrvContents.snp.makeConstraints { make in
+            make.top.bottom.left.right.equalTo(bottomContents)
+        }
+        
         avgStackView.snp.makeConstraints { make in
             make.top.bottom.centerX.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
@@ -686,5 +678,16 @@ class LineChartVC : UIViewController {
             make.top.bottom.right.equalTo(bottomContents)
             make.width.equalTo(oneThirdWidth)
         }
+    }
+    
+    private func addStressViews() {
+        
+    }
+    
+    func setStackView(_ stackView: UIStackView) {
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        stackView.alignment = .center
     }
 }
