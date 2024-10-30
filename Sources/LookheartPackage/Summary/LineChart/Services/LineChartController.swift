@@ -165,7 +165,7 @@ class LineChartController {
     ) {
         switch chartType {
         case .BPM, .HRV:
-            break
+            lineChart.leftAxis.removeAllLimitLines()
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_LIGHT_BLUE)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_LIGHT_BLUE)
@@ -180,7 +180,7 @@ class LineChartController {
         label: String,
         color: UIColor,
         width: CGFloat = 2.0,
-        dashLengths: [CGFloat] = [10.0, 10.0, 0.0]
+        dashLengths: [CGFloat] = [5.0, 5.0, 0.0]    // length, space, offset
     ) {
         let limitLine = ChartLimitLine(limit: limit, label: label)
         
