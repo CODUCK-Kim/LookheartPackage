@@ -213,6 +213,74 @@ class LineChartVC : UIViewController {
     }
     
     
+    
+    
+    private let stressSnsLabel = UILabel().then {
+        $0.text = "SNS"
+        $0.textColor = .MY_RED
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    private let stressPnsLabel = UILabel().then {
+        $0.text = "PNS"
+        $0.textColor = .MY_BLUE
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    
+    private let stressMaxLabel = UILabel().then {
+        $0.text = "unit_max".localized()
+        $0.textColor = .MY_RED
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    private let stressAvgLabel = UILabel().then {
+        $0.text = "unit_bpm_avg".localized()
+        $0.textColor = .black
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    private let stressMinLabel = UILabel().then {
+        $0.text = "unit_min".localized()
+        $0.textColor = .MY_BLUE
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    
+    private let snsMaxValue = UILabel().then {
+        $0.text = "unit_max".localized()
+        $0.textColor = .MY_PINK
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+    }
+    
+    private let snsAvgValue = UILabel().then {
+        $0.textColor = .black
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    private let snsMinValue = UILabel().then {
+        $0.textColor = .MY_LIGHT_BLUE
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+    }
+    
+    
+    private let pnsMaxValue = UILabel().then {
+        $0.text = "unit_max".localized()
+        $0.textColor = .MY_PINK
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+    }
+    
+    private let pnsAvgValue = UILabel().then {
+        $0.textColor = .black
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    
+    private let pnsMinValue = UILabel().then {
+        $0.textColor = .MY_LIGHT_BLUE
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        
+    }
+    
     // MARK: - Button Evnet
     @objc func selectDayButton(_ sender: UIButton) {
         switch(sender.tag) {
@@ -262,6 +330,15 @@ class LineChartVC : UIViewController {
         
         fsCalendar.isHidden = true
         lineChartView.isHidden = false
+        
+        switch lineChart {
+        case .BPM, .HRV:
+            bpmHrvContents.isHidden = false
+            stressContents.isHidden = true
+        case .STRESS:
+            bpmHrvContents.isHidden = true
+            stressContents.isHidden = false
+        }
     }
     
     private func initVar() {
@@ -659,7 +736,6 @@ class LineChartVC : UIViewController {
         bpmHrvContents.addSubview(avgStackView)
         
         
-        // background
         bpmHrvContents.snp.makeConstraints { make in
             make.top.bottom.left.right.equalTo(bottomContents)
         }
@@ -681,7 +757,41 @@ class LineChartVC : UIViewController {
     }
     
     private func addStressViews() {
+        let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
+        let snsStackView = UIStackView(arrangedSubviews: [stressSnsLabel, snsMaxValue, snsAvgValue, snsMinValue]).then {
+            setStackView($0)
+        }
+        let labelStackView = UIStackView(arrangedSubviews: [UIView(), stressMaxLabel, stressAvgLabel, stressMinLabel]).then {
+            setStackView($0)
+        }
+        let pnsStackView = UIStackView(arrangedSubviews: [stressPnsLabel, pnsMaxValue, pnsAvgValue, pnsMinValue]).then {
+            setStackView($0)
+        }
+        
+        bottomContents.addSubview(stressContents)
+        stressContents.addSubview(snsStackView)
+        stressContents.addSubview(labelStackView)
+        stressContents.addSubview(pnsStackView)
+        
+        stressContents.snp.makeConstraints { make in
+            make.top.bottom.left.right.equalTo(bottomContents)
+        }
+        
+        labelStackView.snp.makeConstraints { make in
+            make.top.bottom.centerX.equalTo(bottomContents)
+            make.width.equalTo(oneThirdWidth)
+        }
+        
+        snsStackView.snp.makeConstraints { make in
+            make.top.bottom.left.equalTo(bottomContents)
+            make.width.equalTo(oneThirdWidth)
+        }
+        
+        pnsStackView.snp.makeConstraints { make in
+            make.top.bottom.right.equalTo(bottomContents)
+            make.width.equalTo(oneThirdWidth)
+        }
     }
     
     func setStackView(_ stackView: UIStackView) {
