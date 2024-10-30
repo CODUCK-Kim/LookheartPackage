@@ -534,7 +534,8 @@ class LineChartVC : UIViewController {
         
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
-            make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
+//            make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
+            make.height.equalTo(safeAreaView).multipliedBy(5 / (5 + 5))
         }
         
         activityIndicator.snp.makeConstraints { make in
