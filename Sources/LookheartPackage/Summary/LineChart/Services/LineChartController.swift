@@ -141,11 +141,12 @@ class LineChartController {
         let maximum = getChartMaximum(chartType)
         let axisMaximum = getChartAxisMaximum(chartType)
         let axisMinimum = getChartAxisMinimum(chartType)
-       
+        let removeSecondTimeTable = removeSecond(timeTable)
+        
         addLimitLine(lineChart, chartType)
         
         lineChart.data = chartData
-        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: removeSecondTimeTable)
         lineChart.setVisibleXRangeMaximum(maximum)
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
@@ -155,6 +156,10 @@ class LineChartController {
         lineChart.moveViewToX(0)
         
         chartZoomOut(lineChart)
+    }
+    
+    private func removeSecond(_ timeTable: [String]) -> [String] {
+        return timeTable.map { String($0.dropLast(3)) }
     }
     
     private func addLimitLine(
