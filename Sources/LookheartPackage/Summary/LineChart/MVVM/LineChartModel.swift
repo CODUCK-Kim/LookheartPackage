@@ -7,6 +7,16 @@ struct LineChartModel {
     var timeTable: [String]
     var chartType: LineChartType
     var dateType: LineChartDateType
+    
+    /** Bpm, Hrv Stress(pns) Value **/
+    var maxValue: Int = 0
+    var minValue: Int = 0
+    var avgValue: Int = 0
+    
+    /** Stress(sns) Value **/
+    var secondMaxValue: Int = 0
+    var secondMinValue: Int = 0
+    var secondAvgValue: Int = 0
 }
 
 struct StressDataModel: Codable {

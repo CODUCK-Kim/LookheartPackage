@@ -265,6 +265,7 @@ class LineChartVC : UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
                 self?.showChart(chartModel)
+                
             }
             .store(in: &cancellables)
         
@@ -331,6 +332,22 @@ class LineChartVC : UIViewController {
     }
     
     // MARK: - UI
+    private func updateValueUI(_ lineChartModel: LineChartModel?) {
+        guard let lineChartModel else { return }
+        
+        switch lineChartModel.chartType {
+        case .BPM, .HRV:
+            maxValue.text = String(lineChartModel.maxValue)
+            minValue.text = String(lineChartModel.minValue)
+            avgValue.text = String(lineChartModel.avgValue)
+            
+            diffMin.text = "-\(lineChartModel.avgValue - lineChartModel.minValue)"
+            diffMax.text = "+\(lineChartModel.maxValue - lineChartModel.avgValue)"
+        case .STRESS:
+            break
+        }
+    }
+    
     private func setButtonColor(_ sender: UIButton) {
         for button in buttonList {
             if button == sender {

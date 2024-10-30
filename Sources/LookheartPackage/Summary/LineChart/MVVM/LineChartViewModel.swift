@@ -45,6 +45,15 @@ class LineChartViewModel {
         let timeTable = lineChartModel.timeTable
         let dictionary = lineChartModel.dictData
         
+        // value
+        var maxValue = 0.0
+        var minValue = 70.0
+        var avgValue = 0.0
+
+        var secondMaxValue = 0.0
+        var secondMinValue = 70.0
+        var secondAvgValue = 0.0
+        
         // init entries
         lineChartModel.dictData.keys.forEach { key in
             entries[key] = [ChartDataEntry]()
@@ -67,23 +76,50 @@ class LineChartViewModel {
                         if date == "pns" {
                             value = data.pns
                         } else {
+                            // sns
                             value = data.sns
                         }
                     }
                     
+                    // value
                     if let value {
                         let entry = ChartDataEntry(x: Double(i), y: value)
+                        
                         entries[date]?.append(entry)
+                        
+                        switch lineChartModel.chartType {
+                        case .BPM, .HRV:
+                            maxValue = max(maxValue, value)
+                            minValue = min(minValue, value)
+                            avgValue += value
+                        case .STRESS:
+                            if date == "pns" {
+                                maxValue = max(maxValue, value)
+                                minValue = min(minValue, value)
+                                avgValue += value
+                            } else {
+                                // sns
+                                secondMaxValue = max(secondMaxValue, value)
+                                secondMinValue = min(secondMinValue, value)
+                                secondAvgValue += value
+                            }
+                        }
                     }
                 }
             }
         }
         
         copyModel.entries = entries
+        copyModel.maxValue = Int(maxValue)
+        copyModel.minValue = Int(minValue)
+        copyModel.avgValue = Int(avgValue) / timeTable.count
+        
+        copyModel.secondMaxValue = Int(secondMaxValue)
+        copyModel.secondMinValue = Int(secondMinValue)
+        copyModel.secondAvgValue = Int(secondAvgValue) / timeTable.count
         
         self.chartModel = copyModel
     }
-    
     
     
     // Update Data
