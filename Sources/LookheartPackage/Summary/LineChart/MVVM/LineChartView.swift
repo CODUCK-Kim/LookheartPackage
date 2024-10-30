@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import DGCharts
 import Combine
+import SnapKit
 
 @available(iOS 13.0, *)
 class LineChartVC : UIViewController {
@@ -14,6 +15,9 @@ class LineChartVC : UIViewController {
     
     /* Loading Bar */
     private var loadingIndicator = LoadingIndicator()
+    
+    
+    
     
     // ----------------------------- Image ------------------- //
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .light)
@@ -381,12 +385,15 @@ class LineChartVC : UIViewController {
     private func updateChartUI(_ chartType: LineChartType) {
         switch chartType {
         case .BPM:
+            toggleTopView(check: false)
             avgLabel.text = "unit_bpm_avg".localized()
             valueLabel.text = "unit_bpm_upper".localized()
         case .HRV:
+            toggleTopView(check: false)
             avgLabel.text = "unit_hrv_avg".localized()
             valueLabel.text = "unit_hrv".localized()
         case .STRESS:
+            toggleTopView(check: true)
             break
         }
     }
@@ -452,6 +459,68 @@ class LineChartVC : UIViewController {
         }
     }
     
+    let stackView = UIStackView()
+    var topHeightConstraint: Constraint?
+    var middleHeightConstraint: Constraint?
+    var bottomHeightConstraint: Constraint?
+    
+    func toggleTopView(check: Bool) {
+        if check {
+            // Show topContents
+            topContents.isHidden = false
+            
+            // Remove existing height constraints for middle and bottom
+            middleHeightConstraint?.deactivate()
+            bottomHeightConstraint?.deactivate()
+            
+            // Re-add height constraints with original proportions
+            topContents.snp.makeConstraints { make in
+                topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            }
+            
+            middleContents.snp.makeConstraints { make in
+                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            }
+            
+            bottomContents.snp.makeConstraints { make in
+                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+            }
+        } else {
+            // Hide topContents and adjust proportions
+            hideTopView()
+        }
+        
+        // Animate layout changes
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    // 특정 이벤트 시 topContents 숨기기 및 비율 조정
+    func hideTopView() {
+        // 1. topContents 숨기기
+        topContents.isHidden = true
+        
+        // 2. topContents의 높이 제약 비활성화
+        topHeightConstraint?.deactivate()
+        
+        // 3. middleContents와 bottomContents의 기존 높이 제약 비활성화
+        middleHeightConstraint?.deactivate()
+        bottomHeightConstraint?.deactivate()
+        
+        // 4. 남은 두 뷰의 높이를 stackView의 높이에 대한 새로운 비율로 설정
+        // 비율 합계는 0.3 + 0.7 = 1.0
+        middleContents.snp.makeConstraints { make in
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.3).constraint
+        }
+        
+        bottomContents.snp.makeConstraints { make in
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
+        }
+    }
+    
+    
+    
     // MARK: -
     private func addViews() {
         let totalMultiplier = 4.0 // 1.0, 1.0, 2.0
@@ -460,7 +529,7 @@ class LineChartVC : UIViewController {
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneThirdWidth = screenWidth / 3.0
         
-        let stackView = UIStackView()
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
@@ -501,20 +570,18 @@ class LineChartVC : UIViewController {
         bottomContents.backgroundColor = .MY_LIGHT_PINK
         
         topContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.3)
+            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
-        
         
         middleContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.3)
+            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
-        
         
         bottomContents.snp.makeConstraints { make in
-            make.height.equalTo(stackView.snp.height).multipliedBy(0.4)
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
         }
         
-        topContents.isHidden = true
+        
 //        view.addSubview(bottomLabel)
 //        bottomLabel.snp.makeConstraints { make in
 //            make.top.equalTo(lineChartView.snp.bottom)
