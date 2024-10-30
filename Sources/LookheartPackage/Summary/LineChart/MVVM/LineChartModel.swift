@@ -13,6 +13,12 @@ struct StressDataModel: Codable {
     let writeTime: String
     let pnsPercent: Double
     let snsPercent: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case writeTime = "writetime"
+        case pnsPercent = "pns_percent"
+        case snsPercent = "sns_percent"
+    }
 }
 
 struct LineChartDataModel {
