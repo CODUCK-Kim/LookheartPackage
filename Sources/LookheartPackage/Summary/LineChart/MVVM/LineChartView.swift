@@ -463,7 +463,7 @@ class LineChartVC : UIViewController {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .fillProportionally // 비율에 따라 공간 분배
+        stackView.distribution = .fill
 
         
         // addSubview
