@@ -177,7 +177,7 @@ class LineChartController {
         limit: Double,
         label: String,
         color: UIColor,
-        width: CGFloat = 1.0,
+        width: CGFloat = 1.5,
         dashLengths: [CGFloat] = [3.0, 2.0, 0.0]    // length, space, offset
     ) {
         let limitLine = ChartLimitLine(limit: limit, label: label)

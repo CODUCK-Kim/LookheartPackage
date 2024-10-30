@@ -257,6 +257,9 @@ class LineChartVC : UIViewController {
         setButtonColor(todayButton)
         
         viewModel?.refresh(type: lineChart)
+        
+        fsCalendar.isHidden = true
+        lineChartView.isHidden = false
     }
     
     private func initVar() {
@@ -457,182 +460,220 @@ class LineChartVC : UIViewController {
         let screenWidth = UIScreen.main.bounds.width // Screen width
         let oneThirdWidth = screenWidth / 3.0
         
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillProportionally // 비율에 따라 공간 분배
+
+        
+        // addSubview
         view.addSubview(safeAreaView)
+        view.addSubview(lineChartView)
+        view.addSubview(activityIndicator)
+        view.addSubview(stackView)
+        
+        stackView.addSubview(topContents)
+        stackView.addSubview(middleContents)
+        stackView.addSubview(bottomContents)
+        
+        
+        // makeConstraints
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
         }
         
-        view.addSubview(lineChartView)
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
         }
         
-        view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(lineChartView)
         }
         
-        view.addSubview(bottomLabel)
-        bottomLabel.snp.makeConstraints { make in
+        stackView.snp.makeConstraints { make in
             make.top.equalTo(lineChartView.snp.bottom)
             make.left.right.bottom.equalTo(safeAreaView)
         }
         
-        bottomLabel.addSubview(topContents)
+        topContents.backgroundColor = .green
+        middleContents.backgroundColor = .MY_BLUE
+        bottomContents.backgroundColor = .MY_LIGHT_PINK
+        
         topContents.snp.makeConstraints { make in
-            make.top.equalTo(bottomLabel).offset(10)
-            make.left.equalTo(bottomLabel).offset(10)
-            make.right.equalTo(bottomLabel).offset(-10)
-            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
+            make.height.equalTo(stackView).multipliedBy(0.3)
         }
         
-        bottomLabel.addSubview(middleContents)
+        
         middleContents.snp.makeConstraints { make in
-            make.top.equalTo(topContents.snp.bottom)
-            make.left.right.equalTo(bottomLabel)
-            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
+            make.height.equalTo(stackView).multipliedBy(0.3)
         }
         
-        bottomLabel.addSubview(bottomContents)
+        
         bottomContents.snp.makeConstraints { make in
-            make.top.equalTo(middleContents.snp.bottom)
-            make.left.right.bottom.equalTo(bottomLabel)
+            make.height.equalTo(stackView).multipliedBy(0.4)
         }
         
-        // --------------------- Top Contents --------------------- //
-        topContents.addSubview(twoDaysButton)
-        twoDaysButton.snp.makeConstraints { make in
-            make.top.centerX.equalTo(topContents)
-            make.bottom.equalTo(topContents).offset(-20)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
+//        view.addSubview(bottomLabel)
+//        bottomLabel.snp.makeConstraints { make in
+//            make.top.equalTo(lineChartView.snp.bottom)
+//            make.left.right.bottom.equalTo(safeAreaView)
+//        }
         
-        topContents.addSubview(todayButton)
-        todayButton.snp.makeConstraints { make in
-            make.top.equalTo(topContents)
-            make.left.equalTo(safeAreaView).offset(10)
-            make.bottom.equalTo(topContents).offset(-20)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
+//        bottomLabel.addSubview(topContents)
+//        topContents.snp.makeConstraints { make in
+//            make.top.equalTo(bottomLabel).offset(10)
+//            make.left.equalTo(bottomLabel).offset(10)
+//            make.right.equalTo(bottomLabel).offset(-10)
+//            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
+//        }
         
-        topContents.addSubview(threeDaysButton)
-        threeDaysButton.snp.makeConstraints { make in
-            make.top.equalTo(topContents)
-            make.right.equalTo(safeAreaView).offset(-10)
-            make.bottom.equalTo(topContents).offset(-20)
-            make.width.equalTo(oneThirdWidth - 30)
-        }
+//        bottomLabel.addSubview(middleContents)
+//        middleContents.snp.makeConstraints { make in
+//            make.top.equalTo(topContents.snp.bottom)
+//            make.left.right.equalTo(bottomLabel)
+//            make.height.equalTo(bottomLabel).multipliedBy(singlePortion)
+//        }
+//        
+//        bottomLabel.addSubview(bottomContents)
+//        bottomContents.snp.makeConstraints { make in
+//            make.top.equalTo(middleContents.snp.bottom)
+//            make.left.right.bottom.equalTo(bottomLabel)
+//        }
         
-        // --------------------- middleContents --------------------- //
-        middleContents.addSubview(todayDisplay)
-        todayDisplay.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
-            make.centerX.equalTo(middleContents).offset(5)
-        }
-        
-        middleContents.addSubview(yesterdayButton)
-        yesterdayButton.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
-            make.left.equalTo(middleContents).offset(10)
-        }
-        
-        middleContents.addSubview(tomorrowButton)
-        tomorrowButton.snp.makeConstraints { make in
-            make.top.bottom.equalTo(middleContents)
-            make.right.equalTo(middleContents).offset(-10)
-        }
-        
-        middleContents.addSubview(calendarButton)
-        calendarButton.snp.makeConstraints { make in
-            make.centerY.equalTo(todayDisplay)
-            make.left.equalTo(todayDisplay.snp.left).offset(-30)
-        }
-        
-        // --------------------- bottomContents --------------------- //
-        bottomContents.addSubview(centerContents)
-        centerContents.snp.makeConstraints { make in
-            make.top.bottom.centerX.equalTo(bottomContents)
-            make.width.equalTo(oneThirdWidth)
-        }
-        
-        bottomContents.addSubview(leftContents)
-        leftContents.snp.makeConstraints { make in
-            make.top.bottom.left.equalTo(bottomContents)
-            make.width.equalTo(oneThirdWidth)
-        }
-        
-        bottomContents.addSubview(rightContents)
-        rightContents.snp.makeConstraints { make in
-            make.top.bottom.right.equalTo(bottomContents)
-            make.width.equalTo(oneThirdWidth)
-        }
-                
-        // --------------------- centerBpmContents --------------------- //
-        centerContents.addSubview(avgValue)
-        avgValue.snp.makeConstraints { make in
-            make.centerX.centerY.equalTo(centerContents)
-        }
-        
-        centerContents.addSubview(avgLabel)
-        avgLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(avgValue.snp.top).offset(-10)
-            make.centerX.equalTo(centerContents)
-        }
-        
-        
-        centerContents.addSubview(valueLabel)
-        valueLabel.snp.makeConstraints { make in
-            make.top.equalTo(avgValue.snp.bottom).offset(10)
-            make.centerX.equalTo(centerContents)
-        }
-        
-        // --------------------- leftBpmContents --------------------- //
-        leftContents.addSubview(minValue)
-        minValue.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(avgValue)
-        }
-        
-        leftContents.addSubview(minLabel)
-        minLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(avgLabel)
-        }
-        
-        
-        leftContents.addSubview(diffMin)
-        diffMin.snp.makeConstraints { make in
-            make.centerX.equalTo(leftContents)
-            make.centerY.equalTo(valueLabel)
-        }
-        
-        // --------------------- rightBpmContents --------------------- //
-        rightContents.addSubview(maxValue)
-        maxValue.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(avgValue)
-        }
-        
-        rightContents.addSubview(maxLabel)
-        maxLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(avgLabel)
-        }
-    
-        
-        rightContents.addSubview(diffMax)
-        diffMax.snp.makeConstraints { make in
-            make.centerX.equalTo(rightContents)
-            make.centerY.equalTo(valueLabel)
-        }
-        
-        
-        view.addSubview(fsCalendar)
-        fsCalendar.snp.makeConstraints { make in
-            make.centerY.centerX.equalTo(lineChartView)
-            make.height.equalTo(300)
-            make.width.equalTo(300)
-        }
+//        // --------------------- Top Contents --------------------- //
+//        topContents.addSubview(twoDaysButton)
+//        twoDaysButton.snp.makeConstraints { make in
+//            make.top.centerX.equalTo(topContents)
+//            make.bottom.equalTo(topContents).offset(-20)
+//            make.width.equalTo(oneThirdWidth - 30)
+//        }
+//        
+//        topContents.addSubview(todayButton)
+//        todayButton.snp.makeConstraints { make in
+//            make.top.equalTo(topContents)
+//            make.left.equalTo(safeAreaView).offset(10)
+//            make.bottom.equalTo(topContents).offset(-20)
+//            make.width.equalTo(oneThirdWidth - 30)
+//        }
+//        
+//        topContents.addSubview(threeDaysButton)
+//        threeDaysButton.snp.makeConstraints { make in
+//            make.top.equalTo(topContents)
+//            make.right.equalTo(safeAreaView).offset(-10)
+//            make.bottom.equalTo(topContents).offset(-20)
+//            make.width.equalTo(oneThirdWidth - 30)
+//        }
+//        
+//        // --------------------- middleContents --------------------- //
+//        middleContents.addSubview(todayDisplay)
+//        todayDisplay.snp.makeConstraints { make in
+//            make.top.bottom.equalTo(middleContents)
+//            make.centerX.equalTo(middleContents).offset(5)
+//        }
+//        
+//        middleContents.addSubview(yesterdayButton)
+//        yesterdayButton.snp.makeConstraints { make in
+//            make.top.bottom.equalTo(middleContents)
+//            make.left.equalTo(middleContents).offset(10)
+//        }
+//        
+//        middleContents.addSubview(tomorrowButton)
+//        tomorrowButton.snp.makeConstraints { make in
+//            make.top.bottom.equalTo(middleContents)
+//            make.right.equalTo(middleContents).offset(-10)
+//        }
+//        
+//        middleContents.addSubview(calendarButton)
+//        calendarButton.snp.makeConstraints { make in
+//            make.centerY.equalTo(todayDisplay)
+//            make.left.equalTo(todayDisplay.snp.left).offset(-30)
+//        }
+//        
+//        // --------------------- bottomContents --------------------- //
+//        bottomContents.addSubview(centerContents)
+//        centerContents.snp.makeConstraints { make in
+//            make.top.bottom.centerX.equalTo(bottomContents)
+//            make.width.equalTo(oneThirdWidth)
+//        }
+//        
+//        bottomContents.addSubview(leftContents)
+//        leftContents.snp.makeConstraints { make in
+//            make.top.bottom.left.equalTo(bottomContents)
+//            make.width.equalTo(oneThirdWidth)
+//        }
+//        
+//        bottomContents.addSubview(rightContents)
+//        rightContents.snp.makeConstraints { make in
+//            make.top.bottom.right.equalTo(bottomContents)
+//            make.width.equalTo(oneThirdWidth)
+//        }
+//                
+//        // --------------------- centerBpmContents --------------------- //
+//        centerContents.addSubview(avgValue)
+//        avgValue.snp.makeConstraints { make in
+//            make.centerX.centerY.equalTo(centerContents)
+//        }
+//        
+//        centerContents.addSubview(avgLabel)
+//        avgLabel.snp.makeConstraints { make in
+//            make.bottom.equalTo(avgValue.snp.top).offset(-10)
+//            make.centerX.equalTo(centerContents)
+//        }
+//        
+//        
+//        centerContents.addSubview(valueLabel)
+//        valueLabel.snp.makeConstraints { make in
+//            make.top.equalTo(avgValue.snp.bottom).offset(10)
+//            make.centerX.equalTo(centerContents)
+//        }
+//        
+//        // --------------------- leftBpmContents --------------------- //
+//        leftContents.addSubview(minValue)
+//        minValue.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(avgValue)
+//        }
+//        
+//        leftContents.addSubview(minLabel)
+//        minLabel.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(avgLabel)
+//        }
+//        
+//        
+//        leftContents.addSubview(diffMin)
+//        diffMin.snp.makeConstraints { make in
+//            make.centerX.equalTo(leftContents)
+//            make.centerY.equalTo(valueLabel)
+//        }
+//        
+//        // --------------------- rightBpmContents --------------------- //
+//        rightContents.addSubview(maxValue)
+//        maxValue.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(avgValue)
+//        }
+//        
+//        rightContents.addSubview(maxLabel)
+//        maxLabel.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(avgLabel)
+//        }
+//    
+//        
+//        rightContents.addSubview(diffMax)
+//        diffMax.snp.makeConstraints { make in
+//            make.centerX.equalTo(rightContents)
+//            make.centerY.equalTo(valueLabel)
+//        }
+//        
+//        
+//        view.addSubview(fsCalendar)
+//        fsCalendar.snp.makeConstraints { make in
+//            make.centerY.centerX.equalTo(lineChartView)
+//            make.height.equalTo(300)
+//            make.width.equalTo(300)
+//        }
     }
 }
