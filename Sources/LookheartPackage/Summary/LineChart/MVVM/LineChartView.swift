@@ -465,9 +465,9 @@ class LineChartVC : UIViewController {
     var bottomHeightConstraint: Constraint?
     
     func toggleTopView(check: Bool) {
-        if check {
+        if !check {
             // Show topContents
-            topContents.isHidden = false
+            
             
             // Remove existing height constraints for middle and bottom
             middleHeightConstraint?.deactivate()
@@ -496,7 +496,7 @@ class LineChartVC : UIViewController {
     // 특정 이벤트 시 topContents 숨기기 및 비율 조정
     func hideTopView() {
         // 1. topContents 숨기기
-        topContents.isHidden = true
+//        topContents.isHidden = true
         
         // 2. topContents의 높이 제약 비활성화
         topHeightConstraint?.deactivate()
