@@ -466,24 +466,21 @@ class LineChartVC : UIViewController {
     
     func toggleTopView(check: Bool) {
         if !check {
-            // Show topContents
-            
-            
             // Remove existing height constraints for middle and bottom
             middleHeightConstraint?.deactivate()
             bottomHeightConstraint?.deactivate()
             
             // Re-add height constraints with original proportions
             topContents.snp.remakeConstraints { make in
-                topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+                make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
             }
             
             middleContents.snp.remakeConstraints { make in
-                middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+                make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
             }
             
             bottomContents.snp.remakeConstraints { make in
-                bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.6).constraint
+                make.height.equalTo(stackView.snp.height).multipliedBy(0.6)
             }
         } else {
             // Hide topContents and adjust proportions
@@ -495,28 +492,23 @@ class LineChartVC : UIViewController {
     
     // 특정 이벤트 시 topContents 숨기기 및 비율 조정
     func hideTopView() {
-        // 1. topContents 숨기기
-//        topContents.isHidden = true
-        
-        // 2. topContents의 높이 제약 비활성화
+        //  높이 제약 비활성화
         topHeightConstraint?.deactivate()
-        
-        // 3. middleContents와 bottomContents의 기존 높이 제약 비활성화
         middleHeightConstraint?.deactivate()
         bottomHeightConstraint?.deactivate()
         
         // 4. 남은 두 뷰의 높이를 stackView의 높이에 대한 새로운 비율로 설정
         // 비율 합계는 0.2 + 0.8 = 1.0
         middleContents.snp.remakeConstraints { make in
-            topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.0).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.0)
         }
         
         middleContents.snp.remakeConstraints { make in
-            middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.2)
         }
         
         bottomContents.snp.remakeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.8).constraint
+            make.height.equalTo(stackView.snp.height).multipliedBy(0.8)
         }
     }
     
@@ -565,10 +557,6 @@ class LineChartVC : UIViewController {
             make.top.equalTo(lineChartView.snp.bottom)
             make.left.right.bottom.equalTo(safeAreaView)
         }
-        
-        topContents.backgroundColor = .green
-        middleContents.backgroundColor = .MY_BLUE
-        bottomContents.backgroundColor = .MY_LIGHT_PINK
         
         topContents.snp.makeConstraints { make in
             topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
