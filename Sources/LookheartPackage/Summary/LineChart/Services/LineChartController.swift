@@ -53,13 +53,12 @@ class LineChartController {
         chartType: LineChartType,
         dateType: LineChartDateType
     ) -> [LineChartDataSet] {
-//        var dateChartDict: [String : LineChartDataSet] = [:]
         var chartDataSets: [LineChartDataSet] = []
         
         let graphColor = getGraphColor(chartType, dateType)
         var graphIdx = 0
         
-        let sortedKeys = entries.keys.sorted()
+        let sortedKeys = getSortedKeys(entries, chartType)
         
         for (graphIdx, key) in sortedKeys.enumerated() {
             guard let entry = entries[key] else { continue }
@@ -69,32 +68,24 @@ class LineChartController {
             
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
             
-//            dateChartDict[key] = chartDataSet
             chartDataSets.append(chartDataSet)
         }
-        
-//        for (date, entry) in entries {
-//            let label = getLabel(date, chartType)
-//            let chartDataSet = LineChartDataSet(entries: entry, label: label)
-//            
-//            setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
-//            
-//            dateChartDict[date] = chartDataSet
-//            graphIdx += 1
-//        }
-        
-//        var chartDataSets: [LineChartDataSet] = []
-//        
-//        for date in sortedDates {
-//            if let chartDataSet = dateChartDict[date] {
-//                chartDataSets.append(chartDataSet)
-//            }
-//        }
-        
+
         return chartDataSets
-//        return sortedDictionary(dateChartDict)
     }
 
+    private func getSortedKeys(
+        _ entries: [String : [ChartDataEntry]],
+        _ chartType: LineChartType
+    ) -> [String] {
+        switch chartType {
+            
+        case .BPM, .HRV:
+            return entries.keys.sorted()
+        case .STRESS:
+            return ["sns", "pns"]
+        }
+    }
     
     private func getLabel(
         _ key: String,
