@@ -235,7 +235,7 @@ class LineChartVC : UIViewController {
     }
     
     private let stressAvgLabel = UILabel().then {
-        $0.text = "unit_bpm_avg".localized()
+        $0.text = "unit_avg_cap".localized()
         $0.textColor = .black
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
@@ -248,7 +248,6 @@ class LineChartVC : UIViewController {
     
     
     private let snsMaxValue = UILabel().then {
-        $0.text = "unit_max".localized()
         $0.textColor = .MY_PINK
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
     }
@@ -265,7 +264,6 @@ class LineChartVC : UIViewController {
     
     
     private let pnsMaxValue = UILabel().then {
-        $0.text = "unit_max".localized()
         $0.textColor = .MY_PINK
         $0.font = UIFont.systemFont(ofSize: 18, weight: .medium)
     }
@@ -322,15 +320,18 @@ class LineChartVC : UIViewController {
     }
     
     public func refreshView(lineChart: LineChartType) {
+        // update UI
+        fsCalendar.isHidden = true
+        lineChartView.isHidden = false
+        
         updateChartUI(lineChart)
         
         setButtonColor(todayButton)
         
+        // update Chart Data
         viewModel?.refresh(type: lineChart)
         
-        fsCalendar.isHidden = true
-        lineChartView.isHidden = false
-        
+
         switch lineChart {
         case .BPM, .HRV:
             bpmHrvContents.isHidden = false
@@ -484,7 +485,13 @@ class LineChartVC : UIViewController {
             diffMin.text = "-\(lineChartModel.avgValue - lineChartModel.minValue)"
             diffMax.text = "+\(lineChartModel.maxValue - lineChartModel.avgValue)"
         case .STRESS:
-            break
+            pnsMaxValue.text = String(lineChartModel.maxValue)
+            pnsMinValue.text = String(lineChartModel.minValue)
+            pnsAvgValue.text = String(lineChartModel.avgValue)
+            
+            snsMaxValue.text = String(lineChartModel.secondMaxValue)
+            snsMinValue.text = String(lineChartModel.secondMinValue)
+            snsAvgValue.text = String(lineChartModel.secondAvgValue)
         }
     }
     
@@ -494,8 +501,17 @@ class LineChartVC : UIViewController {
         maxValue.text = "0"
         minValue.text = "0"
         avgValue.text = "0"
+        
         diffMin.text = "-0"
         diffMax.text = "+0"
+        
+        pnsMaxValue.text = "0"
+        pnsMinValue.text = "0"
+        pnsAvgValue.text = "0"
+        
+        snsMaxValue.text = "0"
+        snsMinValue.text = "0"
+        snsAvgValue.text = "0"
     }
     
     
