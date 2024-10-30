@@ -472,9 +472,9 @@ class LineChartVC : UIViewController {
         view.addSubview(activityIndicator)
         view.addSubview(stackView)
         
-        stackView.addSubview(topContents)
-        stackView.addSubview(middleContents)
-        stackView.addSubview(bottomContents)
+        stackView.addArrangedSubview(topContents)
+        stackView.addArrangedSubview(middleContents)
+        stackView.addArrangedSubview(bottomContents)
         
         
         // makeConstraints
