@@ -248,7 +248,7 @@ class LineChartVC : UIViewController {
     
     
     private let snsMaxValue = UILabel().then {
-        $0.textColor = .MY_PINK
+        $0.textColor = .MY_LIGHT_RED
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
@@ -264,7 +264,7 @@ class LineChartVC : UIViewController {
     
     
     private let pnsMaxValue = UILabel().then {
-        $0.textColor = .MY_PINK
+        $0.textColor = .MY_LIGHT_RED
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
