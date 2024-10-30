@@ -143,6 +143,8 @@ class LineChartController {
         let maximum = getChartMaximum(chartType)
         let axisMaximum = getChartAxisMaximum(chartType)
         let axisMinimum = getChartAxisMinimum(chartType)
+       
+        addLimitLine(lineChart, chartType)
         
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
@@ -155,6 +157,41 @@ class LineChartController {
         lineChart.moveViewToX(0)
         
         chartZoomOut(lineChart)
+    }
+    
+    private func addLimitLine(
+        _ lineChart: LineChartView,
+        _ chartType: LineChartType
+    ) {
+        switch chartType {
+        case .BPM, .HRV:
+            break
+        case .STRESS:
+            addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_LIGHT_BLUE)
+            addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_LIGHT_BLUE)
+            addLimitLine(to: lineChart, limit: 80, label: "", color: NSUIColor.MY_PINK)
+            addLimitLine(to: lineChart, limit: 20, label: "", color: NSUIColor.MY_PINK)
+        }
+    }
+    
+    private func addLimitLine(
+        to lineChart: LineChartView,
+        limit: Double,
+        label: String,
+        color: UIColor,
+        width: CGFloat = 2.0,
+        dashLengths: [CGFloat] = [10.0, 10.0, 0.0]
+    ) {
+        let limitLine = ChartLimitLine(limit: limit, label: label)
+        
+        limitLine.lineWidth = width
+        limitLine.lineColor = color
+        limitLine.lineDashLengths = dashLengths
+        limitLine.labelPosition = .leftTop
+        limitLine.valueFont = UIFont.boldSystemFont(ofSize: 12)
+        limitLine.valueTextColor = color
+        
+        lineChart.leftAxis.addLimitLine(limitLine)
     }
     
     private func getChartMaximum(_ chartType: LineChartType) -> Double {
