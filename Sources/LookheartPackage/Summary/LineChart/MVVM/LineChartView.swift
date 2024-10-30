@@ -506,7 +506,7 @@ class LineChartVC : UIViewController {
         bottomHeightConstraint?.deactivate()
         
         // 4. 남은 두 뷰의 높이를 stackView의 높이에 대한 새로운 비율로 설정
-        // 비율 합계는 0.3 + 0.7 = 1.0
+        // 비율 합계는 0.2 + 0.8 = 1.0
         middleContents.snp.remakeConstraints { make in
             middleHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.2).constraint
         }
@@ -529,7 +529,7 @@ class LineChartVC : UIViewController {
         
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.distribution = .fillProportionally
 
         
         // addSubview
