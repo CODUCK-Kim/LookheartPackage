@@ -491,11 +491,12 @@ class LineChartVC : UIViewController {
     
     
     private func hideTopView() {
+        
         topHeightConstraint?.deactivate()
         middleHeightConstraint?.deactivate()
         bottomHeightConstraint?.deactivate()
         
-        middleContents.snp.remakeConstraints { make in
+        topContents.snp.remakeConstraints { make in
             topHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.0).constraint
         }
         
@@ -504,7 +505,7 @@ class LineChartVC : UIViewController {
         }
         
         bottomContents.snp.remakeConstraints { make in
-            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.7).constraint
+            bottomHeightConstraint = make.height.equalTo(stackView.snp.height).multipliedBy(0.85).constraint
         }
     }
     
