@@ -48,27 +48,56 @@ class LineChartController {
         }
     }
     
+//    func getLineChartDataSet(
+//        entries: [String : [ChartDataEntry]],
+//        chartType: LineChartType,
+//        dateType: LineChartDateType
+//    ) -> [LineChartDataSet] {
+//        let graphColor = getGraphColor(chartType, dateType)
+//        var graphIdx = 0
+//            
+//        var dateChartDict: [String : LineChartDataSet] = [:]
+//        
+//        for (date, entry) in entries {
+//            let label = getLabel(date, chartType)
+//            let chartDataSet = LineChartDataSet(entries: entry, label: label)
+//            
+//            setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
+//            
+//            dateChartDict[date] = chartDataSet
+//            graphIdx += 1
+//        }
+//        
+//        return sortedDictionary(dateChartDict)
+//    }
+    
     func getLineChartDataSet(
         entries: [String : [ChartDataEntry]],
         chartType: LineChartType,
         dateType: LineChartDateType
     ) -> [LineChartDataSet] {
         let graphColor = getGraphColor(chartType, dateType)
-        var graphIdx = 0
-            
+        
         var dateChartDict: [String : LineChartDataSet] = [:]
         
         for (date, entry) in entries {
             let label = getLabel(date, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
             
-            setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
+            // 날짜 기반으로 색상 매핑
+            if let color = getColor(for: date, from: graphColor) {
+                setLineChartDataSet(chartDataSet, color, chartType)
+            } else {
+                // 기본 색상 설정 (필요시)
+                setLineChartDataSet(chartDataSet, NSUIColor.gray, chartType)
+            }
             
             dateChartDict[date] = chartDataSet
-            graphIdx += 1
         }
         
-        return sortedDictionary(dateChartDict)
+        let sortedDict = sortedDictionary(dateChartDict)
+        
+        return Array(sortedDict)
     }
     
     private func getLabel(
@@ -81,6 +110,13 @@ class LineChartController {
         case .STRESS:
             return key
         }
+    }
+    
+    private func getColor(for date: String, from colors: [UIColor]) -> UIColor? {
+        guard !colors.isEmpty else { return nil }
+        let hash = date.hash
+        let index = abs(hash) % colors.count
+        return colors[index]
     }
     
     private func setLineChartDataSet(
