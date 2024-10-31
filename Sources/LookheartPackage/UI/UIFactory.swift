@@ -16,7 +16,8 @@ public class UIFactory {
         scale: UIImage.SymbolScale = .default
     ) -> UIImage? {
         let configuration = UIImage.SymbolConfiguration(pointSize: size, weight: weight, scale: scale)
-        return UIImage(named: named, in: nil, with: configuration)?.withTintColor(color)
+        let img =  UIImage(named: named, in: nil, with: configuration)?.withTintColor(color)
+        return img
     }
     
     public func stackView(
