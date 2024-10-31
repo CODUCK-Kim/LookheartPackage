@@ -9,7 +9,7 @@ public class UIFactory {
     public init() {}
     
     public func setImage(
-        image: UIImage,
+        image: UIImage?,
         size: CGFloat,
         color: UIColor,
         weight: UIImage.SymbolWeight = .regular,
@@ -17,8 +17,8 @@ public class UIFactory {
     ) -> UIImage? {
         let copyImg = image
         let configuration = UIImage.SymbolConfiguration(pointSize: size, weight: weight, scale: scale)
-        copyImg.withTintColor(color)
-        copyImg.withConfiguration(configuration)
+        copyImg?.withTintColor(color)
+        copyImg?.withConfiguration(configuration)
         return copyImg
     }
     
