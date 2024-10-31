@@ -50,11 +50,11 @@ public class BasicAlert: UIViewController {
 
         let whitebackground = propCreateUI.backgroundLabel(backgroundColor: .white, borderColor: UIColor.clear.cgColor, borderWidth: 0, cornerRadius: 20)
         
-        titleLabel = propCreateUI.label(text: alertTitle, color: .white, size: 18, weight: .heavy).then {
+        titleLabel = propCreateUI.label(text: alertTitle, color: .white, font: UIFont.systemFont(ofSize: 18, weight: .heavy)).then {
             $0.textAlignment = .center
         }
-                    
-        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, size: 14, weight: .heavy).then {
+        
+        messageLabel = propCreateUI.label(text: alertMessage, color: UIColor.MY_BLUE, font: UIFont.systemFont(ofSize: 14, weight: .heavy)).then {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 15 // 문자 위아래 간격
             

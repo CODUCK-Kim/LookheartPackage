@@ -81,8 +81,8 @@ public class EmergencyAlert: UIViewController {
             $0.layer.cornerRadius = 20
             $0.layer.masksToBounds = true
         }
-                     
-        titleLabel = propCreateUI.label(text: emergencyTitle, color: .white, size: 18, weight: .heavy).then {
+        
+        titleLabel = propCreateUI.label(text: emergencyTitle, color: .white, font: UIFont.systemFont(ofSize: 18, weight: .heavy)).then {
             $0.backgroundColor = UIColor.MY_RED
             $0.textAlignment = .center
         }
@@ -90,11 +90,11 @@ public class EmergencyAlert: UIViewController {
         let timeImg = createImage()
         let locationImg = createImage()
         
-        let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, size: 14, weight: .bold)
-        let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, size: 14, weight: .bold)
+        let timeTitle = propCreateUI.label(text: "occurrenceTime".localized(), color: UIColor.MY_RED, font: UIFont.systemFont(ofSize: 14, weight: .heavy))
+        let locationTitle = propCreateUI.label(text: "occurrenceLocation".localized(), color: UIColor.MY_RED, font: UIFont.systemFont(ofSize: 14, weight: .bold))
         
-        timeLabel = propCreateUI.label(text: emergencyTime, color: .black, size: 14, weight: .bold)
-        locationLabel = propCreateUI.label(text: emergencyLocation, color: .black, size: 14, weight: .bold).then {
+        timeLabel = propCreateUI.label(text: emergencyTime, color: .black, font: UIFont.systemFont(ofSize: 14, weight: .heavy))
+        locationLabel = propCreateUI.label(text: emergencyLocation, color: .black, font: UIFont.systemFont(ofSize: 14, weight: .heavy)).then {
             $0.numberOfLines = 5
         }
         
