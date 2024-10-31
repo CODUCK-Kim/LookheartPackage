@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Then
 
-public class CreateUI {
+public class UIFactory {
     
-    public static let shared = CreateUI()
+    public static let shared = UIFactory()
     
     public init() {}
     

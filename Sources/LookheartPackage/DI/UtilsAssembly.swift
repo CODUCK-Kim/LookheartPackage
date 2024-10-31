@@ -16,9 +16,8 @@ class UtilsAssembly: LookHeartAssembly {
         }
         
         // ui
-        container.register(CreateUI.self) { _ in
-            return CreateUI.shared
+        container.register(UIFactory.self) { _ in
+            return UIFactory.shared
         }
-        
     }
 }

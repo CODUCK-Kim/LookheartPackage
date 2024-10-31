@@ -81,9 +81,9 @@ public var propAlert: MyAlert {
 }
 
 
-public var propCreateUI: CreateUI {
+public var propCreateUI: UIFactory {
     get {
-        return CreateUI.shared
+        return UIFactory.shared
     }
 }
 

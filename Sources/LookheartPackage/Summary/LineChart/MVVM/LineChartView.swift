@@ -9,7 +9,6 @@ class LineChartVC : UIViewController {
     // injection
     private let viewModel = DependencyInjection.shared.resolve(LineChartViewModel.self)
     private let lineChartController = DependencyInjection.shared.resolve(LineChartController.self)
-    private let createUI = DependencyInjection.shared.resolve(CreateUI.self)
     
     // Combine
     private var cancellables = Set<AnyCancellable>()
