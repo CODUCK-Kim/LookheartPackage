@@ -8,13 +8,38 @@ public class CreateUI {
     
     public init() {}
         
-    private let textView = UITextView().then {
-        $0.font = UIFont.systemFont(ofSize: 9)
-        $0.backgroundColor = .white
-        $0.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10 )
-        $0.layer.borderColor = UIColor.MY_LIGHT_GRAY_BORDER.cgColor
-        $0.layer.cornerRadius = 10
-        $0.layer.borderWidth = 1
+    public func stackView(
+        views: [UIView],
+        axis: NSLayoutConstraint.Axis,
+        distribution: UIStackView.Distribution,
+        alignment: UIStackView.Alignment,
+        spacing: CGFloat = 0
+    ) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: views).then {
+            $0.axis = .horizontal
+            $0.distribution = .fillEqually
+            $0.alignment = .fill
+            $0.spacing = spacing
+        }
+        
+        return stackView
+    }
+    
+    public func progressView(
+        backgroundColor: UIColor,
+        tintColor: UIColor,
+        progress: Float = 0,
+        cornerRadius: CGFloat = 0,
+        masksToBounds: Bool = true
+    ) -> UIProgressView {
+        let progressView = UIProgressView().then {
+            $0.trackTintColor = backgroundColor
+            $0.progressTintColor = tintColor
+            $0.progress = progress
+            $0.layer.cornerRadius = cornerRadius
+            $0.layer.masksToBounds = masksToBounds
+        }
+        return progressView
     }
     
     public func textView(
