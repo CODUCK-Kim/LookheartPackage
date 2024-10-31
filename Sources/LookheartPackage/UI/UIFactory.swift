@@ -10,7 +10,6 @@ public class UIFactory {
     
     public func setImage(
         image: UIImage,
-        named: String,
         size: CGFloat,
         color: UIColor,
         weight: UIImage.SymbolWeight = .regular,
