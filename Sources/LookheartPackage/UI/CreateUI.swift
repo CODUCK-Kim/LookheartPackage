@@ -60,8 +60,8 @@ public class CreateUI {
     }
     
     public func label(
-        text: String?,
-        color: UIColor?,
+        text: String? = nil,
+        color: UIColor? = nil,
         font: UIFont
     ) -> UILabel {
         let label = UILabel().then {
