@@ -100,11 +100,13 @@ public class UIFactory {
     }
     
     public func imageView(
-        tintColor: UIColor,
-        backgroundColor: UIColor,
-        contentMode: UIView.ContentMode
+        image: UIImage? = nil,
+        tintColor: UIColor? = .clear,
+        backgroundColor: UIColor? = .clear,
+        contentMode: UIView.ContentMode = .scaleToFill
     ) -> UIImageView {
         let imageView = UIImageView().then {
+            $0.image = image
             $0.tintColor = tintColor
             $0.backgroundColor = backgroundColor
             $0.contentMode = contentMode
@@ -113,11 +115,15 @@ public class UIFactory {
     }
     
     public func button(
-        title: String,
-        titleColor: UIColor,
-        size: CGFloat,
-        weight: UIFont.Weight,
+        title: String? = nil,
+        titleColor: UIColor? = nil,
+        size: CGFloat = 14,
+        weight: UIFont.Weight = .medium,
         backgroundColor: UIColor,
+        cornerRadius: CGFloat = 0,
+        borderColor: CGColor? = nil,
+        borderWidth: CGFloat = 0,
+        clipsToBounds: Bool = true,
         tag: Int = 0
     ) -> UIButton {
         let button =  UIButton().then {
@@ -125,9 +131,14 @@ public class UIFactory {
             $0.setTitleColor(titleColor, for: .normal)
             $0.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: weight)
             $0.backgroundColor = backgroundColor
+                        
+            $0.layer.cornerRadius = cornerRadius
+            $0.layer.borderColor = borderColor
+            $0.layer.borderWidth = borderWidth
+            $0.clipsToBounds = clipsToBounds
+            
             $0.tag = tag
         }
         return button
     }
-    
 }
