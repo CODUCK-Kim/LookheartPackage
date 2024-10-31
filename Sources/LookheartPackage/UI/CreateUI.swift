@@ -7,7 +7,18 @@ public class CreateUI {
     public static let shared = CreateUI()
     
     public init() {}
-        
+    
+    public func image(
+        named: String,
+        size: CGFloat,
+        color: UIColor,
+        weight: UIImage.SymbolWeight = .regular,
+        scale: UIImage.SymbolScale = .default
+    ) -> UIImage? {
+        let configuration = UIImage.SymbolConfiguration(pointSize: size, weight: weight, scale: scale)
+        return UIImage(named: named, in: nil, with: configuration)?.withTintColor(color)
+    }
+    
     public func stackView(
         views: [UIView],
         axis: NSLayoutConstraint.Axis,
@@ -45,9 +56,9 @@ public class CreateUI {
     public func textView(
         size: CGFloat,
         backgroundColor: UIColor,
-        borderColor: CGColor?,
-        cornerRadius: CGFloat?,
-        borderWidth: CGFloat?
+        borderColor: CGColor? = nil,
+        cornerRadius: CGFloat? = nil,
+        borderWidth: CGFloat? = nil
     ) -> UITextView {
         let textView = UITextView().then {
             $0.font = UIFont.systemFont(ofSize: size)
