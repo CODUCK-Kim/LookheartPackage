@@ -8,16 +8,19 @@ public class UIFactory {
     
     public init() {}
     
-    public func image(
+    public func setImage(
+        image: UIImage,
         named: String,
         size: CGFloat,
         color: UIColor,
         weight: UIImage.SymbolWeight = .regular,
         scale: UIImage.SymbolScale = .default
     ) -> UIImage? {
+        let copyImg = image
         let configuration = UIImage.SymbolConfiguration(pointSize: size, weight: weight, scale: scale)
-        let img =  UIImage(named: named, in: nil, with: configuration)?.withRenderingMode(.alwaysTemplate).withTintColor(color)
-        return img
+        copyImg.withTintColor(color)
+        copyImg.withConfiguration(configuration)
+        return copyImg
     }
     
     public func stackView(
