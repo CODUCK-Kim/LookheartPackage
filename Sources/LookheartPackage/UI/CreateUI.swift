@@ -60,14 +60,13 @@ public class CreateUI {
     }
     
     public func label(
-        text: String,
-        color: UIColor,
-        size: CGFloat,
-        weight: UIFont.Weight
+        text: String?,
+        color: UIColor?,
+        font: UIFont
     ) -> UILabel {
         let label = UILabel().then {
             $0.text = text
-            $0.font = UIFont.systemFont(ofSize: size, weight: weight)
+            $0.font = font
             $0.textColor = color
         }
         return label
