@@ -48,6 +48,7 @@ class LineChartController {
         }
     }
     
+    
     func getLineChartDataSet(
         entries: [String : [ChartDataEntry]],
         chartType: LineChartType,
@@ -166,9 +167,11 @@ class LineChartController {
         _ lineChart: LineChartView,
         _ chartType: LineChartType
     ) {
+        lineChart.leftAxis.removeAllLimitLines()
+        
         switch chartType {
         case .BPM, .HRV:
-            lineChart.leftAxis.removeAllLimitLines()
+            break
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)

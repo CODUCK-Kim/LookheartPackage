@@ -14,5 +14,11 @@ class UtilsAssembly: LookHeartAssembly {
         container.register(MyDateTime.self) { _ in
             return MyDateTime.shared
         }
+        
+        // ui
+        container.register(CreateUI.self) { _ in
+            return CreateUI.shared
+        }
+        
     }
 }

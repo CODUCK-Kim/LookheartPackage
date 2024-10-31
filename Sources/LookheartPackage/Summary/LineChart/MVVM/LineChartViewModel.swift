@@ -118,13 +118,13 @@ class LineChartViewModel {
         }
         
         copyModel.entries = entries
-        copyModel.maxValue = Int(maxValue)
-        copyModel.minValue = Int(minValue)
-        copyModel.avgValue = Int(avgValue) / timeTable.count
+        copyModel.maxValue = maxValue
+        copyModel.minValue = minValue
+        copyModel.avgValue = avgValue / Double(timeTable.count)
         
-        copyModel.secondMaxValue = Int(secondMaxValue)
-        copyModel.secondMinValue = Int(secondMinValue)
-        copyModel.secondAvgValue = Int(secondAvgValue) / timeTable.count
+        copyModel.secondMaxValue = secondMaxValue
+        copyModel.secondMinValue = secondMinValue
+        copyModel.secondAvgValue = secondAvgValue / Double(timeTable.count)
         
         self.chartModel = copyModel
     }

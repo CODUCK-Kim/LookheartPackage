@@ -9,14 +9,14 @@ struct LineChartModel {
     var dateType: LineChartDateType
     
     /** Bpm, Hrv Stress(pns) Value **/
-    var maxValue: Int = 0
-    var minValue: Int = 0
-    var avgValue: Int = 0
+    var maxValue: Double = 0
+    var minValue: Double = 0
+    var avgValue: Double = 0
     
     /** Stress(sns) Value **/
-    var secondMaxValue: Int = 0
-    var secondMinValue: Int = 0
-    var secondAvgValue: Int = 0
+    var secondMaxValue: Double = 0
+    var secondMinValue: Double = 0
+    var secondAvgValue: Double = 0
 }
 
 struct StressDataModel: Codable {
@@ -87,8 +87,12 @@ struct LineChartDataModel {
         var parsedRecords = [LineChartDataModel]()
         
         for data in stressData {
-            let splitDateTime = data.writeTime.split(separator: " ")
+            if data.pnsPercent == 100.0 || data.pnsPercent == 100.0 {
+                continue
+            }
             
+            let splitDateTime = data.writeTime.split(separator: " ")
+                        
             parsedRecords.append( LineChartDataModel(
                 writeDateTime: data.writeTime,
                 writeDate: String(splitDateTime.first ?? ""),
@@ -97,7 +101,6 @@ struct LineChartDataModel {
                 sns: data.snsPercent
             ))
         }
-        
         return parsedRecords
     }
 }

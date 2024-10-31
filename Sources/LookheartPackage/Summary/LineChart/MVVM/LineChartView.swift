@@ -6,9 +6,10 @@ import SnapKit
 
 @available(iOS 13.0, *)
 class LineChartVC : UIViewController {
-    // ViewModel
+    // injection
     private let viewModel = DependencyInjection.shared.resolve(LineChartViewModel.self)
     private let lineChartController = DependencyInjection.shared.resolve(LineChartController.self)
+    private let createUI = DependencyInjection.shared.resolve(CreateUI.self)
     
     // Combine
     private var cancellables = Set<AnyCancellable>()
@@ -28,17 +29,12 @@ class LineChartVC : UIViewController {
     private lazy var calendarImage =  UIImage( systemName: "calendar", withConfiguration: symbolConfiguration)?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
     // Image End
 
-    // ----------------------------- TAG ------------------- //
-    // 버튼 상수
     private let YESTERDAY_BUTTON_FLAG = 1
     private let TOMORROW_BUTTON_FLAG = 2
     
     private let TODAY_FLAG = 1
     private let TWO_DAYS_FLAG = 2
     private let THREE_DAYS_FLAG = 3
-    
-    private let PLUS_DATE = true, MINUS_DATE = false
-    // TAG END
     
     
     // ----------------------------- CHART ------------------- //
@@ -368,7 +364,7 @@ class LineChartVC : UIViewController {
             }
             .store(in: &cancellables)
         
-        // chart
+        // chart data
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
@@ -478,20 +474,27 @@ class LineChartVC : UIViewController {
         
         switch lineChartModel.chartType {
         case .BPM, .HRV:
-            maxValue.text = String(lineChartModel.maxValue)
-            minValue.text = String(lineChartModel.minValue)
-            avgValue.text = String(lineChartModel.avgValue)
+            let max = Int(lineChartModel.maxValue)
+            let min = Int(lineChartModel.minValue)
+            let avg = Int(lineChartModel.avgValue)
             
-            diffMin.text = "-\(lineChartModel.avgValue - lineChartModel.minValue)"
-            diffMax.text = "+\(lineChartModel.maxValue - lineChartModel.avgValue)"
+            let difMax = max - avg
+            let difMin = avg - min
+            
+            maxValue.text = String(max)
+            minValue.text = String(min)
+            avgValue.text = String(avg)
+            
+            diffMax.text = "+\(difMax)"
+            diffMin.text = "-\(difMin)"
         case .STRESS:
-            pnsMaxValue.text = String(lineChartModel.maxValue)
-            pnsMinValue.text = String(lineChartModel.minValue)
-            pnsAvgValue.text = String(lineChartModel.avgValue)
+            pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
+            pnsMinValue.text = String(format: "%.1f", lineChartModel.minValue)
+            pnsAvgValue.text = String(format: "%.1f", lineChartModel.avgValue)
             
-            snsMaxValue.text = String(lineChartModel.secondMaxValue)
-            snsMinValue.text = String(lineChartModel.secondMinValue)
-            snsAvgValue.text = String(lineChartModel.secondAvgValue)
+            snsMaxValue.text = String(format: "%.1f", lineChartModel.secondMaxValue)
+            snsMinValue.text = String(format: "%.1f", lineChartModel.secondMinValue)
+            snsAvgValue.text = String(format: "%.1f", lineChartModel.secondAvgValue)
         }
     }
     
