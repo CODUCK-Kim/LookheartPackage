@@ -468,7 +468,9 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         let safeAreaView = UILabel().then { $0.backgroundColor = .white }
+        
         self.addSubview(safeAreaView)
+        
         safeAreaView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(30)
             make.left.equalToSuperview().offset(10)
@@ -500,6 +502,8 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]   // 왼쪽 위, 오른쪽 위 테두리 설정
             $0.clipsToBounds = true
         }
+        
+        
         self.addSubview(authLabel)
         authLabel.snp.makeConstraints { make in
             make.top.left.right.centerX.equalTo(safeAreaView)

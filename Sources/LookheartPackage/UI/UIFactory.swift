@@ -130,4 +130,21 @@ public class UIFactory {
         }
         return button
     }
+    
+    public func textField(
+        textColor: UIColor,
+        font: UIFont,
+        keyboardType: UIKeyboardType,
+        tintColor: UIColor? = nil,
+        tag: Int = 0
+    ) -> UITextField {
+        let textField = UITextField().then {
+            $0.textColor = textColor
+            $0.font = font
+            $0.keyboardType = keyboardType
+            $0.tintColor = tintColor
+            $0.tag = tag
+        }
+        return textField
+    }
 }
