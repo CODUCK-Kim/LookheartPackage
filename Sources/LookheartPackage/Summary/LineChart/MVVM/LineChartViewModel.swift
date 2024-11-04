@@ -65,6 +65,7 @@ class LineChartViewModel {
         
         var avgSumValue = 0.0
         var avgValue = 0.0
+        var avgCnt = 0
         var standardDeviationValue = 0.0
         
         var secondMaxValue = 0.0
@@ -103,6 +104,7 @@ class LineChartViewModel {
                     // value
                     if let value {
                         let entry = ChartDataEntry(x: Double(i), y: value)
+                        avgCnt += 1
                         
                         entries[date]?.append(entry)
                         
@@ -130,7 +132,7 @@ class LineChartViewModel {
             }
         }
         
-        avgValue = avgSumValue / Double(timeTable.count)
+        avgValue = avgSumValue / Double(valueArray.count)
         
         // 표준 편차
         switch lineChartModel.chartType {
