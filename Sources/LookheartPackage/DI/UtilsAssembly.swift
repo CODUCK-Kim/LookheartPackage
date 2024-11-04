@@ -7,6 +7,7 @@
 
 import Foundation
 import Swinject
+import UIKit
 
 class UtilsAssembly: LookHeartAssembly {
     func assemble(container: Container) {
@@ -23,6 +24,11 @@ class UtilsAssembly: LookHeartAssembly {
         // ui
         container.register(UIFactory.self) { _ in
             return UIFactory.shared
+        }
+        
+        // keyboard
+        container.register(KeyboardEventHandling.self) { (resolver, scrollView: UIScrollView) in
+            return KeyboardEventHandling(scrollView: scrollView)
         }
     }
 }
