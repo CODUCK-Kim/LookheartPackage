@@ -65,7 +65,6 @@ class LineChartViewModel {
         
         var avgSumValue = 0.0
         var avgValue = 0.0
-        var avgCnt = 0
         var standardDeviationValue = 0.0
         
         var secondMaxValue = 0.0
@@ -104,14 +103,12 @@ class LineChartViewModel {
                     // value
                     if let value {
                         let entry = ChartDataEntry(x: Double(i), y: value)
-                        avgCnt += 1
                         
                         entries[date]?.append(entry)
+                        valueArray.append(value)
                         
                         switch lineChartModel.chartType {
                         case .BPM, .HRV:
-                            valueArray.append(value)
-                            
                             maxValue = max(maxValue, value)
                             minValue = min(minValue, value)
                             avgSumValue += value
@@ -161,7 +158,7 @@ class LineChartViewModel {
         
         copyModel.secondMaxValue = secondMaxValue
         copyModel.secondMinValue = secondMinValue
-        copyModel.secondAvgValue = secondAvgValue / Double(timeTable.count)
+        copyModel.secondAvgValue = secondAvgValue / Double(valueArray.count)
         
         self.chartModel = copyModel
     }
