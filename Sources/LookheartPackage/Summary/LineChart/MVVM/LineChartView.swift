@@ -410,31 +410,6 @@ class LineChartVC : UIViewController {
     private func showChart(_ lineChartModel: LineChartModel?) {
         guard let lineChartModel else { return }
         
-        guard let entries = lineChartModel.entries else {
-            showErrorMessage(.noData)
-            return
-        }
-        
-        guard let chartDataSets = lineChartController?.getLineChartDataSet(
-            entries: entries,
-            chartType: lineChartModel.chartType,
-            dateType: lineChartModel.dateType
-        ) else {
-            showErrorMessage(.noData)
-            return
-        }
-        
-        let lineChartData = LineChartData(dataSets: chartDataSets)
-        
-        lineChartController?.showChart(
-            lineChart: lineChartView,
-            chartData: lineChartData,
-            timeTable: lineChartModel.timeTable,
-            chartType: lineChartModel.chartType
-        )
-        
-        
-        // test
         if let showChart = lineChartController?.showChart(
             lineChart: lineChartView,
             lineChartModel: lineChartModel

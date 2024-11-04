@@ -164,7 +164,6 @@ class LineChartController {
         lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
-        
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
