@@ -31,6 +31,7 @@ public class KeyboardEventHandling {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    
     @objc private func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
@@ -39,13 +40,14 @@ public class KeyboardEventHandling {
         let contentInset = UIEdgeInsets(
             top: 0.0,
             left: 0.0,
-            bottom: keyboardFrame.size.height + 44,
+            bottom: keyboardFrame.size.height,
             right: 0.0
         )
         
         scrollView.contentInset = contentInset
         scrollView.scrollIndicatorInsets = contentInset
     }
+    
     
     @objc private func viewKeyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
@@ -63,7 +65,7 @@ public class KeyboardEventHandling {
         let contentInset = UIEdgeInsets(
             top: 0.0,
             left: 0.0,
-            bottom: keyboardFrameInView.height - bottomSafeAreaInset,
+            bottom: keyboardFrameInView.height,
             right: 0.0
         )
         
