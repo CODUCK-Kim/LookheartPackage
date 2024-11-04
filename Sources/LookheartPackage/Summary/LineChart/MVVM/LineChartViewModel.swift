@@ -52,7 +52,7 @@ class LineChartViewModel {
     
     private func updateChartModel(lineChartModel: LineChartModel) {
         var entries: [String : [ChartDataEntry]] = [:]
-        var valueArray: [Double] = []    // 표준 편차
+        var valueArray: [Double] = []
         
         var copyModel = lineChartModel
         let size = lineChartModel.timeTable.count
@@ -64,13 +64,14 @@ class LineChartViewModel {
         var minValue = 70.0
         
         var avgSumValue = 0.0
-        var avgValue = 0.0
-        var standardDeviationValue = 0.0
+        var avgCnt = 0
+        
+        var standardDeviationValue = 0.0    // 표준 편차
         
         var secondMaxValue = 0.0
         var secondMinValue = 70.0
         var secondAvgValue = 0.0
-        
+        var secondAvgCnt = 0
         
         // init entries
         lineChartModel.dictData.keys.forEach { key in
@@ -112,28 +113,30 @@ class LineChartViewModel {
                             maxValue = max(maxValue, value)
                             minValue = min(minValue, value)
                             avgSumValue += value
+                            avgCnt += 1
                         case .STRESS:
                             if date == "pns" {
                                 maxValue = max(maxValue, value)
                                 minValue = min(minValue, value)
                                 avgSumValue += value
+                                avgCnt += 1
                             } else {
                                 // sns
                                 secondMaxValue = max(secondMaxValue, value)
                                 secondMinValue = min(secondMinValue, value)
                                 secondAvgValue += value
+                                secondAvgCnt += 1
                             }
                         }
                     }
                 }
             }
         }
-        
-        avgValue = avgSumValue / Double(valueArray.count)
-        
+                
         // 표준 편차
         switch lineChartModel.chartType {
         case .BPM, .HRV:
+            let avgValue = avgSumValue / Double(avgCnt)
             var sumSquareValue = 0.0
             
             valueArray.forEach { value in
@@ -153,12 +156,12 @@ class LineChartViewModel {
         copyModel.entries = entries
         copyModel.maxValue = maxValue
         copyModel.minValue = minValue
-        copyModel.avgValue = avgValue
+        copyModel.avgValue = avgSumValue / Double(avgCnt)
         copyModel.standardDeviationValue = standardDeviationValue
         
         copyModel.secondMaxValue = secondMaxValue
         copyModel.secondMinValue = secondMinValue
-        copyModel.secondAvgValue = secondAvgValue / Double(valueArray.count)
+        copyModel.secondAvgValue = secondAvgValue / Double(secondAvgCnt)
         
         self.chartModel = copyModel
     }
