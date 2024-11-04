@@ -3,7 +3,11 @@ import UIKit
 public class KeyboardEventHandling {
     weak var scrollView: UIScrollView?
     
-    public init(scrollView: UIScrollView) {
+    public init(scrollView: UIScrollView? = nil) {
+        self.scrollView = scrollView
+    }
+    
+    public func setScrollView(scrollView: UIScrollView) {
         self.scrollView = scrollView
     }
     

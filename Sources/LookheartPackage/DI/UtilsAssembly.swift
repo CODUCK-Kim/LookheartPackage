@@ -27,8 +27,8 @@ class UtilsAssembly: LookHeartAssembly {
         }
         
         // keyboard
-        container.register(KeyboardEventHandling.self) { (resolver, scrollView: UIScrollView) in
-            return KeyboardEventHandling(scrollView: scrollView)
+        container.register(KeyboardEventHandling.self) { _ in
+            return KeyboardEventHandling()
         }
     }
 }
