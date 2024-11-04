@@ -13,6 +13,8 @@ struct LineChartModel {
     var minValue: Double = 0
     var avgValue: Double = 0
     
+    var standardDeviationValue: Double = 0
+    
     /** Stress(sns) Value **/
     var secondMaxValue: Double = 0
     var secondMinValue: Double = 0

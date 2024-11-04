@@ -19,6 +19,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
     private let AUTH_NUMBER_TAG = 1
 
     private let phoneNumberKit = PhoneNumberKit()
+    
     private var countries: [String] {
         return phoneNumberKit.allCountries().filter { $0 != "001" }
     }
@@ -575,6 +576,7 @@ public class AuthPhoneNumber: UIView, UITableViewDataSource, UITableViewDelegate
             $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             $0.textColor = UIColor.lightGray
         }
+        
         self.addSubview(authHelpText2)
         authHelpText2.snp.makeConstraints { make in
             make.top.equalTo(authHelpText.snp.bottom).offset(5)

@@ -187,6 +187,7 @@ class LineChartRepository {
         // time Table
         let timeTable = Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
         
+        
         return LineChartModel(
             dictData: dictData,
             timeTable: timeTable,

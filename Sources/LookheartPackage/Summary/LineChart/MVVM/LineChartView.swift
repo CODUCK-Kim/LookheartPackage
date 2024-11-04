@@ -409,11 +409,12 @@ class LineChartVC : UIViewController {
     
     private func showChart(_ lineChartModel: LineChartModel?) {
         guard let lineChartModel else { return }
+        
         guard let entries = lineChartModel.entries else {
             showErrorMessage(.noData)
             return
         }
-                
+        
         guard let chartDataSets = lineChartController?.getLineChartDataSet(
             entries: entries,
             chartType: lineChartModel.chartType,
@@ -431,6 +432,17 @@ class LineChartVC : UIViewController {
             timeTable: lineChartModel.timeTable,
             chartType: lineChartModel.chartType
         )
+        
+        
+        // test
+        if let showChart = lineChartController?.showChart(
+            lineChart: lineChartView,
+            lineChartModel: lineChartModel
+        ) {
+            if !showChart {
+                showErrorMessage(.noData)
+            }
+        }
     }
     
     

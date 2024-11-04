@@ -73,6 +73,7 @@ class LineChartController {
         return chartDataSets
     }
 
+    
     private func getSortedKeys(
         _ entries: [String : [ChartDataEntry]],
         _ chartType: LineChartType
@@ -159,19 +160,71 @@ class LineChartController {
         chartZoomOut(lineChart)
     }
     
+    func showChart(
+        lineChart: LineChartView,
+        lineChartModel: LineChartModel
+    ) -> Bool {
+        
+        // 1. entries
+        guard let entries = lineChartModel.entries else {
+            return false // noData
+        }
+        
+        // 2. chart data sets
+        let chartDataSets = getLineChartDataSet(
+            entries: entries,
+            chartType: lineChartModel.chartType,
+            dateType: lineChartModel.dateType
+        )
+        
+        // 3. line chart data
+        let lineChartData = LineChartData(dataSets: chartDataSets)
+        
+        // 4. set line chart
+        addLimitLine(lineChart, lineChartModel.chartType, lineChartModel)
+        
+        let maximum = getChartMaximum(lineChartModel.chartType)
+        let axisMaximum = getChartAxisMaximum(lineChartModel.chartType)
+        let axisMinimum = getChartAxisMinimum(lineChartModel.chartType)
+        let removeSecondTimeTable = removeSecond(lineChartModel.timeTable)
+        
+        lineChart.data = lineChartData
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: removeSecondTimeTable)
+        lineChart.setVisibleXRangeMaximum(maximum)
+        lineChart.leftAxis.axisMaximum = axisMaximum
+        lineChart.leftAxis.axisMinimum = axisMinimum
+        
+        // 5. show chart
+        lineChart.data?.notifyDataChanged()
+        lineChart.notifyDataSetChanged()
+        lineChart.moveViewToX(0)
+        
+        chartZoomOut(lineChart)
+        
+        return true
+    }
+    
     private func removeSecond(_ timeTable: [String]) -> [String] {
         return timeTable.map { String($0.dropLast(3)) }
     }
     
     private func addLimitLine(
         _ lineChart: LineChartView,
-        _ chartType: LineChartType
+        _ chartType: LineChartType,
+        _ model: LineChartModel? = nil
     ) {
         lineChart.leftAxis.removeAllLimitLines()
         
         switch chartType {
         case .BPM, .HRV:
-            break
+            guard let model else { return }
+            
+            let topLimitLine = model.avgValue + model.standardDeviationValue
+            let bottomLimitLine = model.avgValue - model.standardDeviationValue
+            
+            addLimitLine(to: lineChart, limit: model.avgValue, label: "", color: NSUIColor.MY_ORANGE)
+            addLimitLine(to: lineChart, limit: topLimitLine, label: "", color: NSUIColor.MY_RED)
+            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "", color: NSUIColor.MY_RED)
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)

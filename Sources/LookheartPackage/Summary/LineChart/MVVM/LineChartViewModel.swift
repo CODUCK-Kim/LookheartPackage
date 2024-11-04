@@ -35,8 +35,13 @@ class LineChartViewModel {
             let (chartModel, response) = await repository.getLineChartGropData()
             
             switch response {
-            case .success: 
-                updateChartModel(lineChartModel: chartModel!)
+            case .success:
+                // update model
+                if let chartModel {
+                    updateChartModel(lineChartModel: chartModel)
+                } else {
+                    networkResponse = .noData
+                }
             default:
                 networkResponse = response
             }
@@ -47,6 +52,7 @@ class LineChartViewModel {
     
     private func updateChartModel(lineChartModel: LineChartModel) {
         var entries: [String : [ChartDataEntry]] = [:]
+        var valueArray: [Double] = []    // 표준 편차
         
         var copyModel = lineChartModel
         let size = lineChartModel.timeTable.count
@@ -56,16 +62,21 @@ class LineChartViewModel {
         // value
         var maxValue = 0.0
         var minValue = 70.0
+        
+        var avgSumValue = 0.0
         var avgValue = 0.0
-
+        var standardDeviationValue = 0.0
+        
         var secondMaxValue = 0.0
         var secondMinValue = 70.0
         var secondAvgValue = 0.0
+        
         
         // init entries
         lineChartModel.dictData.keys.forEach { key in
             entries[key] = [ChartDataEntry]()
         }
+        
         
         // set entries
         for i in 0..<size {
@@ -97,14 +108,16 @@ class LineChartViewModel {
                         
                         switch lineChartModel.chartType {
                         case .BPM, .HRV:
+                            valueArray.append(value)
+                            
                             maxValue = max(maxValue, value)
                             minValue = min(minValue, value)
-                            avgValue += value
+                            avgSumValue += value
                         case .STRESS:
                             if date == "pns" {
                                 maxValue = max(maxValue, value)
                                 minValue = min(minValue, value)
-                                avgValue += value
+                                avgSumValue += value
                             } else {
                                 // sns
                                 secondMaxValue = max(secondMaxValue, value)
@@ -117,10 +130,32 @@ class LineChartViewModel {
             }
         }
         
+        avgValue = avgSumValue / Double(timeTable.count)
+        
+        // 표준 편차
+        switch lineChartModel.chartType {
+        case .BPM, .HRV:
+            var sumSquareValue = 0.0
+            
+            valueArray.forEach { value in
+                let deviation = value - avgValue
+                let squaredDeviation = deviation * deviation // 편차의 제곱
+                
+                sumSquareValue += squaredDeviation
+            }
+            
+            let variance = sumSquareValue / Double(valueArray.count) // 분산
+            
+            standardDeviationValue = sqrt(variance) // 표준편차는 분산의 제곱근
+        case .STRESS:
+            break
+        }
+        
         copyModel.entries = entries
         copyModel.maxValue = maxValue
         copyModel.minValue = minValue
-        copyModel.avgValue = avgValue / Double(timeTable.count)
+        copyModel.avgValue = avgValue
+        copyModel.standardDeviationValue = standardDeviationValue
         
         copyModel.secondMaxValue = secondMaxValue
         copyModel.secondMinValue = secondMinValue
@@ -128,6 +163,7 @@ class LineChartViewModel {
         
         self.chartModel = copyModel
     }
+    
     
     
     // Update Data
