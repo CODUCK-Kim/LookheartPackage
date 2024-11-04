@@ -65,7 +65,7 @@ public class KeyboardEventHandling {
         let contentInset = UIEdgeInsets(
             top: 0.0,
             left: 0.0,
-            bottom: keyboardFrameInView.height,
+            bottom: keyboardFrameInView.height + 44,
             right: 0.0
         )
         
