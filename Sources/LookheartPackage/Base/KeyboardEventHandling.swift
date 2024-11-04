@@ -4,16 +4,20 @@ public class KeyboardEventHandling {
     weak var scrollView: UIScrollView?
     weak var view: UIView?
     
+    private var addHeight: CGFloat?
+    
     public init(scrollView: UIScrollView? = nil) {
         self.scrollView = scrollView
     }
     
     public func setScrollView(
         scrollView: UIScrollView,
-        view: UIView
+        view: UIView,
+        addHeight: CGFloat? = 0
     ) {
         self.scrollView = scrollView
         self.view = view
+        self.addHeight = addHeight
     }
     
     public func startObserving() {
@@ -62,10 +66,17 @@ public class KeyboardEventHandling {
         // 안전 영역의 bottom 값 가져오기
         let bottomSafeAreaInset = view.safeAreaInsets.bottom
         
+//        let contentInset = UIEdgeInsets(
+//            top: 0.0,
+//            left: 0.0,
+//            bottom: keyboardFrameInView.height + (addHeight ?? 0),
+//            right: 0.0
+//        )
+        
         let contentInset = UIEdgeInsets(
             top: 0.0,
             left: 0.0,
-            bottom: keyboardFrameInView.height + 44,
+            bottom: keyboardFrame.size.height + (addHeight ?? 0),
             right: 0.0
         )
         
