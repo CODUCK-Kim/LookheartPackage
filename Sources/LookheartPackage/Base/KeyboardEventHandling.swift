@@ -12,9 +12,7 @@ public class KeyboardEventHandling {
     
     
     // MARK: - init
-    public init() { 
-        
-    }
+    public init() { }
     
     public func initScrollView(
         scrollView: UIScrollView,
@@ -67,8 +65,11 @@ public class KeyboardEventHandling {
         )
     }
     
+    
     // event
     @objc private func keyboardWillShow(notification: NSNotification) {
+        isKeyboardVisible = true
+        
         // show
         if scrollView != nil {
             // scrollView
@@ -80,6 +81,8 @@ public class KeyboardEventHandling {
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
+        isKeyboardVisible = false
+        
         // hide
         if scrollView != nil {
             // scrollView
@@ -165,5 +168,10 @@ public class KeyboardEventHandling {
         )
         
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    
+    public func isKeyboardCurrentlyVisible() -> Bool {
+        return isKeyboardVisible
     }
 }
