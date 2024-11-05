@@ -67,6 +67,7 @@ public class KeyboardEventHandling {
         )
     }
     
+    // event
     @objc private func keyboardWillShow(notification: NSNotification) {
         // show
         if scrollView != nil {
@@ -74,6 +75,7 @@ public class KeyboardEventHandling {
             scrollViewKeyboardWillShow(notification)
         } else {
             // containerView
+            containerViewKeyboardWillShow(notification)
         }
     }
     
@@ -84,9 +86,12 @@ public class KeyboardEventHandling {
             scrollViewKeyboardWillHide(notification)
         } else {
             // containerView
+            containerViewKeyboardWillHide(notification)
         }
     }
+
     
+    // scrollView
     func scrollViewKeyboardWillShow(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
@@ -110,7 +115,9 @@ public class KeyboardEventHandling {
         scrollView.scrollIndicatorInsets = .zero
     }
 
-    func containerViewKeyboardWillShow(notification: NSNotification) {
+    
+    // containerView
+    func containerViewKeyboardWillShow(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let containerView = containerView,
               let keyboardFrameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
@@ -131,7 +138,7 @@ public class KeyboardEventHandling {
         )
     }
     
-    func containerViewKeyboardWillHide(notification: NSNotification) {
+    func containerViewKeyboardWillHide(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let containerView = containerView,
               let constraint = constraint,
@@ -148,6 +155,7 @@ public class KeyboardEventHandling {
             containerView.layoutIfNeeded()
         }, completion: nil)
     }
+    
     
     // MARK: -
     private func setupKeybordEvent(view: UIView) {
