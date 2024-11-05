@@ -1,42 +1,93 @@
 import UIKit
+import SnapKit
 
 public class KeyboardEventHandling {
+    private(set) var isKeyboardVisible: Bool = false
+    
     weak var scrollView: UIScrollView?
-    weak var view: UIView?
+    weak var containerView: UIView?
     
-    private var addHeight: CGFloat?
+    private var addHight: CGFloat?
+    private var constraint: Constraint?
     
-    public init(scrollView: UIScrollView? = nil) {
-        self.scrollView = scrollView
+    
+    // MARK: - init
+    public init() { 
+        
     }
     
-    public func setScrollView(
+    public func initScrollView(
         scrollView: UIScrollView,
-        view: UIView,
-        addHeight: CGFloat? = 0
+        addHight: CGFloat = 0
     ) {
         self.scrollView = scrollView
-        self.view = view
-        self.addHeight = addHeight
+        self.addHight = addHight
     }
     
+    public func initContainerView(
+        containerView: UIView,
+        addHight: CGFloat = 0,
+        constraint: Constraint? = nil
+    ) {
+        self.containerView = containerView
+        self.addHight = addHight
+        self.constraint = constraint
+    }
+    
+    // MARK: - observing
     public func startObserving() {
-        if view == nil {
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(viewKeyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)            
-        }
+        // show keyboard
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        // hide keyboard
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
     public func stopObserving() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        // remove observer
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
-    
     @objc private func keyboardWillShow(notification: NSNotification) {
+        // show
+        if scrollView != nil {
+            // scrollView
+            scrollViewKeyboardWillShow(notification)
+        } else {
+            // containerView
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        // hide
+        if scrollView != nil {
+            // scrollView
+            scrollViewKeyboardWillHide(notification)
+        } else {
+            // containerView
+        }
+    }
+    
+    func scrollViewKeyboardWillShow(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
               let scrollView = scrollView else { return }
@@ -44,7 +95,7 @@ public class KeyboardEventHandling {
         let contentInset = UIEdgeInsets(
             top: 0.0,
             left: 0.0,
-            bottom: keyboardFrame.size.height,
+            bottom: keyboardFrame.size.height + (addHight ?? 0),
             right: 0.0
         )
         
@@ -52,42 +103,59 @@ public class KeyboardEventHandling {
         scrollView.scrollIndicatorInsets = contentInset
     }
     
-    
-    @objc private func viewKeyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let scrollView = scrollView,
-              let view = view else { return }
-        
-        // 키보드 프레임을 뷰의 좌표계로 변환
-        let keyboardFrame = keyboardFrameValue.cgRectValue
-        let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
-        
-        // 안전 영역의 bottom 값 가져오기
-        let bottomSafeAreaInset = view.safeAreaInsets.bottom
-        
-//        let contentInset = UIEdgeInsets(
-//            top: 0.0,
-//            left: 0.0,
-//            bottom: keyboardFrameInView.height + (addHeight ?? 0),
-//            right: 0.0
-//        )
-        
-        let contentInset = UIEdgeInsets(
-            top: 0.0,
-            left: 0.0,
-            bottom: keyboardFrame.size.height + (addHeight ?? 0),
-            right: 0.0
-        )
-        
-        scrollView.contentInset = contentInset
-        scrollView.scrollIndicatorInsets = contentInset
-    }
-    
-    @objc private func keyboardWillHide(notification: NSNotification) {
+    func scrollViewKeyboardWillHide(_ notification: NSNotification) {
         guard let scrollView = scrollView else { return }
         
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
+    }
+
+    func containerViewKeyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let containerView = containerView,
+              let keyboardFrameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
+              let animationCurveRawValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber else { return }
+
+        let keyboardFrame = keyboardFrameValue.cgRectValue
+        let keyboardHeight = keyboardFrame.height
+        
+        constraint?.update(offset: -keyboardHeight + (addHight ?? 0))
+
+        UIView.animate(
+            withDuration: animationDuration.doubleValue,
+            delay: 0,
+            options: UIView.AnimationOptions(rawValue: animationCurveRawValue.uintValue << 16),
+            animations: { containerView.layoutIfNeeded() },
+            completion: nil
+        )
+    }
+    
+    func containerViewKeyboardWillHide(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let containerView = containerView,
+              let constraint = constraint,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
+              let animationCurveRawValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber else { return }
+        
+        constraint.update(offset: 0)
+        
+        // 애니메이션 적용
+        UIView.animate(withDuration: animationDuration.doubleValue,
+                       delay: 0,
+                       options: UIView.AnimationOptions(rawValue: animationCurveRawValue.uintValue << 16),
+                       animations: {
+            containerView.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    // MARK: -
+    private func setupKeybordEvent(view: UIView) {
+        let tapGesture = UITapGestureRecognizer(
+            target: view,
+            action: #selector(view.endEditing)
+        )
+        
+        view.addGestureRecognizer(tapGesture)
     }
 }

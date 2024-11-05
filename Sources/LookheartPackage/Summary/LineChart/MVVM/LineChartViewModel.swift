@@ -141,17 +141,18 @@ class LineChartViewModel {
             
             valueArray.forEach { value in
                 let deviation = value - avgValue
-                let squaredDeviation = deviation * deviation // 편차의 제곱
+                let squaredDeviation = deviation * deviation // 편차 제곱
                 
                 sumSquareValue += squaredDeviation
             }
             
             let variance = sumSquareValue / Double(valueArray.count) // 분산
             
-            standardDeviationValue = sqrt(variance) // 표준편차는 분산의 제곱근
+            standardDeviationValue = sqrt(variance) // 제곱근
         case .STRESS:
             break
         }
+        
         
         copyModel.entries = entries
         copyModel.maxValue = maxValue
