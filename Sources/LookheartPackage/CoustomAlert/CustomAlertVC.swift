@@ -17,6 +17,8 @@ public class CustomAlertVC: UIViewController {
     private let alertTitle: String
     private let alertBody: String
     private let alertOk: String
+    private let alertCancel: String
+    
     private let heightMultiplier: CGFloat
     private let widthMultiplier: CGFloat
     private let tapEventEnable: Bool
@@ -24,6 +26,7 @@ public class CustomAlertVC: UIViewController {
     //
     public var backgroundTapped: (() -> Void)?
     public var onOkButtonTapped: (() -> Void)?
+    public var onCancelButtonTapped: (() -> Void)?
     
     // MARK: - init
     public init(
@@ -40,6 +43,8 @@ public class CustomAlertVC: UIViewController {
         self.alertTitle = title
         self.alertBody = body
         self.alertOk = ok
+        self.alertCancel = cancel
+        
         self.heightMultiplier = height
         self.widthMultiplier = width
         self.tapEventEnable = tapDismiss
@@ -91,12 +96,8 @@ public class CustomAlertVC: UIViewController {
     
     private func getView() -> UIView {
         switch alertType {
-        case .basic:
-            return BasicAlertView(title: alertTitle, body: alertBody, ok: alertOk)
-        case .action:
-            return BasicAlertView(title: alertTitle, body: alertBody, ok: alertOk)
-        case .cancel:
-            return BasicAlertView(title: alertTitle, body: alertBody, ok: alertOk)
+        case .basic, .cancel:
+            return BasicAlertView(type: alertType, title: alertTitle, body: alertBody, ok: alertOk, cancel: alertCancel)
         }
     }
     
@@ -104,14 +105,17 @@ public class CustomAlertVC: UIViewController {
         switch alertType {
         case .basic:
             (alertView as! BasicAlertView).okButton.addTarget(self, action: #selector(okButtonTapped), for: .touchUpInside)
-        case .action:
-            break
         case .cancel:
-            break
+            (alertView as! BasicAlertView).okButton.addTarget(self, action: #selector(okButtonTapped), for: .touchUpInside)
+            (alertView as! BasicAlertView).cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         }
     }
     
     @objc private func okButtonTapped() {
         onOkButtonTapped?()
+    }
+    
+    @objc private func cancelButtonTapped() {
+        onCancelButtonTapped?()
     }
 }

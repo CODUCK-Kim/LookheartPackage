@@ -9,6 +9,5 @@ import Foundation
 
 public enum AlertType {
     case basic
-    case action
     case cancel
 }

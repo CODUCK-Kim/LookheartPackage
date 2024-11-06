@@ -161,6 +161,8 @@ public class KeyboardEventHandling {
     }
     
     
+    
+    
     // MARK: -
     public func setupKeybordEvent(view: UIView) {
         let tapGesture = UITapGestureRecognizer(
@@ -171,9 +173,11 @@ public class KeyboardEventHandling {
         view.addGestureRecognizer(tapGesture)
     }
     
+    
     @objc private func backgroundTapped(_ sender: UITapGestureRecognizer) {
         backgroundTapped?()
     }
+    
     
     public func isKeyboardCurrentlyVisible() -> Bool {
         return isKeyboardVisible

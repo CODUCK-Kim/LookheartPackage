@@ -14,6 +14,7 @@ class BasicAlertView: UIView {
     private let alertTitle: String
     private let alertBody: String
     private let alertOk: String
+    private let alertCancel: String
     
     lazy var okButton = uiFactory.button(
         title: alertOk,
@@ -26,26 +27,40 @@ class BasicAlertView: UIView {
         $0.titleLabel?.textAlignment = .center
     }
     
+    lazy var cancelButton = uiFactory.button(
+        title: alertOk,
+        titleColor: .white,
+        size: 14,
+        weight: .heavy,
+        backgroundColor: UIColor.MY_BLUE,
+        cornerRadius: 10
+    ).then {
+        $0.titleLabel?.textAlignment = .center
+    }
+    
     // MARK: - init
     init(
+        type: AlertType,
         title: String,
         body: String,
-        ok: String
+        ok: String,
+        cancel: String
     ) {
         self.alertTitle = title
         self.alertBody = body
         self.alertOk = ok
+        self.alertCancel = cancel
         
         super.init(frame: .zero)
         
-        setupUI()
+        setupUI(type)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupUI() {
+    private func setupUI(_ type: AlertType) {
         let background = uiFactory.backgroundLabel(
             backgroundColor: .white,
             borderColor: UIColor.clear.cgColor,
@@ -75,13 +90,14 @@ class BasicAlertView: UIView {
             cornerRadius: 0
         )
         
+        let buttonStackView = getButtonStackView(type)
         
         // addSubview
         addSubview(background)
         addSubview(title)
         addSubview(underLine)
         addSubview(body)
-        addSubview(okButton)
+        addSubview(buttonStackView)
 
         
         // makeConstraints
@@ -104,7 +120,7 @@ class BasicAlertView: UIView {
             make.height.equalTo(2)
         }
         
-        okButton.snp.makeConstraints { make in
+        buttonStackView.snp.makeConstraints { make in
             make.left.equalTo(background).offset(15)
             make.right.equalTo(background).offset(-15)
             make.bottom.equalTo(background).offset(-10)
@@ -117,5 +133,24 @@ class BasicAlertView: UIView {
             make.right.equalTo(background).offset(-10)
             make.bottom.equalTo(okButton.snp.top)
         }
+    }
+    
+    private func getButtonStackView(_ type: AlertType) -> UIStackView {
+        var views: [UIView]
+        
+        switch type {
+        case .basic:
+            views = [okButton]
+        case .cancel:
+            views = [okButton, cancelButton]
+        }
+        
+        return uiFactory.stackView(
+            views: views,
+            axis: .horizontal,
+            distribution: .fillEqually,
+            alignment: .fill,
+            spacing: 10
+        )
     }
 }
