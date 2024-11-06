@@ -65,6 +65,7 @@ class BasicAlertView: UIView {
             font: UIFont.systemFont(ofSize: 14, weight: .medium)
         ).then {
             $0.textAlignment = .center
+            $0.numberOfLines = 0
         }
         
         let underLine = uiFactory.backgroundLabel(
