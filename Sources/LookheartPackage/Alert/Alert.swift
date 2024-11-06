@@ -5,8 +5,6 @@ public class MyAlert {
     
     public init() {}
     
-    
-    
     public func basicAlert(
         title: String,
         message: String,
@@ -58,6 +56,7 @@ public class MyAlert {
         alert.addAction(cancel)
         viewController.present(alert, animated: true, completion: {})
     }
+    
     
     public func basicTextFieldAlert(
         title: String, body: String, ok: String, cancel: String, holder: String,

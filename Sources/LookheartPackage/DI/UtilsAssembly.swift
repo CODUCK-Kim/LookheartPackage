@@ -11,6 +11,11 @@ import UIKit
 
 class UtilsAssembly: LookHeartAssembly {
     func assemble(container: Container) {
+        // basic alert
+        container.register(MyAlert.self) { _ in
+            return MyAlert.shared
+        }
+        
         // dateTime
         container.register(MyDateTime.self) { _ in
             return MyDateTime.shared
