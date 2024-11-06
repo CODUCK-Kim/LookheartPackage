@@ -28,12 +28,14 @@ class BasicAlertView: UIView {
     }
     
     lazy var cancelButton = uiFactory.button(
-        title: alertOk,
-        titleColor: .white,
+        title: alertCancel,
+        titleColor: .darkGray,
         size: 14,
         weight: .heavy,
-        backgroundColor: UIColor.MY_BLUE,
-        cornerRadius: 10
+        backgroundColor: UIColor.MY_LIGHT_GRAY_BORDER,
+        cornerRadius: 10,
+        borderColor: UIColor.darkGray.cgColor,
+        borderWidth: 1
     ).then {
         $0.titleLabel?.textAlignment = .center
     }
@@ -142,7 +144,7 @@ class BasicAlertView: UIView {
         case .basic:
             views = [okButton]
         case .cancel:
-            views = [okButton, cancelButton]
+            views = [cancelButton, okButton]
         }
         
         return uiFactory.stackView(
