@@ -22,7 +22,7 @@ public class CustomAlertVC: UIViewController {
     private let tapEventEnable: Bool
     
     //
-    var onOkButtonTapped: (() -> Void)?
+    public var onOkButtonTapped: (() -> Void)?
     
     // MARK: - init
     public init(

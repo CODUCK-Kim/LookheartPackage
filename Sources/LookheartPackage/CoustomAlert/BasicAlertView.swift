@@ -18,7 +18,7 @@ class BasicAlertView: UIView {
     lazy var okButton = uiFactory.button(
         title: alertOk,
         titleColor: .white,
-        size: 16,
+        size: 14,
         weight: .heavy,
         backgroundColor: UIColor.MY_BLUE,
         cornerRadius: 10
@@ -104,7 +104,8 @@ class BasicAlertView: UIView {
         }
         
         okButton.snp.makeConstraints { make in
-            make.left.right.equalTo(background)
+            make.left.equalTo(background).offset(15)
+            make.right.equalTo(background).offset(-15)
             make.bottom.equalTo(background).offset(-10)
             make.height.equalTo(30)
         }
