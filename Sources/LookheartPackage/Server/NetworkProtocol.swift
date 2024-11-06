@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-protocol NetworkProtocol {
+public protocol NetworkProtocol {
     func task<T: Decodable>(
         parameters: [String: Any],
         endPoit: EndPoint,
