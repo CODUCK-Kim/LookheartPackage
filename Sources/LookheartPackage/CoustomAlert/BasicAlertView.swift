@@ -29,12 +29,12 @@ class BasicAlertView: UIView {
     
     lazy var cancelButton = uiFactory.button(
         title: alertCancel,
-        titleColor: .darkGray,
+        titleColor: .lightGray,
         size: 14,
         weight: .heavy,
-        backgroundColor: UIColor.MY_LIGHT_GRAY_BORDER,
+        backgroundColor: UIColor.MY_LIGHT_GRAY_BORDER2,
         cornerRadius: 10,
-        borderColor: UIColor.lightGray.cgColor,
+        borderColor: UIColor.MY_LIGHT_GRAY_BORDER.cgColor,
         borderWidth: 1
     ).then {
         $0.titleLabel?.textAlignment = .center
