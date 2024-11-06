@@ -22,6 +22,7 @@ public class CustomAlertVC: UIViewController {
     private let tapEventEnable: Bool
     
     //
+    public var backgroundTapped: (() -> Void)?
     public var onOkButtonTapped: (() -> Void)?
     
     // MARK: - init
@@ -69,7 +70,7 @@ public class CustomAlertVC: UIViewController {
     }
     
     @objc private func backgroundTapped(_ sender: UITapGestureRecognizer) {
-        self.dismiss(animated: true, completion: nil)
+        backgroundTapped?()
     }
     
     private func setupView() {
