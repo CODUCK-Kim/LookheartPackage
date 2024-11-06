@@ -9,11 +9,12 @@ public class LoadingIndicator {
     public init() {}
 
     public func show(in view: UIView) {
+        
         DispatchQueue.main.async {
             if self.overlayView == nil {
                 // overlay
                 let overlay = UIView()
-                overlay.backgroundColor = UIColor(white: 0, alpha: 0.1)
+//                overlay.backgroundColor = UIColor(white: 0, alpha: 0)
                 overlay.isUserInteractionEnabled = true
                 
                 // indicator
@@ -47,5 +48,9 @@ public class LoadingIndicator {
             self.activityIndicator?.stopAnimating()
             self.overlayView?.isHidden = true
         }
+    }
+    
+    public var isAnimating: Bool {
+        return activityIndicator?.isAnimating ?? false
     }
 }
