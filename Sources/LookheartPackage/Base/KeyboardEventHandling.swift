@@ -164,7 +164,7 @@ public class KeyboardEventHandling {
     // MARK: -
     public func setupKeybordEvent(view: UIView) {
         let tapGesture = UITapGestureRecognizer(
-            target: view,
+            target: self,
             action: #selector(backgroundTapped(_:))
         )
         
