@@ -13,12 +13,12 @@ public class LoadingIndicator {
             if self.overlayView == nil {
                 // overlay
                 let overlay = UIView()
-                overlay.backgroundColor = UIColor(white: 0, alpha: 0.5)
+                overlay.backgroundColor = UIColor(white: 0, alpha: 0.3)
                 overlay.isUserInteractionEnabled = true
                 
                 // indicator
                 let indicator = UIActivityIndicatorView(style: .large)
-                
+                indicator.tintColor = .MY_BLUE
                 
                 // addSubview
                 view.addSubview(overlay)
