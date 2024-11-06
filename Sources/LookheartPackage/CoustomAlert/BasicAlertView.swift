@@ -31,7 +31,7 @@ class BasicAlertView: UIView {
         title: alertCancel,
         titleColor: .lightGray,
         size: 14,
-        weight: .heavy,
+        weight: .medium,
         backgroundColor: UIColor.MY_LIGHT_GRAY_BORDER2,
         cornerRadius: 10,
         borderColor: UIColor.MY_LIGHT_GRAY_BORDER.cgColor,
