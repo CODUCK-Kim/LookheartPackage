@@ -34,7 +34,7 @@ class BasicAlertView: UIView {
         weight: .heavy,
         backgroundColor: UIColor.MY_LIGHT_GRAY_BORDER,
         cornerRadius: 10,
-        borderColor: UIColor.darkGray.cgColor,
+        borderColor: UIColor.lightGray.cgColor,
         borderWidth: 1
     ).then {
         $0.titleLabel?.textAlignment = .center
