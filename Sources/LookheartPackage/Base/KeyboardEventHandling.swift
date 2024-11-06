@@ -10,6 +10,7 @@ public class KeyboardEventHandling {
     private var addHight: CGFloat?
     private var constraint: Constraint?
     
+    public var backgroundTapped: (() -> Void)?
     
     // MARK: - init
     public init() { }
@@ -164,12 +165,15 @@ public class KeyboardEventHandling {
     public func setupKeybordEvent(view: UIView) {
         let tapGesture = UITapGestureRecognizer(
             target: view,
-            action: #selector(view.endEditing)
+            action: #selector(backgroundTapped(_:))
         )
         
         view.addGestureRecognizer(tapGesture)
     }
     
+    @objc private func backgroundTapped(_ sender: UITapGestureRecognizer) {
+        backgroundTapped?()
+    }
     
     public func isKeyboardCurrentlyVisible() -> Bool {
         return isKeyboardVisible
