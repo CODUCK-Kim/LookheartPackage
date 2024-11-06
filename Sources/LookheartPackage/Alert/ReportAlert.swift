@@ -10,7 +10,6 @@ import UIKit
 
 
 class ReportAlert: UIView {
-    
     init(lastAccessTime: String, arrCnt: Int, emergencyCnt: Int) {
         super.init(frame: UIScreen.main.bounds)
         setupView(lastAccessTime, arrCnt, emergencyCnt)
