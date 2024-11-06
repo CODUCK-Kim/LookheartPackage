@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CustomAlertVC: UIViewController {
+public class CustomAlertVC: UIViewController {
     private let alertType: AlertType
     private var safeAreaView = UIView()
     private lazy var alertView: UIView = getView()
@@ -25,7 +25,7 @@ class CustomAlertVC: UIViewController {
     var onOkButtonTapped: (() -> Void)?
     
     // MARK: - init
-    init(
+    public init(
         type: AlertType,
         title: String,
         body: String,
@@ -53,7 +53,7 @@ class CustomAlertVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         setupView()
         
         setTapEvent()
