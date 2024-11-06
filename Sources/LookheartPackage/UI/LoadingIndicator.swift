@@ -18,13 +18,12 @@ public class LoadingIndicator {
                 
                 // indicator
                 let indicator = UIActivityIndicatorView(style: .large)
-                indicator.backgroundColor = .MY_BLUE
+                indicator.color = .MY_BLUE
                 
                 // addSubview
                 view.addSubview(overlay)
                 view.addSubview(indicator)
-                
-                
+                                
                 // makeConstraints
                 overlay.snp.makeConstraints { make in
                     make.top.bottom.left.right.equalTo(view)
