@@ -16,9 +16,9 @@ public class UIFactory {
         spacing: CGFloat = 0
     ) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: views).then {
-            $0.axis = .horizontal
-            $0.distribution = .fillEqually
-            $0.alignment = .fill
+            $0.axis = axis
+            $0.distribution = distribution
+            $0.alignment = alignment
             $0.spacing = spacing
         }
         

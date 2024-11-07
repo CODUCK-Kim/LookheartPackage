@@ -8,8 +8,10 @@ public class LoadingIndicator {
 
     public init() {}
 
-    public func show(in view: UIView) {
-        
+    public func show(
+        in view: UIView,
+        color: UIColor = .MY_BLUE
+    ) {        
         DispatchQueue.main.async {
             if self.overlayView == nil {
                 // overlay
