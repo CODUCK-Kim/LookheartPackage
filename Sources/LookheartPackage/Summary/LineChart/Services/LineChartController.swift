@@ -221,8 +221,8 @@ class LineChartController {
             let topLimitLine = model.avgValue + model.standardDeviationValue
             let bottomLimitLine = model.avgValue - model.standardDeviationValue
             
-            addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_ORANGE)
-            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_avg_cap".localized(), color: NSUIColor.MY_RED)
+            addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_avg_cap".localized(), color: NSUIColor.MY_ORANGE)
+            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_RED)
             addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_RED)
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
