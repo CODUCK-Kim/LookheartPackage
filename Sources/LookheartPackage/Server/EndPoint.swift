@@ -39,7 +39,7 @@ public enum EndPoint: String {
     // Google Auth
     case googleAuth = "google/callback"
     case googleHtml = "google/html"
-    case emailAuth = "mslSMS/sendEmail"
+    case emailAuth = "mslSMS/sendEmail?"
     
     // POST: HealthData
     case postTenSecondData = "mslbpm/api_data"
