@@ -245,7 +245,7 @@ class LineChartController {
         limitLine.lineWidth = width
         limitLine.lineColor = color
         limitLine.lineDashLengths = dashLengths
-        limitLine.labelPosition = .leftTop
+        limitLine.labelPosition = .rightTop
         limitLine.valueFont = UIFont.boldSystemFont(ofSize: 12)
         limitLine.valueTextColor = color
         
