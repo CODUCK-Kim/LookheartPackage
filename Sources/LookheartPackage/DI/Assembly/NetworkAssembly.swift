@@ -15,6 +15,11 @@ class NetworkAssembly: LookHeartAssembly {
             return AlamofireController.shared
         }
         
+        // Socket IO
+        container.register(SocketIOManager.self) { _ in
+            SocketIOManager()
+        }
+        
         // UserProfile
         container.register(UserProfileManager.self) { _ in
             return UserProfileManager.shared
