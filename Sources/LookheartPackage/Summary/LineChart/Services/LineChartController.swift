@@ -221,9 +221,9 @@ class LineChartController {
             let topLimitLine = model.avgValue + model.standardDeviationValue
             let bottomLimitLine = model.avgValue - model.standardDeviationValue
             
-            addLimitLine(to: lineChart, limit: model.avgValue, label: "", color: NSUIColor.MY_ORANGE)
-            addLimitLine(to: lineChart, limit: topLimitLine, label: "", color: NSUIColor.MY_RED)
-            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "", color: NSUIColor.MY_RED)
+            addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_ORANGE)
+            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_avg_cap".localized(), color: NSUIColor.MY_RED)
+            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_RED)
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)
@@ -291,11 +291,11 @@ class LineChartController {
         case .BPM, .HRV:
             switch (dateType) {
             case .TODAY:
-                return [NSUIColor.GRAPH_RED]
+                return [NSUIColor.MY_YELLOW]
             case .TWO_DAYS:
-                return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE]
+                return [NSUIColor.MY_YELLOW, NSUIColor.GRAPH_BLUE]
             case .THREE_DAYS:
-                return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
+                return [NSUIColor.MY_YELLOW, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
             }
             
         case .STRESS:

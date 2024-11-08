@@ -22,6 +22,8 @@ public extension UIColor {
     static let MY_LIGHT_GRAY_BORDER = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0)
     static let MY_LIGHT_GRAY_BORDER2 = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 0.5)
     
+    static let MY_YELLOW = UIColor(red: 255/255, green: 209/255, blue: 102/255, alpha: 1.0)
+    
     static let MY_ORANGE = UIColor(red: 255/255, green: 159/255, blue: 64/255, alpha: 1.0)
     
     static let PROFILE_BACKGROUND = UIColor(red: 0xef/255, green: 0xf0/255, blue: 0xf2/255, alpha: 1.0)
