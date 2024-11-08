@@ -222,8 +222,8 @@ class LineChartController {
             let bottomLimitLine = model.avgValue - model.standardDeviationValue
             
             addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_avg_cap".localized(), color: NSUIColor.MY_ORANGE)
-            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_RED)
-            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_RED)
+            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_YELLOW)
+            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_YELLOW)
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)
@@ -246,7 +246,7 @@ class LineChartController {
         limitLine.lineColor = color
         limitLine.lineDashLengths = dashLengths
         limitLine.labelPosition = .rightTop
-        limitLine.valueFont = UIFont.boldSystemFont(ofSize: 12)
+        limitLine.valueFont = UIFont.boldSystemFont(ofSize: 10)
         limitLine.valueTextColor = color
         
         lineChart.leftAxis.addLimitLine(limitLine)
@@ -291,11 +291,11 @@ class LineChartController {
         case .BPM, .HRV:
             switch (dateType) {
             case .TODAY:
-                return [NSUIColor.MY_YELLOW]
+                return [NSUIColor.MY_RED]
             case .TWO_DAYS:
-                return [NSUIColor.MY_YELLOW, NSUIColor.GRAPH_BLUE]
+                return [NSUIColor.MY_RED, NSUIColor.GRAPH_BLUE]
             case .THREE_DAYS:
-                return [NSUIColor.MY_YELLOW, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
+                return [NSUIColor.MY_RED, NSUIColor.GRAPH_BLUE, NSUIColor.GRAPH_GREEN]
             }
             
         case .STRESS:
