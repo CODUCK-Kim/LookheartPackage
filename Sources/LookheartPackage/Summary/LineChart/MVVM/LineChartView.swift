@@ -474,8 +474,8 @@ class LineChartVC : UIViewController {
             minValue.text = "\(min)(-\(difMin))"
             avgValue.text = String(avg)
             
-            maxStandardDeviationValue.text = String(maxStandardDeviation)
-            minStandardDeviationValue.text = String(minStandardDeviation)
+            maxStandardDeviationValue.text = String(Int(maxStandardDeviation))
+            minStandardDeviationValue.text = String(Int(minStandardDeviation))
             
         case .STRESS:
             pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
