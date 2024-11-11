@@ -221,9 +221,11 @@ class LineChartController {
             let topLimitLine = model.avgValue + model.standardDeviationValue
             let bottomLimitLine = model.avgValue - model.standardDeviationValue
             
-            addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_avg_cap".localized(), color: NSUIColor.MY_ORANGE)
-            addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_PINK)
-            addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_PINK)
+            if model.dateType == .TODAY {
+                addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_avg_cap".localized(), color: NSUIColor.MY_ORANGE, width: 3.0)
+                addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_BLUE, width: 3.0)
+                addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation".localized(), color: NSUIColor.MY_BLUE, width: 3.0)
+            }
         case .STRESS:
             addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)
