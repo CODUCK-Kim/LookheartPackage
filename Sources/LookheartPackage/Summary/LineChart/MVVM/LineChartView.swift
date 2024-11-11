@@ -168,7 +168,7 @@ class LineChartVC : UIViewController {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     }
     
-    private let diffMax = UILabel().then {
+    private let maxStandardDeviationValue = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = UIColor(red: 239/255, green: 80/255, blue: 123/255, alpha: 1.0)
@@ -186,7 +186,7 @@ class LineChartVC : UIViewController {
         $0.textColor = .lightGray
     }
     
-    private let diffMin = UILabel().then {
+    private let minStandardDeviationValue = UILabel().then {
         $0.text = "0"
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = UIColor(red: 83/255, green: 136/255, blue: 247/255, alpha: 1.0)
@@ -203,7 +203,7 @@ class LineChartVC : UIViewController {
     }
     
     private let valueLabel = UILabel().then {
-        $0.text = "unit_bpm_upper".localized()
+        $0.text = "unit_standard_deviation".localized()
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
     }
     
@@ -446,10 +446,10 @@ class LineChartVC : UIViewController {
         switch chartType {
         case .BPM:
             avgLabel.text = "unit_bpm_avg".localized()
-            valueLabel.text = "unit_bpm_upper".localized()
+//            valueLabel.text = "unit_bpm_upper".localized()
         case .HRV:
             avgLabel.text = "unit_hrv_avg".localized()
-            valueLabel.text = "unit_hrv".localized()
+//            valueLabel.text = "unit_hrv".localized()
         case .STRESS:
             break
         }
@@ -464,15 +464,19 @@ class LineChartVC : UIViewController {
             let min = Int(lineChartModel.minValue)
             let avg = Int(lineChartModel.avgValue)
             
+            let maxStandardDeviation = lineChartModel.avgValue + lineChartModel.standardDeviationValue
+            let minStandardDeviation = lineChartModel.avgValue - lineChartModel.standardDeviationValue
+            
             let difMax = max - avg
             let difMin = avg - min
             
-            maxValue.text = String(max)
-            minValue.text = String(min)
+            maxValue.text = "\(max)(+\(difMax))"
+            minValue.text = "\(min)(-\(difMin))"
             avgValue.text = String(avg)
             
-            diffMax.text = "+\(difMax)"
-            diffMin.text = "-\(difMin)"
+            maxStandardDeviationValue.text = String(maxStandardDeviation)
+            minStandardDeviationValue.text = String(minStandardDeviation)
+            
         case .STRESS:
             pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
             pnsMinValue.text = String(format: "%.1f", lineChartModel.minValue)
@@ -491,8 +495,8 @@ class LineChartVC : UIViewController {
         minValue.text = "0"
         avgValue.text = "0"
         
-        diffMin.text = "-0"
-        diffMax.text = "+0"
+        minStandardDeviationValue.text = "-0"
+        maxStandardDeviationValue.text = "+0"
         
         pnsMaxValue.text = "0"
         pnsMinValue.text = "0"
@@ -727,10 +731,10 @@ class LineChartVC : UIViewController {
     private func addBpmHrvViews() {
         let oneThirdWidth = UIScreen.main.bounds.width / 3.0
         
-        let minStackView = UIStackView(arrangedSubviews: [minLabel, minValue, diffMin]).then {
+        let minStackView = UIStackView(arrangedSubviews: [minLabel, minValue, minStandardDeviationValue]).then {
             setStackView($0)
         }
-        let maxStackView = UIStackView(arrangedSubviews: [maxLabel, maxValue, diffMax]).then {
+        let maxStackView = UIStackView(arrangedSubviews: [maxLabel, maxValue, maxStandardDeviationValue]).then {
             setStackView($0)
         }
         let avgStackView = UIStackView(arrangedSubviews: [avgLabel, avgValue, valueLabel]).then {
