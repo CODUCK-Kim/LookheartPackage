@@ -80,4 +80,23 @@ public class LogService {
             print("sendBleLog Error: \(error)")
         }
     }
+    
+    public func sendBleSerialNumber(serial: String) async {
+        let params: [String: Any] = [
+            "kind": "ecgSerialNumber",
+            "eq": propEmail,
+            "log": serial
+        ]
+        
+        do {
+            let sendBleLog = try await AlamofireController.shared.alamofireControllerForString(
+                parameters: params,
+                endPoint: .postSerialNumber,
+                method: .post)
+            
+            print("ecgSerialNumber: \(sendBleLog)")
+        } catch {
+            print("sendBleLog Error: \(error)")
+        }
+    }
 }

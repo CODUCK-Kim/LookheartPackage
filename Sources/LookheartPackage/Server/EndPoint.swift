@@ -59,6 +59,8 @@ public enum EndPoint: String {
     case postExerciseData = "exercise/create"
     case deleteExerciseData = "exercise/delete"
     
+    // POST: BLE
+    case postSerialNumber = "mslLast/api_getdata"
     
     /* WSS */
     case wssEcg = "/Ecg"
