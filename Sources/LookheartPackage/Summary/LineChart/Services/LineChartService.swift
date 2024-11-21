@@ -35,13 +35,15 @@ class LineChartService {
             "endDate": endDate
         ]
         
+        print("parameters: \(parameters)")
+        
         let data: (result: String? ,response: NetworkResponse) = await networkController.task(
             parameters: parameters,
             endPoit: endPoint,
             method: .get,
             type: String.self
         )
-                      
+        
         print("GET_LINE_CHART_DATA: \(data)")
         
         return data
