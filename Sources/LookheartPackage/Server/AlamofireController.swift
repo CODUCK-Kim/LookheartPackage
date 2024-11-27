@@ -42,11 +42,9 @@ public class AlamofireController: NetworkProtocol {
                 endPoint: endPoit,
                 method: method
             )
-            print("result: \(result)")
             return (result: result, response: .success)
         } catch {
             let error = handleError(error)
-            print("error: \(error)")
             return (result: nil, response: error)
         }
     }
