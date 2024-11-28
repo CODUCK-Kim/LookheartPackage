@@ -117,13 +117,6 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
-            
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1
-        formatter.maximumFractionDigits = 1
-        formatter.roundingMode = .halfUp // 반올림 방식 설정 (필요에 따라 변경 가능)
-        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -185,6 +178,7 @@ class LineChartController {
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
         
+        
         // 4. set line chart
         addLimitLine(lineChart, lineChartModel.chartType, lineChartModel)
         
@@ -221,7 +215,7 @@ class LineChartController {
         lineChart.leftAxis.removeAllLimitLines()
         
         switch chartType {
-        case .BPM, .HRV, .SPO2, .BREATHE:
+        case .BPM, .HRV:
             guard let model else { return }
             
             let topLimitLine = model.avgValue + model.standardDeviationValue
@@ -237,6 +231,9 @@ class LineChartController {
             addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)
             addLimitLine(to: lineChart, limit: 80, label: "", color: NSUIColor.MY_LIGHT_PINK)
             addLimitLine(to: lineChart, limit: 20, label: "", color: NSUIColor.MY_LIGHT_PINK)
+            
+        case .SPO2, .BREATHE:
+            break
         }
     }
     
@@ -272,7 +269,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 200
+            return 105
         case .BREATHE:
             return 50
         case .STRESS:
