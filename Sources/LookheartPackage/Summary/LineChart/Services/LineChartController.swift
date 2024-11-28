@@ -9,6 +9,8 @@ import Foundation
 import DGCharts
 import UIKit
 
+
+
 class LineChartController {
     private let dateTime: MyDateTime
     
@@ -21,7 +23,7 @@ class LineChartController {
         noDataText: String = "",
         fontSize: CGFloat = 15,
         weight: UIFont.Weight = .bold,
-        granularity: Double = 1,
+        granularity: Double = 0.1,
         labelPosition: XAxis.LabelPosition = .bottom,
         xAxisEnabled: Bool = true,
         drawGridLinesEnabled: Bool = false,
@@ -194,7 +196,7 @@ class LineChartController {
         lineChart.setVisibleXRangeMaximum(maximum)
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
-        lineChart.leftAxis.labelCount = 11
+
         
         // 5. show chart
         lineChart.data?.notifyDataChanged()
@@ -272,7 +274,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 105
+            return 100.5
         case .BREATHE:
             return 50
         case .STRESS:
@@ -287,7 +289,7 @@ class LineChartController {
         case .HRV, .STRESS, .BREATHE:
             return 0
         case .SPO2:
-            return 90
+            return 85
         }
     }
     
