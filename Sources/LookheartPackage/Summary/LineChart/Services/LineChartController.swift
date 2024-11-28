@@ -199,6 +199,13 @@ class LineChartController {
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
         
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .down
+        lineChart.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: formatter)
+        
         // 5. show chart
         lineChart.data?.notifyDataChanged()
         lineChart.notifyDataSetChanged()
