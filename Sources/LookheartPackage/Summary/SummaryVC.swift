@@ -449,7 +449,7 @@ public class SummaryViewController : UIViewController {
         contentView.addSubview(breathButton)
         breathButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
-            make.left.equalTo(spo2Image.snp.right).offset(10)
+            make.left.equalTo(spo2Button.snp.right).offset(10)
             make.width.height.equalTo(bpmButton)
         }
   
