@@ -175,6 +175,8 @@ class LineChartController {
             dateType: lineChartModel.dateType
         )
         
+        print(entries)
+        
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
         
@@ -192,6 +194,7 @@ class LineChartController {
         lineChart.setVisibleXRangeMaximum(maximum)
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
+        lineChart.leftAxis.labelCount = 11
         
         // 5. show chart
         lineChart.data?.notifyDataChanged()
@@ -284,7 +287,7 @@ class LineChartController {
         case .HRV, .STRESS, .BREATHE:
             return 0
         case .SPO2:
-            return 80
+            return 90
         }
     }
     
