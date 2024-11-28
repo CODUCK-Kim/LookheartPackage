@@ -84,7 +84,7 @@ struct LineChartDataModel {
                     temp: Double(temp),
                     hrv: Double(hrv),
                     spo2: 89.5, //Double(spo2),
-                    breathe: Double(breathe)
+                    breathe: 29.5//Double(breathe)
                 ))
             }
         }
