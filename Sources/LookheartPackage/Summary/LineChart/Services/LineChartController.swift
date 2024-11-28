@@ -65,9 +65,9 @@ class LineChartController {
         var chartDataSets: [LineChartDataSet] = []
         
         let graphColor = getGraphColor(chartType, dateType)
-        let sortedKeys = getSortedKeys(entries, chartType)
-        
-        for (graphIdx, key) in sortedKeys.enumerated() {
+//        let sortedKeys = getSortedKeys(entries, chartType)
+//        entries.keys
+        for (graphIdx, key) in entries.keys.enumerated() {
             guard let entry = entries[key] else { continue }
             
             let label = getLabel(key, chartType)
@@ -150,8 +150,6 @@ class LineChartController {
         guard let entries = lineChartModel.entries else {
             return false // noData
         }
-        
-        print(entries)
         
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
