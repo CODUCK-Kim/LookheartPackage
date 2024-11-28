@@ -62,6 +62,7 @@ struct LineChartDataModel {
             let fields = data.split(separator: "|")
             
 //            if fields.count == 7 {
+            print(fields)
             if fields.count == 9 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
@@ -70,6 +71,7 @@ struct LineChartDataModel {
                       let breathe = Int(fields[8]) else {
                     continue
                 }
+                print("spo2: \(spo2)")
                 
                 let dateTime = fields[2].split(separator: " ")
                 
