@@ -47,10 +47,6 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
-            
-            // test
-            $0.leftAxis.granularityEnabled = true
-            $0.leftAxis.labelCount = 6
         }
     }
     
@@ -67,6 +63,8 @@ class LineChartController {
         
         for (graphIdx, key) in sortedKeys.enumerated() {
             guard let entry = entries[key] else { continue }
+            
+            print(entry)
             
             let label = getLabel(key, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
@@ -123,13 +121,6 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
-        
-//        let formatter = NumberFormatter()
-//        formatter.numberStyle = .decimal
-        
-//        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
-//        chartDataSet.valueTextColor = UIColor.MY_RED
-//        chartDataSet.valueFormatter.stringForValue(99.5, entry: <#T##ChartDataEntry#>, dataSetIndex: <#T##Int#>, viewPortHandler: <#T##ViewPortHandler?#>)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -148,32 +139,6 @@ class LineChartController {
     
     func showChart(
         lineChart: LineChartView,
-        chartData: LineChartData,
-        timeTable: [String],
-        chartType: LineChartType
-    ) {
-        let maximum = getChartMaximum(chartType)
-        let axisMaximum = getChartAxisMaximum(chartType)
-        let axisMinimum = getChartAxisMinimum(chartType)
-        let removeSecondTimeTable = removeSecond(timeTable)
-        
-        addLimitLine(lineChart, chartType)
-        
-        lineChart.data = chartData
-        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: removeSecondTimeTable)
-        lineChart.setVisibleXRangeMaximum(maximum)
-        lineChart.leftAxis.axisMaximum = axisMaximum
-        lineChart.leftAxis.axisMinimum = axisMinimum
-        
-        lineChart.data?.notifyDataChanged()
-        lineChart.notifyDataSetChanged()
-        lineChart.moveViewToX(0)
-        
-        chartZoomOut(lineChart)
-    }
-    
-    func showChart(
-        lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
         // 1. entries
@@ -187,8 +152,6 @@ class LineChartController {
             chartType: lineChartModel.chartType,
             dateType: lineChartModel.dateType
         )
-        
-        print(entries)
         
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
