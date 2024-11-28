@@ -93,9 +93,9 @@ class LineChartViewModel {
                     case .HRV:
                         value = data.hrv
                     case .SPO2:
-                        value = Double(data.spo2 ?? 0)
+                        value = data.spo2
                     case .BREATHE:
-                        value = Double(data.breathe ?? 0)
+                        value = data.breathe
                     case .STRESS:
                         if date == "pns" {
                             value = data.pns
@@ -104,6 +104,8 @@ class LineChartViewModel {
                             value = data.sns
                         }
                     }
+                    
+                    print("value: \(value)")
                     
                     // value
                     if let value {
@@ -118,6 +120,8 @@ class LineChartViewModel {
                             minValue = min(minValue, value)
                             avgSumValue += value
                             avgCnt += 1
+                            
+                            print("maxValue: \(maxValue), minValue: \(minValue), avgSumValue: \(avgSumValue)")
                         case .STRESS:
                             if date == "pns" {
                                 maxValue = max(maxValue, value)
