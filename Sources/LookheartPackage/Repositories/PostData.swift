@@ -62,7 +62,8 @@ public class PostData {
                 endPoint: .postTenSecondData,
                 method: .post)
             
-//            print("TenSecondeData: \(tenSecondData)")
+            print("TenSecondeData: \(tenSecondData)")
+            
         } catch {
             print("TenSecondeData Send Error: \(error)")
         }
