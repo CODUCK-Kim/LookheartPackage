@@ -56,7 +56,6 @@ class LineChartController {
     ) -> [LineChartDataSet] {
         var chartDataSets: [LineChartDataSet] = []
         
-        print(entries)
         let graphColor = getGraphColor(chartType, dateType)
         let sortedKeys = getSortedKeys(entries, chartType)
         
@@ -267,7 +266,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 100
+            return 110
         case .BREATHE:
             return 50
         case .STRESS:
