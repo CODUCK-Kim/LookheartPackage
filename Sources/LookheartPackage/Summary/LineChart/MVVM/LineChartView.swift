@@ -410,7 +410,6 @@ class LineChartVC : UIViewController {
     private func showChart(_ lineChartModel: LineChartModel?) {
         guard let lineChartModel else { return }
         
-        print(lineChartModel)
         
         if let showChart = lineChartController?.showChart(
             lineChart: lineChartView,

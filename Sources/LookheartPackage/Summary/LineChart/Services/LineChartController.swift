@@ -56,6 +56,7 @@ class LineChartController {
     ) -> [LineChartDataSet] {
         var chartDataSets: [LineChartDataSet] = []
         
+        print(entries)
         let graphColor = getGraphColor(chartType, dateType)
         let sortedKeys = getSortedKeys(entries, chartType)
         
