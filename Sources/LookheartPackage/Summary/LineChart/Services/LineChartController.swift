@@ -125,7 +125,7 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
-        chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 1)
+        chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 10)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -150,6 +150,8 @@ class LineChartController {
         guard let entries = lineChartModel.entries else {
             return false // noData
         }
+        
+        print(entries)
         
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
