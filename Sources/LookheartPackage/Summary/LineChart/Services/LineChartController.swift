@@ -72,8 +72,6 @@ class LineChartController {
             
             let label = getLabel(key, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
-            chartDataSet.drawValuesEnabled = true
-            chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 1)
             
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
             
@@ -127,6 +125,7 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
+        chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 1)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
