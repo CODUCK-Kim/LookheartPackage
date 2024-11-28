@@ -124,6 +124,7 @@ class LineChartController {
         formatter.numberStyle = .decimal
         
         chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
+        
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
