@@ -118,9 +118,6 @@ class LineChartViewModel {
                             minValue = min(minValue, value)
                             avgSumValue += value
                             avgCnt += 1
-                        
-                            print(value)
-                            
                         case .STRESS:
                             if date == "pns" {
                                 maxValue = max(maxValue, value)

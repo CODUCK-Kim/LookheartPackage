@@ -21,7 +21,7 @@ class LineChartController {
         noDataText: String = "",
         fontSize: CGFloat = 15,
         weight: UIFont.Weight = .bold,
-        granularity: Double = 1,
+        granularity: Double = 0.1,
         labelPosition: XAxis.LabelPosition = .bottom,
         xAxisEnabled: Bool = true,
         drawGridLinesEnabled: Bool = false,
@@ -79,7 +79,6 @@ class LineChartController {
         _ chartType: LineChartType
     ) -> [String] {
         switch chartType {
-            
         case .BPM, .HRV, .SPO2, .BREATHE:
             return entries.keys.sorted()
         case .STRESS:
