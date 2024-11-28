@@ -67,15 +67,15 @@ struct LineChartDataModel {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
                       let hrv = Int(fields[6]),
-                      let spo2 = Int(fields[7]),
+                      let spo2 = Double(fields[7]),
                       let breathe = Int(fields[8]) else {
                     continue
                 }
                 
                 let dateTime = fields[2].split(separator: " ")
                 
-//                print("spo2: \(spo2)")
-//                print("breathe: \(breathe)")
+                print("spo2: \(spo2)")
+                print("breathe: \(breathe)")
                 
                 parsedRecords.append( LineChartDataModel(
                     idx: String(fields[0]),
@@ -92,8 +92,6 @@ struct LineChartDataModel {
                 ))
             }
         }
-    
-        print("parsedRecords: \(parsedRecords)")
         
         return parsedRecords
     }
