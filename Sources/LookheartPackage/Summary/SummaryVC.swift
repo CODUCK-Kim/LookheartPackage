@@ -464,7 +464,9 @@ public class SummaryViewController : UIViewController {
         contentView.addSubview(calorieButton)
         calorieButton.snp.makeConstraints { make in
             make.top.equalTo(bpmButton)
-            make.left.equalTo(stressButton.snp.right).offset(10)
+//            make.left.equalTo(stressButton.snp.right).offset(10)
+            make.left.equalTo(breathButton.snp.right).offset(10)
+            
             make.width.height.equalTo(bpmButton)
         }
         
