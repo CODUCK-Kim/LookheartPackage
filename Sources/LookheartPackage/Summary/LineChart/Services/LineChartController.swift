@@ -117,6 +117,13 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .down // 반올림 방식 설정 (필요에 따라 변경 가능)
+        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -308,16 +315,6 @@ class LineChartController {
         case .STRESS:
             return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE]
         }
-    }
-    
-    private func getFormatter() -> ValueFormatter {
-        let formatter: NumberFormatter
-        formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1
-        formatter.maximumFractionDigits = 1
-        formatter.roundingMode = .down
-        return formatter as! ValueFormatter
     }
 }
 
