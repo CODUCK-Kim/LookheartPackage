@@ -10,5 +10,7 @@ import Foundation
 enum LineChartType {
     case BPM
     case HRV
+    case SPO2
+    case BREATHE
     case STRESS
 }

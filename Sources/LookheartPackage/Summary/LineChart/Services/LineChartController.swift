@@ -80,7 +80,7 @@ class LineChartController {
     ) -> [String] {
         switch chartType {
             
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             return entries.keys.sorted()
         case .STRESS:
             return ["sns", "pns"]
@@ -92,7 +92,7 @@ class LineChartController {
         _ chartType: LineChartType
     ) -> String {
         switch chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             return dateTime.changeDateFormat(key, false)
         case .STRESS:
             return key
@@ -215,7 +215,7 @@ class LineChartController {
         lineChart.leftAxis.removeAllLimitLines()
         
         switch chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             guard let model else { return }
             
             let topLimitLine = model.avgValue + model.standardDeviationValue
@@ -256,7 +256,7 @@ class LineChartController {
     
     private func getChartMaximum(_ chartType: LineChartType) -> Double {
         switch chartType {
-        case .BPM, .HRV, .STRESS:
+        case .BPM, .HRV, .SPO2, .BREATHE, .STRESS:
             return 1000
         }
     }
@@ -265,6 +265,10 @@ class LineChartController {
         switch chartType {
         case .BPM, .HRV:
             return 200
+        case .SPO2:
+            return 100
+        case .BREATHE:
+            return 50
         case .STRESS:
             return 100
         }
@@ -274,8 +278,10 @@ class LineChartController {
         switch chartType {
         case .BPM:
             return 40
-        case .HRV, .STRESS:
+        case .HRV, .STRESS, .BREATHE:
             return 0
+        case .SPO2:
+            return 80
         }
     }
     
@@ -290,7 +296,7 @@ class LineChartController {
         _ dateType: LineChartDateType
     ) -> [UIColor] {
         switch chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             switch (dateType) {
             case .TODAY:
                 return [NSUIColor.MY_RED]

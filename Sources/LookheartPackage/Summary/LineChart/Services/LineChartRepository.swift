@@ -80,7 +80,7 @@ class LineChartRepository {
         response: NetworkResponse
     ) {
         switch (lineChartType) {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             return parsingBpmHrvData(data)
         case .STRESS:
             return parsingStressData(data)
@@ -154,7 +154,7 @@ class LineChartRepository {
         let groupedData = parsingData.reduce(into: [String: [LineChartDataModel]]()) { dict, data in
             
             switch lineChartType {
-            case .BPM, .HRV:
+            case .BPM, .HRV, .SPO2, .BREATHE:
                 // 날짜별("YYYY-MM-DD") 데이터 그룹화
                 let dateKey = String(data.writeDate)
                 dict[dateKey, default: []].append(data)

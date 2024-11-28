@@ -92,6 +92,10 @@ class LineChartViewModel {
                         value = data.bpm
                     case .HRV:
                         value = data.hrv
+                    case .SPO2:
+                        value = Double(data.spo2 ?? 0)
+                    case .BREATHE:
+                        value = Double(data.breathe ?? 0)
                     case .STRESS:
                         if date == "pns" {
                             value = data.pns
@@ -109,7 +113,7 @@ class LineChartViewModel {
                         valueArray.append(value)
                         
                         switch lineChartModel.chartType {
-                        case .BPM, .HRV:
+                        case .BPM, .HRV, .SPO2, .BREATHE:
                             maxValue = max(maxValue, value)
                             minValue = min(minValue, value)
                             avgSumValue += value
@@ -135,7 +139,7 @@ class LineChartViewModel {
                 
         // 표준 편차
         switch lineChartModel.chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             let avgValue = avgSumValue / Double(avgCnt)
             var sumSquareValue = 0.0
             

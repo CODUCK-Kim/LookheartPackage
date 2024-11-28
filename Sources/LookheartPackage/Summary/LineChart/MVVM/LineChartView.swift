@@ -328,7 +328,7 @@ class LineChartVC : UIViewController {
         
 
         switch lineChart {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             bpmHrvContents.isHidden = false
             stressContents.isHidden = true
         case .STRESS:
@@ -452,6 +452,11 @@ class LineChartVC : UIViewController {
 //            valueLabel.text = "unit_hrv".localized()
         case .STRESS:
             break
+            // TEST
+        case .SPO2:
+            avgLabel.text = "평균 SPO2"
+        case .BREATHE:
+            avgLabel.text = "평균 호흡"
         }
     }
     
@@ -459,7 +464,7 @@ class LineChartVC : UIViewController {
         guard let lineChartModel else { return }
         
         switch lineChartModel.chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             let max = Int(lineChartModel.maxValue)
             let min = Int(lineChartModel.minValue)
             let avg = Int(lineChartModel.avgValue)

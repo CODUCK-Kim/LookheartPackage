@@ -53,7 +53,7 @@ class LineChartService {
     
     private func getEndPoint(_ type: LineChartType) -> EndPoint {
         return switch type {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             EndPoint.getBpmData
         case .STRESS:
             EndPoint.getStressData
