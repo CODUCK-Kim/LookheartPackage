@@ -58,11 +58,13 @@ struct LineChartDataModel {
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
+        print(datalist)
+//        "4572640 | 001933.1a0490f0f2cb433d8a5665d51ee98c43.0839 | 2024-11-28 14:16:16 | +09:00/Asia/Seoul/KR | 70 | 0 | 0 | 99.5 | 20"
         for data in datalist {
             let fields = data.split(separator: "|")
             
 //            if fields.count == 7 {
-            if fields.count == 8 {
+            if fields.count == 9 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
                       let hrv = Int(fields[6]),
