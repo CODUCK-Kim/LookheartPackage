@@ -120,11 +120,11 @@ class LineChartController {
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
         
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .decimal
         
-        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
-        
+//        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
+        chartDataSet.valueTextColor = UIColor.MY_RED
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
