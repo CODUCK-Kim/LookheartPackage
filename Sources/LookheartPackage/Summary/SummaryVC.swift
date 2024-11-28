@@ -8,14 +8,17 @@ public class SummaryViewController : UIViewController {
     
     private let BPM_BUTTON_TAG = 1
     private let ARR_BUTTON_TAG = 2
-    private let HRV_BUTTON_TAG = 3
-    private let CAL_BUTTON_TAG = 4
-    private let STEP_BUTTON_TAG = 5
-    private let STRESS_BUTTON_TAG = 6
+//    private let HRV_BUTTON_TAG = 3
+//    private let CAL_BUTTON_TAG = 4
+//    private let STEP_BUTTON_TAG = 5
+//    private let STRESS_BUTTON_TAG = 6
     
     // TEST
-    private let SPO2_BUTTON_TAG = 7
-    private let BREATH_BUTTON_TAG = 8
+    private let CAL_BUTTON_TAG = 3
+    private let STEP_BUTTON_TAG = 4
+    private let STRESS_BUTTON_TAG = 5
+    private let SPO2_BUTTON_TAG = 6
+    private let BREATH_BUTTON_TAG = 7
     
     
     
