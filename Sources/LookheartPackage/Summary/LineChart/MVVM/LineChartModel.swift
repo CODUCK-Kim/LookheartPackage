@@ -61,6 +61,7 @@ struct LineChartDataModel {
         for data in datalist {
             let fields = data.split(separator: "|")
             
+            print(fields)
 //            if fields.count == 7 {
             if fields.count == 9 {
                 guard let bpm = Int(fields[4]),
@@ -73,8 +74,8 @@ struct LineChartDataModel {
                 
                 let dateTime = fields[2].split(separator: " ")
                 
-                print("spo2: \(spo2)")
-                print("breathe: \(breathe)")
+//                print("spo2: \(spo2)")
+//                print("breathe: \(breathe)")
                 
                 parsedRecords.append( LineChartDataModel(
                     idx: String(fields[0]),
