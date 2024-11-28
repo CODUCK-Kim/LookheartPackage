@@ -17,6 +17,7 @@ class LineChartController {
         self.dateTime = dateTime
     }
     
+    
     func setLineChart(
         lineChart: LineChartView,
         noDataText: String = "",
@@ -33,6 +34,11 @@ class LineChartController {
         doubleTapToZoomEnabled: Bool = false,
         highlightPerTapEnabled: Bool = false
     ) {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        
         lineChart.do {
             $0.noDataText = noDataText
             $0.xAxis.enabled = xAxisEnabled
@@ -46,6 +52,7 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
+            $0.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: formatter)
         }
     }
     
@@ -65,12 +72,14 @@ class LineChartController {
             
             let label = getLabel(key, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
+            chartDataSet.drawValuesEnabled = true
+            chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 1)
             
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
             
             chartDataSets.append(chartDataSet)
         }
-
+        
         return chartDataSets
     }
 
@@ -248,7 +257,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 99.5
+            return 100
         case .BREATHE:
             return 50
         case .STRESS:
