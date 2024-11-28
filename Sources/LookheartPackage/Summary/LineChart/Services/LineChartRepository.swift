@@ -112,6 +112,8 @@ class LineChartRepository {
             return (nil, .invalidResponse)
         }
         
+        print(splitData)
+        
         let changedFormatData = LineChartDataModel.changeFormat(datalist: splitData)
         
         return (changedFormatData, .success)
