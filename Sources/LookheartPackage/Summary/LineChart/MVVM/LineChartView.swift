@@ -453,6 +453,8 @@ class LineChartVC : UIViewController {
 //            valueLabel.text = "unit_hrv".localized()
         case .STRESS:
             break
+            
+            
             // TEST
         case .SPO2:
             avgLabel.text = "평균 SPO2"

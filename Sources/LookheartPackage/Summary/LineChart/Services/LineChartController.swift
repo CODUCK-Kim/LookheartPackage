@@ -21,7 +21,7 @@ class LineChartController {
         noDataText: String = "",
         fontSize: CGFloat = 15,
         weight: UIFont.Weight = .bold,
-        granularity: Double = 0.1,
+        granularity: Double = 1,
         labelPosition: XAxis.LabelPosition = .bottom,
         xAxisEnabled: Bool = true,
         drawGridLinesEnabled: Bool = false,
@@ -265,7 +265,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 110
+            return 100
         case .BREATHE:
             return 50
         case .STRESS:
