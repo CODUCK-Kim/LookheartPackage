@@ -34,6 +34,8 @@ class LineChartViewModel {
             
             let (chartModel, response) = await repository.getLineChartGropData()
             
+            print("chartModel: \(chartModel)")
+            
             switch response {
             case .success:
                 // update model
@@ -58,9 +60,6 @@ class LineChartViewModel {
         let size = lineChartModel.timeTable.count
         let timeTable = lineChartModel.timeTable
         let dictionary = lineChartModel.dictData
-        
-        
-        print(lineChartModel)
         
         // value
         var maxValue = 0.0
@@ -108,7 +107,7 @@ class LineChartViewModel {
                         }
                     }
                     
-                    print("value: \(value)")
+                    print("lineChartModel.chartType: \(lineChartModel.chartType), value: \(value)")
                     
                     // value
                     if let value {
