@@ -494,7 +494,7 @@ class LineChartVC : UIViewController {
             
             maxValue.text = "\(String(format: "%.1f", lineChartModel.maxValue))(+\(String(format: "%.1f", difMax))"
             minValue.text = "\(String(format: "%.1f", lineChartModel.minValue))(-\(String(format: "%.1f", difMin)))"
-            avgValue.text = String(lineChartModel.avgValue)
+            avgValue.text = String(format: "%.1f", lineChartModel.avgValue)
             
             maxStandardDeviationValue.text = String(format: "%.1f", maxStandardDeviation)
             minStandardDeviationValue.text = String(format: "%.1f", minStandardDeviation)
