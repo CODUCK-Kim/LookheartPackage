@@ -119,6 +119,11 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        
+        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -197,6 +202,9 @@ class LineChartController {
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
 
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        lineChart.leftAxis.valueFormatter =  DefaultAxisValueFormatter(formatter: formatter)
         
         // 5. show chart
         lineChart.data?.notifyDataChanged()
@@ -274,7 +282,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 200
+            return 100
         case .BREATHE:
             return 50
         case .STRESS:
@@ -289,7 +297,7 @@ class LineChartController {
         case .HRV, .STRESS, .BREATHE:
             return 0
         case .SPO2:
-            return 85
+            return 80
         }
     }
     
