@@ -168,6 +168,8 @@ class LineChartController {
             return false // noData
         }
         
+        print(entries)
+        
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
             entries: entries,

@@ -139,7 +139,7 @@ class LineChartViewModel {
                 
         // 표준 편차
         switch lineChartModel.chartType {
-        case .BPM, .HRV:
+        case .BPM, .HRV, .SPO2, .BREATHE:
             let avgValue = avgSumValue / Double(avgCnt)
             var sumSquareValue = 0.0
             
@@ -153,7 +153,7 @@ class LineChartViewModel {
             let variance = sumSquareValue / Double(valueArray.count) // 분산
             
             standardDeviationValue = sqrt(variance) // 제곱근
-        case .STRESS, .SPO2, .BREATHE:
+        case .STRESS:
             break
         }
         
