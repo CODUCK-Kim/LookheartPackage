@@ -10,7 +10,6 @@ import DGCharts
 import UIKit
 
 
-
 class LineChartController {
     private let dateTime: MyDateTime
     
@@ -63,8 +62,6 @@ class LineChartController {
         
         for (graphIdx, key) in sortedKeys.enumerated() {
             guard let entry = entries[key] else { continue }
-            
-            print(entry)
             
             let label = getLabel(key, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
@@ -251,7 +248,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 100
+            return 99.5
         case .BREATHE:
             return 50
         case .STRESS:
