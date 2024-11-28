@@ -57,12 +57,13 @@ public class PostData {
         params.merge(tenSecondData) { (current, _) in current }
         
         do {
-            _ = try await AlamofireController.shared.alamofireControllerForString(
+            let response = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: params,
                 endPoint: .postTenSecondData,
                 method: .post)
             
-            print("TenSecondeData: \(tenSecondData)")
+//            print("TenSecondeData: \(tenSecondData)")
+            print("TenSecondeData response: \(response)")
             
         } catch {
             print("TenSecondeData Send Error: \(error)")
