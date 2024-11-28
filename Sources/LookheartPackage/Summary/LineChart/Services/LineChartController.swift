@@ -117,6 +117,13 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
+            
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .halfUp // 반올림 방식 설정 (필요에 따라 변경 가능)
+        chartDataSet.valueFormatter = DefaultValueFormatter(formatter: formatter)
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -174,11 +181,6 @@ class LineChartController {
             chartType: lineChartModel.chartType,
             dateType: lineChartModel.dateType
         )
-        print("chartType: \(lineChartModel.chartType)")
-        
-        print("entries: \(entries)")
-        
-        print("chartDataSets: \(chartDataSets)")
         
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
@@ -201,7 +203,6 @@ class LineChartController {
         lineChart.data?.notifyDataChanged()
         lineChart.notifyDataSetChanged()
         lineChart.moveViewToX(0)
-        
         
         chartZoomOut(lineChart)
         
