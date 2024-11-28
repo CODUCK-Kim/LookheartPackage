@@ -58,6 +58,8 @@ struct LineChartDataModel {
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
+        print(datalist)
+        
         for data in datalist {
             let fields = data.split(separator: "|")
             
@@ -87,6 +89,7 @@ struct LineChartDataModel {
                 ))
             }
         }
+        print(parsedRecords)
         
         return parsedRecords
     }
