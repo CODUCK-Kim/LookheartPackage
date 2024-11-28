@@ -34,8 +34,6 @@ class LineChartViewModel {
             
             let (chartModel, response) = await repository.getLineChartGropData()
             
-//            print("chartModel: \(chartModel)")
-            
             switch response {
             case .success:
                 // update model
@@ -106,13 +104,11 @@ class LineChartViewModel {
                             value = data.sns
                         }
                     }
-                    
-//                    print("lineChartModel.chartType: \(lineChartModel.chartType), value: \(value)")
-                    
+
                     // value
                     if let value {
                         let entry = ChartDataEntry(x: Double(i), y: value)
-                        
+                            
                         entries[date]?.append(entry)
                         valueArray.append(value)
                         
@@ -122,8 +118,9 @@ class LineChartViewModel {
                             minValue = min(minValue, value)
                             avgSumValue += value
                             avgCnt += 1
+                        
+                            print(value)
                             
-//                            print("maxValue: \(maxValue), minValue: \(minValue), avgSumValue: \(avgSumValue)")
                         case .STRESS:
                             if date == "pns" {
                                 maxValue = max(maxValue, value)

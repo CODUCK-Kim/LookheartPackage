@@ -42,10 +42,11 @@ public class SummaryViewController : UIViewController {
     
     // test
     private lazy var buttons: [UIButton] = {
-        return [bpmButton, arrButton, spo2Button, breathButton, calorieButton, stepButton, stressButton]
+        return [bpmButton, arrButton, calorieButton, stepButton, stressButton, spo2Button, breathButton]
     }()
+    
     private lazy var images: [UIImageView] = {
-        return [bpmImage, arrImage, spo2Image, breatheImage, calorieImage, stepImage, stressImage]
+        return [bpmImage, arrImage, calorieImage, stepImage, stressImage, spo2Image, breatheImage]
     }()
     
     
