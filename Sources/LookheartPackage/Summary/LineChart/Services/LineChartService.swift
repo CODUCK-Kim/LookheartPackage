@@ -32,7 +32,10 @@ class LineChartService {
 //            "eq": "001948.bc98ad2f3d44485c92a65c1f72fa1db6.0117",
             
             "startDate": startDate,
-            "endDate": endDate
+            "endDate": endDate,
+            
+            // test
+            "test": true
         ]
         
         

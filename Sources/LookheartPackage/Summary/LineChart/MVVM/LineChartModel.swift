@@ -51,6 +51,9 @@ struct LineChartDataModel {
     var sns: Double?
     var stress: Double?
     
+    var spo2: Float?
+    var breathe: Int?
+    
     // bpm, hrv
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
@@ -61,7 +64,9 @@ struct LineChartDataModel {
             if fields.count == 7 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
-                      let hrv = Int(fields[6]) else {
+                      let hrv = Int(fields[6]),
+                      let spo2 = Int(fields[7]),
+                      let breathe = Int(fields[8]) else {
                     continue
                 }
                 
@@ -76,7 +81,9 @@ struct LineChartDataModel {
                     timezone: String(fields[3]),
                     bpm: Double(bpm),
                     temp: Double(temp),
-                    hrv: Double(hrv)
+                    hrv: Double(hrv),
+                    spo2: Float(spo2),
+                    breathe: Int(breathe)
                 ))
             }
         }
