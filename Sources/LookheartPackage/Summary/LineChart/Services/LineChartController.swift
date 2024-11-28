@@ -117,6 +117,15 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = true
+        
+        let formatter: NumberFormatter
+        formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .down
+        
+        chartDataSet.valueFormatter = formatter as! any ValueFormatter
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -167,8 +176,6 @@ class LineChartController {
         guard let entries = lineChartModel.entries else {
             return false // noData
         }
-        
-        print(entries)
         
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
@@ -311,4 +318,16 @@ class LineChartController {
             return [NSUIColor.GRAPH_RED, NSUIColor.GRAPH_BLUE]
         }
     }
+    
+    private func getFormatter() -> ValueFormatter {
+        let formatter: NumberFormatter
+        formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .down
+        return formatter as! ValueFormatter
+    }
 }
+
+
