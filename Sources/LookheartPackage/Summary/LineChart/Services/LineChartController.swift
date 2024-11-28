@@ -274,7 +274,7 @@ class LineChartController {
         case .BPM, .HRV:
             return 200
         case .SPO2:
-            return 100.5
+            return 200
         case .BREATHE:
             return 50
         case .STRESS:
