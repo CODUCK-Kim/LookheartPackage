@@ -467,7 +467,7 @@ class LineChartVC : UIViewController {
         guard let lineChartModel else { return }
         
         switch lineChartModel.chartType {
-        case .BPM, .HRV, .SPO2, .BREATHE:
+        case .BPM, .HRV, .BREATHE:
             let max = Int(lineChartModel.maxValue)
             let min = Int(lineChartModel.minValue)
             let avg = Int(lineChartModel.avgValue)
@@ -484,6 +484,20 @@ class LineChartVC : UIViewController {
             
             maxStandardDeviationValue.text = String(Int(maxStandardDeviation))
             minStandardDeviationValue.text = String(Int(minStandardDeviation))
+            
+        case .SPO2:
+            let maxStandardDeviation = lineChartModel.avgValue + lineChartModel.standardDeviationValue
+            let minStandardDeviation = lineChartModel.avgValue - lineChartModel.standardDeviationValue
+            
+            let difMax = lineChartModel.maxValue - lineChartModel.avgValue
+            let difMin = lineChartModel.avgValue - lineChartModel.minValue
+            
+            maxValue.text = "\(lineChartModel.maxValue)(+\(difMax))"
+            minValue.text = "\(lineChartModel.minValue)(-\(difMin))"
+            avgValue.text = String(lineChartModel.avgValue)
+            
+            maxStandardDeviationValue.text = String(format: "%.1f", maxStandardDeviation)
+            minStandardDeviationValue.text = String(format: "%.1f", minStandardDeviation)
             
         case .STRESS:
             pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
