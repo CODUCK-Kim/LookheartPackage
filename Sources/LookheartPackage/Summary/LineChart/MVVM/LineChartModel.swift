@@ -73,6 +73,9 @@ struct LineChartDataModel {
                 
                 let dateTime = fields[2].split(separator: " ")
                 
+                print("spo2: \(spo2)")
+                print("breathe: \(breathe)")
+                
                 parsedRecords.append( LineChartDataModel(
                     idx: String(fields[0]),
                     eq: String(fields[1]),
@@ -89,6 +92,7 @@ struct LineChartDataModel {
             }
         }
     
+        print("parsedRecords: \(parsedRecords)")
         
         return parsedRecords
     }
