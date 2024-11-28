@@ -51,8 +51,8 @@ struct LineChartDataModel {
     var sns: Double?
     var stress: Double?
     
-    var spo2: Float?
-    var breathe: Int?
+    var spo2: Double?
+    var breathe: Double?
     
     // bpm, hrv
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
@@ -82,8 +82,8 @@ struct LineChartDataModel {
                     bpm: Double(bpm),
                     temp: Double(temp),
                     hrv: Double(hrv),
-                    spo2: Float(spo2),
-                    breathe: Int(breathe)
+                    spo2: Double(spo2),
+                    breathe: Double(breathe)
                 ))
             }
         }
