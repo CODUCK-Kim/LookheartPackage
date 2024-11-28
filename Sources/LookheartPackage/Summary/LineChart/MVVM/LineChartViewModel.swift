@@ -59,6 +59,9 @@ class LineChartViewModel {
         let timeTable = lineChartModel.timeTable
         let dictionary = lineChartModel.dictData
         
+        
+        print(lineChartModel)
+        
         // value
         var maxValue = 0.0
         var minValue = 70.0
