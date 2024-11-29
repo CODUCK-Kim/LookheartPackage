@@ -120,13 +120,15 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
-        let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 1 // 최소 소수점 자릿수 설정
-        numberFormatter.maximumFractionDigits = 10
-        numberFormatter.numberStyle = .decimal
-        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
-        chartDataSet.valueFormatter = valueFormatter
+
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.locale = Locale.current
+        
+        let valuesNumberFormatter = ChartValueFormatter(numberFormatter: numberFormatter)
+        chartDataSet.valueFormatter = valuesNumberFormatter
+    
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
@@ -307,3 +309,19 @@ class LineChartController {
 }
 
 
+class ChartValueFormatter: NSObject, ValueFormatter {
+    fileprivate var numberFormatter: NumberFormatter?
+
+    convenience init(numberFormatter: NumberFormatter) {
+        self.init()
+        self.numberFormatter = numberFormatter
+    }
+
+    func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
+        guard let numberFormatter = numberFormatter
+            else {
+                return ""
+        }
+        return numberFormatter.string(for: value)!
+    }
+}
