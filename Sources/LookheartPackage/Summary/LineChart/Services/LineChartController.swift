@@ -120,6 +120,12 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
+        let numberFormatter = NumberFormatter()
+        numberFormatter.minimumFractionDigits = 1 // 최소 소수점 자릿수 설정
+        numberFormatter.maximumFractionDigits = 10
+        numberFormatter.numberStyle = .decimal
+        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
+        chartDataSet.valueFormatter = valueFormatter
         
     }
     
