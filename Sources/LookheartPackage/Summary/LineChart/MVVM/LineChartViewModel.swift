@@ -93,9 +93,9 @@ class LineChartViewModel {
                     case .HRV:
                         value = data.hrv
                     case .SPO2:
-                        value = data.spo2
+                        value = data.spo2 != 0 ? data.spo2 : nil
                     case .BREATHE:
-                        value = data.breathe
+                        value = data.breathe != 0 ? data.breathe : nil
                     case .STRESS:
                         if date == "pns" {
                             value = data.pns
