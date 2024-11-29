@@ -499,7 +499,7 @@ class LineChartVC : UIViewController {
             // TEST
         case .SPO2, .BREATHE:
             valueLabel.text = "unit_avg_cap".localized()
-            let format = if lineChartModel.chartType == .SPO2 { "%.1f" } else { "%d"}
+            let format = lineChartModel.chartType == .SPO2 ? "%.1f" : "%.0f"
             
             let difMax = lineChartModel.maxValue - lineChartModel.avgValue
             let difMin = lineChartModel.avgValue - lineChartModel.minValue
