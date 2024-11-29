@@ -120,6 +120,15 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
+        
+//        let numberFormatter = NumberFormatter()
+//        numberFormatter.minimumFractionDigits = 1
+//        numberFormatter.maximumFractionDigits = 2
+//        numberFormatter.numberStyle = .decimal
+//        
+//        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
+//        chartDataSet.valueFormatter = valueFormatter
+        
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
@@ -127,7 +136,7 @@ class LineChartController {
         case .BPM, .HRV, .STRESS:
             true
         case .SPO2, .BREATHE:
-            true
+            false
         }
     }
     
@@ -152,12 +161,6 @@ class LineChartController {
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
-        }
-        
-        for (key, dataEntries) in entries {
-            for entry in dataEntries {
-                print("Key: \(key), x: \(entry.x), y: \(entry.y)")
-            }
         }
         
         // 2. chart data sets
