@@ -121,14 +121,6 @@ class LineChartController {
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
         
-//        let numberFormatter = NumberFormatter()
-//        numberFormatter.minimumFractionDigits = 1
-//        numberFormatter.maximumFractionDigits = 2
-//        numberFormatter.numberStyle = .decimal
-//        
-//        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
-//        chartDataSet.valueFormatter = valueFormatter
-        
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {

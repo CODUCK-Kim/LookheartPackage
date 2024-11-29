@@ -62,7 +62,6 @@ struct LineChartDataModel {
             let fields = data.split(separator: "|")
             
 //            if fields.count == 7 {
-            
             if fields.count == 9 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
