@@ -121,6 +121,13 @@ class LineChartController {
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.minimumFractionDigits = 0      // Minimum number of decimal places
+        numberFormatter.maximumFractionDigits = 2      // Maximum number of decimal places
+        numberFormatter.negativeSuffix = " %"          // Optional: Add suffixes or prefixes
+        numberFormatter.positiveSuffix = " %"
+        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
+        chartDataSet.valueFormatter = valueFormatter
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
@@ -128,7 +135,7 @@ class LineChartController {
         case .BPM, .HRV, .STRESS:
             true
         case .SPO2, .BREATHE:
-            false
+            true
         }
     }
     
