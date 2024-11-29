@@ -70,13 +70,9 @@ class LineChartController {
         for (graphIdx, key) in sortedKeys.enumerated() {
             guard let entry = entries[key] else { continue }
             
-            print("entry: \(entry)")
-            
             let label = getLabel(key, chartType)
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
-            
-            print("chartDataSet: \(chartDataSet)")
-            
+
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
             
             chartDataSets.append(chartDataSet)
@@ -123,13 +119,23 @@ class LineChartController {
         _ type: LineChartType
     ) {
         let lineWidth = type != .STRESS ? 0.7 : 1.2
+        let drawValuesEnabled = chartDataSetDrawValuesEnabled(type)
         
         chartDataSet.drawCirclesEnabled = false
         chartDataSet.setColor(color)
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
-        chartDataSet.drawValuesEnabled = true
-        chartDataSet.valueFormatter = DefaultValueFormatter(decimals: 10)
+        chartDataSet.drawValuesEnabled = drawValuesEnabled
+        
+    }
+    
+    private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
+        return switch(type) {
+        case .BPM, .HRV, .STRESS:
+            true
+        case .SPO2, .BREATHE:
+            false
+        }
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
@@ -165,7 +171,6 @@ class LineChartController {
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
         
-        
         // 4. set line chart
         addLimitLine(lineChart, lineChartModel.chartType, lineChartModel)
         
@@ -179,10 +184,6 @@ class LineChartController {
         lineChart.setVisibleXRangeMaximum(maximum)
         lineChart.leftAxis.axisMaximum = axisMaximum
         lineChart.leftAxis.axisMinimum = axisMinimum
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        lineChart.leftAxis.valueFormatter =  DefaultAxisValueFormatter(formatter: formatter)
         
         // 5. show chart
         lineChart.data?.notifyDataChanged()
@@ -244,7 +245,6 @@ class LineChartController {
         limitLine.labelPosition = .rightTop
         limitLine.valueFont = UIFont.boldSystemFont(ofSize: 10)
         limitLine.valueTextColor = color
-        
         lineChart.leftAxis.addLimitLine(limitLine)
     }
     
