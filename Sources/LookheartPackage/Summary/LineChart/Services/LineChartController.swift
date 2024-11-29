@@ -136,7 +136,7 @@ class LineChartController {
         case .BPM, .HRV, .STRESS:
             true
         case .SPO2, .BREATHE:
-            false
+            true
         }
     }
     
