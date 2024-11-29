@@ -68,13 +68,7 @@ class LineChartController {
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
 
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
-            let numberFormatter = NumberFormatter()
-            numberFormatter.minimumFractionDigits = 0      // Minimum number of decimal places
-            numberFormatter.maximumFractionDigits = 2      // Maximum number of decimal places
-            numberFormatter.negativeSuffix = " %"          // Optional: Add suffixes or prefixes
-            numberFormatter.positiveSuffix = " %"
-            let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
-            chartDataSet.valueFormatter = valueFormatter
+            
             chartDataSets.append(chartDataSet)
         }
         
@@ -158,6 +152,12 @@ class LineChartController {
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
+        }
+        
+        for (key, dataEntries) in entries {
+            for entry in dataEntries {
+                print("Key: \(key), x: \(entry.x), y: \(entry.y)")
+            }
         }
         
         // 2. chart data sets
