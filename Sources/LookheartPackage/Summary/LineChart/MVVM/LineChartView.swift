@@ -457,9 +457,9 @@ class LineChartVC : UIViewController {
             
             // TEST
         case .SPO2:
-            avgLabel.text = "평균 SPO2"
+            avgLabel.text = "SPO2"
         case .BREATHE:
-            avgLabel.text = "평균 호흡"
+            avgLabel.text = "호흡"
         }
     }
     
@@ -467,7 +467,9 @@ class LineChartVC : UIViewController {
         guard let lineChartModel else { return }
         
         switch lineChartModel.chartType {
-        case .BPM, .HRV, .BREATHE:
+        case .BPM, .HRV:
+            valueLabel.text = "unit_standard_deviation".localized()
+            
             let max = Int(lineChartModel.maxValue)
             let min = Int(lineChartModel.minValue)
             let avg = Int(lineChartModel.avgValue)
@@ -484,21 +486,6 @@ class LineChartVC : UIViewController {
             
             maxStandardDeviationValue.text = String(Int(maxStandardDeviation))
             minStandardDeviationValue.text = String(Int(minStandardDeviation))
-            
-        case .SPO2:
-            let maxStandardDeviation = lineChartModel.avgValue + lineChartModel.standardDeviationValue
-            let minStandardDeviation = lineChartModel.avgValue - lineChartModel.standardDeviationValue
-            
-            let difMax = lineChartModel.maxValue - lineChartModel.avgValue
-            let difMin = lineChartModel.avgValue - lineChartModel.minValue
-            
-            maxValue.text = "\(String(format: "%.1f", lineChartModel.maxValue))(+\(String(format: "%.1f", difMax))"
-            minValue.text = "\(String(format: "%.1f", lineChartModel.minValue))(-\(String(format: "%.1f", difMin)))"
-            avgValue.text = String(format: "%.1f", lineChartModel.avgValue)
-            
-            maxStandardDeviationValue.text = String(format: "%.1f", maxStandardDeviation)
-            minStandardDeviationValue.text = String(format: "%.1f", minStandardDeviation)
-            
         case .STRESS:
             pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
             pnsMinValue.text = String(format: "%.1f", lineChartModel.minValue)
@@ -507,6 +494,23 @@ class LineChartVC : UIViewController {
             snsMaxValue.text = String(format: "%.1f", lineChartModel.secondMaxValue)
             snsMinValue.text = String(format: "%.1f", lineChartModel.secondMinValue)
             snsAvgValue.text = String(format: "%.1f", lineChartModel.secondAvgValue)
+            
+            
+            // TEST
+        case .SPO2, .BREATHE:
+            valueLabel.text = "unit_avg_cap".localized()
+            let format = if lineChartModel.chartType == .SPO2 { "%.1f" } else { "%d"}
+            
+            let difMax = lineChartModel.maxValue - lineChartModel.avgValue
+            let difMin = lineChartModel.avgValue - lineChartModel.minValue
+            
+            maxValue.text = String(format: format, lineChartModel.maxValue)
+            minValue.text = String(format: format, lineChartModel.minValue)
+            avgValue.text = String(format: format, lineChartModel.avgValue)
+            
+            maxStandardDeviationValue.text = "(+\(String(format: format, difMax)))"
+            minStandardDeviationValue.text = "(-\(String(format: format, difMin)))"
+            
         }
     }
     
