@@ -68,7 +68,13 @@ class LineChartController {
             let chartDataSet = LineChartDataSet(entries: entry, label: label)
 
             setLineChartDataSet(chartDataSet, graphColor[graphIdx], chartType)
-            
+            let numberFormatter = NumberFormatter()
+            numberFormatter.minimumFractionDigits = 0      // Minimum number of decimal places
+            numberFormatter.maximumFractionDigits = 2      // Maximum number of decimal places
+            numberFormatter.negativeSuffix = " %"          // Optional: Add suffixes or prefixes
+            numberFormatter.positiveSuffix = " %"
+            let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
+            chartDataSet.valueFormatter = valueFormatter
             chartDataSets.append(chartDataSet)
         }
         
@@ -120,14 +126,6 @@ class LineChartController {
         chartDataSet.mode = .linear
         chartDataSet.lineWidth = lineWidth
         chartDataSet.drawValuesEnabled = drawValuesEnabled
-        
-        let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 0      // Minimum number of decimal places
-        numberFormatter.maximumFractionDigits = 2      // Maximum number of decimal places
-        numberFormatter.negativeSuffix = " %"          // Optional: Add suffixes or prefixes
-        numberFormatter.positiveSuffix = " %"
-        let valueFormatter = DefaultValueFormatter(formatter: numberFormatter)
-        chartDataSet.valueFormatter = valueFormatter
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
