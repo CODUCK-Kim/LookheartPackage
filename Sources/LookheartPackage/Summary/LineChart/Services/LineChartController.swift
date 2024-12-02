@@ -218,8 +218,8 @@ class LineChartController {
             lineChart.leftAxis.axisMinimum = 0
         case .SPO2, .BREATHE:
             lineChart.setVisibleXRangeMaximum(1000)
-            lineChart.leftAxis.axisMaximum = 100
-            lineChart.leftAxis.axisMinimum = chartModel.minValue - 1
+            lineChart.leftAxis.resetCustomAxisMax()
+            lineChart.leftAxis.resetCustomAxisMin()
         }
         
         lineChart.data = chartData
