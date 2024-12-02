@@ -112,33 +112,38 @@ class LineChartController {
         _ color: NSUIColor,
         _ type: LineChartType
     ) {
-        let lineWidth = type != .STRESS ? 0.7 : 1.2
-        let drawValuesEnabled = chartDataSetDrawValuesEnabled(type)
-        
-        chartDataSet.drawCirclesEnabled = false
-        chartDataSet.setColor(color)
-        chartDataSet.mode = .linear
-        chartDataSet.lineWidth = lineWidth
-        chartDataSet.drawValuesEnabled = drawValuesEnabled
-
-        
         let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.minimumFractionDigits = 0
-        numberFormatter.maximumFractionDigits = 0
+        var fractionDigits = 0
+        
+        switch type {
+        case .BPM, .HRV:
+            chartDataSet.lineWidth = 0.7
+        case .STRESS:
+            chartDataSet.lineWidth = 1.2
+            numberFormatter.numberStyle = .decimal
+            fractionDigits = 1
+            
+        // SPO2 TEST
+        case .SPO2:
+            chartDataSet.lineWidth = 1.2
+            numberFormatter.numberStyle = .decimal
+            fractionDigits = 1
+        case .BREATHE:
+            chartDataSet.lineWidth = 0.7
+        }
+    
+        // value formatter
+        numberFormatter.minimumFractionDigits = fractionDigits
+        numberFormatter.maximumFractionDigits = fractionDigits
         numberFormatter.locale = Locale.current
         
         let valuesNumberFormatter = ChartValueFormatter(numberFormatter: numberFormatter)
         chartDataSet.valueFormatter = valuesNumberFormatter
-    }
-    
-    private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
-        return switch(type) {
-        case .BPM, .HRV, .STRESS:
-            true
-        case .SPO2, .BREATHE:
-            true
-        }
+        
+        chartDataSet.drawCirclesEnabled = false
+        chartDataSet.drawValuesEnabled = true
+        chartDataSet.setColor(color)
+        chartDataSet.mode = .linear
     }
     
     private func sortedDictionary(_ dateChartDict: [String : LineChartDataSet]) -> [LineChartDataSet] {
