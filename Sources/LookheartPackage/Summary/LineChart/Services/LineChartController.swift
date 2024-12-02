@@ -242,6 +242,13 @@ class LineChartController {
             
             lineChart.leftAxis.granularity = 0.5
             lineChart.leftAxis.granularityEnabled = true
+            
+            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
+               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
+                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
+                lineChart.leftAxis.labelCount = labelCount
+            }
+            
         case .BREATHE:
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
