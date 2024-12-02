@@ -219,6 +219,8 @@ class LineChartController {
         
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
         
+        lineChart.leftAxis.granularity = 1
+        
         switch chartModel.chartType {
         case .BPM, .HRV:
             guard let limitLines = getLimitLines(chartModel) else { return }
@@ -233,8 +235,14 @@ class LineChartController {
             
             lineChart.leftAxis.axisMaximum = 100
             lineChart.leftAxis.axisMinimum = 0
+        
+        case .SPO2:
+            lineChart.leftAxis.resetCustomAxisMax()
+            lineChart.leftAxis.resetCustomAxisMin()
             
-        case .SPO2, .BREATHE:
+            lineChart.leftAxis.granularity = 0.5
+            lineChart.leftAxis.granularityEnabled = true
+        case .BREATHE:
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
         }
