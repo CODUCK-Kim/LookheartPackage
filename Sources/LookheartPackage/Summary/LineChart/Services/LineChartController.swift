@@ -218,9 +218,10 @@ class LineChartController {
             guard let limitLines = getLimitLines(chartModel) else { return }
             addLimitLine(to: lineChart,limitLines: limitLines)
             
-            lineChart.setVisibleXRangeMaximum(1000)
+//            lineChart.setVisibleXRangeMaximum(1000)
             lineChart.leftAxis.axisMaximum = 100
             lineChart.leftAxis.axisMinimum = 0
+            
         case .SPO2, .BREATHE:
             lineChart.setVisibleXRangeMaximum(1000)
             lineChart.leftAxis.resetCustomAxisMax()
