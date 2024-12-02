@@ -167,7 +167,14 @@ class LineChartController {
     ) -> Bool {
         
         if lineChartModel.chartType == .SPO2 {
-            print(lineChartModel)
+            
+            lineChartModel.entries?.forEach { data in
+                print("data: \(data)")
+            }
+            
+            lineChartModel.timeTable?.forEach { time in
+                print("time: \(time)")
+            }
         }
         
         // 1. entries
