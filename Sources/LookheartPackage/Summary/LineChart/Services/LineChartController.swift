@@ -206,6 +206,7 @@ class LineChartController {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
+        lineChart.resetZoom()
         
         switch chartModel.chartType {
         case .BPM, .HRV:
@@ -227,7 +228,6 @@ class LineChartController {
             lineChart.leftAxis.resetCustomAxisMin()
         }
         
-        lineChart.setVisibleXRangeMaximum(1000)
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
