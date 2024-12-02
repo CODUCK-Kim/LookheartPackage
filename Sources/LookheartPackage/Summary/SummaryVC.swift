@@ -300,7 +300,9 @@ public class SummaryViewController : UIViewController {
         super.viewWillAppear(animated)
         
         setChild(selectChild: lineChartView, in: self.view)
+        
         lineChartView.refreshView(lineChart: .BPM)
+        
         setButtonColor(buttons[BPM_BUTTON_TAG - 1])
         
     }
