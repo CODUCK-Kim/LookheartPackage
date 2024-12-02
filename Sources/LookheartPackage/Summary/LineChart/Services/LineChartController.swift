@@ -267,6 +267,8 @@ class LineChartController {
         to lineChart: LineChartView,
         limitLines: [LimitLineData]
     ) {
+        lineChart.leftAxis.removeAllLimitLines()
+        
         limitLines.forEach { addLimitLine in
             let limitLine = ChartLimitLine(
                 limit: addLimitLine.limit,
