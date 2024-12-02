@@ -124,8 +124,8 @@ class LineChartController {
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
-        numberFormatter.minimumFractionDigits = 1
-        numberFormatter.maximumFractionDigits = 1
+        numberFormatter.minimumFractionDigits = 0
+        numberFormatter.maximumFractionDigits = 0
         numberFormatter.locale = Locale.current
         
         let valuesNumberFormatter = ChartValueFormatter(numberFormatter: numberFormatter)
