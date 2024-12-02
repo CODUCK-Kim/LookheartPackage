@@ -47,8 +47,6 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
-            
-            $0.setVisibleXRangeMaximum(1000)
         }
     }
     
@@ -190,6 +188,7 @@ class LineChartController {
         )
         
         // 5. show chart
+        lineChart.setVisibleXRangeMaximum(1000)
         lineChart.data?.notifyDataChanged()
         lineChart.notifyDataSetChanged()
         lineChart.moveViewToX(0)
