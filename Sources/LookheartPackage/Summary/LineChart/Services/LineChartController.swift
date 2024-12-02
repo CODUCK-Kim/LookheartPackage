@@ -312,10 +312,11 @@ class LineChartController {
 
 
 class ChartValueFormatter: NSObject, ValueFormatter {
-    fileprivate var numberFormatter: NumberFormatter?
-
-    convenience init(numberFormatter: NumberFormatter) {
-        self.init()
+//    fileprivate var numberFormatter: NumberFormatter?
+    var numberFormatter: NumberFormatter?
+    
+    init(numberFormatter: NumberFormatter) {
+//        self.init()
         self.numberFormatter = numberFormatter
     }
 
