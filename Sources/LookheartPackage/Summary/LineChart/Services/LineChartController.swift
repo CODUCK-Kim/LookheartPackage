@@ -165,6 +165,7 @@ class LineChartController {
         lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
+        print(lineChartModel)
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
