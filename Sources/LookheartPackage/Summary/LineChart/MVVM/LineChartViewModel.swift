@@ -61,7 +61,7 @@ class LineChartViewModel {
         
         // value
         var maxValue = 0.0
-        var minValue = 70.0
+        var minValue = 100.0
         
         var avgSumValue = 0.0
         var avgCnt = 0
@@ -69,7 +69,7 @@ class LineChartViewModel {
         var standardDeviationValue = 0.0    // 표준 편차
         
         var secondMaxValue = 0.0
-        var secondMinValue = 70.0
+        var secondMinValue = 100.0
         var secondAvgValue = 0.0
         var secondAvgCnt = 0
         
