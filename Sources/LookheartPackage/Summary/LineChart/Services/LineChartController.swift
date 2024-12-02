@@ -47,6 +47,8 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
+            
+            $0.setVisibleXRangeMaximum(1000)
         }
     }
     
@@ -229,7 +231,7 @@ class LineChartController {
             lineChart.leftAxis.resetCustomAxisMin()
         }
         
-        lineChart.setVisibleXRangeMaximum(1000)
+//        lineChart.setVisibleXRangeMaximum(1000)
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
