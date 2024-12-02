@@ -205,6 +205,7 @@ class LineChartController {
     ) {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
+        lineChart.leftAxis.labelCount = 6           // y label count
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
         
         switch chartModel.chartType {
@@ -228,12 +229,13 @@ class LineChartController {
             
             lineChart.leftAxis.granularity = 0.5
             lineChart.leftAxis.granularityEnabled = true
-            lineChart.leftAxis.labelCount = 10
-//            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
-//               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
-//                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
-//                lineChart.leftAxis.labelCount = 5
-//            }
+            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
+               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
+                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
+                lineChart.leftAxis.labelCount = labelCount
+                
+                print("axisMax: \(axisMax), axisMin: \(axisMin), labelCount: \(labelCount)")
+            }
             
         case .BREATHE:
             lineChart.leftAxis.resetCustomAxisMax()
@@ -241,7 +243,7 @@ class LineChartController {
         }
         
         lineChart.data = chartData
-        lineChart.leftAxis.granularity = 1
+        lineChart.leftAxis.granularity = chartModel.chartType != .SPO2 ? 1 : 0.5
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
     
