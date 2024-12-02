@@ -55,11 +55,14 @@ class LineChartViewModel {
         var valueArray: [Double] = []
         
         var copyModel = lineChartModel
-        let size = lineChartModel.timeTable.count
         var timeTable:[String] = []
+        
+        let size = lineChartModel.timeTable.count
         let dictionary = lineChartModel.dictData
     
         // value
+        var xValue = 0.0
+        
         var maxValue = 0.0
         var minValue = 100.0
         
@@ -107,13 +110,14 @@ class LineChartViewModel {
 
                     // value
                     if let value {
-                        let entry = ChartDataEntry(x: Double(i), y: value)
-                            
+                        let entry = ChartDataEntry(x: xValue, y: value)
+                        
+                        xValue += 1
+                        
                         entries[date]?.append(entry)
                         valueArray.append(value)
                         timeTable.append(time)
                         
-                        print("time: \(time), value: \(value) ")
                         switch lineChartModel.chartType {
                         case .BPM, .HRV, .SPO2, .BREATHE:
                             maxValue = max(maxValue, value)
@@ -158,8 +162,7 @@ class LineChartViewModel {
         case .STRESS, .SPO2, .BREATHE:
             break
         }
-        
-        print("entries: \(entries.count), timeTable: \(timeTable.count)")
+
         copyModel.entries = entries
         copyModel.timeTable = timeTable
         
