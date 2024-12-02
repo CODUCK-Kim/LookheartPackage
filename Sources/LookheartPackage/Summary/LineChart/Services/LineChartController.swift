@@ -165,18 +165,6 @@ class LineChartController {
         lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
-        
-        if lineChartModel.chartType == .SPO2 {
-            
-            lineChartModel.entries?.forEach { data in
-                print("data: \(data)")
-            }
-            
-            lineChartModel.timeTable.forEach { time in
-                print("time: \(time)")
-            }
-        }
-        
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
@@ -219,8 +207,6 @@ class LineChartController {
         
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
         
-        lineChart.leftAxis.granularity = 1
-        
         switch chartModel.chartType {
         case .BPM, .HRV:
             guard let limitLines = getLimitLines(chartModel) else { return }
@@ -242,12 +228,12 @@ class LineChartController {
             
             lineChart.leftAxis.granularity = 0.5
             lineChart.leftAxis.granularityEnabled = true
-            
-            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
-               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
-                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
-                lineChart.leftAxis.labelCount = labelCount
-            }
+            lineChart.leftAxis.labelCount = 10
+//            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
+//               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
+//                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
+//                lineChart.leftAxis.labelCount = 5
+//            }
             
         case .BREATHE:
             lineChart.leftAxis.resetCustomAxisMax()
@@ -255,6 +241,7 @@ class LineChartController {
         }
         
         lineChart.data = chartData
+        lineChart.leftAxis.granularity = 1
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
     
