@@ -224,10 +224,12 @@ class LineChartController {
             
         case .SPO2, .BREATHE:
 //            lineChart.setVisibleXRangeMaximum(1000)
+            
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
         }
         
+        lineChart.setVisibleXRangeMaximum(1000)
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
