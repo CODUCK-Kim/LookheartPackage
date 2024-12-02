@@ -198,6 +198,8 @@ class LineChartController {
     ) {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
+        lineChart.leftAxis.removeAllLimitLines()    // remove limit line
+        
         switch chartModel.chartType {
         case .BPM, .HRV:
             guard let limitLines = getLimitLines(chartModel) else { return }
@@ -221,6 +223,7 @@ class LineChartController {
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
+    
     
     private func getLimitLines(_ chartModel: LineChartModel) -> [LimitLineData]? {
         switch chartModel.chartType {
@@ -267,8 +270,6 @@ class LineChartController {
         to lineChart: LineChartView,
         limitLines: [LimitLineData]
     ) {
-        lineChart.leftAxis.removeAllLimitLines()
-        
         limitLines.forEach { addLimitLine in
             let limitLine = ChartLimitLine(
                 limit: addLimitLine.limit,
