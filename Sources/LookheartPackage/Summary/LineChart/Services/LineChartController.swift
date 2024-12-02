@@ -165,7 +165,11 @@ class LineChartController {
         lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
-        print(lineChartModel)
+        
+        if lineChartModel.chartType == .SPO2 {
+            print(lineChartModel)
+        }
+        
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
