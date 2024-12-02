@@ -47,6 +47,8 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
+            
+            $0.setVisibleXRangeMaximum(1000)
         }
     }
     
