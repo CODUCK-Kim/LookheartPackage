@@ -142,7 +142,7 @@ class LineChartController {
         
         //
         chartDataSet.drawCirclesEnabled = false
-        chartDataSet.drawValuesEnabled = true
+        chartDataSet.drawValuesEnabled = type != .SPO2 ? true : false
         chartDataSet.setColor(color)
         chartDataSet.mode = .linear
     }
@@ -205,7 +205,7 @@ class LineChartController {
     ) {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
-        lineChart.leftAxis.labelCount = 6           // y label count
+        lineChart.leftAxis.labelCount = 6           // y label default count
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
         
         switch chartModel.chartType {
@@ -226,15 +226,13 @@ class LineChartController {
         case .SPO2:
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
-            
-            lineChart.leftAxis.granularity = 0.5
-            lineChart.leftAxis.granularityEnabled = true
+
+//            lineChart.leftAxis.granularityEnabled = true
+            // y label count
             if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
                let axisMin = lineChart.leftAxis.axisMinimum as Double? {
                 let labelCount = Int((axisMax - axisMin) / 0.5) + 1
                 lineChart.leftAxis.labelCount = labelCount
-                
-                print("axisMax: \(axisMax), axisMin: \(axisMin), labelCount: \(labelCount)")
             }
             
         case .BREATHE:
