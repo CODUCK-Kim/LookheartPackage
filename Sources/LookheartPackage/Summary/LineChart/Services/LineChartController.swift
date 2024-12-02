@@ -172,7 +172,7 @@ class LineChartController {
                 print("data: \(data)")
             }
             
-            lineChartModel.timeTable?.forEach { time in
+            lineChartModel.timeTable.forEach { time in
                 print("time: \(time)")
             }
         }
