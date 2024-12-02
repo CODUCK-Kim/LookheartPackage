@@ -23,7 +23,7 @@ class LineChartController {
         noDataText: String = "",
         fontSize: CGFloat = 15,
         weight: UIFont.Weight = .bold,
-        granularity: Double = 0.1,
+        granularity: Double = 1,
         labelPosition: XAxis.LabelPosition = .bottom,
         xAxisEnabled: Bool = true,
         drawGridLinesEnabled: Bool = false,
@@ -48,7 +48,7 @@ class LineChartController {
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
             
-            $0.setVisibleXRangeMaximum(100)
+            $0.setVisibleXRangeMaximum(1000)
         }
     }
     
@@ -207,7 +207,6 @@ class LineChartController {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
-//        lineChart.resetZoom()
         
         switch chartModel.chartType {
         case .BPM, .HRV:
@@ -225,9 +224,8 @@ class LineChartController {
             lineChart.leftAxis.axisMinimum = 0
             
         case .SPO2, .BREATHE:
-//            lineChart.leftAxis.resetCustomAxisMax()
-//            lineChart.leftAxis.resetCustomAxisMin()
-            break
+            lineChart.leftAxis.resetCustomAxisMax()
+            lineChart.leftAxis.resetCustomAxisMin()
         }
         
         lineChart.data = chartData
