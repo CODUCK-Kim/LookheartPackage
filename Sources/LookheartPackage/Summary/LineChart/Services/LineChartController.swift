@@ -47,8 +47,6 @@ class LineChartController {
             $0.pinchZoomEnabled = pinchZoomEnabled
             $0.doubleTapToZoomEnabled = doubleTapToZoomEnabled
             $0.highlightPerTapEnabled = highlightPerTapEnabled
-            
-            $0.setVisibleXRangeMaximum(500)
         }
     }
     
@@ -212,7 +210,6 @@ class LineChartController {
             guard let limitLines = getLimitLines(chartModel) else { return }
             addLimitLine(to: lineChart,limitLines: limitLines)
             
-//            lineChart.setVisibleXRangeMaximum(1000)
             lineChart.leftAxis.axisMaximum = 200
             lineChart.leftAxis.axisMinimum = chartModel.chartType == .BPM ? 40 : 0
             
@@ -220,18 +217,15 @@ class LineChartController {
             guard let limitLines = getLimitLines(chartModel) else { return }
             addLimitLine(to: lineChart,limitLines: limitLines)
             
-//            lineChart.setVisibleXRangeMaximum(1000)
             lineChart.leftAxis.axisMaximum = 100
             lineChart.leftAxis.axisMinimum = 0
             
         case .SPO2, .BREATHE:
-//            lineChart.setVisibleXRangeMaximum(1000)
-            
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
         }
         
-//        lineChart.setVisibleXRangeMaximum(1000)
+        lineChart.setVisibleXRangeMaximum(1000)
         lineChart.data = chartData
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
