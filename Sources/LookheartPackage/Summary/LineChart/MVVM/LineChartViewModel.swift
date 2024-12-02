@@ -56,9 +56,9 @@ class LineChartViewModel {
         
         var copyModel = lineChartModel
         let size = lineChartModel.timeTable.count
-        let timeTable = lineChartModel.timeTable
+        var timeTable = lineChartModel.timeTable
         let dictionary = lineChartModel.dictData
-        
+    
         // value
         var maxValue = 0.0
         var minValue = 100.0
@@ -131,6 +131,11 @@ class LineChartViewModel {
                                 secondAvgValue += value
                                 secondAvgCnt += 1
                             }
+                        }
+                    } else {
+                        // no data -> remove time table
+                        if let index = timeTable.firstIndex(of: time) {
+                            timeTable.remove(at: index)
                         }
                     }
                 }
