@@ -56,7 +56,7 @@ class LineChartViewModel {
         
         var copyModel = lineChartModel
         let size = lineChartModel.timeTable.count
-        var timeTable = lineChartModel.timeTable
+        var timeTable:[String] = []
         let dictionary = lineChartModel.dictData
     
         // value
@@ -81,7 +81,7 @@ class LineChartViewModel {
         
         // set entries
         for i in 0..<size {
-            let time = timeTable[i]
+            let time = lineChartModel.timeTable[i]
             
             for (date, timeDict) in dictionary {
                 if let data = timeDict[time] {
@@ -111,6 +111,7 @@ class LineChartViewModel {
                             
                         entries[date]?.append(entry)
                         valueArray.append(value)
+                        timeTable.append(time)
                         
                         switch lineChartModel.chartType {
                         case .BPM, .HRV, .SPO2, .BREATHE:
@@ -131,11 +132,6 @@ class LineChartViewModel {
                                 secondAvgValue += value
                                 secondAvgCnt += 1
                             }
-                        }
-                    } else {
-                        // no data -> remove time table
-                        if let index = timeTable.firstIndex(of: time) {
-                            timeTable.remove(at: index)
                         }
                     }
                 }
@@ -164,6 +160,8 @@ class LineChartViewModel {
         
         
         copyModel.entries = entries
+        copyModel.timeTable = timeTable
+        
         copyModel.maxValue = maxValue
         copyModel.minValue = minValue
         copyModel.avgValue = avgSumValue / Double(avgCnt)
