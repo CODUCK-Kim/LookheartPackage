@@ -113,6 +113,7 @@ class LineChartViewModel {
                         valueArray.append(value)
                         timeTable.append(time)
                         
+                        print("time: \(time), value: \(value) ")
                         switch lineChartModel.chartType {
                         case .BPM, .HRV, .SPO2, .BREATHE:
                             maxValue = max(maxValue, value)
@@ -158,7 +159,7 @@ class LineChartViewModel {
             break
         }
         
-        
+        print("entries: \(entries.count), timeTable: \(timeTable.count)")
         copyModel.entries = entries
         copyModel.timeTable = timeTable
         
