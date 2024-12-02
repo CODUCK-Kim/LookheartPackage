@@ -130,7 +130,6 @@ class LineChartController {
         
         let valuesNumberFormatter = ChartValueFormatter(numberFormatter: numberFormatter)
         chartDataSet.valueFormatter = valuesNumberFormatter
-    
     }
     
     private func chartDataSetDrawValuesEnabled(_ type: LineChartType) -> Bool {
@@ -176,18 +175,11 @@ class LineChartController {
         let lineChartData = LineChartData(dataSets: chartDataSets)
         
         // 4. set line chart
-        addLimitLine(lineChart, lineChartModel.chartType, lineChartModel)
-        
-        let maximum = getChartMaximum(lineChartModel.chartType)
-        let axisMaximum = getChartAxisMaximum(lineChartModel.chartType)
-        let axisMinimum = getChartAxisMinimum(lineChartModel.chartType)
-        let removeSecondTimeTable = removeSecond(lineChartModel.timeTable)
-        
-        lineChart.data = lineChartData
-        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: removeSecondTimeTable)
-        lineChart.setVisibleXRangeMaximum(maximum)
-        lineChart.leftAxis.axisMaximum = axisMaximum
-        lineChart.leftAxis.axisMinimum = axisMinimum
+        setLineChart(
+            lineChart: lineChart,
+            chartData: lineChartData,
+            chartModel: lineChartModel
+        )
         
         // 5. show chart
         lineChart.data?.notifyDataChanged()
@@ -199,87 +191,101 @@ class LineChartController {
         return true
     }
     
-    private func removeSecond(_ timeTable: [String]) -> [String] {
-        return timeTable.map { String($0.dropLast(3)) }
+    private func setLineChart(
+        lineChart: LineChartView,
+        chartData: LineChartData,
+        chartModel: LineChartModel
+    ) {
+        let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
+        
+        switch chartModel.chartType {
+        case .BPM, .HRV:
+            guard let limitLines = getLimitLines(chartModel) else { return }
+            addLimitLine(to: lineChart,limitLines: limitLines)
+            
+            lineChart.setVisibleXRangeMaximum(1000)
+            lineChart.leftAxis.axisMaximum = 200
+            lineChart.leftAxis.axisMinimum = chartModel.chartType == .BPM ? 40 : 0
+            
+        case .STRESS:
+            guard let limitLines = getLimitLines(chartModel) else { return }
+            addLimitLine(to: lineChart,limitLines: limitLines)
+            
+            lineChart.setVisibleXRangeMaximum(1000)
+            lineChart.leftAxis.axisMaximum = 100
+            lineChart.leftAxis.axisMinimum = 0
+        case .SPO2, .BREATHE:
+            lineChart.setVisibleXRangeMaximum(1000)
+        }
+        
+        lineChart.data = chartData
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
     
-    private func addLimitLine(
-        _ lineChart: LineChartView,
-        _ chartType: LineChartType,
-        _ model: LineChartModel? = nil
-    ) {
-        lineChart.leftAxis.removeAllLimitLines()
-        
-        switch chartType {
+    private func getLimitLines(_ chartModel: LineChartModel) -> [LimitLineData]? {
+        switch chartModel.chartType {
         case .BPM, .HRV:
-            guard let model else { return }
+            let topLimitLine = LimitLineData(
+                limit: chartModel.avgValue + chartModel.standardDeviationValue,
+                color: UIColor.MY_BLUE,
+                label: "unit_standard_deviation_eng".localized(),
+                width: 3.0
+            )
             
-            let topLimitLine = model.avgValue + model.standardDeviationValue
-            let bottomLimitLine = model.avgValue - model.standardDeviationValue
+            let bottomLimitLine = LimitLineData(
+                limit: chartModel.avgValue - chartModel.standardDeviationValue,
+                color: UIColor.MY_BLUE,
+                label: "unit_standard_deviation_eng".localized(),
+                width: 3.0
+            )
             
-            if model.dateType == .TODAY {
-                addLimitLine(to: lineChart, limit: model.avgValue, label: "unit_avg_cap".localized(), color: NSUIColor.MY_ORANGE, width: 3.0)
-                addLimitLine(to: lineChart, limit: topLimitLine, label: "unit_standard_deviation_eng".localized(), color: NSUIColor.MY_BLUE, width: 3.0)
-                addLimitLine(to: lineChart, limit: bottomLimitLine, label: "unit_standard_deviation_eng".localized(), color: NSUIColor.MY_BLUE, width: 3.0)
-            }
+            let middleLimitLine = LimitLineData(
+                limit: chartModel.avgValue,
+                color: UIColor.MY_ORANGE,
+                label: "unit_avg_cap".localized(),
+                width: 3.0
+            )
+            
+            return [topLimitLine, bottomLimitLine, middleLimitLine]
         case .STRESS:
-            addLimitLine(to: lineChart, limit: 60, label: "", color: NSUIColor.MY_SKY)
-            addLimitLine(to: lineChart, limit: 40, label: "", color: NSUIColor.MY_SKY)
-            addLimitLine(to: lineChart, limit: 80, label: "", color: NSUIColor.MY_LIGHT_PINK)
-            addLimitLine(to: lineChart, limit: 20, label: "", color: NSUIColor.MY_LIGHT_PINK)
-            
-        case .SPO2, .BREATHE:
-            break
+            return [
+                // low
+                LimitLineData(limit: 60, color: UIColor.MY_SKY),
+                LimitLineData(limit: 40, color: UIColor.MY_SKY),
+                
+                // high
+                LimitLineData(limit: 80, color: UIColor.MY_LIGHT_PINK),
+                LimitLineData(limit: 20, color: UIColor.MY_LIGHT_PINK)
+            ]
+        default:
+            return nil
         }
     }
+    
     
     private func addLimitLine(
         to lineChart: LineChartView,
-        limit: Double,
-        label: String,
-        color: UIColor,
-        width: CGFloat = 2.0,
-        dashLengths: [CGFloat] = [3.0, 2.0, 0.0]    // length, space, offset
+        limitLines: [LimitLineData]
     ) {
-        let limitLine = ChartLimitLine(limit: limit, label: label)
-        
-        limitLine.lineWidth = width
-        limitLine.lineColor = color
-        limitLine.lineDashLengths = dashLengths
-        limitLine.labelPosition = .rightTop
-        limitLine.valueFont = UIFont.boldSystemFont(ofSize: 10)
-        limitLine.valueTextColor = color
-        lineChart.leftAxis.addLimitLine(limitLine)
-    }
-    
-    private func getChartMaximum(_ chartType: LineChartType) -> Double {
-        switch chartType {
-        case .BPM, .HRV, .SPO2, .BREATHE, .STRESS:
-            return 1000
-        }
-    }
-    
-    private func getChartAxisMaximum(_ chartType: LineChartType) -> Double {
-        switch chartType {
-        case .BPM, .HRV:
-            return 200
-        case .SPO2:
-            return 100
-        case .BREATHE:
-            return 50
-        case .STRESS:
-            return 100
-        }
-    }
-    
-    private func getChartAxisMinimum(_ chartType: LineChartType) -> Double {
-        switch chartType {
-        case .BPM:
-            return 40
-        case .HRV, .STRESS, .BREATHE:
-            return 0
-        case .SPO2:
-            return 80
+        limitLines.forEach { addLimitLine in
+            let limitLine = ChartLimitLine(
+                limit: addLimitLine.limit,
+                label: addLimitLine.label
+            )
+            
+            let dashLengths = [addLimitLine.length, addLimitLine.space, addLimitLine.offset]
+            
+            limitLine.lineWidth = addLimitLine.width
+            limitLine.lineColor = addLimitLine.color
+            limitLine.lineDashLengths = dashLengths
+            limitLine.labelPosition = .rightTop
+            
+            // text
+            limitLine.valueFont = UIFont.boldSystemFont(ofSize: addLimitLine.fontSize)
+            limitLine.valueTextColor = addLimitLine.color
+            
+            // add
+            lineChart.leftAxis.addLimitLine(limitLine)
         }
     }
     
@@ -312,11 +318,9 @@ class LineChartController {
 
 
 class ChartValueFormatter: NSObject, ValueFormatter {
-//    fileprivate var numberFormatter: NumberFormatter?
-    var numberFormatter: NumberFormatter?
+    private var numberFormatter: NumberFormatter?
     
     init(numberFormatter: NumberFormatter) {
-//        self.init()
         self.numberFormatter = numberFormatter
     }
 
