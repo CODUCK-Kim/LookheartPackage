@@ -140,6 +140,7 @@ class LineChartController {
         let valuesNumberFormatter = ChartValueFormatter(numberFormatter: numberFormatter)
         chartDataSet.valueFormatter = valuesNumberFormatter
         
+        //
         chartDataSet.drawCirclesEnabled = false
         chartDataSet.drawValuesEnabled = true
         chartDataSet.setColor(color)
@@ -215,6 +216,7 @@ class LineChartController {
             lineChart.leftAxis.axisMinimum = chartModel.chartType == .BPM ? 40 : 0
             
             lineChart.setVisibleXRangeMaximum(1000)
+            
             
         case .STRESS:
             guard let limitLines = getLimitLines(chartModel) else { return }
