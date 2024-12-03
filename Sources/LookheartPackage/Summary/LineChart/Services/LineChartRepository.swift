@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DGCharts
 
 
 class LineChartRepository {
@@ -59,12 +60,16 @@ class LineChartRepository {
             guard let parsingResult = parsingData.result else {
                 return (nil, parsingData.response)
             }
-            
+                        
             let groupData = groupDataByDate(parsingResult)
             
+            // data dict, time table -> add model
             let lineChartGroupedData = getLineChartGroupedData(groupData)
             
-            return (lineChartGroupedData, data.response)
+            // result model
+            let lineChartModel = getChartModel(lineChartGroupedData)
+            
+            return (lineChartModel, data.response)
         default:
             return (nil, data.response)
         }
@@ -173,6 +178,7 @@ class LineChartRepository {
     // dictionary Data, time table
     func getLineChartGroupedData(_ groupData: [String : [LineChartDataModel]]) -> LineChartModel {
         var dictData: [String : [String : LineChartDataModel]] = [:]
+        var entries: [String : [ChartDataEntry]] = [:]
         
         for (date, dataForDate) in groupData {
             var timeDictionary: [String: LineChartDataModel] = [:]
@@ -181,7 +187,11 @@ class LineChartRepository {
                 timeDictionary[data.writeTime] = data
             }
             
+            // dictionary
             dictData[date] = timeDictionary
+            
+            // init entry
+            entries[date] = [ChartDataEntry]()
         }
         
         // time Table
@@ -189,11 +199,127 @@ class LineChartRepository {
         
         
         return LineChartModel(
+            entries: entries,
             dictData: dictData,
             timeTable: timeTable,
             chartType: lineChartType,
             dateType: lineChartDateType
         )
+    }
+        
+    
+    private func getChartModel(_ lineChartModel: LineChartModel) -> LineChartModel {
+        var copyModel = lineChartModel
+        
+        var entries = lineChartModel.entries
+        
+        var timeTable: [String] = []
+        var valueTable: [Double] = []
+        
+        var stats: ChartStatistics? = nil
+        var stressStats: StressChartStatistics? = nil
+        
+        var xValue = 0.0
+        
+        for i in 0..<lineChartModel.timeTable.count {
+            let time = lineChartModel.timeTable[i]
+            
+            // dictData: [date: [time: LineChartDataModel]]
+            for (date, timeDict) in lineChartModel.dictData {
+                guard let data = timeDict[time] else { continue }
+                guard let yValue = getYValue(date, data) else { continue }
+                
+                // chart entries
+                let entry = ChartDataEntry(x: xValue, y: yValue)
+                entries?[date]?.append(entry)
+                
+                // time table
+                timeTable.append(time)
+                
+                // update stats
+                switch lineChartModel.chartType {
+                case .BPM, .HRV:
+                    if stats == nil { stats = ChartStatistics() }
+                    
+                    stats?.update(with: yValue)
+                    
+                    valueTable.append(yValue)   // standard deviation value table
+                    
+                case .STRESS:
+                    if stressStats == nil { stressStats = StressChartStatistics() }
+                    
+                    if date == "pns" {
+                        stressStats?.pns.update(with: yValue)
+                    } else {
+                        stressStats?.sns.update(with: yValue)
+                    }
+                                    
+                // SPO2 TEST
+                case .SPO2, .BREATHE:
+                    if stats == nil { stats = ChartStatistics() }
+                    
+                    stats?.update(with: yValue)
+                }
+                
+                xValue += 1
+            }
+        }
+        
+        // chart data
+        copyModel.entries = entries
+        copyModel.timeTable = timeTable
+        
+        // stats
+        copyModel.stats = stats
+        copyModel.stressStats = stressStats
+        copyModel.standardDeviationValue = getStandardDeviationValue(lineChartModel, valueTable)
+        
+        return copyModel
+    }
+    
+    
+    private func getYValue(
+        _ date: String,
+        _ lineChartDataModel: LineChartDataModel
+    ) -> Double? {
+        return switch lineChartType {
+        case .BPM:
+            lineChartDataModel.bpm
+        case .HRV:
+            lineChartDataModel.hrv
+        case .SPO2:
+            lineChartDataModel.spo2 != 0 ? lineChartDataModel.spo2 : nil
+        case .BREATHE:
+            lineChartDataModel.breathe != 0 ? lineChartDataModel.breathe : nil
+        case .STRESS:
+            date == "pns" ? lineChartDataModel.pns : lineChartDataModel.sns
+        }
+    }
+    
+    
+    private func getStandardDeviationValue(
+        _ lineChartModel: LineChartModel,
+        _ valueTable: [Double]
+    ) -> Double? {
+        switch lineChartModel.chartType {
+        case .BPM, .HRV:
+            guard let average = lineChartModel.stats?.average else { return nil }
+            var sumSquareValue = 0.0
+            
+            valueTable.forEach { value in
+                let deviation = value - average
+                let squaredDeviation = deviation * deviation // 편차 제곱
+                
+                sumSquareValue += squaredDeviation
+            }
+            
+            let variance = sumSquareValue / Double(valueTable.count) // 분산
+            
+            return sqrt(variance) // 제곱근
+            
+        case .SPO2, .BREATHE, .STRESS:
+            return nil
+        }
     }
     
     

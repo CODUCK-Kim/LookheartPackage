@@ -8,12 +8,15 @@ struct LineChartModel {
     var chartType: LineChartType
     var dateType: LineChartDateType
     
+    var stats: ChartStatistics? = nil
+    var stressStats: StressChartStatistics? = nil
+    var standardDeviationValue: Double? = nil
+    
+    
     /** Bpm, Hrv Stress(pns) Value **/
     var maxValue: Double = 0
     var minValue: Double = 0
     var avgValue: Double = 0
-    
-    var standardDeviationValue: Double = 0
     
     /** Stress(sns) Value **/
     var secondMaxValue: Double = 0
