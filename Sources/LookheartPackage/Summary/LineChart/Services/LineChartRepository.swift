@@ -273,7 +273,7 @@ class LineChartRepository {
         // stats
         copyModel.stats = stats
         copyModel.stressStats = stressStats
-        copyModel.standardDeviationValue = getStandardDeviationValue(lineChartModel, valueTable)
+        copyModel.standardDeviationValue = getStandardDeviationValue(copyModel, valueTable)
         
         return copyModel
     }
