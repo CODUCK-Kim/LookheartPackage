@@ -487,8 +487,11 @@ class LineChartVC : UIViewController {
             minValue.text = "\(strigMin)(-\(difMin))"
             avgValue.text = String(format: "%.0f", avg)
             
-            maxStandardDeviationValue.text = String(Int(maxStandardDeviation))
-            minStandardDeviationValue.text = String(Int(minStandardDeviation))
+            print("maxStandardDeviation: \(maxStandardDeviation)")
+            print("minStandardDeviation: \(minStandardDeviation)")
+            
+            maxStandardDeviationValue.text = String(format: "%.0f", maxStandardDeviation)
+            minStandardDeviationValue.text = String(format: "%.0f", minStandardDeviation)
             
         case .STRESS:
             let pns = lineChartModel.stressStats?.pns
@@ -513,8 +516,6 @@ class LineChartVC : UIViewController {
             let min = lineChartModel.stats?.minValue ?? 0.0
             let avg = lineChartModel.stats?.average ?? 0.0
             
-            print("max: \(max), min: \(min), avg: \(avg)")
-            
             let difMax = String(format: format, max - avg)
             let difMin = String(format: format, avg - min)
             
@@ -522,8 +523,8 @@ class LineChartVC : UIViewController {
             minValue.text = String(format: format, min)
             avgValue.text = String(format: format, avg)
             
-            maxStandardDeviationValue.text = "+\(String(format: format, difMax))"
-            minStandardDeviationValue.text = "-\(String(format: format, difMin))"
+            maxStandardDeviationValue.text = "+\(difMax)"
+            minStandardDeviationValue.text = "-\(difMin)"
             
         }
     }

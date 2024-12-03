@@ -227,7 +227,6 @@ class LineChartController {
             lineChart.leftAxis.resetCustomAxisMax()
             lineChart.leftAxis.resetCustomAxisMin()
 
-//            lineChart.leftAxis.granularityEnabled = true
             // y label count
             if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
                let axisMin = lineChart.leftAxis.axisMinimum as Double? {
@@ -240,6 +239,8 @@ class LineChartController {
             lineChart.leftAxis.resetCustomAxisMin()
         }
         
+        print("check")
+        
         lineChart.data = chartData
         lineChart.leftAxis.granularity = chartModel.chartType != .SPO2 ? 1 : 0.5
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
@@ -249,23 +250,25 @@ class LineChartController {
     private func getLimitLines(_ chartModel: LineChartModel) -> [LimitLineData]? {
         switch chartModel.chartType {
         case .BPM, .HRV:
-            guard let standardDeviationValue = chartModel.standardDeviationValue else { return nil}
+            guard let standardDeviationValue = chartModel.standardDeviationValue,
+                  let average = chartModel.stats?.average else { return nil }
+            
             let topLimitLine = LimitLineData(
-                limit: chartModel.avgValue + standardDeviationValue,
+                limit: average + standardDeviationValue,
                 color: UIColor.MY_BLUE,
                 label: "unit_standard_deviation_eng".localized(),
                 width: 3.0
             )
             
             let bottomLimitLine = LimitLineData(
-                limit: chartModel.avgValue - standardDeviationValue,
+                limit: average - standardDeviationValue,
                 color: UIColor.MY_BLUE,
                 label: "unit_standard_deviation_eng".localized(),
                 width: 3.0
             )
             
             let middleLimitLine = LimitLineData(
-                limit: chartModel.avgValue,
+                limit: average,
                 color: UIColor.MY_ORANGE,
                 label: "unit_avg_cap".localized(),
                 width: 3.0
