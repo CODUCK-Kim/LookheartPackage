@@ -249,15 +249,16 @@ class LineChartController {
     private func getLimitLines(_ chartModel: LineChartModel) -> [LimitLineData]? {
         switch chartModel.chartType {
         case .BPM, .HRV:
+            guard let standardDeviationValue = chartModel.standardDeviationValue else { return nil}
             let topLimitLine = LimitLineData(
-                limit: chartModel.avgValue + chartModel.standardDeviationValue,
+                limit: chartModel.avgValue + standardDeviationValue,
                 color: UIColor.MY_BLUE,
                 label: "unit_standard_deviation_eng".localized(),
                 width: 3.0
             )
             
             let bottomLimitLine = LimitLineData(
-                limit: chartModel.avgValue - chartModel.standardDeviationValue,
+                limit: chartModel.avgValue - standardDeviationValue,
                 color: UIColor.MY_BLUE,
                 label: "unit_standard_deviation_eng".localized(),
                 width: 3.0

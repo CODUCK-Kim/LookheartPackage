@@ -470,43 +470,55 @@ class LineChartVC : UIViewController {
         case .BPM, .HRV:
             valueLabel.text = "unit_standard_deviation".localized()
             
-            let max = Int(lineChartModel.maxValue)
-            let min = Int(lineChartModel.minValue)
-            let avg = Int(lineChartModel.avgValue)
+            let max = lineChartModel.stats?.maxValue ?? 0.0
+            let min = lineChartModel.stats?.minValue ?? 0.0
+            let avg = lineChartModel.stats?.average ?? 0.0
             
-            let maxStandardDeviation = lineChartModel.avgValue + lineChartModel.standardDeviationValue
-            let minStandardDeviation = lineChartModel.avgValue - lineChartModel.standardDeviationValue
+            let maxStandardDeviation = avg + (lineChartModel.standardDeviationValue ?? 0.0)
+            let minStandardDeviation = avg - (lineChartModel.standardDeviationValue ?? 0.0)
             
-            let difMax = max - avg
-            let difMin = avg - min
+            let difMax = String(format: "%.0f", max - avg)
+            let difMin = String(format: "%.0f", avg - min)
             
-            maxValue.text = "\(max)(+\(difMax))"
-            minValue.text = "\(min)(-\(difMin))"
-            avgValue.text = String(avg)
+            let strigMax = String(format: "%.0f", max)
+            let strigMin = String(format: "%.0f", min)
+            
+            maxValue.text = "\(strigMax)(+\(difMax))"
+            minValue.text = "\(strigMin)(-\(difMin))"
+            avgValue.text = String(format: "%.0f", avg)
             
             maxStandardDeviationValue.text = String(Int(maxStandardDeviation))
             minStandardDeviationValue.text = String(Int(minStandardDeviation))
+            
         case .STRESS:
-            pnsMaxValue.text = String(format: "%.1f", lineChartModel.maxValue)
-            pnsMinValue.text = String(format: "%.1f", lineChartModel.minValue)
-            pnsAvgValue.text = String(format: "%.1f", lineChartModel.avgValue)
+            let pns = lineChartModel.stressStats?.pns
+            let sns = lineChartModel.stressStats?.sns
             
-            snsMaxValue.text = String(format: "%.1f", lineChartModel.secondMaxValue)
-            snsMinValue.text = String(format: "%.1f", lineChartModel.secondMinValue)
-            snsAvgValue.text = String(format: "%.1f", lineChartModel.secondAvgValue)
+            pnsMaxValue.text = String(format: "%.1f", pns?.maxValue ?? 0)
+            pnsMinValue.text = String(format: "%.1f", pns?.minValue ?? 0)
+            pnsAvgValue.text = String(format: "%.1f", pns?.average ?? 0)
+            
+            snsMaxValue.text = String(format: "%.1f", sns?.maxValue ?? 0)
+            snsMinValue.text = String(format: "%.1f", sns?.minValue ?? 0)
+            snsAvgValue.text = String(format: "%.1f", sns?.average ?? 0)
             
             
-            // TEST
+        // SPO2 TEST
         case .SPO2, .BREATHE:
             valueLabel.text = "unit_avg_cap".localized()
+            
             let format = lineChartModel.chartType == .SPO2 ? "%.1f" : "%.0f"
             
-            let difMax = lineChartModel.maxValue - lineChartModel.avgValue
-            let difMin = lineChartModel.avgValue - lineChartModel.minValue
+            let max = lineChartModel.stats?.maxValue ?? 0.0
+            let min = lineChartModel.stats?.minValue ?? 0.0
+            let avg = lineChartModel.stats?.average ?? 0.0
             
-            maxValue.text = String(format: format, lineChartModel.maxValue)
-            minValue.text = String(format: format, lineChartModel.minValue)
-            avgValue.text = String(format: format, lineChartModel.avgValue)
+            let difMax = String(format: format, max - avg)
+            let difMin = String(format: format, avg - min)
+            
+            maxValue.text = String(format: format, max)
+            minValue.text = String(format: format, min)
+            avgValue.text = String(format: format, avg)
             
             maxStandardDeviationValue.text = "+\(String(format: format, difMax))"
             minStandardDeviationValue.text = "-\(String(format: format, difMin))"
