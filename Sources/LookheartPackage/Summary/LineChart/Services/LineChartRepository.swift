@@ -305,6 +305,8 @@ class LineChartRepository {
         switch lineChartModel.chartType {
         case .BPM, .HRV:
             guard let average = lineChartModel.stats?.average else { return nil }
+            
+            print("average: \(average)")
             var sumSquareValue = 0.0
             
             valueTable.forEach { value in
