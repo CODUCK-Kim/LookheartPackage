@@ -232,6 +232,7 @@ class LineChartRepository {
                 // chart entries
                 let entry = ChartDataEntry(x: xValue, y: yValue)
                 entries?[date]?.append(entry)
+                print("entry: \(entry)")
                 
                 // time table
                 timeTable.append(time)
@@ -253,7 +254,8 @@ class LineChartRepository {
                     } else {
                         stressStats?.sns.update(with: yValue)
                     }
-                                    
+                         
+                    
                 // SPO2 TEST
                 case .SPO2, .BREATHE:
                     if stats == nil { stats = ChartStatistics() }

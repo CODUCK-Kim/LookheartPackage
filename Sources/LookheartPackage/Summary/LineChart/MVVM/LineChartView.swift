@@ -513,6 +513,8 @@ class LineChartVC : UIViewController {
             let min = lineChartModel.stats?.minValue ?? 0.0
             let avg = lineChartModel.stats?.average ?? 0.0
             
+            print("max: \(max), min: \(min), avg: \(avg)")
+            
             let difMax = String(format: format, max - avg)
             let difMin = String(format: format, avg - min)
             
