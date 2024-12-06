@@ -228,7 +228,6 @@ class LineChartRepository {
         var stats: ChartStatistics? = nil
         var stressStats: StressChartStatistics? = nil
         
-        var xValue = 0.0
         
         for i in 0..<lineChartModel.timeTable.count {
             let time = lineChartModel.timeTable[i]
@@ -238,9 +237,9 @@ class LineChartRepository {
                 guard let data = timeDict[time] else { continue }
                 guard let yValue = getYValue(date, data) else { continue }
                 
-                print("xValue: \(xValue), yValue: \(yValue)")
+                
                 // chart entries
-                let entry = ChartDataEntry(x: xValue, y: yValue)
+                let entry = ChartDataEntry(x: Double(i), y: yValue)
                 entries?[date]?.append(entry)
                 
                 // time table
@@ -263,7 +262,6 @@ class LineChartRepository {
                     } else {
                         stressStats?.sns.update(with: yValue)
                     }
-                    
                 }
                 // SPO2 TEST
 //                case .SPO2, .BREATHE:
@@ -271,8 +269,6 @@ class LineChartRepository {
 //                    
 //                    stats?.update(with: yValue)
 
-                
-                xValue += 1
             }
         }
         
