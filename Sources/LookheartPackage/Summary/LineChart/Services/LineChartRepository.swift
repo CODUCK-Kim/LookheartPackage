@@ -238,6 +238,7 @@ class LineChartRepository {
                 guard let data = timeDict[time] else { continue }
                 guard let yValue = getYValue(date, data) else { continue }
                 
+                print("xValue: \(xValue), yValue: \(yValue)")
                 // chart entries
                 let entry = ChartDataEntry(x: xValue, y: yValue)
                 entries?[date]?.append(entry)
