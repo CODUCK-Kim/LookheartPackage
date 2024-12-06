@@ -28,8 +28,9 @@ class LineChartService {
         
         let parameters: [String: Any] = [
 //            "eq": profile.email,
-            "eq": "jhaseung@medsyslab.co.kr",
-            
+//            "eq": "jhaseung@medsyslab.co.kr",
+            "eq": "cnd21c@naver.com",
+        
             "startDate": startDate,
             "endDate": endDate,
             
