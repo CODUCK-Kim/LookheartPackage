@@ -5,28 +5,28 @@ public class EcgDataConversion {
     
     public init() {}
     
-    public func conversion(_ ecg: Double) -> Double {
-        if propProfile.conversionFlag { return ecg }
-        
-        changeEcgData[1] = changeEcgData[0]
-        changeEcgData[0] = ecg
-         
-        var calcEcgData = changeEcgData[1] - changeEcgData[0]
-         
-        // 75, 100
-        if abs(calcEcgData) <= 50 {
-            calcEcgData = 0
-        }
-        
-        if changeEcgData[1] == changeEcgData[0] {
-            calcEcgData = changeEcgData[0] <= 10 ? 3 :
-                          changeEcgData[0] >= 1000 ? 1000 : calcEcgData + 512
-        } else {
-            calcEcgData = calcEcgData + 512
-        }
-        
-        return calcEcgData
-     }
+//    public func conversion(_ ecg: Double) -> Double {
+//        if propProfile.conversionFlag { return ecg }
+//        
+//        changeEcgData[1] = changeEcgData[0]
+//        changeEcgData[0] = ecg
+//         
+//        var calcEcgData = changeEcgData[1] - changeEcgData[0]
+//         
+//        // 75, 100
+//        if abs(calcEcgData) <= 50 {
+//            calcEcgData = 0
+//        }
+//        
+//        if changeEcgData[1] == changeEcgData[0] {
+//            calcEcgData = changeEcgData[0] <= 10 ? 3 :
+//                          changeEcgData[0] >= 1000 ? 1000 : calcEcgData + 512
+//        } else {
+//            calcEcgData = calcEcgData + 512
+//        }
+//        
+//        return calcEcgData
+//     }
     
     //    private var ecg_outData:[Float] = Array(repeating: 0.0, count: 5)
     //    private var xx_msl_mm:Float = 0.0

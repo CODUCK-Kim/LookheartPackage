@@ -335,8 +335,9 @@ public class ArrViewController : UIViewController {
             }
             
             for i in 0...arrData.data.count - 1{
-                let ecgData = ecgDataConversion.conversion(arrData.data[i])
-                let arrDataEntry = ChartDataEntry(x: Double(i), y: Double(ecgData))
+//                let ecgData = ecgDataConversion.conversion(arrData.data[i])
+//                let arrDataEntry = ChartDataEntry(x: Double(i), y: Double(ecgData))
+                let arrDataEntry = ChartDataEntry(x: Double(i), y: Double(arrData.data[i]))
                 arrDataEntries.append(arrDataEntry)
             }
             
