@@ -279,7 +279,7 @@ class LineChartRepository {
         
         // chart data
         copyModel.entries = entries
-        copyModel.timeTable = timeTable
+        copyModel.timeTable = lineChartModel.timeTable
         
         // stats
         copyModel.stats = stats
