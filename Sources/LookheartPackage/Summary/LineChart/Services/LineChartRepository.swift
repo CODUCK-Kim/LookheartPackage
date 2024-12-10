@@ -228,7 +228,6 @@ class LineChartRepository {
         var stats: ChartStatistics? = nil
         var stressStats: StressChartStatistics? = nil
         
-        
         for i in 0..<lineChartModel.timeTable.count {
             let time = lineChartModel.timeTable[i]
             
@@ -256,6 +255,8 @@ class LineChartRepository {
                     
                 case .STRESS:
                     if stressStats == nil { stressStats = StressChartStatistics() }
+                    
+                    print("data: \(date), xValue: \(i), yValue: \(yValue)")
                     
                     if date == "pns" {
                         stressStats?.pns.update(with: yValue)
