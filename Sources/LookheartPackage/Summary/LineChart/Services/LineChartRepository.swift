@@ -203,8 +203,12 @@ class LineChartRepository {
             entries[date] = [ChartDataEntry]()
         }
         
+        let timeTest = groupData.values.map { $0.map { $0.writeTime }}
+        print("timeTest: \(timeTest)")
+        
         // time Table
         let timeTable = Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
+        print("timeTable: \(timeTable)")
         
         
         return LineChartModel(
