@@ -203,12 +203,9 @@ class LineChartRepository {
             entries[date] = [ChartDataEntry]()
         }
         
-        let timeTest = groupData.values.map { $0.map { $0.writeTime }}
-        print("timeTest: \(timeTest)")
-        
+    
         // time Table
         let timeTable = Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
-        print("timeTable: \(timeTable)")
         
         
         return LineChartModel(
@@ -231,6 +228,9 @@ class LineChartRepository {
         
         var stats: ChartStatistics? = nil
         var stressStats: StressChartStatistics? = nil
+        
+        print(lineChartModel.timeTable.count)
+        print(lineChartModel.timeTable)
         
         for i in 0..<lineChartModel.timeTable.count {
             let time = lineChartModel.timeTable[i]
