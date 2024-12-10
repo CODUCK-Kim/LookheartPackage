@@ -101,7 +101,10 @@ struct LineChartDataModel {
     static func changeFormat(stressData: [StressDataModel]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
+        
         for data in stressData {
+            print(data)
+            
             if data.pnsPercent == 100.0 || data.pnsPercent == 100.0 {
                 continue
             }
