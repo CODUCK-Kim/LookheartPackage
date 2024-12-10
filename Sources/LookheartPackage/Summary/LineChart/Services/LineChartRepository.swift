@@ -246,7 +246,7 @@ class LineChartRepository {
                 entries?[date]?.append(entry)
                 
                 // time table
-                timeTable.append(time)
+//                timeTable.append(time)
                 
                 // update stats
                 switch lineChartModel.chartType {
