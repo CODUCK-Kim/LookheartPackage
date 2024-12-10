@@ -222,15 +222,10 @@ class LineChartRepository {
         var copyModel = lineChartModel
         
         var entries = lineChartModel.entries
-        
-        var timeTable: [String] = []
         var valueTable: [Double] = []
         
         var stats: ChartStatistics? = nil
         var stressStats: StressChartStatistics? = nil
-        
-        print(lineChartModel.timeTable.count)
-        print(lineChartModel.timeTable)
         
         for i in 0..<lineChartModel.timeTable.count {
             let time = lineChartModel.timeTable[i]
@@ -245,9 +240,6 @@ class LineChartRepository {
                 let entry = ChartDataEntry(x: Double(i), y: yValue)
                 entries?[date]?.append(entry)
                 
-                // time table
-//                timeTable.append(time)
-                
                 // update stats
                 switch lineChartModel.chartType {
                 case .BPM, .HRV:
@@ -259,8 +251,6 @@ class LineChartRepository {
                     
                 case .STRESS:
                     if stressStats == nil { stressStats = StressChartStatistics() }
-                    
-                    print("data: \(date), xValue: \(i), yValue: \(yValue)")
                     
                     if date == "pns" {
                         stressStats?.pns.update(with: yValue)

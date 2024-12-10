@@ -170,7 +170,6 @@ class LineChartController {
         lineChart: LineChartView,
         lineChartModel: LineChartModel
     ) -> Bool {
-        print("lineChartModel.timeTable: \(lineChartModel.timeTable)")
         // 1. entries
         guard let entries = lineChartModel.entries else {
             return false // noData
@@ -210,8 +209,6 @@ class LineChartController {
         chartModel: LineChartModel
     ) {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
-        print("chartData -> chartData.count\(chartData.count): \(chartData)")
-        print("setLineChart -> lineChartModel.count\(timeTable.count): \(timeTable)")
         
         lineChart.leftAxis.labelCount = 6           // y label default count
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
