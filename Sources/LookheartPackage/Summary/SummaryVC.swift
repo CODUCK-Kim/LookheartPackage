@@ -204,40 +204,6 @@ public class SummaryViewController : UIViewController {
         $0.tag = STEP_BUTTON_TAG
         $0.addTarget(self, action: #selector(ButtonEvent(_:)), for: .touchUpInside)
     }
-
-    
-    // SPO2 TEST
-//    private lazy var spo2Button = UIButton().then {
-//        $0.setTitle("SPO2", for: .normal)
-//        $0.setTitleColor(.lightGray, for: .normal)
-//        $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
-//        $0.titleLabel?.contentMode = .center
-//        $0.backgroundColor = .white
-//        $0.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
-//        $0.layer.borderWidth = 3
-//        $0.layer.cornerRadius = 15
-//        $0.titleEdgeInsets = UIEdgeInsets(top: 25, left: 0, bottom: 0, right: 0)
-//        $0.isEnabled = true
-//        $0.isUserInteractionEnabled = true
-//        $0.tag = SPO2_BUTTON_TAG
-//        $0.addTarget(self, action: #selector(ButtonEvent(_:)), for: .touchUpInside)
-//    }
-//    
-//    private lazy var breathButton = UIButton().then {
-//        $0.setTitle("호흡", for: .normal)
-//        $0.setTitleColor(.lightGray, for: .normal)
-//        $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
-//        $0.titleLabel?.contentMode = .center
-//        $0.backgroundColor = .white
-//        $0.layer.borderColor = UIColor(red: 234/255, green: 235/255, blue: 237/255, alpha: 1.0).cgColor
-//        $0.layer.borderWidth = 3
-//        $0.layer.cornerRadius = 15
-//        $0.titleEdgeInsets = UIEdgeInsets(top: 25, left: 0, bottom: 0, right: 0)
-//        $0.isEnabled = true
-//        $0.isUserInteractionEnabled = true
-//        $0.tag = BREATH_BUTTON_TAG
-//        $0.addTarget(self, action: #selector(ButtonEvent(_:)), for: .touchUpInside)
-//    }
     
     @objc private func ButtonEvent(_ sender: UIButton) {
         
@@ -262,14 +228,6 @@ public class SummaryViewController : UIViewController {
         case STEP_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
             barChartView.refreshView(.STEP)
-            
-            // TEST
-//        case SPO2_BUTTON_TAG:
-//            setChild(selectChild: lineChartView, in: self.view)
-//            lineChartView.refreshView(lineChart: .SPO2)
-//        case BREATH_BUTTON_TAG:
-//            setChild(selectChild: lineChartView, in: self.view)
-//            lineChartView.refreshView(lineChart: .BREATHE)
         default:
             break
         }

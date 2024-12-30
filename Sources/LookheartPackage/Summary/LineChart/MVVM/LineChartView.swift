@@ -57,6 +57,18 @@ class LineChartVC : UIViewController {
     
     private lazy var lineChartView = LineChartView()
     
+    private lazy var helpButton = UIButton(type: .custom).then {
+        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
+        let img = UIImage(
+            systemName: "calendar",
+            withConfiguration: symbolConfiguration
+        )?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
+        
+        $0.setImage(img, for: .normal)
+        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 230)
+        $0.addTarget(self, action: #selector(helpButtonEvent(_:)), for: .touchUpInside)
+    }
+    
     //    ----------------------------- UILabel -------------------    //
     private let topContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
@@ -298,6 +310,11 @@ class LineChartVC : UIViewController {
         lineChartView.isHidden = !lineChartView.isHidden
     }
     
+    @objc func helpButtonEvent(_ sender: UIButton) {
+        print("check")
+    }
+    
+    
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -328,7 +345,6 @@ class LineChartVC : UIViewController {
         
 
         switch lineChart {
-//        case .BPM, .HRV, .SPO2, .BREATHE:
         case .BPM, .HRV:
             bpmHrvContents.isHidden = false
             stressContents.isHidden = true
@@ -454,13 +470,6 @@ class LineChartVC : UIViewController {
             valueLabel.text = "unit_hrv".localized()
         case .STRESS:
             break
-            
-            
-            // TEST
-//        case .SPO2:
-//            avgLabel.text = "SPO2"
-//        case .BREATHE:
-//            avgLabel.text = "호흡"
         }
     }
     
@@ -502,27 +511,6 @@ class LineChartVC : UIViewController {
             snsMaxValue.text = String(format: "%.1f", sns?.maxValue ?? 0)
             snsMinValue.text = String(format: "%.1f", sns?.minValue ?? 0)
             snsAvgValue.text = String(format: "%.1f", sns?.average ?? 0)
-            
-            
-        // SPO2 TEST
-//        case .SPO2, .BREATHE:
-//            valueLabel.text = "unit_avg_cap".localized()
-//            
-//            let format = lineChartModel.chartType == .SPO2 ? "%.1f" : "%.0f"
-//            
-//            let max = lineChartModel.stats?.maxValue ?? 0.0
-//            let min = lineChartModel.stats?.minValue ?? 0.0
-//            let avg = lineChartModel.stats?.average ?? 0.0
-//            
-//            let difMax = String(format: format, max - avg)
-//            let difMin = String(format: format, avg - min)
-//            
-//            maxValue.text = String(format: format, max)
-//            minValue.text = String(format: format, min)
-//            avgValue.text = String(format: format, avg)
-//            
-//            maxStandardDeviationValue.text = "+\(difMax)"
-//            minStandardDeviationValue.text = "-\(difMin)"
         }
     }
     
@@ -651,6 +639,7 @@ class LineChartVC : UIViewController {
         view.addSubview(lineChartView)
         view.addSubview(activityIndicator)
         view.addSubview(fsCalendar)
+        view.addSubview(helpButton)
         
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
@@ -660,7 +649,12 @@ class LineChartVC : UIViewController {
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
-//            make.height.equalTo(safeAreaView).multipliedBy(5.0 / (5.0 + 5.0))     // spo2 test
+        }
+        
+        // helpButton
+        helpButton.snp.makeConstraints { make in
+            make.top.equalTo(lineChartView).offset(20)
+            make.right.equalTo(lineChartView).offset(20)
         }
         
         // indicator
