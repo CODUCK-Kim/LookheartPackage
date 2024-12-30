@@ -81,12 +81,14 @@ class LineChartController {
         _ chartType: LineChartType
     ) -> [String] {
         switch chartType {
-//        case .BPM, .HRV, .SPO2, .BREATHE:
+//        case .BPM, .HRV:
 //            return entries.keys.sorted()
-        case .BPM, .HRV:
-            return entries.keys.sorted()
         case .STRESS:
             return ["sns", "pns"]
+            
+        // spo2 test
+        case .BPM, .HRV, .SPO2, .BREATHE:
+            return entries.keys.sorted()
         }
     }
     
@@ -95,12 +97,14 @@ class LineChartController {
         _ chartType: LineChartType
     ) -> String {
         switch chartType {
-//        case .BPM, .HRV, .SPO2, .BREATHE:
+//        case .BPM, .HRV:
 //            return dateTime.changeDateFormat(key, false)
-        case .BPM, .HRV:
-            return dateTime.changeDateFormat(key, false)
         case .STRESS:
             return key
+            
+            // spo2 test
+        case .BPM, .HRV, .SPO2, .BREATHE:
+            return dateTime.changeDateFormat(key, false)
         }
     }
     
@@ -128,12 +132,12 @@ class LineChartController {
             fractionDigits = 1
             
         // SPO2 TEST
-//        case .SPO2:
-//            chartDataSet.lineWidth = 1.2
-//            numberFormatter.numberStyle = .decimal
-//            fractionDigits = 1
-//        case .BREATHE:
-//            chartDataSet.lineWidth = 0.7
+        case .SPO2:
+            chartDataSet.lineWidth = 1.2
+            numberFormatter.numberStyle = .decimal
+            fractionDigits = 1
+        case .BREATHE:
+            chartDataSet.lineWidth = 0.7
         }
     
         // value formatter
@@ -227,25 +231,28 @@ class LineChartController {
             
             lineChart.leftAxis.axisMaximum = 100
             lineChart.leftAxis.axisMinimum = 0
-        
-//        case .SPO2:
-//            lineChart.leftAxis.resetCustomAxisMax()
-//            lineChart.leftAxis.resetCustomAxisMin()
-//
-//            // y label count
-//            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
-//               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
-//                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
-//                lineChart.leftAxis.labelCount = labelCount
-//            }
-//            
-//        case .BREATHE:
-//            lineChart.leftAxis.resetCustomAxisMax()
-//            lineChart.leftAxis.resetCustomAxisMin()
+
+        // spo2 test
+        case .SPO2:
+            lineChart.leftAxis.resetCustomAxisMax()
+            lineChart.leftAxis.resetCustomAxisMin()
+
+            // y label count
+            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
+               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
+                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
+                lineChart.leftAxis.labelCount = labelCount
+            }
+            
+        case .BREATHE:
+            lineChart.leftAxis.resetCustomAxisMax()
+            lineChart.leftAxis.resetCustomAxisMin()
         }
         
+        // spo2 test
+        lineChart.leftAxis.granularity = chartModel.chartType != .SPO2 ? 1 : 0.5
+        
         lineChart.data = chartData
-//        lineChart.leftAxis.granularity = chartModel.chartType != .SPO2 ? 1 : 0.5
         lineChart.leftAxis.granularity = 1
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
     }
@@ -289,8 +296,10 @@ class LineChartController {
                 LimitLineData(limit: 80, color: UIColor.MY_LIGHT_PINK),
                 LimitLineData(limit: 20, color: UIColor.MY_LIGHT_PINK)
             ]
-//        default:
-//            return nil
+            
+        // spo2 test
+        default:
+            return nil
         }
     }
     
@@ -332,8 +341,10 @@ class LineChartController {
         _ dateType: LineChartDateType
     ) -> [UIColor] {
         switch chartType {
-//        case .BPM, .HRV, .SPO2, .BREATHE:
-        case .BPM, .HRV:
+            // spo2 test
+        case .BPM, .HRV, .SPO2, .BREATHE:
+            
+//        case .BPM, .HRV:
             switch (dateType) {
             case .TODAY:
                 return [NSUIColor.MY_RED]

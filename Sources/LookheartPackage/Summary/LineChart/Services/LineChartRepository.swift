@@ -85,12 +85,12 @@ class LineChartRepository {
         response: NetworkResponse
     ) {
         switch (lineChartType) {
-            // SPO2 TEST
-//        case .BPM, .HRV, .SPO2, .BREATHE:
-//            return parsingBpmHrvData(data)
-            
-        case .BPM, .HRV:
+        // SPO2 TEST
+        case .BPM, .HRV, .SPO2, .BREATHE:
             return parsingBpmHrvData(data)
+            
+//        case .BPM, .HRV:
+//            return parsingBpmHrvData(data)
         case .STRESS:
             return parsingStressData(data)
         }
@@ -163,15 +163,16 @@ class LineChartRepository {
         let groupedData = parsingData.reduce(into: [String: [LineChartDataModel]]()) { dict, data in
             
             switch lineChartType {
-//            case .BPM, .HRV, .SPO2, .BREATHE:
-//                // 날짜별("YYYY-MM-DD") 데이터 그룹화
-//                let dateKey = String(data.writeDate)
-//                dict[dateKey, default: []].append(data)
-              
-            case .BPM, .HRV:
+            // spo2 test
+            case .BPM, .HRV, .SPO2, .BREATHE:
                 // 날짜별("YYYY-MM-DD") 데이터 그룹화
                 let dateKey = String(data.writeDate)
                 dict[dateKey, default: []].append(data)
+              
+//            case .BPM, .HRV:
+//                // 날짜별("YYYY-MM-DD") 데이터 그룹화
+//                let dateKey = String(data.writeDate)
+//                dict[dateKey, default: []].append(data)
                 
             case .STRESS:
                 // 항목별(pns, sns) 데이터 그룹화
@@ -257,13 +258,12 @@ class LineChartRepository {
                     } else {
                         stressStats?.sns.update(with: yValue)
                     }
-                }
+                    
                 // SPO2 TEST
-//                case .SPO2, .BREATHE:
-//                    if stats == nil { stats = ChartStatistics() }
-//                    
-//                    stats?.update(with: yValue)
-
+                case .SPO2, .BREATHE:
+                    if stats == nil { stats = ChartStatistics() }
+                    stats?.update(with: yValue)
+                }
             }
         }
         
@@ -289,12 +289,14 @@ class LineChartRepository {
             lineChartDataModel.bpm
         case .HRV:
             lineChartDataModel.hrv
-//        case .SPO2:
-//            lineChartDataModel.spo2 != 0 ? lineChartDataModel.spo2 : nil
-//        case .BREATHE:
-//            lineChartDataModel.breathe != 0 ? lineChartDataModel.breathe : nil
         case .STRESS:
             date == "pns" ? lineChartDataModel.pns : lineChartDataModel.sns
+            
+        // spo2 test
+        case .SPO2:
+            lineChartDataModel.spo2 != 0 ? lineChartDataModel.spo2 : nil
+        case .BREATHE:
+            lineChartDataModel.breathe != 0 ? lineChartDataModel.breathe : nil
         }
     }
     
@@ -319,10 +321,11 @@ class LineChartRepository {
             let variance = sumSquareValue / Double(valueTable.count) // 분산
             
             return sqrt(variance) // 제곱근
-            
-//        case .SPO2, .BREATHE, .STRESS:
+//        case .STRESS:
 //            return nil
-        case .STRESS:
+            
+        // spo2 test
+        case .SPO2, .BREATHE, .STRESS:
             return nil
         }
     }

@@ -55,8 +55,8 @@ struct LineChartDataModel {
     var stress: Double?
     
     // SPO2 TEST
-//    var spo2: Double?
-//    var breathe: Double?
+    var spo2: Double?
+    var breathe: Double?
     
     // bpm, hrv
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {

@@ -36,7 +36,7 @@ class LineChartService {
             "endDate": endDate,
             
             // SPO2 test
-//            "test": true
+            "test": true
         ]
         
         
@@ -54,13 +54,13 @@ class LineChartService {
     
     private func getEndPoint(_ type: LineChartType) -> EndPoint {
         return switch type {
-            // SPO2 TEST
-//        case .BPM, .HRV, .SPO2, .BREATHE:
+//        case .BPM, .HRV: 
 //            EndPoint.getBpmData
-        case .BPM, .HRV: 
-            EndPoint.getBpmData
         case .STRESS:
             EndPoint.getStressData
+        // SPO2 TEST
+        case .BPM, .HRV, .SPO2, .BREATHE:
+            EndPoint.getBpmData
         }
     }
 }
