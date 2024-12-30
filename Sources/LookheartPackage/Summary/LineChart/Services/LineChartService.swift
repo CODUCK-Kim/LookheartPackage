@@ -59,6 +59,8 @@ class LineChartService {
 //            EndPoint.getBpmData
         case .STRESS:
             EndPoint.getStressData
+            
+            
         // SPO2 TEST
         case .BPM, .HRV, .SPO2, .BREATHE:
             EndPoint.getBpmData

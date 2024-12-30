@@ -65,13 +65,13 @@ struct LineChartDataModel {
         for data in datalist {
             let fields = data.split(separator: "|")
             
-            if fields.count == 7 {
-//            if fields.count == 9 {
+//            if fields.count == 7 {
+            if fields.count == 9 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
-                      let hrv = Int(fields[6])  else {
-//                      let spo2 = Double(fields[7]),
-//                      let breathe = Int(fields[8]) else {
+//                      let hrv = Int(fields[6])  else {
+                      let spo2 = Double(fields[7]),
+                      let breathe = Int(fields[8]) else {
                     continue
                 }
                 
@@ -86,10 +86,11 @@ struct LineChartDataModel {
                     timezone: String(fields[3]),
                     bpm: Double(bpm),
                     temp: Double(temp),
-                    hrv: Double(hrv)
-                    
-//                    spo2: Double(spo2),
-//                    breathe: Double(breathe)
+//                    hrv: Double(hrv)
+                   
+                    // spo2 test
+                    spo2: Double(spo2),
+                    breathe: Double(breathe)
                 ))
             }
         }
