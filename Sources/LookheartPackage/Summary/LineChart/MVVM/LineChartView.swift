@@ -328,8 +328,8 @@ class LineChartVC : UIViewController {
         
 
         switch lineChart {
-        case .BPM, .HRV, .SPO2, .BREATHE:
-//        case .BPM, .HRV:
+//        case .BPM, .HRV, .SPO2, .BREATHE:
+        case .BPM, .HRV:
             bpmHrvContents.isHidden = false
             stressContents.isHidden = true
         case .STRESS:
@@ -457,10 +457,10 @@ class LineChartVC : UIViewController {
             
             
             // TEST
-        case .SPO2:
-            avgLabel.text = "SPO2"
-        case .BREATHE:
-            avgLabel.text = "호흡"
+//        case .SPO2:
+//            avgLabel.text = "SPO2"
+//        case .BREATHE:
+//            avgLabel.text = "호흡"
         }
     }
     
@@ -505,24 +505,24 @@ class LineChartVC : UIViewController {
             
             
         // SPO2 TEST
-        case .SPO2, .BREATHE:
-            valueLabel.text = "unit_avg_cap".localized()
-            
-            let format = lineChartModel.chartType == .SPO2 ? "%.1f" : "%.0f"
-            
-            let max = lineChartModel.stats?.maxValue ?? 0.0
-            let min = lineChartModel.stats?.minValue ?? 0.0
-            let avg = lineChartModel.stats?.average ?? 0.0
-            
-            let difMax = String(format: format, max - avg)
-            let difMin = String(format: format, avg - min)
-            
-            maxValue.text = String(format: format, max)
-            minValue.text = String(format: format, min)
-            avgValue.text = String(format: format, avg)
-            
-            maxStandardDeviationValue.text = "+\(difMax)"
-            minStandardDeviationValue.text = "-\(difMin)"
+//        case .SPO2, .BREATHE:
+//            valueLabel.text = "unit_avg_cap".localized()
+//            
+//            let format = lineChartModel.chartType == .SPO2 ? "%.1f" : "%.0f"
+//            
+//            let max = lineChartModel.stats?.maxValue ?? 0.0
+//            let min = lineChartModel.stats?.minValue ?? 0.0
+//            let avg = lineChartModel.stats?.average ?? 0.0
+//            
+//            let difMax = String(format: format, max - avg)
+//            let difMin = String(format: format, avg - min)
+//            
+//            maxValue.text = String(format: format, max)
+//            minValue.text = String(format: format, min)
+//            avgValue.text = String(format: format, avg)
+//            
+//            maxStandardDeviationValue.text = "+\(difMax)"
+//            minStandardDeviationValue.text = "-\(difMin)"
         }
     }
     
@@ -660,7 +660,7 @@ class LineChartVC : UIViewController {
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
-//            make.height.equalTo(safeAreaView).multipliedBy(5.0 / (5.0 + 5.0))
+//            make.height.equalTo(safeAreaView).multipliedBy(5.0 / (5.0 + 5.0))     // spo2 test
         }
         
         // indicator
