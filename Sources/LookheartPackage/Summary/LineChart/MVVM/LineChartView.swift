@@ -57,18 +57,6 @@ class LineChartVC : UIViewController {
     
     private lazy var lineChartView = LineChartView()
     
-    private lazy var helpButton = UIButton(type: .custom).then {
-        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .light)
-        let img = UIImage(
-            systemName: "calendar",
-            withConfiguration: symbolConfiguration
-        )?.withTintColor(.darkGray, renderingMode: .alwaysOriginal)
-        
-        $0.setImage(img, for: .normal)
-        $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 230)
-        $0.addTarget(self, action: #selector(helpButtonEvent(_:)), for: .touchUpInside)
-    }
-    
     //    ----------------------------- UILabel -------------------    //
     private let topContents = UILabel().then { $0.isUserInteractionEnabled = true }
     
@@ -308,10 +296,6 @@ class LineChartVC : UIViewController {
     @objc func calendarButtonEvent(_ sender: UIButton) {
         fsCalendar.isHidden = !fsCalendar.isHidden
         lineChartView.isHidden = !lineChartView.isHidden
-    }
-    
-    @objc func helpButtonEvent(_ sender: UIButton) {
-        print("check")
     }
     
     
@@ -639,7 +623,6 @@ class LineChartVC : UIViewController {
         view.addSubview(lineChartView)
         view.addSubview(activityIndicator)
         view.addSubview(fsCalendar)
-        view.addSubview(helpButton)
         
         safeAreaView.snp.makeConstraints { make in
             make.top.bottom.left.right.equalToSuperview()
@@ -649,12 +632,6 @@ class LineChartVC : UIViewController {
         lineChartView.snp.makeConstraints { make in
             make.top.left.right.equalTo(safeAreaView)
             make.height.equalTo(safeAreaView).multipliedBy(5.5 / (5.5 + 4.5))
-        }
-        
-        // helpButton
-        helpButton.snp.makeConstraints { make in
-            make.top.equalTo(lineChartView).offset(20)
-            make.right.equalTo(lineChartView).offset(20)
         }
         
         // indicator
