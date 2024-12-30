@@ -27,9 +27,9 @@ class LineChartService {
         let endPoint = getEndPoint(type)
         
         let parameters: [String: Any] = [
-//            "eq": profile.email,
+            "eq": profile.email,
             
-            "eq": "jhaseung@medsyslab.co.kr",
+//            "eq": "jhaseung@medsyslab.co.kr",
 //            "eq": "jhemin0415@gmail.com",
         
         
@@ -39,7 +39,6 @@ class LineChartService {
             // SPO2 test
             "test": true
         ]
-        
         
         let data: (result: String? ,response: NetworkResponse) = await networkController.task(
             parameters: parameters,
