@@ -375,3 +375,4 @@ class ChartValueFormatter: NSObject, ValueFormatter {
         return numberFormatter.string(for: value)!
     }
 }
+
