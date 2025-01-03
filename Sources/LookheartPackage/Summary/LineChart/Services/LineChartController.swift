@@ -235,15 +235,25 @@ class LineChartController {
 
         // spo2 test
         case .SPO2:
-            lineChart.leftAxis.resetCustomAxisMax()
-            lineChart.leftAxis.resetCustomAxisMin()
-
-            // y label count
-            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
-               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
-                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
-                lineChart.leftAxis.labelCount = labelCount
+            lineChart.leftAxis.axisMaximum = 100
+            lineChart.leftAxis.axisMinimum = 90
+            lineChart.leftAxis.labelCount = 10
+            
+            if let minValue = chartModel.stats?.minValue {
+                if minValue < 95 {
+                    lineChart.leftAxis.axisMinimum = minValue
+                }
             }
+            
+//            lineChart.leftAxis.resetCustomAxisMax()
+//            lineChart.leftAxis.resetCustomAxisMin()
+//
+//            // y label count
+//            if let axisMax = lineChart.leftAxis.axisMaximum as Double?,
+//               let axisMin = lineChart.leftAxis.axisMinimum as Double? {
+//                let labelCount = Int((axisMax - axisMin) / 0.5) + 1
+//                lineChart.leftAxis.labelCount = labelCount
+//            }
             
         case .BREATHE:
             lineChart.leftAxis.resetCustomAxisMax()
