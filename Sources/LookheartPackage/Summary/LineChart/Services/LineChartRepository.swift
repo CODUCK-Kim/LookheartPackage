@@ -215,18 +215,33 @@ class LineChartRepository {
 //                .map { $0.writeTime }
 //        }
         
-        let timeTable = switch (lineChartType) {
-        case .BPM, .HRV, .STRESS:
-            Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-        case .SPO2:
-            groupData.flatMap { $0.value } // 모든 LineChartDataModel을 하나의 배열로 합침
-                .filter { $0.spo2 ?? 0.0 > 0 } // spo2가 0 이상인 항목만 필터링
-                .map { $0.writeTime }
-        case .BREATHE:
-            groupData.flatMap { $0.value }
-                .filter { $0.breathe ?? 0.0 > 0 }
-                .map { $0.writeTime }
-        }
+//        let timeTable = switch (lineChartType) {
+//        case .BPM, .HRV, .STRESS:
+//            Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
+//        case .SPO2:
+//            groupData.flatMap { $0.value } // 모든 LineChartDataModel을 하나의 배열로 합침
+//                .filter { $0.spo2 ?? 0.0 > 0 } // spo2가 0 이상인 항목만 필터링
+//                .map { $0.writeTime }
+//        case .BREATHE:
+//            groupData.flatMap { $0.value }
+//                .filter { $0.breathe ?? 0.0 > 0 }
+//                .map { $0.writeTime }
+//        }
+        
+        let timeTable: [String] = {
+            switch lineChartType {
+            case .BPM, .HRV, .STRESS:
+                return Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
+            case .SPO2:
+                return groupData.flatMap { $0.value }
+                                .filter { ($0.spo2 ?? 0.0) > 0 }
+                                .map { $0.writeTime }
+            case .BREATHE:
+                return groupData.flatMap { $0.value }
+                                .filter { ($0.breathe ?? 0.0) > 0 }
+                                .map { $0.writeTime }
+            }
+        }()
 //        let timeTable = switch lineChartType {
 //        case .BPM, .HRV, .STRESS:
 //            Set(groupData.values.flatMap { $0.map {
