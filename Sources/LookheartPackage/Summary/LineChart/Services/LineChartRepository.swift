@@ -56,18 +56,28 @@ class LineChartRepository {
             // string -> parsing
             let parsingData = getParsingData(data.result)
             
+            print("parsingData: \(parsingData)")
+            
             // parsing -> group
             guard let parsingResult = parsingData.result else {
                 return (nil, parsingData.response)
             }
+            
+            print("parsingResult: \(parsingResult)")
                         
             let groupData = groupDataByDate(parsingResult)
+            
+            print("groupData: \(groupData)")
             
             // data dict, time table -> add model
             let lineChartGroupedData = getLineChartGroupedData(groupData)
             
+            print("lineChartGroupedData: \(lineChartGroupedData)")
+            
             // result model
             let lineChartModel = getChartModel(lineChartGroupedData)
+            
+            print("lineChartModel: \(lineChartModel)")
             
             return (lineChartModel, data.response)
         default:
