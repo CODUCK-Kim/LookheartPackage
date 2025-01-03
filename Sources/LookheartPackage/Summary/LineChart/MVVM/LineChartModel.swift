@@ -89,8 +89,8 @@ struct LineChartDataModel {
 //                    hrv: Double(hrv)
                    
                     // spo2 test
-                    spo2: Double(spo2),
-                    breathe: Double(breathe)
+                    spo2: spo2 > 0 ? Double(spo2) : nil,
+                    breathe: breathe > 0 ? Double(breathe) : nil
                 ))
             }
         }
