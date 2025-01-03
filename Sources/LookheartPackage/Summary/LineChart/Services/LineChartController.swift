@@ -179,6 +179,8 @@ class LineChartController {
             return false // noData
         }
         
+        print("entries: \(entries)")
+        
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
             entries: entries,
@@ -186,8 +188,12 @@ class LineChartController {
             dateType: lineChartModel.dateType
         )
         
+        print("chartDataSets: \(chartDataSets)")
+        
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
+        
+        print("lineChartData: \(lineChartData)")
         
         // 4. set line chart
         setLineChart(
@@ -195,6 +201,8 @@ class LineChartController {
             chartData: lineChartData,
             chartModel: lineChartModel
         )
+        
+//        print("lineChartData: \(lineChartData)")
         
         // 5. show chart
         lineChart.setVisibleXRangeMaximum(1000)

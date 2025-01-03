@@ -369,6 +369,7 @@ class LineChartVC : UIViewController {
         viewModel?.$chartModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] chartModel in
+                print("chartModel: \(chartModel)")
                 self?.updateValueUI(chartModel)
                 self?.showChart(chartModel)
             }
