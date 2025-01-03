@@ -56,28 +56,18 @@ class LineChartRepository {
             // string -> parsing
             let parsingData = getParsingData(data.result)
             
-            print("parsingData: \(parsingData)")
-            
             // parsing -> group
             guard let parsingResult = parsingData.result else {
                 return (nil, parsingData.response)
             }
-            
-            print("parsingResult: \(parsingResult)")
                         
             let groupData = groupDataByDate(parsingResult)
-            
-            print("groupData: \(groupData)")
             
             // data dict, time table -> add model
             let lineChartGroupedData = getLineChartGroupedData(groupData)
             
-            print("lineChartGroupedData: \(lineChartGroupedData)")
-            
             // result model
             let lineChartModel = getChartModel(lineChartGroupedData)
-            
-            print("lineChartModel: \(lineChartModel)")
             
             return (lineChartModel, data.response)
         default:
@@ -95,12 +85,8 @@ class LineChartRepository {
         response: NetworkResponse
     ) {
         switch (lineChartType) {
-        // SPO2 TEST
-        case .BPM, .HRV, .SPO2, .BREATHE:
+        case .BPM, .HRV:
             return parsingBpmHrvData(data)
-            
-//        case .BPM, .HRV:
-//            return parsingBpmHrvData(data)
         case .STRESS:
             return parsingStressData(data)
         }
@@ -173,21 +159,15 @@ class LineChartRepository {
         let groupedData = parsingData.reduce(into: [String: [LineChartDataModel]]()) { dict, data in
             
             switch lineChartType {
-//            case .BPM, .HRV:
-//                // 날짜별("YYYY-MM-DD") 데이터 그룹화
-//                let dateKey = String(data.writeDate)
-//                dict[dateKey, default: []].append(data)
+            case .BPM, .HRV:
+                // 날짜별("YYYY-MM-DD") 데이터 그룹화
+                let dateKey = String(data.writeDate)
+                dict[dateKey, default: []].append(data)
                 
             case .STRESS:
                 // 항목별(pns, sns) 데이터 그룹화
                 dict["sns", default: []].append(data)
                 dict["pns", default: []].append(data)
-                
-            // spo2 test
-            case .BPM, .HRV, .SPO2, .BREATHE:
-                // 날짜별("YYYY-MM-DD") 데이터 그룹화
-                let dateKey = String(data.writeDate)
-                dict[dateKey, default: []].append(data)
             }
         }
         
@@ -216,48 +196,7 @@ class LineChartRepository {
         
     
         // time Table
-//        let timeTable = Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-        
-        
-//        var timeTable: [String] = []
-//        if groupData.count != 0 {
-        let timeTable: [String] = {
-                switch lineChartType {
-                case .BPM, .HRV, .STRESS:
-                    return Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
-                case .SPO2:
-                    return groupData.flatMap { $0.value }
-                                    .filter { ($0.spo2 ?? 0.0) > 0 }
-                                    .map { $0.writeTime }
-                case .BREATHE:
-                    return groupData.flatMap { $0.value }
-                                    .filter { ($0.breathe ?? 0.0) > 0 }
-                                    .map { $0.writeTime }
-                }
-            }()
-//        }
-
-        
-//        let timeTable = switch lineChartType {
-//        case .BPM, .HRV, .STRESS:
-//            Set(groupData.values.flatMap { $0.map {
-//                if let spo2Value = $0.spo2 {
-//                    $0.writeTime
-//                } else
-//                {
-//                    $0.writeTime
-//                }
-////                if $0.spo2 > 0 {
-////                    $0.writeTime
-////                }
-//            }
-//        }
-//            ).sorted()
-//        case .SPO2:
-//            Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-//        case .BREATHE:
-//            Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-//        }
+        let timeTable = Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
         
         return LineChartModel(
             entries: entries,
@@ -308,11 +247,6 @@ class LineChartRepository {
                     } else {
                         stressStats?.sns.update(with: yValue)
                     }
-                    
-                // SPO2 TEST
-                case .SPO2, .BREATHE:
-                    if stats == nil { stats = ChartStatistics() }
-                    stats?.update(with: yValue)
                 }
             }
         }
@@ -341,12 +275,6 @@ class LineChartRepository {
             lineChartDataModel.hrv
         case .STRESS:
             date == "pns" ? lineChartDataModel.pns : lineChartDataModel.sns
-            
-        // spo2 test
-        case .SPO2:
-            lineChartDataModel.spo2 != 0 ? lineChartDataModel.spo2 : nil
-        case .BREATHE:
-            lineChartDataModel.breathe != 0 ? lineChartDataModel.breathe : nil
         }
     }
     
@@ -372,11 +300,7 @@ class LineChartRepository {
             
             return sqrt(variance) // 제곱근
             
-//        case .STRESS:
-//            return nil
-            
-        // spo2 test
-        case .SPO2, .BREATHE, .STRESS:
+        case .STRESS:
             return nil
         }
     }

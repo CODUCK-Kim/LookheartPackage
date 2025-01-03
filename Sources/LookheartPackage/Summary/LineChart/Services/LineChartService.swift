@@ -27,18 +27,9 @@ class LineChartService {
         let endPoint = getEndPoint(type)
         
         let parameters: [String: Any] = [
-//            "eq": profile.email,
-        
-            "eq": "001425.a1679c7e2e9a4e5196897d7bb9efd28e.0129",
-//            "eq": "jhaseung@medsyslab.co.kr",
-//            "eq": "jhemin0415@gmail.com",
-        
-        
+            "eq": profile.email,
             "startDate": startDate,
             "endDate": endDate,
-            
-            // SPO2 test
-            "test": true
         ]
         
         let data: (result: String? ,response: NetworkResponse) = await networkController.task(
@@ -55,15 +46,10 @@ class LineChartService {
     
     private func getEndPoint(_ type: LineChartType) -> EndPoint {
         return switch type {
-//        case .BPM, .HRV: 
-//            EndPoint.getBpmData
+        case .BPM, .HRV: 
+            EndPoint.getBpmData
         case .STRESS:
             EndPoint.getStressData
-            
-            
-        // SPO2 TEST
-        case .BPM, .HRV, .SPO2, .BREATHE:
-            EndPoint.getBpmData
         }
     }
 }

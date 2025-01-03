@@ -11,17 +11,6 @@ struct LineChartModel {
     var stats: ChartStatistics? = nil
     var stressStats: StressChartStatistics? = nil
     var standardDeviationValue: Double? = nil
-    
-    
-    /** Bpm, Hrv Stress(pns) Value **/
-//    var maxValue: Double = 0
-//    var minValue: Double = 0
-//    var avgValue: Double = 0
-//    
-//    /** Stress(sns) Value **/
-//    var secondMaxValue: Double = 0
-//    var secondMinValue: Double = 0
-//    var secondAvgValue: Double = 0
 }
 
 struct StressDataModel: Codable {
@@ -54,10 +43,6 @@ struct LineChartDataModel {
     var sns: Double?
     var stress: Double?
     
-    // SPO2 TEST
-    var spo2: Double?
-    var breathe: Double?
-    
     // bpm, hrv
     static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
@@ -65,13 +50,10 @@ struct LineChartDataModel {
         for data in datalist {
             let fields = data.split(separator: "|")
             
-//            if fields.count == 7 {
-            if fields.count == 9 {
+            if fields.count == 7 {
                 guard let bpm = Int(fields[4]),
                       let temp = Double(fields[5]),
-//                      let hrv = Int(fields[6])  else {
-                      let spo2 = Double(fields[7]),
-                      let breathe = Int(fields[8]) else {
+                      let hrv = Int(fields[6]) else {
                     continue
                 }
                 
@@ -86,11 +68,7 @@ struct LineChartDataModel {
                     timezone: String(fields[3]),
                     bpm: Double(bpm),
                     temp: Double(temp),
-//                    hrv: Double(hrv)
-                   
-                    // spo2 test
-                    spo2: spo2 > 0 ? Double(spo2) : nil,
-                    breathe: breathe > 0 ? Double(breathe) : nil
+                    hrv: Double(hrv)
                 ))
             }
         }
