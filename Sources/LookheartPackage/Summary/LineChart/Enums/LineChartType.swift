@@ -13,6 +13,6 @@ enum LineChartType {
     case STRESS
     
     // spo2 test
-//    case SPO2
-//    case BREATHE
+    case SPO2
+    case BREATHE
 }
