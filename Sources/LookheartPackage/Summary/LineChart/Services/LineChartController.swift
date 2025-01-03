@@ -214,6 +214,9 @@ class LineChartController {
     ) {
         let timeTable = chartModel.timeTable.map { String($0.dropLast(3)) } // remove second
         
+        print("chartData: \(chartData)")
+        print("chartModel: \(chartModel.timeTable)")
+        
         lineChart.leftAxis.labelCount = 6           // y label default count
         lineChart.leftAxis.removeAllLimitLines()    // remove limit line
         

@@ -208,6 +208,7 @@ class LineChartRepository {
         // time Table
         let timeTable = Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
         
+        print("timeTable: \(timeTable)")
         
         return LineChartModel(
             entries: entries,
@@ -322,8 +323,8 @@ class LineChartRepository {
             
             return sqrt(variance) // 제곱근
             
-        case .STRESS:
-            return nil
+//        case .STRESS:
+//            return nil
             
         // spo2 test
         case .SPO2, .BREATHE, .STRESS:
