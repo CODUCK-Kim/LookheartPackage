@@ -227,21 +227,25 @@ class LineChartRepository {
 //                .filter { $0.breathe ?? 0.0 > 0 }
 //                .map { $0.writeTime }
 //        }
+        var timeTable: [String] = []
+        if groupData.count != 0 {
+            timeTable = {
+                switch lineChartType {
+                case .BPM, .HRV, .STRESS:
+                    return Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
+                case .SPO2:
+                    return groupData.flatMap { $0.value }
+                                    .filter { ($0.spo2 ?? 0.0) > 0 }
+                                    .map { $0.writeTime }
+                case .BREATHE:
+                    return groupData.flatMap { $0.value }
+                                    .filter { ($0.breathe ?? 0.0) > 0 }
+                                    .map { $0.writeTime }
+                }
+            }()
+        }
+
         
-        let timeTable: [String] = {
-            switch lineChartType {
-            case .BPM, .HRV, .STRESS:
-                return Set(groupData.values.flatMap { $0.map { $0.writeTime } }).sorted()
-            case .SPO2:
-                return groupData.flatMap { $0.value }
-                                .filter { ($0.spo2 ?? 0.0) > 0 }
-                                .map { $0.writeTime }
-            case .BREATHE:
-                return groupData.flatMap { $0.value }
-                                .filter { ($0.breathe ?? 0.0) > 0 }
-                                .map { $0.writeTime }
-            }
-        }()
 //        let timeTable = switch lineChartType {
 //        case .BPM, .HRV, .STRESS:
 //            Set(groupData.values.flatMap { $0.map {
