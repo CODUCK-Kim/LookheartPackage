@@ -207,26 +207,8 @@ class LineChartRepository {
     
         // time Table
 //        let timeTable = Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-
         
-//        if (lineChartType == .SPO2) {
-//            let filteredWriteTimes = groupData.flatMap { $0.value } // 모든 LineChartDataModel을 하나의 배열로 합침
-//                .filter { $0.spo2 ?? 0.0 > 0 } // spo2가 0 이상인 항목만 필터링
-//                .map { $0.writeTime }
-//        }
         
-//        let timeTable = switch (lineChartType) {
-//        case .BPM, .HRV, .STRESS:
-//            Set(groupData.values.flatMap { $0.map {$0.writeTime } }).sorted()
-//        case .SPO2:
-//            groupData.flatMap { $0.value } // 모든 LineChartDataModel을 하나의 배열로 합침
-//                .filter { $0.spo2 ?? 0.0 > 0 } // spo2가 0 이상인 항목만 필터링
-//                .map { $0.writeTime }
-//        case .BREATHE:
-//            groupData.flatMap { $0.value }
-//                .filter { $0.breathe ?? 0.0 > 0 }
-//                .map { $0.writeTime }
-//        }
         var timeTable: [String] = []
         if groupData.count != 0 {
             timeTable = {
