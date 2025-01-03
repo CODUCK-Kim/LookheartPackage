@@ -260,6 +260,12 @@ public class SummaryViewController : UIViewController {
         case STEP_BUTTON_TAG:
             setChild(selectChild: barChartView, in: self.view)
             barChartView.refreshView(.STEP)
+        case SPO2_BUTTON_TAG:
+            setChild(selectChild: lineChartView, in: self.view)
+            lineChartView.refreshView(lineChart: .SPO2)
+        case BREATH_BUTTON_TAG:
+            setChild(selectChild: lineChartView, in: self.view)
+            lineChartView.refreshView(lineChart: .BREATHE)
         default:
             break
         }
