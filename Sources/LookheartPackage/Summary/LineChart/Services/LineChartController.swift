@@ -239,11 +239,11 @@ class LineChartController {
             lineChart.leftAxis.axisMinimum = 90
             lineChart.leftAxis.labelCount = 10
             
-//            if let minValue = chartModel.stats?.minValue {
-//                if minValue < 95 {
-//                    lineChart.leftAxis.axisMinimum = minValue
-//                }
-//            }
+            if let minValue = chartModel.stats?.minValue {
+                if minValue < 95 {
+                    lineChart.leftAxis.axisMinimum = minValue
+                }
+            }
             
 //            lineChart.leftAxis.resetCustomAxisMax()
 //            lineChart.leftAxis.resetCustomAxisMin()

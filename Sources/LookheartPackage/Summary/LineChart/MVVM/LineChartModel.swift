@@ -95,6 +95,8 @@ struct LineChartDataModel {
             }
         }
         
+        print(parsedRecords)
+        
         return parsedRecords
     }
     
