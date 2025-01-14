@@ -69,8 +69,6 @@ class LineChartRepository {
             // result model
             let lineChartModel = getChartModel(lineChartGroupedData)
             
-            print("lineChartModel: \(lineChartModel)")
-            
             return (lineChartModel, data.response)
         default:
             return (nil, data.response)

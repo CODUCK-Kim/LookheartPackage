@@ -156,26 +156,20 @@ class LineChartController {
         lineChartModel: LineChartModel
     ) -> Bool {
         // 1. entries
-        guard let entries = lineChartModel.entries, entries.count <= 0 else {
+        guard let entries = lineChartModel.entries, entries.count > 0 else {
             print("noData: \(lineChartModel.entries?.count)")
             return false // noData
         }
-        
-        print("entries: \(entries)")
-        
+    
         // 2. chart data sets
         let chartDataSets = getLineChartDataSet(
             entries: entries,
             chartType: lineChartModel.chartType,
             dateType: lineChartModel.dateType
         )
-        
-        print("chartDataSets: \(chartDataSets)")
-        
+
         // 3. line chart data
         let lineChartData = LineChartData(dataSets: chartDataSets)
-        
-        print("lineChartData: \(lineChartData)")
         
         // 4. set line chart
         setLineChart(
