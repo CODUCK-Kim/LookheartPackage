@@ -115,6 +115,8 @@ final class DateTimeManager {
         }
       }()
         
+    print("targetLocalDateStr: \(targetLocalDateStr)")
+        
       guard let localDateAtMidnight = localDateFormatter.date(from: targetLocalDateStr) else {
         return false
       }
