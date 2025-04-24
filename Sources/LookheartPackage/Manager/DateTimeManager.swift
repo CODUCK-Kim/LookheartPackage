@@ -25,6 +25,13 @@ final class DateTimeManager {
         return df
     }()
     
+    private let utcHourFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.timeZone = TimeZone(abbreviation: "UTC")
+        df.dateFormat = "HH"
+        return df
+    }()
+    
     private let localDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.locale = .current
@@ -52,6 +59,11 @@ final class DateTimeManager {
     public func getCurrentUTCDateTime() -> String {
         let now = Date()
         return utcDateTimeFormatter.string(from: now)
+    }
+    
+    public func getCurrentUTCHour() -> String {
+        let now = Date()
+        return utcHourFormatter.string(from: now)
     }
     
     

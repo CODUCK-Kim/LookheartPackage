@@ -284,10 +284,12 @@ public class ProfileService {
             }
             
             if let parsingData = getParsingHourlyData(hourlyData) {
-                let lastUserHealthData = parsingData.lastUserHealthData
                 var userHealthData = parsingData.userHealthData
+                var lastUserHealthData = parsingData.lastUserHealthData
                 
-                userHealthData.arrCnt = arrCnt // update arrCnt
+                userHealthData.arrCnt = arrCnt.totalCnt // update arrCnt
+                lastUserHealthData.arrCnt = arrCnt.lastCnt
+            
                 
                 return (
                     userHealthData: userHealthData,
@@ -307,7 +309,10 @@ public class ProfileService {
     private func getArrCnt(
         startDate: String,
         endDate: String
-    ) async -> Int {
+    ) async -> (
+        totalCnt: Int,
+        lastCnt: Int
+    ) {
         let parameters: [String: Any] = [
             "eq": propEmail,
             "startDate": startDate,
@@ -324,10 +329,21 @@ public class ProfileService {
                 DateTimeManager.shared.checkLocalDate(utcDateTime: $0.writetime) && $0.address == nil
             }.count
             
-            return todayArrCnt
+            let lastArrCnt = response.filter { item in
+                guard
+                    let timePart  = item.writetime.split(separator: " ").last,
+                    let hourPart  = timePart.split(separator: ":").first
+                else {
+                    return false
+                }
+                
+                return item.address == nil && String(hourPart) == DateTimeManager.shared.getCurrentUTCHour()
+            }.count
+            
+            return (totalCnt: todayArrCnt, lastCnt: lastArrCnt)
         } catch {
             print(AlamofireController.shared.handleError(error))
-            return 0
+            return (totalCnt: 0, lastCnt: 0)
         }
     }
     
@@ -384,6 +400,7 @@ public class ProfileService {
                         }
                     }
                 }
+                
                 return (userHealthData: userHealthData, lastUserHealthData: lastUserHealthData)
             }
         }

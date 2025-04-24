@@ -297,7 +297,11 @@ public class ArrViewController : UIViewController {
                 $0.isUserInteractionEnabled = true
             }
             
-            arrDateTagDict[idx] = ArrDateTagStruct(writeDateTime: arrDate.writetime, emergencyFlag: emergencyFlag, address: arrDate.address)
+            arrDateTagDict[idx] = ArrDateTagStruct(
+                writeDateTime: arrDate.writetime,
+                emergencyFlag: emergencyFlag,
+                address: arrDate.address
+            )
             
             arrList.addArrangedSubview(background)
             idxButtonList.append(idxButton)
