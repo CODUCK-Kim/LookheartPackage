@@ -111,11 +111,9 @@ final class DateTimeManager {
         if let local = localDate, !local.isEmpty {
           return local
         } else {
-          return localDateTimeFormatter.string(from: Date())
+            return localDateFormatter.string(from: Date())
         }
       }()
-        
-    print("targetLocalDateStr: \(targetLocalDateStr)")
         
       guard let localDateAtMidnight = localDateFormatter.date(from: targetLocalDateStr) else {
         return false
