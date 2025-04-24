@@ -8,8 +8,8 @@
 import Foundation
 
 
-final class DateTimeManager {
-    static let shared = DateTimeManager()
+public final class DateTimeManager {
+    public static let shared = DateTimeManager()
     
     private let utcDateFormatter: DateFormatter = {
         let df = DateFormatter()
