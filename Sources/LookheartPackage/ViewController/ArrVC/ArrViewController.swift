@@ -92,8 +92,7 @@ public class ArrViewController : UIViewController {
     private lazy var chartView = LineChartView().then {
         $0.xAxis.enabled = false
         $0.noDataText = ""
-        $0.leftAxis.axisMaximum = 1024
-        $0.leftAxis.axisMinimum = 0
+    
         $0.rightAxis.enabled = false
         $0.legend.enabled = false
         $0.drawMarkers = false
@@ -347,6 +346,9 @@ public class ArrViewController : UIViewController {
             arrChartDataSet.mode = .linear
             arrChartDataSet.drawValuesEnabled = false
             
+
+            chartView.leftAxis.axisMaximum = if arrData.data.max() ?? 0 > 1000 { 4096 } else { 1024 }
+            chartView.leftAxis.axisMinimum = 0
             chartView.data = LineChartData(dataSet: arrChartDataSet)
             chartView.data?.notifyDataChanged()
             chartView.notifyDataSetChanged()

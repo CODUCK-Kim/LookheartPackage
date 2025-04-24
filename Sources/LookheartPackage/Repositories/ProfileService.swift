@@ -269,7 +269,8 @@ public class ProfileService {
             let hourlyData = try await AlamofireController.shared.alamofireControllerForString(
                 parameters: parameters,
                 endPoint: .getHourlyData,
-                method: .get)
+                method: .get
+            )
             
             guard !hourlyData.contains("result = 0") else {
                 print("getUserHealthData noData")
@@ -323,8 +324,6 @@ public class ProfileService {
                 DateTimeManager.shared.checkLocalDate(utcDateTime: $0.writetime) && $0.address == nil
             }.count
             
-            print("todayArrCnt: \(todayArrCnt)")
-            
             return todayArrCnt
         } catch {
             print(AlamofireController.shared.handleError(error))
@@ -366,8 +365,6 @@ public class ProfileService {
                         let checkToday = DateTimeManager.shared.checkLocalDate(
                             utcDateTime: String(fields[1])
                         )
-                        
-                        print("checkToday: \(checkToday), \(String(fields[1]))")
                         
                         if (checkToday) {
                             userHealthData.calorie += calorie
