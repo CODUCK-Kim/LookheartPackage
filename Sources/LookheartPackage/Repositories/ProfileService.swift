@@ -318,9 +318,12 @@ public class ProfileService {
                 parameters: parameters,
                 endPoint: .getArrListData,
                 method: .get)
-            response.forEach { print($0) }
-//            print("arrCnt: \(response)")
-            return 0
+            
+            let todayArrCnt = response.filter {
+                DateTimeManager.shared.checkLocalDate(utcDateTime: $0.writetime) && $0.address == nil
+            }.count
+            
+            return todayArrCnt
         } catch {
             print(AlamofireController.shared.handleError(error))
             return 0
@@ -355,20 +358,29 @@ public class ProfileService {
                               let arrCnt = Int(fields[11]) else {
                             continue // Skip this record if any conversions fail
                         }
-                        userHealthData.calorie += calorie
-                        userHealthData.activityCalorie += activityCalorie
-                        userHealthData.step += step
-                        userHealthData.distance += distance
-                        userHealthData.arrCnt += arrCnt
                         
-                        lastUserHealthData = UserHealthData(
-                            hour: prevHour,
-                            calorie: calorie,
-                            activityCalorie: activityCalorie,
-                            step: step,
-                            distance: distance,
-                            arrCnt:  arrCnt
+                        print(String(fields[1]))
+                        
+                        let checkToday = DateTimeManager.shared.checkLocalDate(
+                            utcDateTime: String(fields[1])
                         )
+                        
+                        if (checkToday) {
+                            userHealthData.calorie += calorie
+                            userHealthData.activityCalorie += activityCalorie
+                            userHealthData.step += step
+                            userHealthData.distance += distance
+                            userHealthData.arrCnt += arrCnt
+                            
+                            lastUserHealthData = UserHealthData(
+                                hour: prevHour,
+                                calorie: calorie,
+                                activityCalorie: activityCalorie,
+                                step: step,
+                                distance: distance,
+                                arrCnt:  arrCnt
+                            )
+                        }
                     }
                 }
                 return (userHealthData: userHealthData, lastUserHealthData: lastUserHealthData)
