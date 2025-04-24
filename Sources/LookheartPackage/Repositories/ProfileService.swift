@@ -314,12 +314,13 @@ public class ProfileService {
         ]
         
         do {
-            let response: ArrCnt = try await AlamofireController.shared.alamofireControllerAsync(
+            let response: [ArrDateEntry] = try await AlamofireController.shared.alamofireControllerAsync(
                 parameters: parameters,
-                endPoint: .getArrCnt,
+                endPoint: .getArrListData,
                 method: .get)
-            print("arrCnt: \(response)")
-            return Int(response.arrCnt) ?? 0
+            response.forEach { print($0) }
+//            print("arrCnt: \(response)")
+            return 0
         } catch {
             print(AlamofireController.shared.handleError(error))
             return 0

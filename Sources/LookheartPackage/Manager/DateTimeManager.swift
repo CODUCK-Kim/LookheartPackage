@@ -94,4 +94,40 @@ final class DateTimeManager {
         let countryCode = getCountryCode()
         return "\(timeZone)/\(identifier)/\(countryCode)"   // +09:00/Asia/Seoul/KR
     }
+    
+    
+    // MARK: -
+    public func checkLocalDate(
+      utcDateTime: String?,
+      localDate: String? = nil
+    ) -> Bool {
+      guard let utcDateTime = utcDateTime else { return false }
+        
+      guard let utcDateTime = utcDateTimeFormatter.date(from: utcDateTime) else {
+        return false
+      }
+        
+      let targetLocalDateStr: String = {
+        if let local = localDate, !local.isEmpty {
+          return local
+        } else {
+          return localDateTimeFormatter.string(from: Date())
+        }
+      }()
+        
+      guard let localDateAtMidnight = localDateFormatter.date(from: targetLocalDateStr) else {
+        return false
+      }
+
+      // 시작(00:00)과 다음날 시작(다음날 00:00)
+      let calendar = Calendar.current
+      let startOfDay = calendar.startOfDay(for: localDateAtMidnight)
+      guard let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+        return false
+      }
+
+      // utcDateTime이 localDate 시작~다음날에 속하는지 비교
+      return (utcDateTime >= startOfDay) && (utcDateTime < startOfNextDay)
+    }
 }
+
