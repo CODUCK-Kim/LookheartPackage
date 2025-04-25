@@ -331,41 +331,31 @@ class BarChartVC : UIViewController {
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
-        if let startDate = setStartDate(sender.tag),
-           let endDate = setEndDate(startDate) {
+        if let startDate = getStartDate(offset: sender.tag == TOMORROW_BUTTON_FLAG ? 1 : -1),
+           let endDate = getEndDate(startDate) {
             print("startDate: \(startDate)")
             print("endDate: \(endDate)")
-            
-//            getDataToServer(startDate, endDate)
-//            setDisplayDateText(startDate, endDate)
         }
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
-        var targetDate = targetDate
-        
         switch (sender.tag) {
         case DAY_FLAG:
             currentButtonFlag = .DAY
         case WEEK_FLAG:
             currentButtonFlag = .WEEK
-            targetDate = MyDateTime.shared.dateCalculate(targetDate, findMonday(targetDate), MINUS_DATE)
         case MONTH_FLAG:
             currentButtonFlag = .MONTH
-            targetDate = String(targetDate.prefix(8)) + "01"
         case YEAR_FLAG:
             currentButtonFlag = .YEAR
-            targetDate = String(targetDate.prefix(4)) + "-01-01"
         default:
             break
         }
         
-        if let startDate = setStartDate(sender.tag),
-           let endDate = setEndDate(startDate) {
+        if let startDate = getStartDate(offset: 0),
+           let endDate = getEndDate(startDate) {
             print("startDate: \(startDate)")
             print("endDate: \(endDate)")
-//            getDataToServer(startDate, endDate)
-//            setDisplayDateText(startDate, endDate)
         }
         
         setButtonColor(sender)
@@ -725,9 +715,7 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
-    func setStartDate(_ tag : Int) -> String? {
-        let flag = tag == TOMORROW_BUTTON_FLAG ? PLUS_DATE : MINUS_DATE
-        
+    func getStartDate(offset: Int) -> String? {
         let component: Calendar.Component = switch (currentButtonFlag) {
         case .DAY:      .day
         case .WEEK:     .weekOfYear
@@ -737,11 +725,9 @@ class BarChartVC : UIViewController {
         
         if let targetDate = DateTimeManager.shared.adjustDate(
             targetDate,
-            offset: tag == TOMORROW_BUTTON_FLAG ? 1 : -1,
-            component: component)
-        {
-            self.targetDate = targetDate
-            
+            offset: offset,
+            component: component
+        ) {
             guard let startDate = switch (currentButtonFlag) {
             case .DAY:
                 targetDate
@@ -764,7 +750,7 @@ class BarChartVC : UIViewController {
     }
     
     
-    func setEndDate(_ startDate: String) -> String? {
+    func getEndDate(_ startDate: String) -> String? {
         if let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(targetDate) {
             switch (currentButtonFlag) {
             case .DAY:
