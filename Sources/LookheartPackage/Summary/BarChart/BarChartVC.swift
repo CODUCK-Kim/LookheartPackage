@@ -331,11 +331,12 @@ class BarChartVC : UIViewController {
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
-        if let startDate = getStartDate(offset: sender.tag == TOMORROW_BUTTON_FLAG ? 1 : -1),
-           let endDate = getEndDate(startDate) {
-            print("startDate: \(startDate)")
-            print("endDate: \(endDate)")
-        }
+        moveDate(shouldAdd: sender.tag == TOMORROW_BUTTON_FLAG)
+//        if let startDate = getStartDate(offset: sender.tag == TOMORROW_BUTTON_FLAG ? 1 : -1),
+//           let endDate = getEndDate(startDate) {
+//            print("startDate: \(startDate)")
+//            print("endDate: \(endDate)")
+//        }
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
@@ -352,11 +353,11 @@ class BarChartVC : UIViewController {
             break
         }
         
-        if let startDate = getStartDate(offset: 0),
-           let endDate = getEndDate(startDate) {
-            print("startDate: \(startDate)")
-            print("endDate: \(endDate)")
-        }
+//        if let startDate = getStartDate(offset: 0),
+//           let endDate = getEndDate(startDate) {
+//            print("startDate: \(startDate)")
+//            print("endDate: \(endDate)")
+//        }
         
         setButtonColor(sender)
     }
@@ -715,6 +716,24 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
+    func moveDate(shouldAdd: Bool) {
+        let component: Calendar.Component = switch (currentButtonFlag) {
+        case .DAY:      .day
+        case .WEEK:     .weekOfYear
+        case .MONTH:    .month
+        case .YEAR:     .year
+        }
+        
+        if let targetDate = DateTimeManager.shared.adjustDate(
+            targetDate,
+            offset: shouldAdd ? 1 : -1,
+            component: component
+        ) {
+            self.targetDate = targetDate
+            print(targetDate)
+        }
+    }
+    
     func getStartDate(offset: Int) -> String? {
         let component: Calendar.Component = switch (currentButtonFlag) {
         case .DAY:      .day
