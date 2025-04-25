@@ -771,8 +771,8 @@ class BarChartVC : UIViewController {
                 ) {
                     return DateTimeManager.shared.adjustDate(
                         monday,
-                        offset: 8,
-                        component: .day
+                        offset: 1,
+                        component: .weekOfYear
                     )
                 } else { return nil }
             case .MONTH:
