@@ -141,7 +141,7 @@ class LineChartRepository {
         do {
             let stressDataArray = try decoder.decode([StressDataModel].self, from: jsonData)
             
-            let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray)
+            let changedFormatData = LineChartDataModel.changeFormat(stressData: stressDataArray, dateList: getDateList())
             
             return (changedFormatData, .success)
         } catch {

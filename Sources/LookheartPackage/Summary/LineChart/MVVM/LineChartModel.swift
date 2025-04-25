@@ -91,7 +91,10 @@ struct LineChartDataModel {
     }
     
     // Stress
-    static func changeFormat(stressData: [StressDataModel]) -> [LineChartDataModel] {
+    static func changeFormat(
+        stressData: [StressDataModel],
+        dateList: [String]
+    ) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
         
@@ -100,15 +103,19 @@ struct LineChartDataModel {
                 continue
             }
             
-            let splitDateTime = data.writeTime.split(separator: " ")
-                        
-            parsedRecords.append( LineChartDataModel(
-                writeDateTime: data.writeTime,
-                writeDate: String(splitDateTime.first ?? ""),
-                writeTime: String(splitDateTime.last ?? ""),
-                pns: data.pnsPercent,
-                sns: data.snsPercent
-            ))
+            if let localDateTime = DateTimeManager.shared.convertUtcToLocal(utcTimeStr: data.writeTime) {
+                let splitDateTime = localDateTime.split(separator: " ")
+                
+                parsedRecords.append(
+                    LineChartDataModel(
+                        writeDateTime: data.writeTime,
+                        writeDate: String(splitDateTime.first ?? ""),
+                        writeTime: String(splitDateTime.last ?? ""),
+                        pns: data.pnsPercent,
+                        sns: data.snsPercent
+                    )
+                )
+            }
         }
         return parsedRecords
     }
