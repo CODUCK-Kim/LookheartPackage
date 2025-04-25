@@ -338,7 +338,7 @@ public class ProfileService {
                     return false
                 }
                 
-                return item.address == nil && String(hourPart) == DateTimeManager.shared.getCurrentUTCHour()
+                return item.address == nil && String(hourPart) == DateTimeManager.shared.getCurrentUtcHour()
             }.count
             
             return (totalCnt: todayArrCnt, lastCnt: lastArrCnt)
