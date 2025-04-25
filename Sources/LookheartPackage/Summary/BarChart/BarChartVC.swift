@@ -331,7 +331,6 @@ class BarChartVC : UIViewController {
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
-        
         let targetDate = setStartDate(startDate, sender.tag)
         let endDate = setEndDate(startDate)
         
@@ -632,7 +631,6 @@ class BarChartVC : UIViewController {
     }
     
     private func getDataToServer(_ startDate: String, _ endDate: String) {
-        
         activityIndicator.startAnimating()
         
         initUI()
@@ -715,7 +713,6 @@ class BarChartVC : UIViewController {
     
     // MARK: - DATE FUNC
     func setStartDate(_ date: String, _ tag : Int) -> String {
-        
         let flag = tag == TOMORROW_BUTTON_FLAG ? PLUS_DATE : MINUS_DATE
         
         switch (currentButtonFlag) {
