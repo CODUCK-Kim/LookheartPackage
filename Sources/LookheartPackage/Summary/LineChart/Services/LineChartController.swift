@@ -206,7 +206,7 @@ class LineChartController {
             addLimitLine(to: lineChart,limitLines: limitLines)
             
             if let maxValue = chartModel.stats?.maxValue {
-                if maxValue > 1000 {
+                if maxValue > 300 {
                     lineChart.leftAxis.axisMaximum = 2000
                 } else {
                     lineChart.leftAxis.axisMaximum = 200
