@@ -757,17 +757,24 @@ class BarChartVC : UIViewController {
         }
     }
     
+    
     func setEndDate(_ startDate: String) -> String? {
         if let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(targetDate) {
             switch (currentButtonFlag) {
             case .DAY:
                 return DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
             case .WEEK:
-                return DateTimeManager.shared.adjustDate(
-                    startDate,
-                    offset: 1,
-                    component: .weekOfYear
-                )
+                if let monday = DateTimeManager.shared.adjustDate(
+                    targetDate,
+                    offset: -findMonday(targetDate),
+                    component: .day
+                ) {
+                    return DateTimeManager.shared.adjustDate(
+                        monday,
+                        offset: 8,
+                        component: .day
+                    )
+                } else { return nil }
             case .MONTH:
                 guard let month = DateTimeManager.shared.adjustDate(
                     startDate,
