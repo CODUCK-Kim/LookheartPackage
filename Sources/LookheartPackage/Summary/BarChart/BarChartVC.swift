@@ -64,7 +64,7 @@ class BarChartVC : UIViewController {
     private let dateFormatter = DateFormatter()
     private let timeFormatter = DateFormatter()
     private var calendar = Calendar.current
-    private var startDate = String()
+    private var targetDate = String()
     // DATE END
     
     // ----------------------------- CHART ------------------- //
@@ -331,37 +331,44 @@ class BarChartVC : UIViewController {
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
-        let targetDate = setStartDate(startDate, sender.tag)
-        let endDate = setEndDate(startDate)
+//        let startDate = setStartDate(sender.tag)
+//        let endDate = setEndDate(startDate)
+//        
+//        getDataToServer(startDate, endDate)
+//        setDisplayDateText(startDate, endDate)
         
-        getDataToServer(targetDate, endDate)
-        setDisplayDateText(targetDate, endDate)
+        if let startDate = setStartDate(sender.tag),
+           let endDate = setEndDate(startDate) {
+            print("startDate: \(startDate)")
+            print("endDate: \(endDate)")
+        }
+        
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
         
-        var targetDate = startDate
+        var targetDate = targetDate
         
         switch (sender.tag) {
         case DAY_FLAG:
             currentButtonFlag = .DAY
         case WEEK_FLAG:
             currentButtonFlag = .WEEK
-            targetDate = MyDateTime.shared.dateCalculate(startDate, findMonday(targetDate), MINUS_DATE)
+            targetDate = MyDateTime.shared.dateCalculate(targetDate, findMonday(targetDate), MINUS_DATE)
         case MONTH_FLAG:
             currentButtonFlag = .MONTH
-            targetDate = String(startDate.prefix(8)) + "01"
+            targetDate = String(targetDate.prefix(8)) + "01"
         case YEAR_FLAG:
             currentButtonFlag = .YEAR
-            targetDate = String(startDate.prefix(4)) + "-01-01"
+            targetDate = String(targetDate.prefix(4)) + "-01-01"
         default:
             break
         }
         
         let endDate = setEndDate(targetDate)
 
-        getDataToServer(targetDate, endDate)
-        setDisplayDateText(targetDate, endDate)
+//        getDataToServer(targetDate, endDate)
+//        setDisplayDateText(targetDate, endDate)
         setButtonColor(sender)
     }
     
@@ -398,24 +405,24 @@ class BarChartVC : UIViewController {
     }
     
     public func refreshView(_ type: BarChartType) {
-        
         chartType = type
         currentButtonFlag = .DAY
         
-        startDate = MyDateTime.shared.getCurrentDateTime(.DATE)
-        let endDate = MyDateTime.shared.dateCalculate(startDate, 1, PLUS_DATE)
-            
-        getDataToServer(startDate, endDate)
-    
-        setUI()
-        setDisplayDateText(startDate, endDate)
-        setButtonColor(dayButton)
+        let currentLocalDate = DateTimeManager.shared.getCurrentLocalDate()
+        if let startDate = DateTimeManager.shared.localDateStartToUtcDateString(currentLocalDate),
+           let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(currentLocalDate),
+           let endDate = DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
+        {
+            self.targetDate = currentLocalDate
+            getDataToServer(startDate, endDate)
+            setUI()
+            setDisplayDateText(startDate, endDate)
+            setButtonColor(dayButton)
+        }
     }
     
     func initVar() {
-                
         buttonList = [dayButton, weekButton, monthButton, yearButton]
-
     }
     
     // MARK: - CHART FUNC
@@ -712,39 +719,73 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - DATE FUNC
-    func setStartDate(_ date: String, _ tag : Int) -> String {
+    func setStartDate(_ tag : Int) -> String? {
         let flag = tag == TOMORROW_BUTTON_FLAG ? PLUS_DATE : MINUS_DATE
         
-        switch (currentButtonFlag) {
-        case .DAY:
-            startDate = MyDateTime.shared.dateCalculate(date, 1, flag)
-            return startDate
-        case .WEEK:
-            startDate = MyDateTime.shared.dateCalculate(date, 7, flag)
-            return MyDateTime.shared.dateCalculate(startDate, findMonday(startDate), MINUS_DATE)
-        case .MONTH:
-            startDate = MyDateTime.shared.dateCalculate(date, 1, flag, .month)
-            return String(startDate.prefix(8)) + "01"
-        case .YEAR:
-            startDate = MyDateTime.shared.dateCalculate(date, 1, flag, .year)
-            return String(startDate.prefix(4)) + "-01-01"
+        let component: Calendar.Component = switch (currentButtonFlag) {
+        case .DAY:      .day
+        case .WEEK:     .weekday
+        case .MONTH:    .month
+        case .YEAR:     .year
+        }
+        
+        if let targetDate = DateTimeManager.shared.adjustDate(
+            targetDate,
+            offset: tag == TOMORROW_BUTTON_FLAG ? 1 : -1,
+            component: component)
+        {
+            self.targetDate = targetDate
+            
+            guard let startDate = switch (currentButtonFlag) {
+            case .DAY:
+                targetDate
+            case .WEEK:
+                DateTimeManager.shared.adjustDate(
+                    targetDate,
+                    offset: -findMonday(targetDate),
+                    component: .day
+                )
+            case .MONTH:
+                String(targetDate.prefix(8)) + "01"
+            case .YEAR:
+                String(targetDate.prefix(4)) + "-01-01"
+            } else { return nil }
+            
+            return DateTimeManager.shared.localDateStartToUtcDateString(startDate)
+        } else {
+            return nil
         }
     }
     
-    func setEndDate(_ date: String) -> String {
-        switch (currentButtonFlag) {
-        case .DAY:
-            return MyDateTime.shared.dateCalculate(date, 1, PLUS_DATE)
-        case .WEEK:
-            return MyDateTime.shared.dateCalculate(date, 7, PLUS_DATE)
-        case .MONTH:
-            let numDay = MyDateTime.shared.findNumDay(date) ?? 30
-            return MyDateTime.shared.dateCalculate(date, numDay, PLUS_DATE)
-        case .YEAR:
-            let lastDate = String(date.prefix(4)) + "-12-01"
-            let numDay = MyDateTime.shared.findNumDay(lastDate) ?? 30
-            return MyDateTime.shared.dateCalculate(lastDate, numDay, PLUS_DATE)
-        }
+    func setEndDate(_ startDate: String) -> String? {
+        if let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(targetDate) {
+            switch (currentButtonFlag) {
+            case .DAY:
+                return DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
+            case .WEEK:
+                return DateTimeManager.shared.adjustDate(
+                    startDate,
+                    offset: findMonday(targetDate) + 1,
+                    component: .day
+                )
+            case .MONTH:
+                guard let month = DateTimeManager.shared.adjustDate(
+                    startDate,
+                    offset: 1,
+                    component: .month
+                ) else { return nil }
+                
+                return String(month.prefix(8)) + "01"
+            case .YEAR:
+                guard let year = DateTimeManager.shared.adjustDate(
+                    startDate,
+                    offset: 1,
+                    component: .year
+                ) else { return nil }
+                
+                return String(year.prefix(4)) + "-01-01"
+            }
+        } else { return nil }
     }
     
     func findMonday(_ startDate: String) -> Int {
@@ -787,7 +828,7 @@ class BarChartVC : UIViewController {
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
                         
-            startDate = MyDateTime.shared.getDateFormat().string(from: date)
+            targetDate = MyDateTime.shared.getDateFormat().string(from: date)
             
             switch (currentButtonFlag) {
             case .DAY:
