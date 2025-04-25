@@ -765,8 +765,8 @@ class BarChartVC : UIViewController {
             case .WEEK:
                 return DateTimeManager.shared.adjustDate(
                     startDate,
-                    offset: findMonday(targetDate) + 1,
-                    component: .day
+                    offset: 1,
+                    component: .weekOfYear
                 )
             case .MONTH:
                 guard let month = DateTimeManager.shared.adjustDate(
