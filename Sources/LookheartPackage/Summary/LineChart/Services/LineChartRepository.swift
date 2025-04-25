@@ -117,7 +117,7 @@ class LineChartRepository {
             return (nil, .invalidResponse)
         }
         
-        let changedFormatData = LineChartDataModel.changeFormat(datalist: splitData)
+        let changedFormatData = LineChartDataModel.changeFormat(datalist: splitData, dateList: getDateList())
         
         return (changedFormatData, .success)
     }
@@ -360,6 +360,22 @@ class LineChartRepository {
             return dateTimeManager.adjustDate(endUTCDate, offset: 1, component: .day) ?? targetLocalDate
         } else {
             return dateTimeManager.adjustDate(targetLocalDate, offset: 1, component: .day) ?? targetLocalDate
+        }
+    }
+    
+    private func getDateList() -> [String] {
+        let count = switch lineChartDateType {
+        case .TODAY:        1
+        case .TWO_DAYS:     2
+        case .THREE_DAYS:   3
+        }
+        
+        // -(count-1) ... 0 까지 1씩 증가하는 스트라이드
+        let offsets = stride(from: -(count - 1), through: 0, by: 1)
+        return offsets.map { offset in
+            dateTimeManager
+                .adjustDate(targetLocalDate, offset: offset, component: .day)
+                ?? targetLocalDate
         }
     }
     

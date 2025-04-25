@@ -44,7 +44,10 @@ struct LineChartDataModel {
     var stress: Double?
     
     // bpm, hrv
-    static func changeFormat(datalist: [Substring]) -> [LineChartDataModel] {
+    static func changeFormat(
+        datalist: [Substring],
+        dateList: [String]
+    ) -> [LineChartDataModel] {
         var parsedRecords = [LineChartDataModel]()
         
         for data in datalist {
@@ -57,23 +60,29 @@ struct LineChartDataModel {
                     continue
                 }
                 
-                if let localDateTime = DateTimeManager.shared.convertUtcToLocal(utcTimeStr: String(fields[2])) {
-                    let dateTime = localDateTime.split(separator: " ")
+                let utcDateTime = String(fields[2])
+                
+                if let localDateTime = DateTimeManager.shared.convertUtcToLocal(utcTimeStr: utcDateTime) {
                     
-                    parsedRecords.append(
-                        LineChartDataModel(
-                            idx: String(fields[0]),
-                            eq: String(fields[1]),
-                            writeDateTime: localDateTime,
-                            writeDate: String(dateTime[0]),
-                            writeTime: String(dateTime[1]),
-                            timezone: String(fields[3]),
-                            bpm: Double(bpm),
-                            temp: Double(temp),
-                            hrv: Double(hrv)
+                    let splitLocalDateTime = localDateTime.split(separator: " ")
+                    let localDate = String(splitLocalDateTime[0])
+                    let localTime = String(splitLocalDateTime[1])
+                    
+                    if dateList.contains(localDate) {
+                        parsedRecords.append(
+                            LineChartDataModel(
+                                idx: String(fields[0]),
+                                eq: String(fields[1]),
+                                writeDateTime: localDateTime,
+                                writeDate: localDate,
+                                writeTime: localTime,
+                                timezone: String(fields[3]),
+                                bpm: Double(bpm),
+                                temp: Double(temp),
+                                hrv: Double(hrv)
+                            )
                         )
-                    )
-                    
+                    }
                 }
             }
         }
