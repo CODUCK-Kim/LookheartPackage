@@ -724,7 +724,7 @@ class BarChartVC : UIViewController {
         
         let component: Calendar.Component = switch (currentButtonFlag) {
         case .DAY:      .day
-        case .WEEK:     .weekday
+        case .WEEK:     .weekOfYear
         case .MONTH:    .month
         case .YEAR:     .year
         }
