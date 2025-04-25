@@ -331,22 +331,17 @@ class BarChartVC : UIViewController {
     
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
-//        let startDate = setStartDate(sender.tag)
-//        let endDate = setEndDate(startDate)
-//        
-//        getDataToServer(startDate, endDate)
-//        setDisplayDateText(startDate, endDate)
-        
         if let startDate = setStartDate(sender.tag),
            let endDate = setEndDate(startDate) {
             print("startDate: \(startDate)")
             print("endDate: \(endDate)")
+            
+//            getDataToServer(startDate, endDate)
+//            setDisplayDateText(startDate, endDate)
         }
-        
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
-        
         var targetDate = targetDate
         
         switch (sender.tag) {
@@ -365,10 +360,14 @@ class BarChartVC : UIViewController {
             break
         }
         
-        let endDate = setEndDate(targetDate)
-
-//        getDataToServer(targetDate, endDate)
-//        setDisplayDateText(targetDate, endDate)
+        if let startDate = setStartDate(sender.tag),
+           let endDate = setEndDate(startDate) {
+            print("startDate: \(startDate)")
+            print("endDate: \(endDate)")
+//            getDataToServer(startDate, endDate)
+//            setDisplayDateText(startDate, endDate)
+        }
+        
         setButtonColor(sender)
     }
     
@@ -637,13 +636,20 @@ class BarChartVC : UIViewController {
         }
     }
     
-    private func getDataToServer(_ startDate: String, _ endDate: String) {
+    private func getDataToServer(
+        _ startDate: String,
+        _ endDate: String
+    ) {
         activityIndicator.startAnimating()
         
         initUI()
 
         Task {
-            let getHourlyData = await graphService.getHourlyData(startDate: startDate, endDate: endDate)
+            let getHourlyData = await graphService.getHourlyData(
+                startDate: startDate,
+                endDate: endDate
+            )
+            
             let data = getHourlyData.0
             let response = getHourlyData.1
             
@@ -794,6 +800,7 @@ class BarChartVC : UIViewController {
             }
         } else { return nil }
     }
+    
     
     func findMonday(_ startDate: String) -> Int {
         var calendar = Calendar(identifier: .gregorian)
@@ -989,6 +996,7 @@ class BarChartVC : UIViewController {
             barChartView.isHidden = false
         }
     }
+
     
     // MARK: - addViews
     private func addViews() {
