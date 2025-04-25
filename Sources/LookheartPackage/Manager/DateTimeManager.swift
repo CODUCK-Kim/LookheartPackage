@@ -11,6 +11,8 @@ import Foundation
 public final class DateTimeManager {
     public static let shared = DateTimeManager()
     
+    private let calendar = Calendar.current
+    
     private let utcDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.timeZone = TimeZone(abbreviation: "UTC")
@@ -46,6 +48,12 @@ public final class DateTimeManager {
         return df
     }()
     
+    private let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.dateFormat = "yyyy-MM-dd"
+        return df
+    }()
     
     init() { }
     
@@ -78,7 +86,7 @@ public final class DateTimeManager {
         return localDateTimeFormatter.string(from: now)
     }
     
-    
+
     // MARK: - TimeZone
     public func getTimeZone() -> String {
         let currentTimeZone = TimeZone.current
@@ -108,7 +116,33 @@ public final class DateTimeManager {
     }
     
     
-    // MARK: -
+    // MARK: - Calculate
+    public func getFormattedDateString(_ date: Date) -> String {
+        return dateFormatter.string(from: date)
+    }
+    
+    // adjustDate("2025-04-21", offset: 1 or -1, component: .day)
+    public func adjustDate(
+        _ dateString: String,
+        offset: Int,
+        component: Calendar.Component
+    ) -> String? {
+        guard let date = dateFormatter.date(from: dateString) else {
+            return nil
+        }
+        
+        guard let newDate = Calendar.current.date(
+            byAdding: component,
+            value: offset,
+            to: date
+        ) else {
+            return nil
+        }
+        
+        return dateFormatter.string(from: newDate)
+    }
+    
+    
     public func checkLocalDate(
       utcDateTime: String?,
       localDate: String? = nil
@@ -138,8 +172,40 @@ public final class DateTimeManager {
         return false
       }
 
-      // utcDateTime이 localDate 시작~다음날에 속하는지 비교
+      // utcDateTime이 localDate 시작 ~ 다음날에 속하는지 비교
       return (utcDateTime >= startOfDay) && (utcDateTime < startOfNextDay)
+    }
+    
+    
+    
+    func localDateStartToUtcDateString(
+        _ localDateStr: String
+    ) -> String? {
+        // 1) 로컬 포맷터: "yyyy-MM-dd" → Date(로컬 00:00)
+        guard let localMidnight = localDateFormatter.date(from: localDateStr) else {
+            return nil
+        }
+        
+        // 2) UTC 포맷터: Date → "yyyy-MM-dd" (UTC 기준)
+        return utcDateFormatter.string(from: localMidnight)
+    }
+    
+    
+    func localDateEndToUtcDateString(
+        _ localDateStr: String
+    ) -> String? {
+        // 1) 로컬 포맷터: "yyyy-MM-dd" → Date(로컬 00:00)
+        guard let localMidnight = localDateFormatter.date(from: localDateStr) else {
+            return nil
+        }
+
+        // 2) Calendar를 이용해 '다음 날 00:00' 구하기
+        guard let nextMidnight = calendar.date(byAdding: .day, value: 1, to: localMidnight) else {
+            return nil
+        }
+
+        // 3) UTC 포맷터: Date → "yyyy-MM-dd" (UTC 기준)
+        return utcDateFormatter.string(from: nextMidnight)
     }
 }
 

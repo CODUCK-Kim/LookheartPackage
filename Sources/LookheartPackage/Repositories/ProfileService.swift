@@ -284,13 +284,14 @@ public class ProfileService {
             }
             
             if let parsingData = getParsingHourlyData(hourlyData) {
+                // update health data
                 var userHealthData = parsingData.userHealthData
                 var lastUserHealthData = parsingData.lastUserHealthData
                 
-                userHealthData.arrCnt = arrCnt.totalCnt // update arrCnt
+                // update arr Cnt data
+                userHealthData.arrCnt = arrCnt.totalCnt
                 lastUserHealthData.arrCnt = arrCnt.lastCnt
             
-                
                 return (
                     userHealthData: userHealthData,
                     lastUserHealthData: lastUserHealthData
@@ -331,8 +332,8 @@ public class ProfileService {
             
             let lastArrCnt = response.filter { item in
                 guard
-                    let timePart  = item.writetime.split(separator: " ").last,
-                    let hourPart  = timePart.split(separator: ":").first
+                    let timePart = item.writetime.split(separator: " ").last,
+                    let hourPart = timePart.split(separator: ":").first
                 else {
                     return false
                 }
@@ -371,15 +372,13 @@ public class ProfileService {
                               let step = Int(fields[7]),
                               let distance = Int(fields[8]),
                               let calorie = Int(fields[9]),
-                              let activityCalorie = Int(fields[10]),
-                              let arrCnt = Int(fields[11]) else {
+                              let activityCalorie = Int(fields[10]) else {
                             continue // Skip this record if any conversions fail
                         }
                         
-                        
-                        
+                                                
                         let checkToday = DateTimeManager.shared.checkLocalDate(
-                            utcDateTime: String(fields[1])
+                            utcDateTime: String(fields[1])  // fields[1]: datetime
                         )
                         
                         if (checkToday) {
@@ -387,15 +386,13 @@ public class ProfileService {
                             userHealthData.activityCalorie += activityCalorie
                             userHealthData.step += step
                             userHealthData.distance += distance
-                            userHealthData.arrCnt += arrCnt
                             
                             lastUserHealthData = UserHealthData(
                                 hour: prevHour,
                                 calorie: calorie,
                                 activityCalorie: activityCalorie,
                                 step: step,
-                                distance: distance,
-                                arrCnt:  arrCnt
+                                distance: distance
                             )
                         }
                     }
