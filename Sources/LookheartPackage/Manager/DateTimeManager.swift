@@ -126,6 +126,14 @@ public final class DateTimeManager {
         return dateFormatter.string(from: date)
     }
     
+    public func getFormattedLocalDate(_ dateStr: String) -> Date? {
+        return localDateFormatter.date(from: dateStr)
+    }
+    
+    public func getFormattedLocalDateString(_ dateStr: Date) -> String {
+        return localDateFormatter.string(from: dateStr)
+    }
+    
     // adjustDate("2025-04-21", offset: 1 or -1, component: .day)
     public func adjustDate(
         _ dateString: String,

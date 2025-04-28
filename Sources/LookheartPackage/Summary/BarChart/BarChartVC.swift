@@ -332,32 +332,22 @@ class BarChartVC : UIViewController {
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
         moveDate(shouldAdd: sender.tag == TOMORROW_BUTTON_FLAG)
-//        if let startDate = getStartDate(offset: sender.tag == TOMORROW_BUTTON_FLAG ? 1 : -1),
-//           let endDate = getEndDate(startDate) {
-//            print("startDate: \(startDate)")
-//            print("endDate: \(endDate)")
-//        }
+        
+        if let startDate = getStartDate(),
+           let endDate = getEndDate() {
+            print("startDate: \(startDate)")
+            print("endDate: \(endDate)")
+        }
     }
         
     @objc func selectDayButton(_ sender: UIButton) {
-        switch (sender.tag) {
-        case DAY_FLAG:
-            currentButtonFlag = .DAY
-        case WEEK_FLAG:
-            currentButtonFlag = .WEEK
-        case MONTH_FLAG:
-            currentButtonFlag = .MONTH
-        case YEAR_FLAG:
-            currentButtonFlag = .YEAR
-        default:
-            break
-        }
+        updateDateType(tag: sender.tag)
         
-//        if let startDate = getStartDate(offset: 0),
-//           let endDate = getEndDate(startDate) {
-//            print("startDate: \(startDate)")
-//            print("endDate: \(endDate)")
-//        }
+        if let startDate = getStartDate(),
+           let endDate = getEndDate() {
+            print("startDate: \(startDate)")
+            print("endDate: \(endDate)")
+        }
         
         setButtonColor(sender)
     }
@@ -730,97 +720,87 @@ class BarChartVC : UIViewController {
             component: component
         ) {
             self.targetDate = targetDate
-            print(targetDate)
         }
     }
     
-    func getStartDate(offset: Int) -> String? {
-        let component: Calendar.Component = switch (currentButtonFlag) {
-        case .DAY:      .day
-        case .WEEK:     .weekOfYear
-        case .MONTH:    .month
-        case .YEAR:     .year
+    private func updateDateType(tag: Int) {
+        switch (tag) {
+        case DAY_FLAG:
+            currentButtonFlag = .DAY
+        case WEEK_FLAG:
+            currentButtonFlag = .WEEK
+        case MONTH_FLAG:
+            currentButtonFlag = .MONTH
+        case YEAR_FLAG:
+            currentButtonFlag = .YEAR
+        default:
+            break
         }
-        
-        if let targetDate = DateTimeManager.shared.adjustDate(
-            targetDate,
-            offset: offset,
-            component: component
-        ) {
-            guard let startDate = switch (currentButtonFlag) {
-            case .DAY:
-                targetDate
-            case .WEEK:
-                DateTimeManager.shared.adjustDate(
-                    targetDate,
-                    offset: -findMonday(targetDate),
-                    component: .day
-                )
-            case .MONTH:
-                String(targetDate.prefix(8)) + "01"
-            case .YEAR:
-                String(targetDate.prefix(4)) + "-01-01"
-            } else { return nil }
-            
-            return DateTimeManager.shared.localDateStartToUtcDateString(startDate)
+    }
+    
+    func getStartDate() -> String? {
+        guard let startDate = switch (currentButtonFlag) {
+        case .DAY:
+            targetDate
+        case .WEEK:
+            findMonday(targetDate)
+        case .MONTH:
+            String(targetDate.prefix(8)) + "01"
+        case .YEAR:
+            String(targetDate.prefix(4)) + "-01-01"
         } else {
             return nil
         }
-    }
-    
-    
-    func getEndDate(_ startDate: String) -> String? {
-        if let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(targetDate) {
-            switch (currentButtonFlag) {
-            case .DAY:
-                return DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
-            case .WEEK:
-                if let monday = DateTimeManager.shared.adjustDate(
-                    targetDate,
-                    offset: -findMonday(targetDate),
-                    component: .day
-                ) {
-                    return DateTimeManager.shared.adjustDate(
-                        monday,
-                        offset: 1,
-                        component: .weekOfYear
-                    )
-                } else { return nil }
-            case .MONTH:
-                guard let month = DateTimeManager.shared.adjustDate(
-                    startDate,
-                    offset: 1,
-                    component: .month
-                ) else { return nil }
-                
-                return String(month.prefix(8)) + "01"
-            case .YEAR:
-                guard let year = DateTimeManager.shared.adjustDate(
-                    startDate,
-                    offset: 1,
-                    component: .year
-                ) else { return nil }
-                
-                return String(year.prefix(4)) + "-01-01"
-            }
-        } else { return nil }
-    }
-    
-    
-    func findMonday(_ startDate: String) -> Int {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Locale(identifier: "en_US_POSIX")
-        let weekdaySymbols = calendar.weekdaySymbols
         
-        guard let weekdayName = findWeekday(startDate),
-              let weekdayIndex = weekdaySymbols.firstIndex(of: weekdayName) else {
-            return 0
+        return DateTimeManager.shared.localDateStartToUtcDateString(startDate)
+    }
+    
+    
+    func getEndDate() -> String? {
+        switch (currentButtonFlag) {
+        case .DAY:
+            return DateTimeManager.shared.adjustDate(
+                targetDate,
+                offset: 1,
+                component: .day
+            )
+        case .WEEK:
+            if let monday = findMonday(targetDate) {
+                return DateTimeManager.shared.adjustDate(monday, offset: 1, component: .weekday)
+            } else {
+                return nil
+            }
+        case .MONTH:
+            let startMonth = String(targetDate.prefix(8)) + "01"
+            return DateTimeManager.shared.adjustDate(startMonth, offset: 1, component: .month)
+        case .YEAR:
+            let startYear = String(targetDate.prefix(4)) + "-01-01"
+            return DateTimeManager.shared.adjustDate(startYear, offset: 1, component: .month)
         }
-        // 'calendar.firstWeekday'로 주의 시작 요일을 고려해 인덱스 조정
-        // 그레고리안 캘린더에서 'firstWeekday'는 일반적으로 1(일요일)
-        // 월요일을 0으로 만들기 위해, 인덱스에서 1을 빼고, 7로 나눈 나머지를 계산
-        let mondayIndex = (weekdayIndex + 7 - calendar.firstWeekday) % 7
-        return mondayIndex
+    }
+    
+    
+    func findMonday(_ dateStr: String) -> String? {
+        guard let date = DateTimeManager.shared.getFormattedLocalDate(dateStr) else {
+            return nil
+        }
+
+        let calendar = Calendar(identifier: .gregorian)
+        // 일요일=1, 월요일=2, …, 토요일=7
+        let weekday = calendar.component(.weekday, from: date)
+        // 월요일=1, …, 일요일=7
+        let dayOfWeek = (weekday == 1) ? 7 : (weekday - 1)
+        
+        let daysToSubtract = dayOfWeek - 1  // 월요일→0, 화요일→1, …
+        guard let monday = calendar.date(
+            byAdding: .day,
+            value: -daysToSubtract,
+            to: date
+        ) else {
+            return nil
+        }
+        
+        return DateTimeManager.shared.getFormattedLocalDateString(monday)
     }
     
     func findWeekday(_ startDate: String) -> String? {
