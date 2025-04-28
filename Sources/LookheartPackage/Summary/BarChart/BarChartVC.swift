@@ -420,25 +420,23 @@ class BarChartVC : UIViewController {
     ) {
         initUI()
         
-        Task {
+        Task { @MainActor in
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
-                DispatchQueue.main.async {
-                    // chart
-                    let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
-                    let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
-                    let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
-                    
-                    self.updateBarChart(
-                        chartData: barChartDataSets,
-                        timeTable: sortedFirstMap.map { $0.0 }
-                    )
-                    
-                    // value
-                    self.updateValue(
-                        firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
-                        secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
-                    )
-                }
+                // chart
+                let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
+                let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
+                
+                self.updateBarChart(
+                    chartData: barChartDataSets,
+                    timeTable: sortedFirstMap.map { $0.0 }
+                )
+                
+                // value
+                self.updateValue(
+                    firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
+                    secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
+                )
             }
         }
     }
