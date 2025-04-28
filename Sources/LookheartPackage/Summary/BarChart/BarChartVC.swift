@@ -424,10 +424,10 @@ class BarChartVC : UIViewController {
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
                 DispatchQueue.main.async {
                     let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
-                                
-                    print("currentButtonFlag: \(self.currentButtonFlag)")
-                    firstMap.forEach { print("first: \($0)") }
-                    secondMap.forEach { print("second: \($0)") }
+                    let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                    
+                    sortedFirstMap.forEach { data in print("first: \(data)") }
+                    sortedSecondMap.forEach { data in print("second: \(data)") }
                 }
             }
         }
@@ -443,7 +443,7 @@ class BarChartVC : UIViewController {
             startDate: startDate,
             endDate: endDate
         )
-        print("data: \(data)")
+        
         await MainActor.run { activityIndicator.stopAnimating() }
 
         switch response {
@@ -458,6 +458,8 @@ class BarChartVC : UIViewController {
         }
     }
     
+    
+    // MARK: - data map
     private func getChartDataMap(
         hourlyDataList: [HourlyData]
     ) -> (firstMap: [String : Double], secondMap: [String : Double]) {
@@ -473,7 +475,6 @@ class BarChartVC : UIViewController {
         }
     }
     
-    // MARK: -
     private func getTodayChartMap (
         hourlyDataList: [HourlyData]
     ) -> ([String : Double], [String : Double]) {
@@ -621,6 +622,41 @@ class BarChartVC : UIViewController {
         return (firstMap, secondMap)
     }
     
+    // MARK: -
+    private func sortedMap(
+        _ firstMap: [String : Double],
+        _ secondMap: [String : Double]
+    ) -> ([String : Double], [String : Double]) {
+        let sortedFirstEntries: [(String, Double)]
+        let sortedSecondEntries: [(String, Double)]
+        
+        switch (currentButtonFlag) {
+        case .WEEK:
+            let weekdayOrder = ["MON","TUE","WED","THU","FRI","SAT","SUN"]
+            sortedFirstEntries = firstMap.sorted { lhs, rhs in
+                (weekdayOrder.firstIndex(of: lhs.key) ?? 0)
+              < (weekdayOrder.firstIndex(of: rhs.key) ?? 0)
+            }
+            sortedSecondEntries = secondMap.sorted { lhs, rhs in
+                (weekdayOrder.firstIndex(of: lhs.key) ?? 0)
+              < (weekdayOrder.firstIndex(of: rhs.key) ?? 0)
+            }
+        default:
+            sortedFirstEntries = firstMap.sorted { lhs, rhs in
+                (Int(lhs.key) ?? 0) < (Int(rhs.key) ?? 0)
+            }
+            sortedSecondEntries = secondMap.sorted { lhs, rhs in
+                (Int(lhs.key) ?? 0) < (Int(rhs.key) ?? 0)
+            }
+        }
+        
+        // 순서 보존
+        let sortedFirst  = Dictionary(uniqueKeysWithValues: sortedFirstEntries)
+        let sortedSecond = Dictionary(uniqueKeysWithValues: sortedSecondEntries)
+        return (sortedFirst, sortedSecond)
+    }
+    
+    // MARK: -
     private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
         let dataDict = groupDataByDate(hourlyDataList)
         
