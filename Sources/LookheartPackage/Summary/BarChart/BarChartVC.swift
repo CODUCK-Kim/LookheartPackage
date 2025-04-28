@@ -425,6 +425,8 @@ class BarChartVC : UIViewController {
                 // chart
                 let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
                 
+                print("firstMap: \(firstMap)")
+                print("secondMap: \(secondMap)")
                 firstMap.forEach {
                     print("firstMap: \($0)")
                 }
@@ -433,6 +435,9 @@ class BarChartVC : UIViewController {
                 }
                 
                 let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                
+                print("sortedFirstMap: \(sortedFirstMap)")
+                print("sortedSecondMap: \(sortedSecondMap)")
                 
                 sortedFirstMap.forEach {
                     print("sortedFirstMap: \($0)")
