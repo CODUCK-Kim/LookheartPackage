@@ -332,6 +332,7 @@ class BarChartVC : UIViewController {
     // MARK: - Button Event
     @objc func shiftDate(_ sender: UIButton) {
         moveDate(shouldAdd: sender.tag == TOMORROW_BUTTON_FLAG)
+        updateDisplayText()
         
         if let startDate = getStartDate(),
            let endDate = getEndDate() {
@@ -344,6 +345,8 @@ class BarChartVC : UIViewController {
         
     @objc func selectDayButton(_ sender: UIButton) {
         updateDateType(tag: sender.tag)
+        updateDisplayText()
+        setButtonColor(sender)
         
         if let startDate = getStartDate(),
            let endDate = getEndDate() {
@@ -352,8 +355,6 @@ class BarChartVC : UIViewController {
                 endDate: endDate
             )
         }
-        
-        setButtonColor(sender)
     }
     
     @objc func calendarButtonEvent(_ sender: UIButton) {
@@ -391,22 +392,20 @@ class BarChartVC : UIViewController {
     public func refreshView(_ type: BarChartType) {
         chartType = type
         currentButtonFlag = .DAY
-        
         targetDate = DateTimeManager.shared.getCurrentLocalDate()
         
+        updateDisplayText()
         setUI()
         setButtonColor(dayButton)
         
-//        if let startDate = DateTimeManager.shared.localDateStartToUtcDateString(currentLocalDate),
-//           let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(currentLocalDate),
-//           let endDate = DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
-//        {
-//            self.targetDate = currentLocalDate
-//            getDataToServer(startDate, endDate)
-//            setUI()
-//            setDisplayDateText(startDate, endDate)
-//            setButtonColor(dayButton)
-//        }
+        if let startDate = getStartDate(),
+           let endDate = getEndDate() {
+            showChart(
+                startDate: startDate,
+                endDate: endDate
+            )
+        }
+        
     }
     
     func initVar() {
@@ -743,7 +742,7 @@ class BarChartVC : UIViewController {
     ) {
         switch (chartType) {
         case .ARR:
-            singleContentsValueLabel.text = String(firstValue)
+            singleContentsValueLabel.text = String(Int(firstValue))
         case .CALORIE, .STEP:
             let firstLabel = chartType == .CALORIE ? "unit_kcal".localized() : "unit_step_cap".localized()
             let secondLabel = chartType == .CALORIE ? "unit_kcal".localized() : "unit_distance_km".localized()
@@ -761,8 +760,8 @@ class BarChartVC : UIViewController {
             bottomValueProcent.text = String(Int(secondGoalProgress * 100)) + "%"
             
             // text
-            topValue.text = String(firstValue) + " " + firstLabel
-            bottomValue.text = chartType == .STEP ? String(Double(secondValue) / 1000.0) + " " + secondLabel : String(secondValue) + " " + secondLabel
+            topValue.text = String(Int(firstValue)) + " " + firstLabel
+            bottomValue.text = chartType == .STEP ? String(Double(Int(secondValue)) / 1000.0) + " " + secondLabel : String(Int(secondValue)) + " " + secondLabel
         }
     }
     
@@ -1085,23 +1084,32 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - UI
-    private func setDisplayDateText(_ startDate: String, _ endDate: String) {
-        var displayText = startDate
-        let startDateText = MyDateTime.shared.changeDateFormat(startDate, false)
-        let endDateText = MyDateTime.shared.changeDateFormat(MyDateTime.shared.dateCalculate(endDate, 1, false), false)
-        
-        switch (currentButtonFlag) {
+    private func updateDisplayText() {
+        let displayDate: String
+
+        switch currentButtonFlag {
         case .DAY:
-            displayText = startDate
+            displayDate = targetDate
+
         case .WEEK:
-            displayText = "\(startDateText) ~ \(endDateText)"
+            if let monday = findMonday(targetDate),
+               let sunday = DateTimeManager.shared.adjustDate(monday, offset: 6, component: .day)
+            {
+                displayDate = "\(monday)~\(sunday.suffix(5))"
+            } else {
+                displayDate = targetDate
+            }
+
         case .MONTH:
-            displayText = "\(startDate.prefix(7))"
+            // 예: "2025-04-02" → "04-02"
+            displayDate = String(targetDate.suffix(5))
+
         case .YEAR:
-            displayText = "\(startDate.prefix(4))"
+            // 예: "2025-04-02" → "2025"
+            displayDate = String(targetDate.prefix(4))
         }
-        
-        todayDisplay.text = displayText
+
+        todayDisplay.text = displayDate
     }
     
     func toastMessage(_ message: String) {
