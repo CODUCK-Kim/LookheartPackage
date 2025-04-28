@@ -422,47 +422,26 @@ class BarChartVC : UIViewController {
         
         Task { @MainActor in
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
-                print(hourlyDataList)
-                
-                // chart
                 let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
                 
-                print("firstMap: \(firstMap)")
-                print("secondMap: \(secondMap)")
-                firstMap.forEach {
-                    print("firstMap: \($0)")
+                if !firstMap.isEmpty {
+                    // chart
+                    let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                    let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
+
+                    self.updateBarChart(
+                        chartData: barChartDataSets,
+                        timeTable: sortedFirstMap.map { $0.0 }
+                    )
+                    
+                    // value
+                    self.updateValue(
+                        firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
+                        secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
+                    )
+                } else {
+                    toastMessage("dialog_error_noData".localized())
                 }
-                secondMap.forEach {
-                    print("secondMap: \($0)")
-                }
-                
-                let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
-                
-                print("sortedFirstMap: \(sortedFirstMap)")
-                print("sortedSecondMap: \(sortedSecondMap)")
-                
-                sortedFirstMap.forEach {
-                    print("sortedFirstMap: \($0)")
-                }
-                sortedSecondMap.forEach {
-                    print("sortedSecondMap: \($0)")
-                }
-                
-                let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
-                
-                print("barChartDataSets: \(barChartDataSets)")
-                
-                self.updateBarChart(
-                    chartData: barChartDataSets,
-                    timeTable: sortedFirstMap.map { $0.0 }
-                )
-                
-                // value
-//                self.updateValue(
-//                    firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
-//                    secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
-//                )
-                
             }
         }
     }
@@ -515,18 +494,8 @@ class BarChartVC : UIViewController {
         var firstMap: [String : Double] = [:]
         var secondMap: [String : Double] = [:]
         
-        hourlyDataList.forEach {
-            print($0)
-        }
-        
         let todayDataList = hourlyDataList.filter {
             $0.date == targetDate
-        }
-        
-        print("targetDate: \(targetDate)")
-        print("todayDataList: \(todayDataList)")
-        todayDataList.forEach { data in
-            print(data)
         }
         
         todayDataList.forEach { data in
