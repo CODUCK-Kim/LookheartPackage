@@ -422,6 +422,8 @@ class BarChartVC : UIViewController {
         
         Task { @MainActor in
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
+                print(hourlyDataList)
+                
                 // chart
                 let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
                 
