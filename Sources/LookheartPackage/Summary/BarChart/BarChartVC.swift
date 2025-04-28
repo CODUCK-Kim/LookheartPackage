@@ -423,11 +423,21 @@ class BarChartVC : UIViewController {
         Task {
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
                 DispatchQueue.main.async {
+                    // chart
                     let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
                     let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
-                    let (timeTable, barChartDataSets) = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
+                    let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
                     
-                    self.showBarChart(chartData: barChartDataSets, timeTable: timeTable)
+                    self.updateBarChart(
+                        chartData: barChartDataSets,
+                        timeTable: firstMap.map { $0.0 }
+                    )
+                    
+                    // value
+                    self.updateValue(
+                        firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
+                        secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
+                    )
                 }
             }
         }
@@ -483,6 +493,10 @@ class BarChartVC : UIViewController {
         
         let todayDataList = hourlyDataList.filter { $0.date == targetDate }
     
+        todayDataList.forEach { data in
+            print(data)
+        }
+        
         todayDataList.forEach { data in
             switch (chartType) {
             case .ARR:
@@ -656,9 +670,7 @@ class BarChartVC : UIViewController {
     private func getBarChartDataSets(
         _ firstMap: [(String, Double)],
         _ secondMap: [(String, Double)]
-    ) -> ([String], BarChartData) {
-        let labels = firstMap.map { $0.0 }
-        
+    ) -> BarChartData {
         switch (chartType) {
         // single bar
         case .ARR:
@@ -671,7 +683,7 @@ class BarChartVC : UIViewController {
             let dataSet = BarChartDataSet(entries: entries, label: firstLabel)
             dataSet.setColor(NSUIColor.GRAPH_RED)
             
-            return (labels, BarChartData(dataSets: [dataSet]))
+            return BarChartData(dataSets: [dataSet])
         // double bar
         case .CALORIE, .STEP:
             let (firstLabel, secondLabel) = getLabel()
@@ -690,7 +702,7 @@ class BarChartVC : UIViewController {
             let secondDataSet = BarChartDataSet(entries: scondEntries, label: firstLabel)
             secondDataSet.setColor(NSUIColor.GRAPH_BLUE)
             
-            return (labels, BarChartData(dataSets: [firstDataSet, secondDataSet]))
+            return BarChartData(dataSets: [firstDataSet, secondDataSet])
         }
     }
     
@@ -705,7 +717,7 @@ class BarChartVC : UIViewController {
         }
     }
     
-    func showBarChart(
+    private func updateBarChart(
         chartData: BarChartData,
         timeTable: [String]
     ) {
@@ -724,100 +736,36 @@ class BarChartVC : UIViewController {
         chartZoomOut()
     }
     
-    // MARK: -
-    private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
-        let dataDict = groupDataByDate(hourlyDataList)
-        
-        let sortedDate = sortedKeys(dataDict)
-        
-        let chartDataSet = getChartDataSet(sortedDate, dataDict, startDate)
-        
-        setChart(
-            chartData: BarChartData(dataSets: chartDataSet.1),
-            timeTable: chartDataSet.0,
-            labelCnt: chartDataSet.0.count
-        )
-        
-        activityIndicator.stopAnimating()
-        
-    }
-    
-    private func getChartDataSet(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataSet]) {
-        
+    private func updateValue(
+        firstValue: Double,
+        secondValue: Double
+    ) {
         switch (chartType) {
+        case .ARR:
+            singleContentsValueLabel.text = String(firstValue)
         case .CALORIE, .STEP:
-            // double graph
-            let entries = createDoubleGraphEntries(sortedDate, dataDict, startDate)
+            let firstLabel = chartType == .CALORIE ? "unit_kcal".localized() : "unit_step_cap".localized()
+            let secondLabel = chartType == .CALORIE ? "unit_kcal".localized() : "unit_distance_km".localized()
+            let dayCount = getDayCount(for: currentButtonFlag)
             
-            let label1 = chartType == .CALORIE ? "unit_tCal".localized() : "unit_step".localized()
-            let label2 = chartType == .CALORIE ? "unit_eCal".localized() : "unit_distance".localized()
+            // Progress
+            let firstGoalProgress = Double(firstValue) / Double(firstGoal * dayCount)
+            topProgress.progress = Float(firstGoalProgress)
             
-            let dataSet1 =  chartDataSet(color: NSUIColor.GRAPH_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: label1))
-            let dataSet2 =  chartDataSet(color: NSUIColor.GRAPH_BLUE, chartDataSet: BarChartDataSet(entries: entries.2, label: label2))
+            let secondGoalProgress = chartType == .STEP ? (Double(secondValue) / 1000.0) / Double(secondGoal * dayCount) : Double(secondValue) / Double(secondGoal * dayCount)
+            bottomProgress.progress = Float(secondGoalProgress)
             
-            let dataSets: [BarChartDataSet] = [dataSet1, dataSet2]
+            // procent
+            topValueProcent.text = String(Int(firstGoalProgress * 100)) + "%"
+            bottomValueProcent.text = String(Int(secondGoalProgress * 100)) + "%"
             
-            return (entries.0, dataSets)
-            
-        default:
-            // single graph
-            let entries = createSingleGraphEntries(sortedDate, dataDict, startDate)
-            let dataSet =  chartDataSet(color: NSUIColor.MY_RED, chartDataSet: BarChartDataSet(entries: entries.1, label: "unit_arr_abb".localized()))
-            return (entries.0, [dataSet])
+            // text
+            topValue.text = String(firstValue) + " " + firstLabel
+            bottomValue.text = chartType == .STEP ? String(Double(secondValue) / 1000.0) + " " + secondLabel : String(secondValue) + " " + secondLabel
         }
     }
     
-    private func createDoubleGraphEntries(_ sortedDate: [String], _ dataDict: [String : HourlyDataStruct], _ startDate: String) -> ([String], [BarChartDataEntry], [BarChartDataEntry]) {
-        
-        let buttonFlag = currentButtonFlag == .WEEK || currentButtonFlag == .YEAR
-        var findDate = currentButtonFlag == .YEAR ? String(startDate.prefix(7)) : startDate
-        
-        let index = getChartIndexCount(sortedDate)
-        var weekAndYearIdx = 0
-        
-        var entries1 = [BarChartDataEntry]()
-        var entries2 = [BarChartDataEntry]()
-        
-        var sumValue1 = 0
-        var sumValue2 = 0
-        
-        var timeTable: [String] = []
-        
-        for i in 0..<index {
-            let time = getTime(buttonFlag ? String(i) : sortedDate[i])
-            var yValue1 = 0.0
-            var yValue2 = 0.0
-            
-            if index != sortedDate.count {
-                // 고정 index WEEK(7), YEAR(12) 예외 처리
-                if dataDict.keys.contains(findDate) {
-                    (yValue1, yValue2) = getYValues(for: sortedDate, at: weekAndYearIdx, with: dataDict)
-
-                    weekAndYearIdx += 1
-                }
-                
-                findDate = currentButtonFlag == .YEAR ? getYearDate(findDate) : MyDateTime.shared.dateCalculate(findDate, 1, PLUS_DATE)
-            } else {
-                (yValue1, yValue2) = getYValues(for: sortedDate, at: i, with: dataDict)
-            }
-            
-            let entry1 = BarChartDataEntry(x: Double(i), y: yValue1)
-            let entry2 = BarChartDataEntry(x: Double(i), y: yValue2)
-            
-            entries1.append(entry1)
-            entries2.append(entry2)
-            
-            sumValue1 += Int(yValue1)
-            sumValue2 += Int(yValue2)
-            
-            timeTable.append(time)
-            
-        }
-        
-        setDoubleGraphUI(sumValue1, sumValue2)
-        
-        return (timeTable, entries1, entries2)
-    }
+    
     
     
     private func getYValues(for sortedDate: [String], at index: Int, with dataDict: [String : HourlyDataStruct]) -> (Double, Double) {
@@ -1223,32 +1171,7 @@ class BarChartVC : UIViewController {
         }
     }
     
-    private func setSingleGraphUI(_ cnt : Int) {
-        singleContentsValueLabel.text = String(cnt)
-    }
-    
-    private func setDoubleGraphUI(_ value1 : Int, _ value2 : Int) {
-        
-        let label1 = chartType == .CALORIE ? "unit_kcal".localized() : "unit_step_cap".localized()
-        let label2 = chartType == .CALORIE ? "unit_kcal".localized() : "unit_distance_km".localized()
-        let dayCount = getDayCount(for: currentButtonFlag)
-        
-        // Progress
-        let firstGoalProgress = Double(value1) / Double(firstGoal * dayCount)
-        topProgress.progress = Float(firstGoalProgress)
-        
-        let secondGoalProgress = chartType == .STEP ? (Double(value2) / 1000.0) / Double(secondGoal * dayCount) : Double(value2) / Double(secondGoal * dayCount)
-        bottomProgress.progress = Float(secondGoalProgress)
-        
-        // procent
-        topValueProcent.text = String(Int(firstGoalProgress * 100)) + "%"
-        bottomValueProcent.text = String(Int(secondGoalProgress * 100)) + "%"
-        
-        // text
-        topValue.text = String(value1) + " " + label1
-        bottomValue.text = chartType == .STEP ? String(Double(value2) / 1000.0) + " " + label2 :
-                                                String(value2) + " " + label2
-    }
+
     
     private func getDayCount(for buttonFlag: DateType) -> Int {
         switch buttonFlag {
