@@ -394,6 +394,9 @@ class BarChartVC : UIViewController {
         
         let currentLocalDate = DateTimeManager.shared.getCurrentLocalDate()
         
+        setUI()
+        setButtonColor(dayButton)
+        
 //        if let startDate = DateTimeManager.shared.localDateStartToUtcDateString(currentLocalDate),
 //           let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(currentLocalDate),
 //           let endDate = DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
@@ -440,7 +443,7 @@ class BarChartVC : UIViewController {
             startDate: startDate,
             endDate: endDate
         )
-        
+        print("data: \(data)")
         await MainActor.run { activityIndicator.stopAnimating() }
 
         switch response {
