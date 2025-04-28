@@ -818,7 +818,7 @@ class BarChartVC : UIViewController {
             sumValue += Int(yValue)
         }
         
-        setSingleGraphUI(sumValue)
+//        setSingleGraphUI(sumValue)
         
         return (timeTable, entries)
     }
