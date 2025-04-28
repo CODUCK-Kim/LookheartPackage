@@ -425,9 +425,9 @@ class BarChartVC : UIViewController {
                 DispatchQueue.main.async {
                     let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
                     let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                    let (timeTable, barChartDataSets) = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
                     
-                    sortedFirstMap.forEach { data in print("first: \(data)") }
-                    sortedSecondMap.forEach { data in print("second: \(data)") }
+                    self.showBarChart(chartData: barChartDataSets, timeTable: timeTable)
                 }
             }
         }
@@ -622,7 +622,6 @@ class BarChartVC : UIViewController {
         return (firstMap, secondMap)
     }
     
-    // MARK: -
     private func sortedMap(
         _ firstMap: [String : Double],
         _ secondMap: [String : Double]
@@ -654,6 +653,77 @@ class BarChartVC : UIViewController {
         return (sortedFirstEntries, sortedSecondEntries)
     }
     
+    private func getBarChartDataSets(
+        _ firstMap: [(String, Double)],
+        _ secondMap: [(String, Double)]
+    ) -> ([String], BarChartData) {
+        let labels = firstMap.map { $0.0 }
+        
+        switch (chartType) {
+        // single bar
+        case .ARR:
+            let (firstLabel, _) = getLabel()
+            
+            let entries = firstMap.enumerated().map { index, element in
+                BarChartDataEntry(x: Double(index), y: element.1)
+            }
+
+            let dataSet = BarChartDataSet(entries: entries, label: firstLabel)
+            dataSet.setColor(NSUIColor.GRAPH_RED)
+            
+            return (labels, BarChartData(dataSets: [dataSet]))
+        // double bar
+        case .CALORIE, .STEP:
+            let (firstLabel, secondLabel) = getLabel()
+            
+            let firstEntries = firstMap.enumerated().map { index, element in
+                BarChartDataEntry(x: Double(index), y: element.1)
+            }
+            
+            let scondEntries = secondMap.enumerated().map { index, element in
+                BarChartDataEntry(x: Double(index), y: element.1)
+            }
+            
+            let firstDataSet = BarChartDataSet(entries: firstEntries, label: firstLabel)
+            firstDataSet.setColor(NSUIColor.GRAPH_RED)
+            
+            let secondDataSet = BarChartDataSet(entries: scondEntries, label: firstLabel)
+            secondDataSet.setColor(NSUIColor.GRAPH_BLUE)
+            
+            return (labels, BarChartData(dataSets: [firstDataSet, secondDataSet]))
+        }
+    }
+    
+    private func getLabel() -> (firstLabel: String, secondLabel: String) {
+        switch (chartType) {
+        case .ARR:
+            return ("unit_arr_abb".localized(), "")
+        case .CALORIE:
+            return ("unit_tCal".localized(), "unit_eCal".localized())
+        case .STEP:
+            return ("unit_step".localized(), "unit_distance".localized())
+        }
+    }
+    
+    func showBarChart(
+        chartData: BarChartData,
+        timeTable: [String]
+    ) {
+        let labelCount = timeTable.count
+        let visibleXRangeMax = timeTable.count > 7 ? 7.5 : Double(timeTable.count)
+
+        configureBarChartSettings(chartData: chartData, labelCnt: labelCount)
+        
+        barChartView.data = chartData
+        barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: timeTable)
+        barChartView.setVisibleXRangeMaximum(visibleXRangeMax)
+        barChartView.xAxis.setLabelCount(labelCount, force: false)
+        barChartView.data?.notifyDataChanged()
+        barChartView.notifyDataSetChanged()
+        barChartView.moveViewToX(0)
+        chartZoomOut()
+    }
+    
     // MARK: -
     private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
         let dataDict = groupDataByDate(hourlyDataList)
@@ -662,7 +732,11 @@ class BarChartVC : UIViewController {
         
         let chartDataSet = getChartDataSet(sortedDate, dataDict, startDate)
         
-        setChart(chartData: BarChartData(dataSets: chartDataSet.1), timeTable: chartDataSet.0, labelCnt: chartDataSet.0.count)
+        setChart(
+            chartData: BarChartData(dataSets: chartDataSet.1),
+            timeTable: chartDataSet.0,
+            labelCnt: chartDataSet.0.count
+        )
         
         activityIndicator.stopAnimating()
         
