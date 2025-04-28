@@ -433,10 +433,11 @@ class BarChartVC : UIViewController {
                 )
                 
                 // value
-                self.updateValue(
-                    firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
-                    secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
-                )
+//                self.updateValue(
+//                    firstValue: firstMap.values.compactMap { $0 }.reduce(0, +),
+//                    secondValue: secondMap.values.compactMap { $0 }.reduce(0, +)
+//                )
+                
             }
         }
     }
