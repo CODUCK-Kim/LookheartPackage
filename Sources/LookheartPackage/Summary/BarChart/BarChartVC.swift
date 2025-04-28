@@ -775,7 +775,7 @@ class BarChartVC : UIViewController {
             return DateTimeManager.shared.adjustDate(startMonth, offset: 1, component: .month)
         case .YEAR:
             let startYear = String(targetDate.prefix(4)) + "-01-01"
-            return DateTimeManager.shared.adjustDate(startYear, offset: 1, component: .month)
+            return DateTimeManager.shared.adjustDate(startYear, offset: 1, component: .year)
         }
     }
     
