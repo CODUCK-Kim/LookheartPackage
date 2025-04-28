@@ -626,11 +626,11 @@ class BarChartVC : UIViewController {
     private func sortedMap(
         _ firstMap: [String : Double],
         _ secondMap: [String : Double]
-    ) -> ([String : Double], [String : Double]) {
+    ) -> (first: [(String, Double)], second: [(String, Double)]) {
         let sortedFirstEntries: [(String, Double)]
         let sortedSecondEntries: [(String, Double)]
         
-        switch (currentButtonFlag) {
+        switch currentButtonFlag {
         case .WEEK:
             let weekdayOrder = ["MON","TUE","WED","THU","FRI","SAT","SUN"]
             sortedFirstEntries = firstMap.sorted { lhs, rhs in
@@ -641,6 +641,7 @@ class BarChartVC : UIViewController {
                 (weekdayOrder.firstIndex(of: lhs.key) ?? 0)
               < (weekdayOrder.firstIndex(of: rhs.key) ?? 0)
             }
+
         default:
             sortedFirstEntries = firstMap.sorted { lhs, rhs in
                 (Int(lhs.key) ?? 0) < (Int(rhs.key) ?? 0)
@@ -650,10 +651,7 @@ class BarChartVC : UIViewController {
             }
         }
         
-        // 순서 보존
-        let sortedFirst  = Dictionary(uniqueKeysWithValues: sortedFirstEntries)
-        let sortedSecond = Dictionary(uniqueKeysWithValues: sortedSecondEntries)
-        return (sortedFirst, sortedSecond)
+        return (sortedFirstEntries, sortedSecondEntries)
     }
     
     // MARK: -
