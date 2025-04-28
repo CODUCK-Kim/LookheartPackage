@@ -393,16 +393,17 @@ class BarChartVC : UIViewController {
         currentButtonFlag = .DAY
         
         let currentLocalDate = DateTimeManager.shared.getCurrentLocalDate()
-        if let startDate = DateTimeManager.shared.localDateStartToUtcDateString(currentLocalDate),
-           let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(currentLocalDate),
-           let endDate = DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
-        {
-            self.targetDate = currentLocalDate
-            getDataToServer(startDate, endDate)
-            setUI()
-            setDisplayDateText(startDate, endDate)
-            setButtonColor(dayButton)
-        }
+        
+//        if let startDate = DateTimeManager.shared.localDateStartToUtcDateString(currentLocalDate),
+//           let targetDate = DateTimeManager.shared.localDateEndToUtcDateString(currentLocalDate),
+//           let endDate = DateTimeManager.shared.adjustDate(targetDate, offset: 1, component: .day)
+//        {
+//            self.targetDate = currentLocalDate
+//            getDataToServer(startDate, endDate)
+//            setUI()
+//            setDisplayDateText(startDate, endDate)
+//            setButtonColor(dayButton)
+//        }
     }
     
     func initVar() {
@@ -416,14 +417,15 @@ class BarChartVC : UIViewController {
     ) {
         initUI()
         
-        if let hourlyDataList = getDataToServer(startDate, endDate) {
-            DispatchQueue.main.async {
-                let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
-                
-            
-                print("currentButtonFlag: \(self.currentButtonFlag)")
-                firstMap.forEach { print("first: \($0)") }
-                secondMap.forEach { print("second: \($0)") }
+        Task {
+            if let hourlyDataList = await getDataToServer(startDate, endDate) {
+                DispatchQueue.main.async {
+                    let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
+                                
+                    print("currentButtonFlag: \(self.currentButtonFlag)")
+                    firstMap.forEach { print("first: \($0)") }
+                    secondMap.forEach { print("second: \($0)") }
+                }
             }
         }
     }
@@ -431,33 +433,26 @@ class BarChartVC : UIViewController {
     private func getDataToServer(
         _ startDate: String,
         _ endDate: String
-    ) -> [HourlyData]? {
-        activityIndicator.startAnimating()
+    ) async -> [HourlyData]? {
+        await MainActor.run { activityIndicator.startAnimating() }
+    
+        let (data, response) = await graphService.getHourlyData(
+            startDate: startDate,
+            endDate: endDate
+        )
         
-        Task {
-            let getHourlyData = await graphService.getHourlyData(
-                startDate: startDate,
-                endDate: endDate
-            )
-            
-            let data = getHourlyData.0
-            let response = getHourlyData.1
-            
-            switch response {
-            case .success:
-                return data
-            case .noData:
-                toastMessage("dialog_error_noData".localized())
-            default:
-                toastMessage("dialog_error_server_noData".localized())
-            }
-            
-            activityIndicator.stopAnimating()
-            
+        await MainActor.run { activityIndicator.stopAnimating() }
+
+        switch response {
+        case .success:
+            return data
+        case .noData:
+            await MainActor.run { toastMessage("dialog_error_noData".localized()) }
+            return nil
+        default:
+            await MainActor.run { toastMessage("dialog_error_server_noData".localized()) }
             return nil
         }
-        
-        return nil
     }
     
     private func getChartDataMap(
