@@ -335,8 +335,10 @@ class BarChartVC : UIViewController {
         
         if let startDate = getStartDate(),
            let endDate = getEndDate() {
-            print("startDate: \(startDate)")
-            print("endDate: \(endDate)")
+            showChart(
+                startDate: startDate,
+                endDate: endDate
+            )
         }
     }
         
@@ -345,8 +347,10 @@ class BarChartVC : UIViewController {
         
         if let startDate = getStartDate(),
            let endDate = getEndDate() {
-            print("startDate: \(startDate)")
-            print("endDate: \(endDate)")
+            showChart(
+                startDate: startDate,
+                endDate: endDate
+            )
         }
         
         setButtonColor(sender)
@@ -406,8 +410,220 @@ class BarChartVC : UIViewController {
     }
     
     // MARK: - CHART FUNC
-    private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
+    private func showChart(
+        startDate: String,
+        endDate: String
+    ) {
+        initUI()
         
+        if let hourlyDataList = getDataToServer(startDate, endDate) {
+            DispatchQueue.main.async {
+                let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
+                
+            
+                print("currentButtonFlag: \(self.currentButtonFlag)")
+                firstMap.forEach { print("first: \($0)") }
+                secondMap.forEach { print("second: \($0)") }
+            }
+        }
+    }
+    
+    private func getDataToServer(
+        _ startDate: String,
+        _ endDate: String
+    ) -> [HourlyData]? {
+        activityIndicator.startAnimating()
+        
+        Task {
+            let getHourlyData = await graphService.getHourlyData(
+                startDate: startDate,
+                endDate: endDate
+            )
+            
+            let data = getHourlyData.0
+            let response = getHourlyData.1
+            
+            switch response {
+            case .success:
+                return data
+            case .noData:
+                toastMessage("dialog_error_noData".localized())
+            default:
+                toastMessage("dialog_error_server_noData".localized())
+            }
+            
+            activityIndicator.stopAnimating()
+            
+            return nil
+        }
+        
+        return nil
+    }
+    
+    private func getChartDataMap(
+        hourlyDataList: [HourlyData]
+    ) -> (firstMap: [String : Double], secondMap: [String : Double]) {
+        switch (currentButtonFlag) {
+        case .DAY:
+            return getTodayChartMap(hourlyDataList: hourlyDataList)
+        case .WEEK:
+            return getWeekChartMap(hourlyDataList: hourlyDataList)
+        case .MONTH:
+            return getMonthChartMap(hourlyDataList: hourlyDataList)
+        case .YEAR:
+            return getYearChartMap(hourlyDataList: hourlyDataList)
+        }
+    }
+    
+    // MARK: -
+    private func getTodayChartMap (
+        hourlyDataList: [HourlyData]
+    ) -> ([String : Double], [String : Double]) {
+        var firstMap: [String : Double] = [:]
+        var secondMap: [String : Double] = [:]
+        
+        let todayDataList = hourlyDataList.filter { $0.date == targetDate }
+    
+        todayDataList.forEach { data in
+            switch (chartType) {
+            case .ARR:
+                firstMap[data.hour] = Double(data.arrCnt)
+            case .CALORIE:
+                firstMap[data.hour] = Double(data.cal)
+                secondMap[data.hour] = Double(data.activityCal)
+            case .STEP:
+                firstMap[data.hour] = Double(data.step)
+                secondMap[data.hour] = Double(data.distance)
+            }
+        }
+        
+        return (firstMap, secondMap)
+    }
+    
+    private func getWeekChartMap (
+        hourlyDataList: [HourlyData]
+    ) -> ([String : Double], [String : Double]) {
+        guard let monday = findMonday(targetDate) else {
+          return ([:], [:])
+        }
+        
+        let days = DayOfWeek.allCases
+        let dates = (0..<7).compactMap { offset in
+          DateTimeManager.shared.adjustDate(monday, offset: offset, component: .day)
+        }
+        
+        var firstMap: [String : Double] = [:]
+        var secondMap: [String : Double] = [:]
+        
+        for (day, date) in zip(days, dates) {
+          let todayData = hourlyDataList.filter { $0.date == date }
+
+            switch (chartType) {
+            case .ARR:
+                firstMap[day.name] = todayData.compactMap { Double($0.arrCnt) }.reduce(0, +)
+            case .CALORIE:
+                firstMap[day.name] = todayData.compactMap { Double($0.cal) }.reduce(0, +)
+                secondMap[day.name] = todayData.compactMap { Double($0.activityCal) }.reduce(0, +)
+            case .STEP:
+                firstMap[day.name] = todayData.compactMap { Double($0.step) }.reduce(0, +)
+                secondMap[day.name] = todayData.compactMap { Double($0.distance) }.reduce(0, +)
+            }
+        }
+        
+        return (firstMap, secondMap)
+    }
+    
+    private func getMonthChartMap (
+        hourlyDataList: [HourlyData]
+    ) -> ([String : Double], [String : Double]) {
+        var firstMap: [String: Double]  = [:]
+        var secondMap: [String: Double] = [:]
+        
+        var date = String(targetDate.prefix(7)) + "-01"
+        guard let daysInMonth = DateTimeManager.shared.daysInMonth(from: targetDate) else {
+            return ([:], [:])
+        }
+        
+        for _ in 0..<daysInMonth {
+            let parts = date.split(separator: "-")
+            let xValue = String(parts[2])
+            
+            let targetDataList = hourlyDataList.filter {
+                $0.date == date
+            }
+            
+            if !targetDataList.isEmpty {
+                switch (chartType) {
+                case .ARR:
+                    firstMap[xValue] = targetDataList.compactMap { Double($0.arrCnt) }.reduce(0, +)
+                case .CALORIE:
+                    firstMap[xValue] = targetDataList.compactMap { Double($0.cal) }.reduce(0, +)
+                    secondMap[xValue] = targetDataList.compactMap { Double($0.activityCal) }.reduce(0, +)
+                case .STEP:
+                    firstMap[xValue] = targetDataList.compactMap { Double($0.step) }.reduce(0, +)
+                    secondMap[xValue] = targetDataList.compactMap { Double($0.distance) }.reduce(0, +)
+                }
+            }
+            
+            date = DateTimeManager.shared.adjustDate(date, offset: 1, component: .day) ?? date
+        }
+        
+        return (firstMap, secondMap)
+    }
+    
+    private func getYearChartMap (
+        hourlyDataList: [HourlyData]
+    ) -> ([String : Double], [String : Double]) {
+        var firstMap: [String: Double]  = [:]
+        var secondMap: [String: Double] = [:]
+        
+        let groupedByMonth: [String?: [HourlyData]] = Dictionary(
+            grouping: hourlyDataList,
+            by: { data in
+                if data.date.count >= 7 {
+                    let start = data.date.index(data.date.startIndex, offsetBy: 5)
+                    let end   = data.date.index(data.date.startIndex, offsetBy: 7)
+                    return String(data.date[start..<end])  // ex) "04", "11"
+                } else {
+                    return nil
+                }
+            }
+        )
+        
+        for (maybeMonth, dataList) in groupedByMonth {
+            guard let month = maybeMonth else { continue }
+            
+            switch (chartType) {
+            case .ARR:
+                let sumArr = dataList.reduce(0) { acc, item in
+                    acc + (Double(item.arrCnt) ?? 0)
+                }
+                firstMap[month] = sumArr
+            case .CALORIE:
+                let sumCal = dataList.reduce(0) { acc, item in
+                    acc + (Double(item.cal) ?? 0)
+                }
+                let sumAct = dataList.reduce(0) { acc, item in
+                    acc + (Double(item.activityCal) ?? 0)
+                }
+                firstMap[month]  = sumCal
+                secondMap[month] = sumAct
+            case .STEP:
+                let sumStep = dataList.reduce(0) { acc, item in
+                    acc + (Double(item.step) ?? 0)
+                }
+                let sumDist = dataList.reduce(0) { acc, item in
+                    acc + (Double(item.distance) ?? 0)
+                }
+                firstMap[month]  = sumStep
+                secondMap[month] = sumDist
+            }
+        }
+        
+        return (firstMap, secondMap)
+    }
+    
+    private func viewChart(_ hourlyDataList: [HourlyData], _ startDate: String) {
         let dataDict = groupDataByDate(hourlyDataList)
         
         let sortedDate = sortedKeys(dataDict)
@@ -584,7 +800,6 @@ class BarChartVC : UIViewController {
     }
     
     private func groupDataByDate(_ dataArray: [HourlyData]) -> [String : HourlyDataStruct] {
-        
         var hourlyDataDict:[String : HourlyDataStruct] = [:]
         
         for data in dataArray {
@@ -592,8 +807,8 @@ class BarChartVC : UIViewController {
             var dataStruct = hourlyDataDict[dateKey, default: HourlyDataStruct()]
             dataStruct.updateData(data)
             hourlyDataDict[dateKey] = dataStruct
-            
         }
+        
         return hourlyDataDict
     }
     
@@ -617,37 +832,6 @@ class BarChartVC : UIViewController {
         }
     }
     
-    private func getDataToServer(
-        _ startDate: String,
-        _ endDate: String
-    ) {
-        activityIndicator.startAnimating()
-        
-        initUI()
-
-        Task {
-            let getHourlyData = await graphService.getHourlyData(
-                startDate: startDate,
-                endDate: endDate
-            )
-            
-            let data = getHourlyData.0
-            let response = getHourlyData.1
-            
-            switch response {
-            case .success:
-                DispatchQueue.main.async {
-                    self.viewChart(data!, startDate)
-                }
-            case .noData:
-                toastMessage("dialog_error_noData".localized())
-            default:
-                toastMessage("dialog_error_server_noData".localized())
-            }
-            
-            activityIndicator.stopAnimating()
-        }
-    }
     
     func chartDataSet(color: NSUIColor, chartDataSet: BarChartDataSet) -> BarChartDataSet {
         chartDataSet.setColor(color)

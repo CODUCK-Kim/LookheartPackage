@@ -134,6 +134,19 @@ public final class DateTimeManager {
         return localDateFormatter.string(from: dateStr)
     }
     
+    func daysInMonth(from dateStr: String) -> Int? {
+        guard let date = localDateFormatter.date(from: dateStr) else {
+            return nil
+        }
+        
+        let cal = Calendar.current
+        guard let range = cal.range(of: .day, in: .month, for: date) else {
+            return nil
+        }
+        
+        return range.count
+    }
+    
     // adjustDate("2025-04-21", offset: 1 or -1, component: .day)
     public func adjustDate(
         _ dateString: String,
