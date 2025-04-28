@@ -430,7 +430,7 @@ class BarChartVC : UIViewController {
                     
                     self.updateBarChart(
                         chartData: barChartDataSets,
-                        timeTable: firstMap.map { $0.0 }
+                        timeTable: sortedFirstMap.map { $0.0 }
                     )
                     
                     // value
