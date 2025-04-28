@@ -392,7 +392,7 @@ class BarChartVC : UIViewController {
         chartType = type
         currentButtonFlag = .DAY
         
-        let currentLocalDate = DateTimeManager.shared.getCurrentLocalDate()
+        targetDate = DateTimeManager.shared.getCurrentLocalDate()
         
         setUI()
         setButtonColor(dayButton)
