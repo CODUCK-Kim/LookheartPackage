@@ -424,8 +424,26 @@ class BarChartVC : UIViewController {
             if let hourlyDataList = await getDataToServer(startDate, endDate) {
                 // chart
                 let (firstMap, secondMap) = self.getChartDataMap(hourlyDataList: hourlyDataList)
+                
+                firstMap.forEach {
+                    print("firstMap: \($0)")
+                }
+                secondMap.forEach {
+                    print("secondMap: \($0)")
+                }
+                
                 let (sortedFirstMap, sortedSecondMap) = self.sortedMap(firstMap, secondMap)
+                
+                sortedFirstMap.forEach {
+                    print("sortedFirstMap: \($0)")
+                }
+                sortedSecondMap.forEach {
+                    print("sortedSecondMap: \($0)")
+                }
+                
                 let barChartDataSets = self.getBarChartDataSets(sortedFirstMap, sortedSecondMap)
+                
+                print("barChartDataSets: \(barChartDataSets)")
                 
                 self.updateBarChart(
                     chartData: barChartDataSets,
