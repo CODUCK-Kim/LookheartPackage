@@ -515,8 +515,16 @@ class BarChartVC : UIViewController {
         var firstMap: [String : Double] = [:]
         var secondMap: [String : Double] = [:]
         
-        let todayDataList = hourlyDataList.filter { $0.date == targetDate }
-    
+        hourlyDataList.forEach {
+            print($0)
+        }
+        
+        let todayDataList = hourlyDataList.filter {
+            $0.date == targetDate
+        }
+        
+        print("targetDate: \(targetDate)")
+        print("todayDataList: \(todayDataList)")
         todayDataList.forEach { data in
             print(data)
         }
