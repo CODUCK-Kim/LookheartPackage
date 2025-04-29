@@ -862,7 +862,6 @@ class BarChartVC : UIViewController {
                     return DateTimeManager.shared.localDateEndToUtcDateString(monday)
                 }
                 return nil
-
             case .MONTH:
                 let firstOfMonth = String(targetDate.prefix(8)) + "01"
                 return DateTimeManager.shared.localDateEndToUtcDateString(firstOfMonth)
