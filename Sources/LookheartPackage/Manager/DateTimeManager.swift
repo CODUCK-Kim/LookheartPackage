@@ -134,7 +134,7 @@ public final class DateTimeManager {
         return localDateFormatter.string(from: dateStr)
     }
     
-    func daysInMonth(from dateStr: String) -> Int? {
+    public func daysInMonth(from dateStr: String) -> Int? {
         guard let date = localDateFormatter.date(from: dateStr) else {
             return nil
         }
@@ -204,7 +204,7 @@ public final class DateTimeManager {
     
     
     
-    func localDateStartToUtcDateString(
+    public func localDateStartToUtcDateString(
         _ localDateStr: String
     ) -> String? {
         // 1) 로컬 포맷터: "yyyy-MM-dd" → Date(로컬 00:00)
@@ -217,7 +217,7 @@ public final class DateTimeManager {
     }
     
     
-    func localDateEndToUtcDateString(
+    public func localDateEndToUtcDateString(
         _ localDateStr: String
     ) -> String? {
         // 1) 로컬 포맷터: "yyyy-MM-dd" → Date(로컬 00:00)
@@ -235,7 +235,7 @@ public final class DateTimeManager {
     }
     
     
-    func convertUtcToLocal(utcTimeStr: String) -> String? {
+    public func convertUtcToLocal(utcTimeStr: String) -> String? {
         guard let utcDate = utcDateTimeFormatter.date(from: utcTimeStr) else {
             return nil
         }
