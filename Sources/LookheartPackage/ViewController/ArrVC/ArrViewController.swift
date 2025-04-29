@@ -197,6 +197,8 @@ public class ArrViewController : UIViewController {
     }
     
     func initVar() {
+        targetDate = DateTimeManager.shared.getCurrentLocalDate()
+        
         dissmissCalendar()
     }
     

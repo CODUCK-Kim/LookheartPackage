@@ -704,7 +704,7 @@ class BarChartVC : UIViewController {
             firstDataSet.setColor(NSUIColor.GRAPH_RED)
             firstDataSet.valueFormatter = CombinedValueFormatter()
             
-            let secondDataSet = BarChartDataSet(entries: scondEntries, label: firstLabel)
+            let secondDataSet = BarChartDataSet(entries: scondEntries, label: secondLabel)
             secondDataSet.setColor(NSUIColor.GRAPH_BLUE)
             secondDataSet.valueFormatter = CombinedValueFormatter()
             
