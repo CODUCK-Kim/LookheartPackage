@@ -852,25 +852,56 @@ class BarChartVC : UIViewController {
     
     
     func getEndDate() -> String? {
-        switch (currentButtonFlag) {
-        case .DAY:
-            return DateTimeManager.shared.adjustDate(
-                targetDate,
-                offset: 1,
-                component: .day
-            )
-        case .WEEK:
-            if let monday = findMonday(targetDate) {
-                return DateTimeManager.shared.adjustDate(monday, offset: 1, component: .weekOfYear)
-            } else {
+        let baseDate: String? = {
+            switch currentButtonFlag {
+            case .DAY:
+                return DateTimeManager.shared.localDateEndToUtcDateString(targetDate)
+
+            case .WEEK:
+                if let monday = findMonday(targetDate) {
+                    return DateTimeManager.shared.localDateEndToUtcDateString(monday)
+                }
                 return nil
+
+            case .MONTH:
+                let firstOfMonth = String(targetDate.prefix(8)) + "01"
+                return DateTimeManager.shared.localDateEndToUtcDateString(firstOfMonth)
+
+            case .YEAR:
+                let firstOfYear = String(targetDate.prefix(4)) + "-01-01"
+                return DateTimeManager.shared.localDateEndToUtcDateString(firstOfYear)
             }
-        case .MONTH:
-            let startMonth = String(targetDate.prefix(8)) + "01"
-            return DateTimeManager.shared.adjustDate(startMonth, offset: 1, component: .month)
-        case .YEAR:
-            let startYear = String(targetDate.prefix(4)) + "-01-01"
-            return DateTimeManager.shared.adjustDate(startYear, offset: 1, component: .year)
+        }()
+        
+        if let endUtcDate = baseDate {
+            switch (currentButtonFlag) {
+            case .DAY:
+                return DateTimeManager.shared.adjustDate(
+                    endUtcDate,
+                    offset: 1,
+                    component: .day
+                )
+            case .WEEK:
+                return DateTimeManager.shared.adjustDate(
+                    endUtcDate,
+                    offset: 1,
+                    component: .weekOfYear
+                )
+            case .MONTH:
+                return DateTimeManager.shared.adjustDate(
+                    endUtcDate,
+                    offset: 1,
+                    component: .month
+                )
+            case .YEAR:
+                return DateTimeManager.shared.adjustDate(
+                    endUtcDate,
+                    offset: 1,
+                    component: .year
+                )
+            }
+        } else {
+            return nil
         }
     }
     
@@ -901,8 +932,7 @@ class BarChartVC : UIViewController {
     
     private func setCalendarClosure() {
         fsCalendar.didSelectDate = { [self] date in
-                        
-            targetDate = MyDateTime.shared.getDateFormat().string(from: date)
+            targetDate = DateTimeManager.shared.getFormattedLocalDateString(date)
             
             switch (currentButtonFlag) {
             case .DAY:
