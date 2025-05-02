@@ -21,7 +21,7 @@ public class GoogleService {
     public init() {}
     
     public func getGoogleLoginSession(callback: @escaping (GoogleUser?, Error?) -> Void) -> ASWebAuthenticationSession? {
-        let authURLString = AlamofireController.shared.getBaseURL() + "google/callback"
+        let authURLString = AlamofireController.shared.getAuthURL() + "google/callback"
         
         guard let authURL = URL(string: authURLString) else {
             print("Invalid Google Login URL")
