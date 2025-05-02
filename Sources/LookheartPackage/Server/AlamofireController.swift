@@ -29,7 +29,13 @@ public class AlamofireController: NetworkProtocol {
         return url
     }()
 
-
+    private lazy var authURL: String = {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "Auth URL") as? String else {
+            fatalError("Base URL not found in Info.plist")
+        }
+        return url
+    }()
+    
     public func task<T: Decodable>(
         parameters: [String : Any],
         endPoit: EndPoint,
@@ -100,7 +106,9 @@ public class AlamofireController: NetworkProtocol {
         return baseURL
     }
     
-    
+    public func getAuthURL() -> String {
+        return authURL
+    }
     
     
     
