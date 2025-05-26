@@ -119,6 +119,10 @@ class LineChartRepository {
         
         let changedFormatData = LineChartDataModel.changeFormat(datalist: splitData, dateList: getDateList())
         
+        changedFormatData.forEach {
+            print($0)
+        }
+        
         return (changedFormatData, .success)
     }
     

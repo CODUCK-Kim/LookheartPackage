@@ -61,7 +61,7 @@ struct LineChartDataModel {
                 }
                 
                 let utcDateTime = String(fields[2])
-                
+                                
                 if let localDateTime = DateTimeManager.shared.convertUtcToLocal(utcTimeStr: utcDateTime) {
                     let splitLocalDateTime = localDateTime.split(separator: " ")
                     let localDate = String(splitLocalDateTime[0])
